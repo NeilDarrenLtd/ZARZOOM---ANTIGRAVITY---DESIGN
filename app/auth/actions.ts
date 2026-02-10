@@ -97,17 +97,16 @@ export async function signInAdmin(email: string, password: string) {
     return { error: error.message };
   }
 
-  // Check if user has admin role
-  const isAdmin = data.user?.user_metadata?.is_admin === true;
-  if (!isAdmin) {
-    // Also check profiles table
+  // Check if user has admin role via metadata or profiles table
+  const isAdminMeta = data.user?.user_metadata?.is_admin === true;
+  if (!isAdminMeta) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("is_admin")
       .eq("id", data.user.id)
       .single();
 
-    if (profile?.role !== "admin") {
+    if (!profile?.is_admin) {
       await supabase.auth.signOut();
       return { error: "You do not have administrator access." };
     }
