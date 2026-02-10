@@ -38,6 +38,7 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             const BATCH_SIZE = 20;
             const allImages: HTMLImageElement[] = new Array(frameCount + 1);
             let loaded = 0;
+            let successCount = 0;
 
             for (let batch = 0; batch <= frameCount; batch += BATCH_SIZE) {
                 const batchEnd = Math.min(batch + BATCH_SIZE - 1, frameCount);
@@ -52,11 +53,12 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                             img.onload = () => {
                                 allImages[i] = img;
                                 loaded++;
+                                successCount++;
                                 setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
                                 resolve();
                             };
                             img.onerror = () => {
-                                allImages[i] = img;
+                                // Don't store failed images
                                 loaded++;
                                 setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
                                 resolve();
@@ -68,7 +70,10 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                 await Promise.all(promises);
             }
 
-            setImages(allImages);
+            // Only set images if at least some loaded successfully
+            if (successCount > 0) {
+                setImages(allImages);
+            }
             setIsLoaded(true);
         };
 
@@ -86,18 +91,19 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
 
         if (!ctx) return;
 
-        // Set canvas size (handled by CSS generally, but we need internal resolution)
-        // We'll set it to match the image aspect ratio or window
-        // For now, let's look at the first image dimensions once loaded
-        // User requested trimming black lines (horizontal crop). 
-        // Let's assume a standard letterbox/pillarbox removal is needed.
-        // Adjust TRIM_FACTOR as needed (e.g., 0.1 = 10% from left and 10% from right)
         const TRIM_FACTOR = 0.12;
 
-        if (images[0]) {
-            const cropX = images[0].naturalWidth * TRIM_FACTOR;
-            canvas.width = images[0].naturalWidth - (cropX * 2);
-            canvas.height = images[0].naturalHeight;
+        // Find the first valid image to set canvas dimensions
+        const firstValidImage = images.find((img) => img && img.naturalWidth > 0);
+        if (firstValidImage) {
+            const cropX = firstValidImage.naturalWidth * TRIM_FACTOR;
+            canvas.width = firstValidImage.naturalWidth - (cropX * 2);
+            canvas.height = firstValidImage.naturalHeight;
+        } else {
+            // No valid images loaded - set a default canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            return;
         }
 
         const render = () => {
@@ -107,25 +113,21 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             );
 
             const img = images[index];
-            if (img) {
+            if (img && img.naturalWidth > 0) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 const cropX = img.naturalWidth * TRIM_FACTOR;
                 const sourceWidth = img.naturalWidth - (cropX * 2);
 
-                // Draw image with cropping
                 ctx.drawImage(
                     img,
-                    cropX, 0, sourceWidth, img.naturalHeight, // Source rectangle
-                    0, 0, canvas.width, canvas.height         // Destination rectangle
+                    cropX, 0, sourceWidth, img.naturalHeight,
+                    0, 0, canvas.width, canvas.height
                 );
             }
         };
 
-        // Subscribing to frameIndex changes
         const unsubscribe = frameIndex.on("change", render);
-
-        // Initial render
         render();
 
         return () => unsubscribe();
