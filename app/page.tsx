@@ -64,10 +64,10 @@ export default function Home() {
             style={{ opacity: taglineOpacity, y: taglineY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white text-center max-w-3xl drop-shadow-lg">
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg">
               AI-Powered Social Media Growth
             </h2>
-            <p className="mt-6 text-lg md:text-xl text-white/70 text-center max-w-xl drop-shadow-md">
+            <p className="mt-6 text-lg md:text-xl text-green-600/80 text-center max-w-xl drop-shadow-md">
               Generate, schedule, and post — all on autopilot.
             </p>
           </motion.div>
@@ -77,7 +77,7 @@ export default function Home() {
             style={{ opacity: featureOpacity, y: featureY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white text-center max-w-3xl drop-shadow-lg">
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg">
               One Click. Explosive Growth.
             </h2>
           </motion.div>
@@ -87,7 +87,7 @@ export default function Home() {
             style={{ opacity: ctaOpacity, y: ctaY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white text-center max-w-3xl drop-shadow-lg mb-8">
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg mb-8">
               Ready to Transform Your Social Presence?
             </h2>
             <motion.button
