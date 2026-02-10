@@ -51,7 +51,7 @@ export default function Home() {
               </h1>
             </div>
             <div className="mt-4 rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-8 py-4 md:px-12 md:py-5">
-              <p className="text-2xl md:text-5xl text-green-600/80 text-center max-w-3xl drop-shadow-md text-balance">
+              <p className="text-2xl md:text-5xl text-black text-center max-w-3xl drop-shadow-md text-balance">
                 {t("hero.subtitle")}
               </p>
             </div>
@@ -61,7 +61,7 @@ export default function Home() {
               className="mt-10 flex flex-col items-center"
             >
               <div className="rounded-xl border border-green-600 bg-white/30 px-8 py-3">
-                <span className="text-green-600 font-semibold text-lg tracking-wide">
+                <span className="text-black font-semibold text-lg tracking-wide">
                   {t("hero.scrollToLaunch")}
                 </span>
               </div>
@@ -74,10 +74,10 @@ export default function Home() {
             style={{ opacity: taglineOpacity, y: taglineY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg text-balance">
+            <h2 className="text-4xl md:text-6xl font-bold text-black text-center max-w-3xl drop-shadow-lg text-balance">
               {t("tagline.heading")}
             </h2>
-            <p className="mt-6 text-lg md:text-xl text-green-600/80 text-center max-w-xl drop-shadow-md text-balance">
+            <p className="mt-6 text-lg md:text-xl text-black text-center max-w-xl drop-shadow-md text-balance">
               {t("tagline.subheading")}
             </p>
           </motion.div>
@@ -87,7 +87,7 @@ export default function Home() {
             style={{ opacity: featureOpacity, y: featureY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg text-balance">
+            <h2 className="text-4xl md:text-6xl font-bold text-black text-center max-w-3xl drop-shadow-lg text-balance">
               {t("feature.heading")}
             </h2>
           </motion.div>
@@ -97,7 +97,7 @@ export default function Home() {
             style={{ opacity: ctaOpacity, y: ctaY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg mb-8 text-balance">
+            <h2 className="text-4xl md:text-6xl font-bold text-black text-center max-w-3xl drop-shadow-lg mb-8 text-balance">
               {t("cta.heading")}
             </h2>
             <motion.button
