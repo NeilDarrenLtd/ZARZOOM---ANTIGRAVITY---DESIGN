@@ -37,14 +37,14 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
 
             for (let i = 0; i <= frameCount; i++) {
                 const img = new Image();
-                // Assuming filenames are 000.jpg, 001.jpg etc. as renamed
+                img.crossOrigin = "anonymous";
                 const filename = `/sequence/${i.toString().padStart(3, "0")}.jpg`;
                 img.src = filename;
-                await new Promise((resolve, reject) => {
+                await new Promise((resolve) => {
                     img.onload = resolve;
                     img.onerror = () => {
                         console.warn(`Failed to load frame ${i}`);
-                        resolve(null); // Proceed anyway to avoid breaking everything
+                        resolve(null);
                     };
                 });
                 loadedImages.push(img);
@@ -55,7 +55,10 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             setIsLoaded(true);
         };
 
-        loadImages();
+        loadImages().catch((err) => {
+            console.warn("Failed to load image sequence:", err);
+            setIsLoaded(true);
+        });
     }, []);
 
     useEffect(() => {
