@@ -133,19 +133,10 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
         return () => unsubscribe();
     }, [images, frameIndex]);
 
-    // Off-white background matching the animation frames
-    const bgColor = "#f5f5f0";
-
     return (
-        <div
-            className={cn("fixed top-0 left-0 w-full h-screen z-0 flex items-center justify-center", className)}
-            style={{ backgroundColor: bgColor }}
-        >
+        <div className={cn("fixed top-0 left-0 w-full h-screen z-0 bg-white flex items-center justify-center", className)}>
             {!isLoaded && (
-                <div
-                    className="absolute inset-0 flex items-center justify-center z-50"
-                    style={{ backgroundColor: bgColor }}
-                >
+                <div className="absolute inset-0 flex items-center justify-center bg-white z-50">
                     <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-green-600 transition-all duration-100 ease-out"
