@@ -14,6 +14,7 @@ export default function Home() {
   const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
 
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
