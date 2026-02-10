@@ -37,7 +37,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#" className="flex-shrink-0">
             <img
-              src="/images/zarzoom-logo.jpg"
+              src="/images/zarzoom-logo-v4.png"
               alt="ZARZOOM - Autopilot Your Socials in Seconds"
               className="h-10 md:h-14 w-auto rounded-md"
             />
