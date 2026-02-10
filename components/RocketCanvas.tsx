@@ -1,14 +1,16 @@
 "use client";
 
-import { useScroll, useSpring, useTransform, MotionValue } from "framer-motion";
+import { useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface RocketCanvasProps {
     className?: string; // Additional classes
 }
 
 export default function RocketCanvas({ className }: RocketCanvasProps) {
+    const { t } = useI18n();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -31,31 +33,54 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
     const frameIndex = useTransform(smoothScroll, [0, 1], [0, frameCount]);
 
     useEffect(() => {
-        // Preload images
+        // Preload images in parallel batches for fast loading
         const loadImages = async () => {
-            const loadedImages: HTMLImageElement[] = [];
+            const BATCH_SIZE = 20;
+            const allImages: HTMLImageElement[] = new Array(frameCount + 1);
+            let loaded = 0;
+            let successCount = 0;
 
-            for (let i = 0; i <= frameCount; i++) {
-                const img = new Image();
-                // Assuming filenames are 000.jpg, 001.jpg etc. as renamed
-                const filename = `/sequence/${i.toString().padStart(3, "0")}.jpg`;
-                img.src = filename;
-                await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = () => {
-                        console.warn(`Failed to load frame ${i}`);
-                        resolve(null); // Proceed anyway to avoid breaking everything
-                    };
-                });
-                loadedImages.push(img);
-                setLoadProgress(Math.round(((i + 1) / (frameCount + 1)) * 100));
+            for (let batch = 0; batch <= frameCount; batch += BATCH_SIZE) {
+                const batchEnd = Math.min(batch + BATCH_SIZE - 1, frameCount);
+                const promises = [];
+
+                for (let i = batch; i <= batchEnd; i++) {
+                    const img = new window.Image();
+                    img.crossOrigin = "anonymous";
+                    img.src = `/sequence/${i.toString().padStart(3, "0")}.jpg`;
+                    promises.push(
+                        new Promise<void>((resolve) => {
+                            img.onload = () => {
+                                allImages[i] = img;
+                                loaded++;
+                                successCount++;
+                                setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
+                                resolve();
+                            };
+                            img.onerror = () => {
+                                // Don't store failed images
+                                loaded++;
+                                setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
+                                resolve();
+                            };
+                        })
+                    );
+                }
+
+                await Promise.all(promises);
             }
 
-            setImages(loadedImages);
+            // Only set images if at least some loaded successfully
+            if (successCount > 0) {
+                setImages(allImages);
+            }
             setIsLoaded(true);
         };
 
-        loadImages();
+        loadImages().catch((err) => {
+            console.warn("Failed to load image sequence:", err);
+            setIsLoaded(true);
+        });
     }, []);
 
     useEffect(() => {
@@ -66,18 +91,19 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
 
         if (!ctx) return;
 
-        // Set canvas size (handled by CSS generally, but we need internal resolution)
-        // We'll set it to match the image aspect ratio or window
-        // For now, let's look at the first image dimensions once loaded
-        // User requested trimming black lines (horizontal crop). 
-        // Let's assume a standard letterbox/pillarbox removal is needed.
-        // Adjust TRIM_FACTOR as needed (e.g., 0.1 = 10% from left and 10% from right)
         const TRIM_FACTOR = 0.12;
 
-        if (images[0]) {
-            const cropX = images[0].naturalWidth * TRIM_FACTOR;
-            canvas.width = images[0].naturalWidth - (cropX * 2);
-            canvas.height = images[0].naturalHeight;
+        // Find the first valid image to set canvas dimensions
+        const firstValidImage = images.find((img) => img && img.naturalWidth > 0);
+        if (firstValidImage) {
+            const cropX = firstValidImage.naturalWidth * TRIM_FACTOR;
+            canvas.width = firstValidImage.naturalWidth - (cropX * 2);
+            canvas.height = firstValidImage.naturalHeight;
+        } else {
+            // No valid images loaded - set a default canvas size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            return;
         }
 
         const render = () => {
@@ -87,25 +113,21 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             );
 
             const img = images[index];
-            if (img) {
+            if (img && img.naturalWidth > 0) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 const cropX = img.naturalWidth * TRIM_FACTOR;
                 const sourceWidth = img.naturalWidth - (cropX * 2);
 
-                // Draw image with cropping
                 ctx.drawImage(
                     img,
-                    cropX, 0, sourceWidth, img.naturalHeight, // Source rectangle
-                    0, 0, canvas.width, canvas.height         // Destination rectangle
+                    cropX, 0, sourceWidth, img.naturalHeight,
+                    0, 0, canvas.width, canvas.height
                 );
             }
         };
 
-        // Subscribing to frameIndex changes
         const unsubscribe = frameIndex.on("change", render);
-
-        // Initial render
         render();
 
         return () => unsubscribe();
@@ -121,13 +143,16 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                             style={{ width: `${loadProgress}%` }}
                         />
                     </div>
-                    <p className="absolute mt-8 text-sm text-gray-500 font-medium">Loading Experience...</p>
+                    <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
-            <canvas
-                ref={canvasRef}
-                className="w-full h-full object-cover"
-            />
+            {/* Desktop: full width, capped height. Mobile: 20% larger max height */}
+            <div className="w-full h-full flex items-center justify-center max-h-[918px] md:max-h-[765px]">
+                <canvas
+                    ref={canvasRef}
+                    className="w-full h-full object-contain"
+                />
+            </div>
         </div>
     );
 }
