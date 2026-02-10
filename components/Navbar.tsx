@@ -51,7 +51,7 @@ export default function Navbar() {
                 href={link.href}
                 className={`text-sm font-semibold tracking-wide uppercase transition-colors duration-200 ${
                   scrolled
-                    ? "text-gray-700 hover:text-[#6AB04C]"
+                    ? "text-gray-700 hover:text-green-600"
                     : "text-white hover:text-green-200"
                 }`}
               >
@@ -64,7 +64,7 @@ export default function Navbar() {
           <div className="hidden md:block">
             <a
               href="#cta"
-              className="bg-[#6AB04C] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#5A9A3E] transition-colors duration-200 tracking-wide uppercase"
+              className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
               Get Started
             </a>
@@ -105,7 +105,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 hover:text-[#6AB04C] hover:bg-[#6AB04C]/10 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
+                  className="text-gray-700 hover:text-green-600 hover:bg-green-50 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
                 >
                   {link.label}
                 </a>
@@ -114,7 +114,7 @@ export default function Navbar() {
                 <a
                   href="#cta"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block bg-[#6AB04C] text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-[#5A9A3E] transition-colors text-center tracking-wide uppercase"
+                  className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >
                   Get Started
                 </a>
