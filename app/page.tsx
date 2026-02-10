@@ -44,21 +44,23 @@ export default function Home() {
             style={{ opacity: heroOpacity, scale: heroScale }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h1 className="text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">
-              ZARZOOM
-            </h1>
-            <p className="mt-4 text-2xl md:text-5xl text-green-600/80 text-center max-w-3xl drop-shadow-md">
-              Autopilot Your Socials in Seconds
-            </p>
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="mt-12"
-            >
-              <div className="rounded-xl border border-green-600 bg-white/30 backdrop-blur-sm px-8 py-3">
-                <span className="text-green-600 font-semibold text-lg tracking-wide">Scroll to Launch</span>
-              </div>
-            </motion.div>
+            <div className="rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-10 py-10 md:px-16 md:py-14 flex flex-col items-center">
+              <h1 className="text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">
+                ZARZOOM
+              </h1>
+              <p className="mt-4 text-2xl md:text-5xl text-green-600/80 text-center max-w-3xl drop-shadow-md">
+                Autopilot Your Socials in Seconds
+              </p>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+                className="mt-10"
+              >
+                <div className="rounded-xl border border-green-600 bg-white/30 px-8 py-3">
+                  <span className="text-green-600 font-semibold text-lg tracking-wide">Scroll to Launch</span>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
 
           {/* Text Overlay: Tagline */}
