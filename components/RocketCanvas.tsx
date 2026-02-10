@@ -1,6 +1,6 @@
 "use client";
 
-import { useScroll, useSpring, useTransform, MotionValue } from "framer-motion";
+import { useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
