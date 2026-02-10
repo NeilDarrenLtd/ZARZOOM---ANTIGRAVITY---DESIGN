@@ -8,7 +8,9 @@ export default function TestimonialGrid() {
   const { translations } = useI18n();
   const { t } = useI18n();
 
-  const testimonials = translations.testimonials.items;
+  const testimonials =
+    (translations as Record<string, Record<string, unknown>>)?.testimonials
+      ?.items as Array<{ name: string; role: string; content: string }> ?? [];
 
   return (
     <section className="py-24 bg-white relative z-10">

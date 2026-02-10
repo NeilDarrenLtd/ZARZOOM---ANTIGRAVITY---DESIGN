@@ -5,9 +5,10 @@ import {
   useContext,
   useState,
   useCallback,
-  useEffect,
   type ReactNode,
 } from "react";
+
+import en from "@/locales/en.json";
 
 // Supported languages list
 export const languages = [
@@ -64,18 +65,10 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState("en");
-  const [translations, setTranslations] = useState<Translations>({});
-
-  // Dynamically load translations to avoid bundling large JSON into webpack cache
-  useEffect(() => {
-    import("@/locales/en.json").then((mod) => {
-      setTranslations(mod.default);
-    });
-  }, []);
+  const [translations] = useState<Translations>(en as unknown as Translations);
 
   const t = useCallback(
     (key: string): string => {
-      if (Object.keys(translations).length === 0) return "";
       return getNestedValue(translations, key);
     },
     [translations]
