@@ -133,27 +133,8 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
         return () => unsubscribe();
     }, [images, frameIndex]);
 
-    // Sample the top-left pixel colour of the first loaded frame to match the background
-    const [bgColor, setBgColor] = useState("#ffffff");
-
-    useEffect(() => {
-        if (images.length === 0) return;
-        const firstValid = images.find((img) => img && img.naturalWidth > 0);
-        if (!firstValid) return;
-
-        try {
-            const sampleCanvas = document.createElement("canvas");
-            sampleCanvas.width = 1;
-            sampleCanvas.height = 1;
-            const sampleCtx = sampleCanvas.getContext("2d");
-            if (!sampleCtx) return;
-            sampleCtx.drawImage(firstValid, 0, 0, 1, 1, 0, 0, 1, 1);
-            const [r, g, b] = sampleCtx.getImageData(0, 0, 1, 1).data;
-            setBgColor(`rgb(${r}, ${g}, ${b})`);
-        } catch {
-            // CORS or other error - keep default
-        }
-    }, [images]);
+    // Off-white background matching the animation frames
+    const bgColor = "#f5f5f0";
 
     return (
         <div
