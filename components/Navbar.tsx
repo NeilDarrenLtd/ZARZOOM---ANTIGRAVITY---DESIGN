@@ -51,7 +51,7 @@ export default function Navbar() {
                 href={link.href}
                 className={`text-sm font-semibold tracking-wide uppercase transition-colors duration-200 ${
                   scrolled
-                    ? "text-gray-700 hover:text-green-600"
+                    ? "text-green-600 hover:text-green-700"
                     : "text-white hover:text-green-200"
                 }`}
               >
@@ -105,7 +105,7 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-gray-700 hover:text-green-600 hover:bg-green-50 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
+                  className="text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
                 >
                   {link.label}
                 </a>
