@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function updateSession(request: NextRequest) {
   const isProtectedRoute =
     request.nextUrl.pathname.startsWith('/dashboard') ||
-    request.nextUrl.pathname.startsWith('/admin')
+    (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login'))
 
   // For public routes, skip Supabase auth entirely to avoid blocking page loads
   if (!isProtectedRoute) {
@@ -46,14 +46,14 @@ export async function updateSession(request: NextRequest) {
     // Protect /dashboard routes - redirect to login if not authenticated
     if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
       const url = request.nextUrl.clone()
-      url.pathname = '/login-launch'
+      url.pathname = '/auth'
       return NextResponse.redirect(url)
     }
 
-    // Protect /admin routes - redirect to login if not authenticated
-    if (request.nextUrl.pathname.startsWith('/admin') && !user) {
+    // Protect /admin routes - redirect to admin login if not authenticated
+    if (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login') && !user) {
       const url = request.nextUrl.clone()
-      url.pathname = '/login-launch'
+      url.pathname = '/admin/login'
       return NextResponse.redirect(url)
     }
 
@@ -71,7 +71,7 @@ export async function updateSession(request: NextRequest) {
   } catch {
     // If Supabase auth fails, redirect protected routes to login
     const url = request.nextUrl.clone()
-    url.pathname = '/login-launch'
+    url.pathname = '/auth'
     return NextResponse.redirect(url)
   }
 }

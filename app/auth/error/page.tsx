@@ -23,7 +23,7 @@ export default function AuthErrorPage() {
             {t("auth.authErrorMessage")}
           </p>
           <Link
-            href="/login-launch"
+            href="/auth"
             className="mt-6 inline-block bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-colors text-sm uppercase tracking-wide"
           >
             {t("auth.tryAgain")}

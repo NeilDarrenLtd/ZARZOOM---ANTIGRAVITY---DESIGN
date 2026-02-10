@@ -72,7 +72,7 @@ export default function SiteNavbar() {
             <LanguageSwitcher />
 
             <Link
-              href="/login-launch"
+              href="/auth"
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
               {t("nav.getStarted")}
@@ -177,7 +177,7 @@ export default function SiteNavbar() {
 
               <div className="pt-2 px-4">
                 <Link
-                  href="/login-launch"
+                  href="/auth"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >

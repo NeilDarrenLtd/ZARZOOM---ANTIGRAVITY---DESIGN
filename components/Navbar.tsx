@@ -88,12 +88,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
 
-            <a
-              href="#cta"
+            <Link
+              href="/auth"
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
               {t("nav.getStarted")}
-            </a>
+            </Link>
 
             {/* Desktop 3-line submenu toggle */}
             <div ref={subMenuRef} className="relative">
@@ -193,13 +193,13 @@ export default function Navbar() {
               </div>
 
               <div className="pt-2 px-4">
-                <a
-                  href="#cta"
+                <Link
+                  href="/auth"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >
                   {t("nav.getStarted")}
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
