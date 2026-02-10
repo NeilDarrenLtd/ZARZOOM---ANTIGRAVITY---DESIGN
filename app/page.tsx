@@ -1,5 +1,6 @@
 "use client";
 
+import Navbar from "@/components/Navbar";
 import RocketCanvas from "@/components/RocketCanvas";
 import TestimonialGrid from "@/components/TestimonialGrid";
 import FinalCTA from "@/components/FinalCTA";
@@ -33,6 +34,9 @@ export default function Home() {
 
   return (
     <main className="bg-white min-h-screen">
+      {/* Sticky Navigation Bar */}
+      <Navbar />
+
       {/* Scroll Track - 500vh */}
       <div ref={containerRef} className="h-[500vh] relative">
 
