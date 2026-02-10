@@ -31,27 +31,42 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
     const frameIndex = useTransform(smoothScroll, [0, 1], [0, frameCount]);
 
     useEffect(() => {
-        // Preload images
+        // Preload images in parallel batches for fast loading
         const loadImages = async () => {
-            const loadedImages: HTMLImageElement[] = [];
+            const BATCH_SIZE = 20;
+            const allImages: HTMLImageElement[] = new Array(frameCount + 1);
+            let loaded = 0;
 
-            for (let i = 0; i <= frameCount; i++) {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                const filename = `/sequence/${i.toString().padStart(3, "0")}.jpg`;
-                img.src = filename;
-                await new Promise((resolve) => {
-                    img.onload = resolve;
-                    img.onerror = () => {
-                        console.warn(`Failed to load frame ${i}`);
-                        resolve(null);
-                    };
-                });
-                loadedImages.push(img);
-                setLoadProgress(Math.round(((i + 1) / (frameCount + 1)) * 100));
+            for (let batch = 0; batch <= frameCount; batch += BATCH_SIZE) {
+                const batchEnd = Math.min(batch + BATCH_SIZE - 1, frameCount);
+                const promises = [];
+
+                for (let i = batch; i <= batchEnd; i++) {
+                    const img = new window.Image();
+                    img.crossOrigin = "anonymous";
+                    img.src = `/sequence/${i.toString().padStart(3, "0")}.jpg`;
+                    promises.push(
+                        new Promise<void>((resolve) => {
+                            img.onload = () => {
+                                allImages[i] = img;
+                                loaded++;
+                                setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
+                                resolve();
+                            };
+                            img.onerror = () => {
+                                allImages[i] = img;
+                                loaded++;
+                                setLoadProgress(Math.round((loaded / (frameCount + 1)) * 100));
+                                resolve();
+                            };
+                        })
+                    );
+                }
+
+                await Promise.all(promises);
             }
 
-            setImages(loadedImages);
+            setImages(allImages);
             setIsLoaded(true);
         };
 
