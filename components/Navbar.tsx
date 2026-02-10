@@ -3,27 +3,30 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-
-const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
-];
-
-const subMenuLinks = [
-  { label: "Support", href: "#support" },
-  { label: "User T&C's", href: "#user-terms" },
-  { label: "Website T&C's", href: "#website-terms" },
-  { label: "Privacy", href: "#privacy" },
-  { label: "Cookies", href: "#cookies" },
-];
+import { useI18n } from "@/lib/i18n";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
   const subMenuRef = useRef<HTMLDivElement>(null);
+
+  const navLinks = [
+    { labelKey: "nav.about", href: "#about" },
+    { labelKey: "nav.features", href: "#features" },
+    { labelKey: "nav.pricing", href: "#pricing" },
+    { labelKey: "nav.contact", href: "#contact" },
+  ];
+
+  const subMenuLinks = [
+    { labelKey: "nav.support", href: "#support" },
+    { labelKey: "nav.userTerms", href: "#user-terms" },
+    { labelKey: "nav.websiteTerms", href: "#website-terms" },
+    { labelKey: "nav.privacy", href: "#privacy" },
+    { labelKey: "nav.cookies", href: "#cookies" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +37,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close desktop submenu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -72,22 +74,24 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <a
-                key={link.label}
+                key={link.labelKey}
                 href={link.href}
                 className="text-sm font-semibold tracking-wide uppercase transition-colors duration-200 text-green-600 hover:text-green-700"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
           </div>
 
-          {/* Desktop Right Side: CTA + Submenu Toggle */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Desktop Right Side: Language + CTA + Submenu */}
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
+
             <a
               href="#cta"
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
-              Get Started
+              {t("nav.getStarted")}
             </a>
 
             {/* Desktop 3-line submenu toggle */}
@@ -104,7 +108,6 @@ export default function Navbar() {
                 )}
               </button>
 
-              {/* Desktop Dropdown */}
               <AnimatePresence>
                 {desktopSubMenuOpen && (
                   <motion.div
@@ -117,12 +120,12 @@ export default function Navbar() {
                     <div className="py-2">
                       {subMenuLinks.map((link) => (
                         <a
-                          key={link.label}
+                          key={link.labelKey}
                           href={link.href}
                           onClick={() => setDesktopSubMenuOpen(false)}
                           className="block px-4 py-2.5 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 transition-colors"
                         >
-                          {link.label}
+                          {t(link.labelKey)}
                         </a>
                       ))}
                     </div>
@@ -158,41 +161,43 @@ export default function Navbar() {
             className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 overflow-hidden"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
-              {/* Main Nav Links */}
               {navLinks.map((link) => (
                 <a
-                  key={link.label}
+                  key={link.labelKey}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </a>
               ))}
 
-              {/* Subtle Separator */}
               <div className="my-2 mx-4 border-t border-green-600/20" />
 
-              {/* Sub Menu Links */}
               {subMenuLinks.map((link) => (
                 <a
-                  key={link.label}
+                  key={link.labelKey}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-green-600/70 hover:text-green-700 hover:bg-green-50 font-medium text-xs tracking-wide uppercase px-4 py-2.5 rounded-lg transition-colors"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </a>
               ))}
 
-              {/* CTA Button */}
+              <div className="my-2 mx-4 border-t border-green-600/20" />
+
+              <div className="px-4 pb-1">
+                <LanguageSwitcher />
+              </div>
+
               <div className="pt-2 px-4">
                 <a
                   href="#cta"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >
-                  Get Started
+                  {t("nav.getStarted")}
                 </a>
               </div>
             </div>

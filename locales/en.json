@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Social Media Autopilot",
+    "description": "Automate your social media growth with AI-powered content generation and scheduling."
+  },
+  "nav": {
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "getStarted": "Get Started",
+    "support": "Support",
+    "userTerms": "User T&C's",
+    "websiteTerms": "Website T&C's",
+    "privacy": "Privacy",
+    "cookies": "Cookies"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilot Your Socials in Seconds",
+    "scrollToLaunch": "Scroll to Launch"
+  },
+  "tagline": {
+    "heading": "AI-Powered Social Media Growth",
+    "subheading": "Generate, schedule, and post — all on autopilot."
+  },
+  "feature": {
+    "heading": "One Click. Explosive Growth."
+  },
+  "cta": {
+    "heading": "Ready to Transform Your Social Presence?",
+    "button": "Start Free Trial"
+  },
+  "testimonials": {
+    "heading": "Trusted by Industry Leaders",
+    "subheading": "Join 10,000+ marketers scaling with ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM doubled our reach in 30 days. The AI content generation is indistinguishable from human writing."
+      },
+      {
+        "name": "David Chen",
+        "role": "Founder, GrowthStack",
+        "content": "The autopilot feature is a game changer. I spend 5 minutes a week on social now."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Influence Lead",
+        "content": "Explosive growth indeed. Our engagement metrics are up 400% across all platforms."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Ready to Blast Off?",
+    "subheading": "Start your 14-day free trial. No credit card required.",
+    "button": "Get Started Now"
+  },
+  "loading": {
+    "text": "Loading Experience..."
+  }
+}

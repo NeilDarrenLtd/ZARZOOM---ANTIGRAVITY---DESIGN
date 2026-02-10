@@ -7,8 +7,11 @@ import FinalCTA from "@/components/FinalCTA";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import DynamicSEO from "@/components/DynamicSEO";
 
 export default function Home() {
+  const { t } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -30,12 +33,10 @@ export default function Home() {
 
   return (
     <main className="bg-white min-h-screen">
-      {/* Sticky Navigation Bar */}
+      <DynamicSEO />
       <Navbar />
 
-      {/* Scroll Track - 500vh */}
       <div ref={containerRef} className="relative" style={{ height: "500vh" }}>
-        {/* Rocket Canvas (Sticky Background) */}
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <RocketCanvas />
 
@@ -46,12 +47,12 @@ export default function Home() {
           >
             <div className="rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-10 py-6 md:px-16 md:py-8">
               <h1 className="text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">
-                ZARZOOM
+                {t("hero.title")}
               </h1>
             </div>
             <div className="mt-4 rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-8 py-4 md:px-12 md:py-5">
-              <p className="text-2xl md:text-5xl text-green-600/80 text-center max-w-3xl drop-shadow-md">
-                Autopilot Your Socials in Seconds
+              <p className="text-2xl md:text-5xl text-green-600/80 text-center max-w-3xl drop-shadow-md text-balance">
+                {t("hero.subtitle")}
               </p>
             </div>
             <motion.div
@@ -60,7 +61,9 @@ export default function Home() {
               className="mt-10 flex flex-col items-center"
             >
               <div className="rounded-xl border border-green-600 bg-white/30 px-8 py-3">
-                <span className="text-green-600 font-semibold text-lg tracking-wide">Scroll to Launch</span>
+                <span className="text-green-600 font-semibold text-lg tracking-wide">
+                  {t("hero.scrollToLaunch")}
+                </span>
               </div>
               <ArrowDown className="w-8 h-8 text-green-600 mt-3" />
             </motion.div>
@@ -71,11 +74,11 @@ export default function Home() {
             style={{ opacity: taglineOpacity, y: taglineY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg">
-              AI-Powered Social Media Growth
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg text-balance">
+              {t("tagline.heading")}
             </h2>
-            <p className="mt-6 text-lg md:text-xl text-green-600/80 text-center max-w-xl drop-shadow-md">
-              Generate, schedule, and post — all on autopilot.
+            <p className="mt-6 text-lg md:text-xl text-green-600/80 text-center max-w-xl drop-shadow-md text-balance">
+              {t("tagline.subheading")}
             </p>
           </motion.div>
 
@@ -84,8 +87,8 @@ export default function Home() {
             style={{ opacity: featureOpacity, y: featureY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg">
-              One Click. Explosive Growth.
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg text-balance">
+              {t("feature.heading")}
             </h2>
           </motion.div>
 
@@ -94,21 +97,20 @@ export default function Home() {
             style={{ opacity: ctaOpacity, y: ctaY }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg mb-8">
-              Ready to Transform Your Social Presence?
+            <h2 className="text-4xl md:text-6xl font-bold text-green-600 text-center max-w-3xl drop-shadow-lg mb-8 text-balance">
+              {t("cta.heading")}
             </h2>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-green-600 text-white text-lg px-10 py-4 rounded-full font-bold hover:bg-green-700 transition-colors shadow-2xl"
             >
-              Start Free Trial
+              {t("cta.button")}
             </motion.button>
           </motion.div>
         </div>
       </div>
 
-      {/* Below the Scroll Animation */}
       <TestimonialGrid />
       <FinalCTA />
     </main>

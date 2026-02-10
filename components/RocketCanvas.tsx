@@ -3,12 +3,14 @@
 import { useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface RocketCanvasProps {
     className?: string; // Additional classes
 }
 
 export default function RocketCanvas({ className }: RocketCanvasProps) {
+    const { t } = useI18n();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -139,7 +141,7 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                             style={{ width: `${loadProgress}%` }}
                         />
                     </div>
-                    <p className="absolute mt-8 text-sm text-gray-500 font-medium">Loading Experience...</p>
+                    <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
             <canvas
