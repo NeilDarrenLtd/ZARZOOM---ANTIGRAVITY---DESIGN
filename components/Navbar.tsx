@@ -52,7 +52,7 @@ export default function Navbar() {
                 className={`text-sm font-semibold tracking-wide uppercase transition-colors duration-200 ${
                   scrolled
                     ? "text-green-600 hover:text-green-700"
-                    : "text-white hover:text-green-200"
+                    : "text-green-600 hover:text-green-700"
                 }`}
               >
                 {link.label}
@@ -75,8 +75,8 @@ export default function Navbar() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
               scrolled
-                ? "text-gray-700 hover:bg-gray-100"
-                : "text-white hover:bg-white/10"
+                ? "text-green-600 hover:bg-gray-100"
+                : "text-green-600 hover:bg-white/10"
             }`}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >

@@ -57,11 +57,12 @@ export default function Home() {
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="mt-10"
+              className="mt-10 flex flex-col items-center"
             >
               <div className="rounded-xl border border-green-600 bg-white/30 px-8 py-3">
                 <span className="text-green-600 font-semibold text-lg tracking-wide">Scroll to Launch</span>
               </div>
+              <ArrowDown className="w-8 h-8 text-green-600 mt-3" />
             </motion.div>
           </motion.div>
 
