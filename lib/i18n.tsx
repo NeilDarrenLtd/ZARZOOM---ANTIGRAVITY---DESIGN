@@ -45,7 +45,11 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   let current: unknown = obj;
 
   for (const key of keys) {
-    if (current === null || current === undefined || typeof current !== "object") {
+    if (
+      current === null ||
+      current === undefined ||
+      typeof current !== "object"
+    ) {
       return path;
     }
     current = (current as Record<string, unknown>)[key];
@@ -62,7 +66,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState("en");
   const [translations, setTranslations] = useState<Translations>({});
 
-  // Dynamically load translations to avoid bundling large JSON into the webpack cache
+  // Dynamically load translations to avoid bundling large JSON into webpack cache
   useEffect(() => {
     import("@/locales/en.json").then((mod) => {
       setTranslations(mod.default);
@@ -73,53 +77,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     (key: string): string => {
       if (Object.keys(translations).length === 0) return "";
       return getNestedValue(translations, key);
-    },
-    [translations]
-  );
-
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t, translations }}>
-      {children}
-    </I18nContext.Provider>
-  );
-}
-
-export function useI18n(): I18nContextType {
-  const context = useContext(I18nContext);
-  if (!context) {
-    throw new Error("useI18n must be used within an I18nProvider");
-  }
-  return context;
-}
-
-const I18nContext = createContext<I18nContextType | null>(null);
-
-// Helper to get a nested value from an object using a dot-separated key
-function getNestedValue(obj: Record<string, unknown>, path: string): string {
-  const keys = path.split(".");
-  let current: unknown = obj;
-
-  for (const key of keys) {
-    if (current === null || current === undefined || typeof current !== "object") {
-      return path;
-    }
-    current = (current as Record<string, unknown>)[key];
-  }
-
-  if (typeof current === "string") {
-    return current;
-  }
-
-  return path;
-}
-
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState("en");
-  const [translations] = useState<Translations>(en);
-
-  const t = useCallback(
-    (key: string): string => {
-      return getNestedValue(translations as unknown as Record<string, unknown>, key);
     },
     [translations]
   );
