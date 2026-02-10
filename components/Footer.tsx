@@ -94,7 +94,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/user-terms"
+                  href="/terms-user"
                   className="text-sm text-gray-400 hover:text-green-400 transition-colors"
                 >
                   {t("footer.userTerms")}
@@ -102,7 +102,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/website-terms"
+                  href="/terms-website"
                   className="text-sm text-gray-400 hover:text-green-400 transition-colors"
                 >
                   {t("footer.websiteTerms")}

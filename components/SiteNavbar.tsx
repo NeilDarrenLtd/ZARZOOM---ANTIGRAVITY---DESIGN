@@ -1,24 +1,23 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function SiteNavbar() {
   const { t } = useI18n();
-  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
   const subMenuRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
-    { labelKey: "nav.about", href: "#about" },
-    { labelKey: "nav.features", href: "#features" },
-    { labelKey: "nav.pricing", href: "#pricing" },
-    { labelKey: "nav.contact", href: "#contact" },
+    { labelKey: "nav.about", href: "/#about" },
+    { labelKey: "nav.features", href: "/#features" },
+    { labelKey: "nav.pricing", href: "/#pricing" },
+    { labelKey: "nav.contact", href: "/#contact" },
   ];
 
   const subMenuLinks = [
@@ -30,15 +29,6 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         subMenuRef.current &&
@@ -47,40 +37,33 @@ export default function Navbar() {
         setDesktopSubMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-md"
-          : "bg-transparent"
-      }`}
-    >
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex-shrink-0">
+          <Link href="/" className="flex-shrink-0">
             <img
               src="/images/zarzoom-logo-v4.png"
               alt="ZARZOOM - Autopilot Your Socials in Seconds"
               className="h-10 md:h-14 w-auto rounded-md"
             />
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.labelKey}
                 href={link.href}
                 className="text-sm font-semibold tracking-wide uppercase transition-colors duration-200 text-green-600 hover:text-green-700"
               >
                 {t(link.labelKey)}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -88,12 +71,12 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
 
-            <a
-              href="#cta"
+            <Link
+              href="/login-launch"
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
               {t("nav.getStarted")}
-            </a>
+            </Link>
 
             {/* Desktop 3-line submenu toggle */}
             <div ref={subMenuRef} className="relative">
@@ -163,14 +146,14 @@ export default function Navbar() {
           >
             <div className="px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.labelKey}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold text-sm tracking-wide uppercase px-4 py-3 rounded-lg transition-colors"
                 >
                   {t(link.labelKey)}
-                </a>
+                </Link>
               ))}
 
               <div className="my-2 mx-4 border-t border-green-600/20" />
@@ -193,13 +176,13 @@ export default function Navbar() {
               </div>
 
               <div className="pt-2 px-4">
-                <a
-                  href="#cta"
+                <Link
+                  href="/login-launch"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >
                   {t("nav.getStarted")}
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
