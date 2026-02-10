@@ -133,10 +133,38 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
         return () => unsubscribe();
     }, [images, frameIndex]);
 
+    // Sample the top-left pixel colour of the first loaded frame to match the background
+    const [bgColor, setBgColor] = useState("#ffffff");
+
+    useEffect(() => {
+        if (images.length === 0) return;
+        const firstValid = images.find((img) => img && img.naturalWidth > 0);
+        if (!firstValid) return;
+
+        try {
+            const sampleCanvas = document.createElement("canvas");
+            sampleCanvas.width = 1;
+            sampleCanvas.height = 1;
+            const sampleCtx = sampleCanvas.getContext("2d");
+            if (!sampleCtx) return;
+            sampleCtx.drawImage(firstValid, 0, 0, 1, 1, 0, 0, 1, 1);
+            const [r, g, b] = sampleCtx.getImageData(0, 0, 1, 1).data;
+            setBgColor(`rgb(${r}, ${g}, ${b})`);
+        } catch {
+            // CORS or other error - keep default
+        }
+    }, [images]);
+
     return (
-        <div className={cn("fixed top-0 left-0 w-full h-screen z-0 bg-white flex items-center justify-center", className)}>
+        <div
+            className={cn("fixed top-0 left-0 w-full h-screen z-0 flex items-center justify-center", className)}
+            style={{ backgroundColor: bgColor }}
+        >
             {!isLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-white z-50">
+                <div
+                    className="absolute inset-0 flex items-center justify-center z-50"
+                    style={{ backgroundColor: bgColor }}
+                >
                     <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-green-600 transition-all duration-100 ease-out"
@@ -146,7 +174,8 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                     <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
-            <div className="w-full h-full flex items-center justify-center" style={{ maxWidth: "1224px", maxHeight: "765px" }}>
+            {/* Desktop: full width, capped height. Mobile: 20% larger max height */}
+            <div className="w-full h-full flex items-center justify-center max-h-[918px] md:max-h-[765px]">
                 <canvas
                     ref={canvasRef}
                     className="w-full h-full object-contain"
