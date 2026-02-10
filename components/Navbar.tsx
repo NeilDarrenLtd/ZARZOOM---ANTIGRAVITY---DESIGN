@@ -1,19 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
+  { label: "About", href: "#about" },
   { label: "Features", href: "#features" },
-  { label: "Testimonials", href: "#testimonials" },
   { label: "Pricing", href: "#pricing" },
   { label: "Contact", href: "#contact" },
+];
+
+const subMenuLinks = [
+  { label: "Support", href: "#support" },
+  { label: "User T&C's", href: "#user-terms" },
+  { label: "Website T&C's", href: "#website-terms" },
+  { label: "Privacy", href: "#privacy" },
+  { label: "Cookies", href: "#cookies" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
+  const subMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +32,21 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close desktop submenu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        subMenuRef.current &&
+        !subMenuRef.current.contains(event.target as Node)
+      ) {
+        setDesktopSubMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -49,35 +74,68 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className={`text-sm font-semibold tracking-wide uppercase transition-colors duration-200 ${
-                  scrolled
-                    ? "text-green-600 hover:text-green-700"
-                    : "text-green-600 hover:text-green-700"
-                }`}
+                className="text-sm font-semibold tracking-wide uppercase transition-colors duration-200 text-green-600 hover:text-green-700"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          {/* CTA Button (Desktop) */}
-          <div className="hidden md:block">
+          {/* Desktop Right Side: CTA + Submenu Toggle */}
+          <div className="hidden md:flex items-center gap-4">
             <a
               href="#cta"
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
               Get Started
             </a>
+
+            {/* Desktop 3-line submenu toggle */}
+            <div ref={subMenuRef} className="relative">
+              <button
+                onClick={() => setDesktopSubMenuOpen(!desktopSubMenuOpen)}
+                className="p-2 rounded-lg text-green-600 hover:bg-green-50 transition-colors"
+                aria-label={desktopSubMenuOpen ? "Close submenu" : "Open submenu"}
+              >
+                {desktopSubMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </button>
+
+              {/* Desktop Dropdown */}
+              <AnimatePresence>
+                {desktopSubMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+                  >
+                    <div className="py-2">
+                      {subMenuLinks.map((link) => (
+                        <a
+                          key={link.label}
+                          href={link.href}
+                          onClick={() => setDesktopSubMenuOpen(false)}
+                          className="block px-4 py-2.5 text-sm font-medium text-green-600 hover:text-green-700 hover:bg-green-50 transition-colors"
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`md:hidden p-2 rounded-lg transition-colors ${
-              scrolled
-                ? "text-green-600 hover:bg-gray-100"
-                : "text-green-600 hover:bg-white/10"
-            }`}
+            className="md:hidden p-2 rounded-lg transition-colors text-green-600 hover:bg-green-50"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? (
@@ -89,7 +147,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile / Tablet Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -100,6 +158,7 @@ export default function Navbar() {
             className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 overflow-hidden"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
+              {/* Main Nav Links */}
               {navLinks.map((link) => (
                 <a
                   key={link.label}
@@ -110,6 +169,23 @@ export default function Navbar() {
                   {link.label}
                 </a>
               ))}
+
+              {/* Subtle Separator */}
+              <div className="my-2 mx-4 border-t border-green-600/20" />
+
+              {/* Sub Menu Links */}
+              {subMenuLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-green-600/70 hover:text-green-700 hover:bg-green-50 font-medium text-xs tracking-wide uppercase px-4 py-2.5 rounded-lg transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+
+              {/* CTA Button */}
               <div className="pt-2 px-4">
                 <a
                   href="#cta"
