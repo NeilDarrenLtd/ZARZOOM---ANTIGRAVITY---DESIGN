@@ -93,18 +93,21 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
 
         const TRIM_FACTOR = 0.12;
 
-        // Find the first valid image to set canvas dimensions
+        // Find the first valid image to get source dimensions
         const firstValidImage = images.find((img) => img && img.naturalWidth > 0);
-        if (firstValidImage) {
-            const cropX = firstValidImage.naturalWidth * TRIM_FACTOR;
-            canvas.width = firstValidImage.naturalWidth - (cropX * 2);
-            canvas.height = firstValidImage.naturalHeight;
-        } else {
-            // No valid images loaded - set a default canvas size
+        if (!firstValidImage) {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             return;
         }
+
+        // Size the canvas to fill the viewport
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
 
         const render = () => {
             const index = Math.min(
@@ -116,13 +119,36 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             if (img && img.naturalWidth > 0) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                // Source crop: trim sides by TRIM_FACTOR to keep the focus area
                 const cropX = img.naturalWidth * TRIM_FACTOR;
-                const sourceWidth = img.naturalWidth - (cropX * 2);
+                const srcX = cropX;
+                const srcW = img.naturalWidth - cropX * 2;
+                const srcH = img.naturalHeight;
+
+                // Destination: cover the full canvas while keeping the center
+                const srcAspect = srcW / srcH;
+                const canvasAspect = canvas.width / canvas.height;
+
+                let dstW: number, dstH: number, dstX: number, dstY: number;
+
+                if (canvasAspect > srcAspect) {
+                    // Canvas is wider than source - fit to width, crop top/bottom
+                    dstW = canvas.width;
+                    dstH = canvas.width / srcAspect;
+                    dstX = 0;
+                    dstY = (canvas.height - dstH) / 2;
+                } else {
+                    // Canvas is taller than source - fit to height, crop sides
+                    dstH = canvas.height;
+                    dstW = canvas.height * srcAspect;
+                    dstX = (canvas.width - dstW) / 2;
+                    dstY = 0;
+                }
 
                 ctx.drawImage(
                     img,
-                    cropX, 0, sourceWidth, img.naturalHeight,
-                    0, 0, canvas.width, canvas.height
+                    srcX, 0, srcW, srcH,
+                    dstX, dstY, dstW, dstH
                 );
             }
         };
@@ -130,7 +156,18 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
         const unsubscribe = frameIndex.on("change", render);
         render();
 
-        return () => unsubscribe();
+        // Also re-render on resize so it stays full-bleed
+        const onResize = () => {
+            resizeCanvas();
+            render();
+        };
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            unsubscribe();
+            window.removeEventListener("resize", resizeCanvas);
+            window.removeEventListener("resize", onResize);
+        };
     }, [images, frameIndex]);
 
     return (
@@ -146,13 +183,10 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                     <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
-            {/* Desktop: full width, capped height. Mobile: 20% larger max height */}
-            <div className="w-full h-full flex items-center justify-center max-h-[918px] md:max-h-[765px]">
-                <canvas
-                    ref={canvasRef}
-                    className="w-full h-full object-contain"
-                />
-            </div>
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full"
+            />
         </div>
     );
 }
