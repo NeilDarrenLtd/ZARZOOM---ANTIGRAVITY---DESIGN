@@ -25,8 +25,12 @@ interface ProviderConfig {
   name: string;
   color: string;
   bgColor: string;
-  callbackPath: string;
+  consoleUrl: string;
 }
+
+// The callback URL for ALL providers is Supabase's auth callback, NOT the app's.
+// The OAuth flow is: App -> Provider (Google etc.) -> Supabase callback -> App callback
+const SUPABASE_CALLBACK_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/callback`;
 
 const PROVIDERS: ProviderConfig[] = [
   {
@@ -34,28 +38,28 @@ const PROVIDERS: ProviderConfig[] = [
     name: "Google",
     color: "text-red-600",
     bgColor: "bg-red-50",
-    callbackPath: "/auth/callback",
+    consoleUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
     id: "facebook",
     name: "Facebook",
     color: "text-blue-600",
     bgColor: "bg-blue-50",
-    callbackPath: "/auth/callback",
+    consoleUrl: "https://developers.facebook.com/apps",
   },
   {
     id: "linkedin",
     name: "LinkedIn",
     color: "text-sky-700",
     bgColor: "bg-sky-50",
-    callbackPath: "/auth/callback",
+    consoleUrl: "https://www.linkedin.com/developers/apps",
   },
   {
     id: "twitter",
     name: "X (Twitter)",
     color: "text-gray-900",
     bgColor: "bg-gray-100",
-    callbackPath: "/auth/callback",
+    consoleUrl: "https://developer.twitter.com/en/portal/dashboard",
   },
 ];
 
@@ -74,8 +78,7 @@ export default function OAuthSettingsPage() {
   >({});
   const [hasAccessToken, setHasAccessToken] = useState(true);
 
-  const siteUrl =
-    typeof window !== "undefined" ? window.location.origin : "https://yoursite.com";
+  const supabaseCallbackUrl = SUPABASE_CALLBACK_URL;
 
   useEffect(() => {
     async function load() {
@@ -212,11 +215,18 @@ export default function OAuthSettingsPage() {
       {/* Info note */}
       <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-6">
         <Info className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-        <p className="text-xs text-blue-700 leading-relaxed">
-          Enter your OAuth credentials and enable the provider. Saving will
-          configure the provider directly in Supabase Auth so users can sign in
-          immediately.
-        </p>
+        <div className="text-xs text-blue-700 leading-relaxed space-y-1">
+          <p>
+            Enter your OAuth credentials and enable the provider. Saving will
+            configure the provider directly in Supabase Auth so users can sign in
+            immediately.
+          </p>
+          <p className="font-semibold">
+            Important: In each provider&apos;s developer console, you must set the
+            Authorized Redirect URI to your Supabase callback URL shown below each
+            provider -- NOT your website URL.
+          </p>
+        </div>
       </div>
 
       {!hasAccessToken && (
@@ -251,7 +261,6 @@ export default function OAuthSettingsPage() {
           const form = forms[provider.id];
           if (!form) return null;
 
-          const callbackUrl = `${siteUrl}${provider.callbackPath}`;
           const isEnabled = form.enabled === "true";
 
           return (
@@ -298,18 +307,32 @@ export default function OAuthSettingsPage() {
                 </button>
               </div>
 
-              {/* Callback URL (read-only) */}
+              {/* Supabase Callback URL (read-only) - this is what goes in the provider console */}
               <div className="mb-4">
-                <label className={labelClass}>{t("admin.oauthCallbackUrl")}</label>
+                <label className={labelClass}>
+                  Authorized Redirect URI{" "}
+                  <span className="font-normal text-gray-400">
+                    (paste this into your{" "}
+                    <a
+                      href={provider.consoleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline text-blue-500 hover:text-blue-600"
+                    >
+                      {provider.name} developer console
+                    </a>
+                    )
+                  </span>
+                </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     readOnly
-                    value={callbackUrl}
-                    className={`${inputClass} bg-gray-50 text-gray-500 cursor-default`}
+                    value={supabaseCallbackUrl}
+                    className={`${inputClass} bg-gray-50 text-gray-500 cursor-default font-mono text-xs`}
                   />
                   <button
-                    onClick={() => handleCopyUrl(callbackUrl, provider.id)}
+                    onClick={() => handleCopyUrl(supabaseCallbackUrl, provider.id)}
                     className="flex-shrink-0 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
                     aria-label="Copy URL"
                   >
@@ -320,6 +343,9 @@ export default function OAuthSettingsPage() {
                     )}
                   </button>
                 </div>
+                <p className="text-xs text-amber-600 mt-1">
+                  Important: This Supabase URL must be used as the redirect URI in your {provider.name} app settings, not your website URL.
+                </p>
               </div>
 
               {/* Client ID */}
