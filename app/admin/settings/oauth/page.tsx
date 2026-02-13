@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { getSettings, saveSettings } from "@/app/admin/actions";
+import {
+  getSettings,
+  saveSettings,
+  configureSupabaseOAuthProvider,
+  getSupabaseOAuthStatus,
+} from "@/app/admin/actions";
 import {
   KeyRound,
   Check,
@@ -12,6 +17,7 @@ import {
   Info,
   Copy,
   CheckCheck,
+  Loader2,
 } from "lucide-react";
 
 interface ProviderConfig {
@@ -63,12 +69,17 @@ export default function OAuthSettingsPage() {
   const [error, setError] = useState("");
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+  const [supabaseStatus, setSupabaseStatus] = useState<
+    Record<string, { enabled: boolean; hasClientId: boolean }>
+  >({});
+  const [hasAccessToken, setHasAccessToken] = useState(true);
 
   const siteUrl =
     typeof window !== "undefined" ? window.location.origin : "https://yoursite.com";
 
   useEffect(() => {
     async function load() {
+      // Load saved settings from site_settings DB
       const result = await getSettings("oauth_");
       const loaded: typeof forms = {};
 
@@ -82,7 +93,6 @@ export default function OAuthSettingsPage() {
 
       if (result.settings) {
         for (const [key, val] of Object.entries(result.settings)) {
-          // key format: oauth_google_client_id
           const parts = key.replace("oauth_", "").split("_");
           const provider = parts[0];
           const field = parts.slice(1).join("_");
@@ -93,6 +103,22 @@ export default function OAuthSettingsPage() {
       }
 
       setForms(loaded);
+
+      // Also load actual Supabase provider status
+      const statusResult = await getSupabaseOAuthStatus();
+      if (statusResult.error) {
+        setHasAccessToken(false);
+      } else {
+        setSupabaseStatus(statusResult.providers || {});
+        // Sync enabled state from Supabase if available
+        for (const p of PROVIDERS) {
+          const status = statusResult.providers?.[p.id];
+          if (status) {
+            loaded[p.id].enabled = status.enabled ? "true" : "false";
+          }
+        }
+        setForms({ ...loaded });
+      }
     }
     load();
   }, []);
@@ -111,6 +137,9 @@ export default function OAuthSettingsPage() {
     setSavedProvider(null);
 
     const form = forms[providerId];
+    const isEnabled = form.enabled === "true";
+
+    // 1. Save to site_settings DB (backup/reference)
     const entries = [
       { key: `oauth_${providerId}_client_id`, value: form.client_id, encrypted: false },
       {
@@ -121,13 +150,32 @@ export default function OAuthSettingsPage() {
       { key: `oauth_${providerId}_enabled`, value: form.enabled, encrypted: false },
     ];
 
-    const result = await saveSettings(entries);
+    const dbResult = await saveSettings(entries);
+    if (dbResult.error) {
+      setSaving(null);
+      setError(dbResult.error);
+      return;
+    }
+
+    // 2. Configure the provider in Supabase Auth (this is what actually matters)
+    const supabaseResult = await configureSupabaseOAuthProvider(
+      providerId,
+      form.client_id,
+      form.client_secret,
+      isEnabled
+    );
+
     setSaving(null);
 
-    if (result.error) {
-      setError(result.error);
+    if (supabaseResult.error) {
+      setError(supabaseResult.error);
     } else {
       setSavedProvider(providerId);
+      // Update local Supabase status
+      setSupabaseStatus((prev) => ({
+        ...prev,
+        [providerId]: { enabled: isEnabled, hasClientId: !!form.client_id },
+      }));
       // Clear secret field after save
       setForms((prev) => ({
         ...prev,
@@ -161,13 +209,35 @@ export default function OAuthSettingsPage() {
         </div>
       </div>
 
-      {/* Stub note */}
+      {/* Info note */}
       <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-6">
         <Info className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
         <p className="text-xs text-blue-700 leading-relaxed">
-          {t("admin.oauthStubNote")}
+          Enter your OAuth credentials and enable the provider. Saving will
+          configure the provider directly in Supabase Auth so users can sign in
+          immediately.
         </p>
       </div>
+
+      {!hasAccessToken && (
+        <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 mb-6">
+          <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-amber-700 leading-relaxed">
+            The SUPABASE_ACCESS_TOKEN environment variable is not set. Please add
+            a Supabase Personal Access Token to enable OAuth provider
+            configuration. You can generate one from your{" "}
+            <a
+              href="https://supabase.com/dashboard/account/tokens"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-medium"
+            >
+              Supabase account settings
+            </a>
+            .
+          </p>
+        </div>
+      )}
 
       {error && (
         <div className="flex items-center gap-2 mb-4 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">
@@ -316,15 +386,30 @@ export default function OAuthSettingsPage() {
 
               {/* Status */}
               <div className="flex items-center justify-between">
-                <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    isEnabled
-                      ? "bg-green-50 text-green-700"
-                      : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {isEnabled ? t("admin.oauthEnabled") : t("admin.oauthDisabled")}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                      isEnabled
+                        ? "bg-green-50 text-green-700"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {isEnabled ? t("admin.oauthEnabled") : t("admin.oauthDisabled")}
+                  </span>
+                  {supabaseStatus[provider.id] && (
+                    <span
+                      className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                        supabaseStatus[provider.id].enabled
+                          ? "bg-emerald-50 text-emerald-700"
+                          : "bg-orange-50 text-orange-600"
+                      }`}
+                    >
+                      {supabaseStatus[provider.id].enabled
+                        ? "Supabase: Active"
+                        : "Supabase: Inactive"}
+                    </span>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-2">
                   {savedProvider === provider.id && (
@@ -336,11 +421,16 @@ export default function OAuthSettingsPage() {
                   <button
                     onClick={() => handleSaveProvider(provider.id)}
                     disabled={saving === provider.id}
-                    className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-xs"
+                    className="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-xs flex items-center gap-2"
                   >
-                    {saving === provider.id
-                      ? t("admin.settingsSaving")
-                      : t("admin.saveProvider")}
+                    {saving === provider.id ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        {t("admin.settingsSaving")}
+                      </>
+                    ) : (
+                      t("admin.saveProvider")
+                    )}
                   </button>
                 </div>
               </div>
