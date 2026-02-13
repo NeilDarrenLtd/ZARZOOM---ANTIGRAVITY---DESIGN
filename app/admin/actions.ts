@@ -11,14 +11,20 @@ async function requireAdmin() {
 
   if (!user) throw new Error("Not authenticated");
 
-  // Check profiles table for admin role
-  const { data: profile } = await supabase
+  // Quick check via JWT metadata first (no DB query needed)
+  if (user.user_metadata?.is_admin === true) {
+    return user;
+  }
+
+  // Fall back to profiles table check using admin client to bypass RLS
+  const adminSupabase = await createAdminClient();
+  const { data: profile } = await adminSupabase
     .from("profiles")
     .select("is_admin")
     .eq("id", user.id)
     .single();
 
-  if (!profile?.is_admin && user.user_metadata?.is_admin !== true) {
+  if (!profile?.is_admin) {
     throw new Error("Not authorised");
   }
 
@@ -31,7 +37,8 @@ async function requireAdmin() {
 
 export async function getSettings(prefix: string) {
   await requireAdmin();
-  const supabase = await createClient();
+  // Use admin client (service role) to bypass RLS for settings reads
+  const supabase = await createAdminClient();
 
   const { data, error } = await supabase
     .from("site_settings")
@@ -54,7 +61,8 @@ export async function saveSettings(
   entries: { key: string; value: string; encrypted?: boolean }[]
 ) {
   await requireAdmin();
-  const supabase = await createClient();
+  // Use admin client (service role) to bypass RLS for settings writes
+  const supabase = await createAdminClient();
 
   for (const entry of entries) {
     // Skip empty secrets (user didn't change them)
@@ -97,7 +105,8 @@ export async function sendTestEmail(recipientEmail: string) {
 // ─── User management ───────────────────────────────────────────
 export async function getUsers() {
   await requireAdmin();
-  const supabase = await createClient();
+  // Use admin client (service role) to bypass RLS for reading all profiles
+  const supabase = await createAdminClient();
 
   const { data, error } = await supabase
     .from("profiles")
@@ -110,7 +119,8 @@ export async function getUsers() {
 
 export async function updateUserRole(userId: string, isAdmin: boolean) {
   await requireAdmin();
-  const supabase = await createClient();
+  // Use admin client (service role) to bypass RLS for role updates
+  const supabase = await createAdminClient();
 
   const { error } = await supabase
     .from("profiles")
