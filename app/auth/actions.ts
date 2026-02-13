@@ -97,10 +97,13 @@ export async function signInAdmin(email: string, password: string) {
     return { error: error.message };
   }
 
-  // Check if user has admin role via metadata or profiles table
+  // Check if user has admin role via metadata first
   const isAdminMeta = data.user?.user_metadata?.is_admin === true;
   if (!isAdminMeta) {
-    const { data: profile } = await supabase
+    // Use admin client to bypass RLS and avoid recursion when checking profiles
+    const { createAdminClient } = await import("@/lib/supabase/server");
+    const adminSupabase = await createAdminClient();
+    const { data: profile } = await adminSupabase
       .from("profiles")
       .select("is_admin")
       .eq("id", data.user.id)

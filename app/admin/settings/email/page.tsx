@@ -53,7 +53,7 @@ export default function EmailSettingsPage() {
           }
         }
         // If smtp_host exists, assume secrets might be saved
-        if (result.settings.smtp_host !== undefined) {
+        if ("smtp_host" in result.settings && result.settings["smtp_host"]) {
           hasSecrets = true;
         }
         setHasExistingSecrets(hasSecrets);
@@ -93,11 +93,19 @@ export default function EmailSettingsPage() {
     }
   }
 
+  const [testError, setTestError] = useState("");
+
   async function handleTestEmail() {
     if (!testEmail) return;
     setTestStatus("idle");
+    setTestError("");
     const result = await sendTestEmail(testEmail);
-    setTestStatus(result.success ? "sent" : "error");
+    if (result.success) {
+      setTestStatus("sent");
+    } else {
+      setTestStatus("error");
+      setTestError(result.error || "Failed to send test email.");
+    }
   }
 
   const inputClass =
@@ -119,11 +127,12 @@ export default function EmailSettingsPage() {
         </div>
       </div>
 
-      {/* Stub note */}
+      {/* Info note */}
       <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-6">
         <Info className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
         <p className="text-xs text-blue-700 leading-relaxed">
-          {t("admin.smtpStubNote")}
+          Configure your SMTP server to send emails from ZARZOOM. After saving,
+          use the test button below to verify your settings are correct.
         </p>
       </div>
 
@@ -318,7 +327,7 @@ export default function EmailSettingsPage() {
         )}
         {testStatus === "error" && (
           <p className="text-xs text-red-600 mt-2">
-            {t("admin.testEmailFailed")}
+            {testError || t("admin.testEmailFailed")}
           </p>
         )}
       </div>
