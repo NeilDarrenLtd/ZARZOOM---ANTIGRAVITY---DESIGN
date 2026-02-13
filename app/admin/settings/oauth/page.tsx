@@ -112,10 +112,11 @@ export default function OAuthSettingsPage() {
       if (statusResult.error) {
         setHasAccessToken(false);
       } else {
-        setSupabaseStatus(statusResult.providers || {});
+        const providers = (statusResult.providers || {}) as Record<string, { enabled: boolean; hasClientId: boolean }>;
+        setSupabaseStatus(providers);
         // Sync enabled state from Supabase if available
         for (const p of PROVIDERS) {
-          const status = statusResult.providers?.[p.id];
+          const status = providers[p.id];
           if (status) {
             loaded[p.id].enabled = status.enabled ? "true" : "false";
           }
