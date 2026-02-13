@@ -53,7 +53,7 @@ export default function EmailSettingsPage() {
           }
         }
         // If smtp_host exists, assume secrets might be saved
-        if (result.settings.smtp_host !== undefined) {
+        if ("smtp_host" in result.settings && result.settings["smtp_host"]) {
           hasSecrets = true;
         }
         setHasExistingSecrets(hasSecrets);
