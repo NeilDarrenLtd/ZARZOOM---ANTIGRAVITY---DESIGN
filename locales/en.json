@@ -312,5 +312,72 @@
       "s5Title": "5. Contact Us",
       "s5Text": "If you have questions about our use of cookies, please contact us at privacy@zarzoom.com."
     }
+  },
+  "billing": {
+    "admin": {
+      "title": "Billing",
+      "subtitle": "Manage subscription plans, pricing, and billing.",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "plansTitle": "Subscription Plans",
+      "newPlan": "New Plan",
+      "newPlanDesc": "Create a new subscription plan with pricing.",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing.",
+      "planDetails": "Plan Details",
+      "planName": "Name",
+      "planSlug": "Slug",
+      "planDescription": "Description",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial Days",
+      "planDisplayOrder": "Display Order",
+      "planActions": "Actions",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your growth. Start with a free trial, upgrade anytime.",
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "popular": "Most Popular",
+      "getStarted": "Get Started",
+      "savePercent": "Save {percent}% with annual billing",
+      "trialDays": "{days}-day free trial"
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Up to 3 social profiles",
+        "postsPerMonth": "30 posts per month",
+        "aiGeneration": "Basic AI content generation",
+        "scheduling": "Post scheduling",
+        "emailSupport": "Email support"
+      },
+      "pro": {
+        "socialProfiles": "Up to 10 social profiles",
+        "postsPerMonth": "150 posts per month",
+        "aiGeneration": "Advanced AI content generation",
+        "scheduling": "Smart scheduling with optimal times",
+        "analytics": "Analytics dashboard",
+        "prioritySupport": "Priority support"
+      },
+      "advanced": {
+        "socialProfiles": "Unlimited social profiles",
+        "postsPerMonth": "Unlimited posts",
+        "aiGeneration": "Premium AI with custom brand voice",
+        "scheduling": "AI-powered auto-scheduling",
+        "analytics": "Advanced analytics and reporting",
+        "customBranding": "Custom branding and white-label",
+        "dedicatedSupport": "Dedicated account manager",
+        "apiAccess": "Full API access"
+      }
+    }
   }
 }
