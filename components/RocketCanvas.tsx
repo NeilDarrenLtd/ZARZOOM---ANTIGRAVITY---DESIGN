@@ -146,8 +146,7 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                     <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
-            {/* Desktop: full width, capped height. Mobile: 20% larger max height */}
-            <div className="w-full h-full flex items-center justify-center max-h-[918px] md:max-h-[765px]">
+            <div className="w-full h-full flex items-center justify-center">
                 <canvas
                     ref={canvasRef}
                     className="w-full h-full object-contain"
