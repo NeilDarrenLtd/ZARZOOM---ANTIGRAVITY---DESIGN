@@ -501,3 +501,152 @@ The app resolves its base URL for OAuth/email redirects in this order:
 | `/admin/settings`          | Settings redirect          |
 | `/admin/settings/email`    | SMTP email configuration   |
 | `/admin/settings/oauth`    | OAuth provider management  |
+
+---
+
+## 9. API Service Layer Architecture
+
+The `lib/api/` directory contains the shared service layer that powers all
+`/api/v1/*` route handlers. Every module is designed to work with the existing
+Supabase database tables and RLS policies.
+
+### Module Inventory
+
+| Module              | File                    | Responsibility                                                        |
+|---------------------|-------------------------|-----------------------------------------------------------------------|
+| Environment         | `lib/api/env.ts`        | Zod-validated, typed access to required env vars. Fails fast on boot. |
+| Request ID          | `lib/api/request-id.ts` | Generates or inherits `X-Request-Id` correlation IDs.                 |
+| HTTP Responses      | `lib/api/http-responses.ts` | Standardised JSON response helpers (`ok`, `created`, `accepted`, `badRequest`, `unauthorized`, `forbidden`, `notFound`, `conflict`, `tooManyRequests`, `serverError`). |
+| Errors              | `lib/api/errors.ts`     | Typed error classes (`ApiError`, `AuthError`, `ForbiddenError`, `NotFoundError`, `ConflictError`, `RateLimitError`, `QuotaExceededError`, `ValidationError`). |
+| Authentication      | `lib/api/auth.ts`       | Extracts Bearer token or session cookies, calls `supabase.auth.getUser()`. |
+| Tenancy             | `lib/api/tenancy.ts`    | Resolves the user's active tenant via `tenant_memberships` table.     |
+| Roles               | `lib/api/roles.ts`      | Role hierarchy check (`super_admin > admin > member > viewer`).       |
+| Rate Limiting       | `lib/api/rate-limit.ts` | Sliding-window counter using the `rate_limits` table.                 |
+| Idempotency         | `lib/api/idempotency.ts`| Deduplication via `idempotency_keys` table with response replay.      |
+| Quotas              | `lib/api/quotas.ts`     | Usage tracking via `billing_usage_counters` + `subscription_plans.quota_policy`. |
+| Job Queue           | `lib/api/queue.ts`      | Enqueues background work into the `jobs` table.                       |
+| Language            | `lib/api/language.ts`   | Resolves `Accept-Language` / query param / tenant default.            |
+| Handler Factory     | `lib/api/handler.ts`    | `createApiHandler()` -- wires all cross-cutting concerns together.    |
+| Barrel Export       | `lib/api/index.ts`      | Re-exports everything for clean imports: `import { ... } from "@/lib/api"`. |
+
+### Request Lifecycle
+
+Every request through `createApiHandler` follows this pipeline:
+
+```
+Incoming Request
+  |
+  v
+1. Generate / inherit X-Request-Id
+  |
+  v
+2. Authenticate (Bearer token or session cookie)
+   - Calls supabase.auth.getUser()
+   - Skipped if auth: false
+  |
+  v
+3. Resolve Tenant
+   - Queries tenant_memberships for user's active tenant
+   - Supports X-Tenant-Id header for multi-tenant users
+  |
+  v
+4. Check Role
+   - Compares user's role against requiredRole config
+   - Uses hierarchy: super_admin > admin > member > viewer
+  |
+  v
+5. Enforce Rate Limit
+   - Sliding-window counter in rate_limits table
+   - Per-tenant, per-endpoint
+  |
+  v
+6. Resolve Language
+   - ?lang= param > Accept-Language header > tenant default > "en"
+  |
+  v
+7. Execute Handler
+   - Handler receives ApiContext with user, membership, language, etc.
+  |
+  v
+8. Return Response
+   - Attaches X-Request-Id, X-RateLimit-* headers
+   - On error: structured JSON { error: { code, message, requestId } }
+```
+
+### Error Response Format
+
+All error responses follow this structure:
+
+```json
+{
+  "error": {
+    "code": "AUTH_REQUIRED",
+    "message": "Invalid or expired authentication credentials",
+    "requestId": "550e8400-e29b-41d4-a716-446655440000",
+    "details": {}
+  }
+}
+```
+
+Standard error codes: `AUTH_REQUIRED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`,
+`RATE_LIMITED`, `QUOTA_EXCEEDED`, `VALIDATION_ERROR`, `BAD_REQUEST`,
+`INTERNAL_ERROR`.
+
+### How to Add a New Endpoint
+
+1. Create a route file, e.g. `app/api/v1/posts/route.ts`.
+2. Import from the barrel: `import { createApiHandler, ok, accepted, enqueueJob } from "@/lib/api"`.
+3. Define and export the handler:
+
+```typescript
+import { createApiHandler, ok } from "@/lib/api";
+
+export const GET = createApiHandler({
+  requiredRole: "member",
+  rateLimit: { maxRequests: 60, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const { data } = await ctx.supabase!
+      .from("artefacts")
+      .select("*")
+      .eq("tenant_id", ctx.membership!.tenantId);
+
+    return ok({ artefacts: data }, ctx.requestId);
+  },
+});
+```
+
+4. For async/long-running work, use the 202 pattern:
+
+```typescript
+import { createApiHandler, accepted, enqueueJob } from "@/lib/api";
+
+export const POST = createApiHandler({
+  requiredRole: "member",
+  rateLimit: { maxRequests: 10, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const body = await ctx.req.json();
+    const { jobId } = await enqueueJob(
+      ctx.membership!.tenantId,
+      "generate_content",
+      body
+    );
+
+    return accepted(
+      { jobId, statusUrl: `/api/v1/jobs/${jobId}` },
+      ctx.requestId
+    );
+  },
+});
+```
+
+### Middleware Integration
+
+API v1 routes (`/api/v1/*`) bypass the Supabase session middleware and handle
+their own authentication via `authenticateRequest()`. This is configured in
+`middleware.ts` with an early return for the `/api/v1` path prefix.
+
+### API Routes
+
+| Route                | Method | Auth     | Description          |
+|----------------------|--------|----------|----------------------|
+| `/api/v1/health`     | GET    | Public   | Health check         |
