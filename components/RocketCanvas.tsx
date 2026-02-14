@@ -149,7 +149,7 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
             <div className="w-full h-full flex items-center justify-center">
                 <canvas
                     ref={canvasRef}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                 />
             </div>
         </div>
