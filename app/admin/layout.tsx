@@ -14,6 +14,7 @@ import {
   ChevronDown,
   LogOut,
   LayoutDashboard,
+  CreditCard,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -109,6 +110,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/users",
       label: t("admin.users"),
       icon: Users,
+    },
+    {
+      href: "/admin/billing",
+      label: t("billing.admin.title"),
+      icon: CreditCard,
     },
   ];
 

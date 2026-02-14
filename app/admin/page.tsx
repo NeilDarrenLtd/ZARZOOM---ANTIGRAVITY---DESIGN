@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { Mail, KeyRound, Users } from "lucide-react";
+import { Mail, KeyRound, Users, CreditCard } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -28,6 +28,13 @@ export default function AdminDashboardPage() {
       title: t("admin.oauthKeys"),
       description: t("admin.oauthSettingsDesc"),
       color: "bg-violet-50 text-violet-600",
+    },
+    {
+      href: "/admin/billing",
+      icon: CreditCard,
+      title: t("billing.admin.title"),
+      description: t("billing.admin.subtitle"),
+      color: "bg-green-50 text-green-600",
     },
   ];
 
