@@ -134,7 +134,7 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
     }, [images, frameIndex]);
 
     return (
-        <div className={cn("fixed top-0 left-0 w-full h-screen z-0 bg-white", className)}>
+        <div className={cn("fixed top-0 left-0 w-full h-screen z-0 bg-white flex items-center justify-center", className)}>
             {!isLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white z-50">
                     <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
