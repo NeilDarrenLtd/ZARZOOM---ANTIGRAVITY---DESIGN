@@ -1648,3 +1648,265 @@ export const POST = createApiHandler({
 5. For admin-only endpoints, set `requiredRole: "admin"` and use `writeAuditLog()` from `@/lib/admin`.
 
 6. For webhook endpoints, skip `createApiHandler` and export a raw `POST` function with token verification and SHA-256 deduplication (see existing webhook routes for patterns).
+
+---
+
+## 25. Queue Integration
+
+The queue integration decouples **Vercel route handlers** (producers) from an
+**external Worker** (consumer). Vercel never executes provider calls directly;
+it enqueues a signed message and returns `202 Accepted`.
+
+### Architecture
+
+```
+Vercel Route Handler                    External Worker
+       |                                     |
+       | 1. Insert row into `jobs` table      |
+       | 2. Sign message (HMAC-SHA256)        |
+       | 3. POST to QUEUE_PUSH_URL (optional) |
+       |------------------------------------->|
+       |                                      | 4. Verify signature
+       | <-- 202 { jobId, statusUrl } -----   | 5. Process job
+       |                                      | 6. Update `jobs` row
+```
+
+**Transport modes:**
+
+| Mode       | How it works | When to use |
+|------------|-------------|-------------|
+| HTTP Push  | Vercel POSTs message to `QUEUE_PUSH_URL` after DB insert. Worker receives HTTP requests. | Recommended for Vercel. Best with services like QStash, Inngest, or custom HTTP endpoint. Built-in retries and signatures. |
+| DB Poll    | No `QUEUE_PUSH_URL` set. Worker polls the `jobs` table for `status = 'pending'` rows. | Alternative if you want deeper DLQ primitives or use SQS-style queues. |
+
+Both modes persist jobs to the `jobs` table first, so the DB is always the source of truth.
+
+### Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `QUEUE_SIGNING_SECRET` | No (falls back to `SUPABASE_SERVICE_ROLE_KEY`) | HMAC-SHA256 secret shared between Vercel and Worker. Dedicated key recommended in production. |
+| `QUEUE_PUSH_URL` | No | HTTP endpoint to POST messages to. When unset, operates in pull/poll mode. |
+
+### Queue Message Contract
+
+Every message (whether pushed via HTTP or read from the `jobs` table) follows this exact schema:
+
+```json
+{
+  "job_id": "550e8400-e29b-41d4-a716-446655440000",
+  "tenant_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "type": "social.post.publish",
+  "attempt": 0,
+  "scheduled_for": "2026-02-14T12:00:00.000Z",
+  "enqueued_at": "2026-02-14T12:00:00.000Z",
+  "payload": {
+    "post_id": "...",
+    "profile_username": "acme",
+    "text_content": "Hello world"
+  },
+  "max_attempts": 5,
+  "priority": 100,
+  "callback_url": null,
+  "signature": "a3f8b2c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1"
+}
+```
+
+#### Field Reference
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `job_id` | UUID | Primary key in the `jobs` table. |
+| `tenant_id` | UUID | Owning tenant. Used for isolation and quota tracking. |
+| `type` | string | Job type -- routes to the correct worker handler. Convention: `domain.entity.action`. |
+| `attempt` | integer | Zero-indexed. Producer always sends `0`. Worker increments on retry. |
+| `scheduled_for` | ISO-8601 | When the job should be processed. Equals `enqueued_at` for immediate jobs. Future for delayed jobs. |
+| `enqueued_at` | ISO-8601 | When the message was first created. |
+| `payload` | object | Opaque job data. Worker interprets based on `type`. Queue layer never inspects this. |
+| `max_attempts` | integer | Maximum delivery attempts. After this, job status becomes `failed`. |
+| `priority` | integer | Lower = higher priority. Default: 100. |
+| `callback_url` | string or null | Optional URL the worker should POST results to on completion. |
+| `signature` | string | HMAC-SHA256 of `job_id\|tenant_id\|type\|scheduled_for` using `QUEUE_SIGNING_SECRET`. |
+
+### Message Signing
+
+Messages are signed using HMAC-SHA256 to prevent forged messages from being processed.
+
+**Canonical string:** `{job_id}|{tenant_id}|{type}|{scheduled_for}`
+
+**Signing (Vercel producer):**
+```typescript
+import { createHmac } from "crypto";
+
+const canonical = `${jobId}|${tenantId}|${type}|${scheduledFor}`;
+const signature = createHmac("sha256", QUEUE_SIGNING_SECRET)
+  .update(canonical)
+  .digest("hex");
+```
+
+**Verification (Worker consumer):**
+```typescript
+import { verifyQueueSignature } from "@/lib/queue";
+
+const isValid = verifyQueueSignature(
+  message.job_id,
+  message.tenant_id,
+  message.type,
+  message.scheduled_for,
+  message.signature,
+  QUEUE_SIGNING_SECRET
+);
+
+if (!isValid) {
+  // Reject message -- potential forgery
+}
+```
+
+Verification uses constant-time comparison (`timingSafeEqual`) to prevent timing attacks.
+
+### Producer API
+
+Import from `@/lib/queue`:
+
+```typescript
+import { enqueueNow, enqueueDelayed } from "@/lib/queue";
+```
+
+#### `enqueueNow(tenantId, type, payload, options?)`
+
+Enqueue a job for immediate processing.
+
+```typescript
+const { jobId, status, message } = await enqueueNow(
+  ctx.membership!.tenantId,
+  "images.generate",
+  { prompt: "A sunset over mountains", model: "gpt-image-1" }
+);
+// status === "pending"
+```
+
+#### `enqueueDelayed(tenantId, type, payload, options)`
+
+Enqueue a job for future processing. Supports two modes:
+
+```typescript
+// Delay by milliseconds (e.g., poll in 30 seconds)
+const result = await enqueueDelayed(
+  tenantId,
+  "social.post.poll",
+  { post_id: "..." },
+  { delayMs: 30_000 }
+);
+
+// Schedule for a specific time
+const result = await enqueueDelayed(
+  tenantId,
+  "email.send",
+  { template: "welcome" },
+  { scheduledFor: new Date("2026-03-01T09:00:00Z") }
+);
+// status === "scheduled"
+```
+
+**Common delay patterns for polling:**
+
+| Step | Delay | Use case |
+|------|-------|----------|
+| 1st poll | 30s | Fast check after initial submission |
+| 2nd poll | 2m | Provider still processing |
+| 3rd poll | 5m | Longer operations (video encoding) |
+
+#### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `priority` | number | 100 | Lower = higher priority |
+| `callbackUrl` | string | null | URL to POST results to |
+| `maxAttempts` | number | From `RETRY_DEFAULTS` | Override max retry attempts |
+| `delayMs` | number | -- | Delay in ms (enqueueDelayed only) |
+| `scheduledFor` | Date | -- | Absolute time (enqueueDelayed only) |
+
+### Backward Compatibility
+
+The existing `enqueueJob()` function from `@/lib/api` continues to work unchanged. It delegates to the new producer internally:
+
+```typescript
+// This still works -- no changes needed to existing route handlers
+import { enqueueJob } from "@/lib/api";
+const { jobId } = await enqueueJob(tenantId, "images.generate", payload);
+```
+
+### Retry Configuration
+
+Retry config is defined per job type with exponential backoff:
+
+| Job type prefix | Max attempts | Base delay | Max delay |
+|----------------|-------------|-----------|----------|
+| `default` | 3 | 5s | 5m |
+| `social.post` | 5 | 10s | 10m |
+| `images.generate` | 3 | 15s | 5m |
+| `images.edit` | 3 | 15s | 5m |
+| `videos.generate` | 3 | 30s | 10m |
+| `research.social` | 3 | 10s | 5m |
+| `writing.article` | 3 | 10s | 5m |
+| `writing.script` | 3 | 10s | 5m |
+| `prompt_test` | 1 | 0 | 0 |
+
+**Backoff formula:** `delay = min(baseDelayMs * 2^attempt + jitter, maxDelayMs)`
+
+Resolution order: exact match -> prefix match -> `default`.
+
+```typescript
+import { getRetryConfig, calculateBackoff } from "@/lib/queue";
+
+const config = getRetryConfig("social.post.publish");
+// Matches "social.post" prefix -> { maxAttempts: 5, baseDelayMs: 10_000, maxDelayMs: 600_000 }
+
+const delay = calculateBackoff(2, config);
+// ~40_000ms (10_000 * 2^2 + jitter)
+```
+
+### Worker Contract
+
+The worker is an external service (not deployed on Vercel). It must:
+
+1. **Receive messages** -- either via HTTP POST (push mode) or by polling the `jobs` table.
+2. **Verify the signature** before processing (see Signing section above).
+3. **Update the `jobs` row** on completion:
+   - Success: `status = 'completed'`, `result = { ... }`
+   - Failure: increment `attempt`, set `error`, re-enqueue with backoff delay if `attempt < max_attempts`, otherwise `status = 'failed'`.
+4. **Lock the job** during processing: set `locked_by = worker_id`, `locked_until = now + timeout`.
+5. **Call the callback URL** (if set) with the result on completion.
+6. **Never modify the payload** -- it is immutable from the producer's perspective.
+
+### Job Lifecycle
+
+```
+Producer (Vercel)                       Worker
+     |                                    |
+     | INSERT status=pending/scheduled    |
+     |                                    |
+     | POST message to QUEUE_PUSH_URL --> |
+     |                                    | Verify signature
+     |                                    | Lock job (locked_by, locked_until)
+     |                                    | Process based on type + payload
+     |                                    |
+     |                            Success | UPDATE status=completed, result={...}
+     |                                    | POST callback_url (if set)
+     |                                    |
+     |                            Failure | IF attempt < max_attempts:
+     |                                    |   UPDATE attempt++, error=...
+     |                                    |   Re-enqueue with backoff delay
+     |                                    | ELSE:
+     |                                    |   UPDATE status=failed, error=...
+     |                                    |   POST callback_url with error
+```
+
+### Module Inventory
+
+| File | Description |
+|------|-------------|
+| `lib/queue/types.ts` | Zod schema for `QueueMessage`, `RetryConfig`, `RETRY_DEFAULTS`, `getRetryConfig()`, `calculateBackoff()` |
+| `lib/queue/signing.ts` | `signMessage()` and `verifyQueueSignature()` using HMAC-SHA256 |
+| `lib/queue/producer.ts` | `enqueueNow()` and `enqueueDelayed()` -- persists to DB + optional HTTP push |
+| `lib/queue/index.ts` | Barrel export for all queue functions and types |
+| `lib/api/queue.ts` | Backward-compatible `enqueueJob()` wrapper (delegates to `lib/queue/producer`) |
