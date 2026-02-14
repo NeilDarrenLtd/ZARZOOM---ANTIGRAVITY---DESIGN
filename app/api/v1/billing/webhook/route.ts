@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       // Dynamic import so the app doesn't break if stripe isn't installed yet
       const stripe = (await import("stripe")).default;
       const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2024-12-18.acacia",
+        apiVersion: "2026-01-28.clover",
       });
       event = stripeClient.webhooks.constructEvent(
         body,
