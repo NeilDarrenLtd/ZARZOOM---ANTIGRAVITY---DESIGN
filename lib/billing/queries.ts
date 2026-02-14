@@ -18,7 +18,7 @@ import type {
 export async function getPlans(
   opts: { status?: PlanStatus } = {}
 ): Promise<PlanWithPrices[]> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
 
   let query = supabase
     .from("subscription_plans")
@@ -38,7 +38,7 @@ export async function getPlans(
 export async function getPlanById(
   id: string
 ): Promise<PlanWithPrices | null> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("subscription_plans")
     .select("*, plan_prices(*)")
@@ -53,7 +53,7 @@ export async function getPlanById(
 export async function getPlanBySlug(
   slug: string
 ): Promise<PlanWithPrices | null> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("subscription_plans")
     .select("*, plan_prices(*)")
@@ -69,7 +69,7 @@ export async function createPlan(
   plan: Omit<PlanRow, "id" | "created_at" | "updated_at">,
   prices: { currency: Currency; interval: BillingInterval; unit_amount: number }[]
 ): Promise<PlanWithPrices> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
 
   const { data: planData, error: planError } = await supabase
     .from("subscription_plans")
@@ -114,7 +114,7 @@ export async function updatePlan(
   updates: Partial<Omit<PlanRow, "id" | "created_at" | "updated_at">>,
   prices?: { currency: Currency; interval: BillingInterval; unit_amount: number }[]
 ): Promise<PlanWithPrices> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
 
   const { data: planData, error: planError } = await supabase
     .from("subscription_plans")
@@ -153,7 +153,7 @@ export async function updatePlan(
 
 /** Archive a plan (soft delete) */
 export async function archivePlan(id: string): Promise<void> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
   const { error } = await supabase
     .from("subscription_plans")
     .update({ status: "archived", updated_at: new Date().toISOString() })
@@ -170,7 +170,7 @@ export async function archivePlan(id: string): Promise<void> {
 export async function getTenantSubscription(
   tenantId: string
 ): Promise<SubscriptionWithPlan | null> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("tenant_subscriptions")
     .select("*, plan:subscription_plans(*)")
@@ -190,7 +190,7 @@ export async function listSubscriptions(opts: {
   limit?: number;
   offset?: number;
 } = {}): Promise<{ subscriptions: TenantSubscriptionRow[]; count: number }> {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
 
   let query = supabase
     .from("tenant_subscriptions")
@@ -214,7 +214,7 @@ export async function listSubscriptions(opts: {
 export async function getSubscriptionStats(): Promise<
   Record<string, number>
 > {
-  const supabase = createAdminClient();
+  const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("tenant_subscriptions")
     .select("status");
