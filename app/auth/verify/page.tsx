@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { resendVerificationEmail } from "../actions";
@@ -11,6 +11,14 @@ import Link from "next/link";
 import { Mail, ArrowLeft } from "lucide-react";
 
 export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="bg-gray-50 min-h-screen" />}>
+      <VerifyPageContent />
+    </Suspense>
+  );
+}
+
+function VerifyPageContent() {
   const { t } = useI18n();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
