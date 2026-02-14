@@ -146,12 +146,10 @@ export default function RocketCanvas({ className }: RocketCanvasProps) {
                     <p className="absolute mt-8 text-sm text-gray-500 font-medium">{t("loading.text")}</p>
                 </div>
             )}
-            <div className="w-full h-full flex items-center justify-center">
-                <canvas
-                    ref={canvasRef}
-                    className="w-full h-full object-contain"
-                />
-            </div>
+            <canvas
+                ref={canvasRef}
+                style={{ width: "auto", height: "100%", display: "block" }}
+            />
         </div>
     );
 }
