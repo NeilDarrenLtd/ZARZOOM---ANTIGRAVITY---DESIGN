@@ -88,31 +88,31 @@ END $$;
 INSERT INTO plan_prices (plan_id, currency, interval, unit_amount, is_active, billing_provider_price_id, created_at, updated_at)
 VALUES
   -- Basic Monthly
-  ('a0000000-0000-0000-0000-000000000001', 'GBP', 'month', 999, true, 'pending_basic_gbp_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000001', 'USD', 'month', 1299, true, 'pending_basic_usd_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000001', 'EUR', 'month', 1199, true, 'pending_basic_eur_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'GBP', 'monthly', 999, true, 'pending_basic_gbp_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'USD', 'monthly', 1299, true, 'pending_basic_usd_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'EUR', 'monthly', 1199, true, 'pending_basic_eur_month', now(), now()),
   -- Basic Annual
-  ('a0000000-0000-0000-0000-000000000001', 'GBP', 'year', 9990, true, 'pending_basic_gbp_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000001', 'USD', 'year', 12990, true, 'pending_basic_usd_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000001', 'EUR', 'year', 11990, true, 'pending_basic_eur_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'GBP', 'annual', 9990, true, 'pending_basic_gbp_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'USD', 'annual', 12990, true, 'pending_basic_usd_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000001', 'EUR', 'annual', 11990, true, 'pending_basic_eur_year', now(), now()),
 
   -- Pro Monthly
-  ('a0000000-0000-0000-0000-000000000002', 'GBP', 'month', 2999, true, 'pending_pro_gbp_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000002', 'USD', 'month', 3999, true, 'pending_pro_usd_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000002', 'EUR', 'month', 3499, true, 'pending_pro_eur_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'GBP', 'monthly', 2999, true, 'pending_pro_gbp_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'USD', 'monthly', 3999, true, 'pending_pro_usd_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'EUR', 'monthly', 3499, true, 'pending_pro_eur_month', now(), now()),
   -- Pro Annual
-  ('a0000000-0000-0000-0000-000000000002', 'GBP', 'year', 29990, true, 'pending_pro_gbp_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000002', 'USD', 'year', 39990, true, 'pending_pro_usd_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000002', 'EUR', 'year', 34990, true, 'pending_pro_eur_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'GBP', 'annual', 29990, true, 'pending_pro_gbp_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'USD', 'annual', 39990, true, 'pending_pro_usd_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000002', 'EUR', 'annual', 34990, true, 'pending_pro_eur_year', now(), now()),
 
   -- Advanced Monthly
-  ('a0000000-0000-0000-0000-000000000003', 'GBP', 'month', 5999, true, 'pending_advanced_gbp_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000003', 'USD', 'month', 7999, true, 'pending_advanced_usd_month', now(), now()),
-  ('a0000000-0000-0000-0000-000000000003', 'EUR', 'month', 6999, true, 'pending_advanced_eur_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000003', 'GBP', 'monthly', 5999, true, 'pending_advanced_gbp_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000003', 'USD', 'monthly', 7999, true, 'pending_advanced_usd_month', now(), now()),
+  ('a0000000-0000-0000-0000-000000000003', 'EUR', 'monthly', 6999, true, 'pending_advanced_eur_month', now(), now()),
   -- Advanced Annual
-  ('a0000000-0000-0000-0000-000000000003', 'GBP', 'year', 59990, true, 'pending_advanced_gbp_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000003', 'USD', 'year', 79990, true, 'pending_advanced_usd_year', now(), now()),
-  ('a0000000-0000-0000-0000-000000000003', 'EUR', 'year', 69990, true, 'pending_advanced_eur_year', now(), now())
+  ('a0000000-0000-0000-0000-000000000003', 'GBP', 'annual', 59990, true, 'pending_advanced_gbp_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000003', 'USD', 'annual', 79990, true, 'pending_advanced_usd_year', now(), now()),
+  ('a0000000-0000-0000-0000-000000000003', 'EUR', 'annual', 69990, true, 'pending_advanced_eur_year', now(), now())
 ON CONFLICT (plan_id, currency, interval) DO UPDATE SET
   unit_amount = EXCLUDED.unit_amount,
   is_active = EXCLUDED.is_active,
