@@ -1,7 +1,12 @@
 import { updateSession } from '@/lib/supabase/middleware'
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // API v1 routes handle their own auth -- skip Supabase session refresh
+  if (request.nextUrl.pathname.startsWith('/api/v1')) {
+    return NextResponse.next()
+  }
+
   return await updateSession(request)
 }
 
