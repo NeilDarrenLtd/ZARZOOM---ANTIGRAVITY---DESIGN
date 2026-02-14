@@ -21,10 +21,11 @@ const paramsSchema = z.object({
 export const GET = createApiHandler({
   requiredRole: "member",
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
-  handler: async (ctx, routeCtx?: { params: Promise<{ job_id: string }> }) => {
+  handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
-    const rawParams = routeCtx ? await routeCtx.params : { job_id: "" };
-    const paramsParsed = paramsSchema.safeParse(rawParams);
+    const segments = ctx.req.nextUrl.pathname.split("/");
+    const rawJobId = segments[segments.indexOf("research") + 1] ?? "";
+    const paramsParsed = paramsSchema.safeParse({ job_id: rawJobId });
     if (!paramsParsed.success) {
       throw new ValidationError(paramsParsed.error.flatten().fieldErrors);
     }
@@ -80,4 +81,4 @@ export const GET = createApiHandler({
       ctx.requestId
     );
   },
-} as unknown as import("@/lib/api").HandlerConfig);
+});
