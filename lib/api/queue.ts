@@ -1,14 +1,22 @@
+/**
+ * Backward-compatible queue functions.
+ *
+ * These re-export / wrap the new `@/lib/queue` producer so existing
+ * callers (`enqueueJob`, `getJobStatus`) continue to work unchanged.
+ */
+
 import { createServerClient } from "@supabase/ssr";
 import { env } from "./env";
+import { enqueueNow, type EnqueueResult as NewEnqueueResult } from "@/lib/queue";
+
+/* ------------------------------------------------------------------ */
+/*  Legacy types (kept for backward compatibility)                     */
+/* ------------------------------------------------------------------ */
 
 export interface EnqueueOptions {
-  /** Job priority (lower = higher priority). Default: 100 */
   priority?: number;
-  /** Schedule the job for future execution. */
   scheduledFor?: Date;
-  /** URL to POST the result to when the job completes. */
   callbackUrl?: string;
-  /** Maximum retry attempts. Default: 3 */
   maxAttempts?: number;
 }
 
@@ -17,12 +25,15 @@ export interface EnqueueResult {
   status: "pending" | "scheduled";
 }
 
+/* ------------------------------------------------------------------ */
+/*  enqueueJob -- delegates to the new producer                        */
+/* ------------------------------------------------------------------ */
+
 /**
  * Enqueue a background job.
  *
- * Inserts a row into the `jobs` table with status `pending` (or `scheduled`
- * if `scheduledFor` is in the future). Returns the new job ID so the caller
- * can return a 202 Accepted response with a polling URL.
+ * This is the legacy API -- it delegates to `@/lib/queue/producer`
+ * which handles signing, optional HTTP push, and retry config.
  */
 export async function enqueueJob(
   tenantId: string,
@@ -30,45 +41,31 @@ export async function enqueueJob(
   payload: Record<string, unknown>,
   options: EnqueueOptions = {}
 ): Promise<EnqueueResult> {
-  const { NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = env();
-
-  const admin = createServerClient(
-    NEXT_PUBLIC_SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY,
-    { cookies: { getAll: () => [], setAll() {} } }
-  );
-
-  const now = new Date();
-  const isScheduled =
-    options.scheduledFor && options.scheduledFor.getTime() > now.getTime();
-  const status = isScheduled ? "scheduled" : "pending";
-
-  const { data, error } = await admin
-    .from("jobs")
-    .insert({
-      tenant_id: tenantId,
-      type,
-      payload,
-      status,
-      priority: options.priority ?? 100,
-      scheduled_for: options.scheduledFor?.toISOString() ?? null,
-      callback_url: options.callbackUrl ?? null,
-      max_attempts: options.maxAttempts ?? 3,
-      attempt: 0,
-    })
-    .select("id")
-    .single();
-
-  if (error || !data) {
-    throw new Error(`Failed to enqueue job: ${error?.message ?? "unknown"}`);
+  // If scheduledFor is specified, use enqueueDelayed
+  if (options.scheduledFor) {
+    const { enqueueDelayed } = await import("@/lib/queue");
+    const result = await enqueueDelayed(tenantId, type, payload, {
+      scheduledFor: options.scheduledFor,
+      priority: options.priority,
+      callbackUrl: options.callbackUrl,
+      maxAttempts: options.maxAttempts,
+    });
+    return { jobId: result.jobId, status: result.status };
   }
 
-  return { jobId: data.id, status };
+  const result: NewEnqueueResult = await enqueueNow(tenantId, type, payload, {
+    priority: options.priority,
+    callbackUrl: options.callbackUrl,
+    maxAttempts: options.maxAttempts,
+  });
+
+  return { jobId: result.jobId, status: result.status };
 }
 
-/**
- * Fetch the status of a job by its ID.
- */
+/* ------------------------------------------------------------------ */
+/*  getJobStatus -- unchanged                                          */
+/* ------------------------------------------------------------------ */
+
 export async function getJobStatus(
   jobId: string,
   tenantId: string
@@ -88,7 +85,12 @@ export async function getJobStatus(
   const admin = createServerClient(
     NEXT_PUBLIC_SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY,
-    { cookies: { getAll: () => [], setAll() {} } }
+    {
+      cookies: {
+        getAll: () => [],
+        setAll(_cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {},
+      },
+    }
   );
 
   const { data, error } = await admin
