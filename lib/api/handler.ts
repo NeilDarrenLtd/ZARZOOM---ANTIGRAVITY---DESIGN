@@ -183,7 +183,7 @@ export function createApiHandler(config: HandlerConfig) {
         }
 
         if (apiKeyIdentity) {
-          // API key auth succeeded -- build a synthetic membership
+          // API key auth verified -- build a synthetic membership
           authMethod = "api_key";
           membership = {
             id: apiKeyIdentity.apiKeyId,

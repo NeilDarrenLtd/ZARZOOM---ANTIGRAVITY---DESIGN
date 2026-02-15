@@ -127,7 +127,7 @@ CREATE TABLE jobs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id UUID NOT NULL REFERENCES tenants(id),
   type TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('pending', 'running', 'succeeded', 'failed', 'cancelled')),
+  status TEXT NOT NULL CHECK (status IN ('pending', 'scheduled', 'running', 'completed', 'failed', 'cancelled')),
   payload JSONB NOT NULL,
   result JSONB,
   error TEXT,
@@ -283,7 +283,7 @@ await supabase
 await supabase
   .from('jobs')
   .update({
-    status: 'succeeded',
+    status: 'completed',
     result: resultData,
     completed_at: new Date()
   })
@@ -318,7 +318,7 @@ if (job.attempt < maxAttempts) {
 
 Some third-party providers (HeyGen, Kling, UploadPost) send webhooks when async work completes. These webhooks update the job status.
 
-### Pattern: Find Job → Update Status
+### Pattern: Find Job -> Update Status
 
 #### Example: HeyGen Video Webhook (`/webhooks/heygen`)
 
@@ -363,7 +363,7 @@ export async function POST(request: NextRequest) {
 
   // 5. Update job status
   const updates = {
-    status: status === 'completed' ? 'succeeded' : 'failed',
+    status: status === 'completed' ? 'completed' : 'failed',
     result: status === 'completed' ? { ...job.result, video_url: body.video_url } : job.result,
     error: error || null,
     completed_at: new Date()
@@ -413,7 +413,7 @@ async function pollJob(jobId: string) {
     const res = await fetch(`/api/v1/jobs/${jobId}`)
     const job = await res.json()
 
-    if (job.status === 'succeeded') {
+    if (job.status === 'completed') {
       console.log('Result:', job.result)
       break
     } else if (job.status === 'failed') {
@@ -431,7 +431,7 @@ async function pollJob(jobId: string) {
 {
   id: string,
   type: string,
-  status: 'pending' | 'running' | 'succeeded' | 'failed' | 'cancelled',
+  status: 'pending' | 'scheduled' | 'running' | 'completed' | 'failed' | 'cancelled',
   payload: object,
   result?: object,
   error?: string,
@@ -558,7 +558,7 @@ export async function POST(request: NextRequest) {
   await supabase
     .from('jobs')
     .update({
-      status: status === 'done' ? 'succeeded' : 'failed',
+      status: status === 'done' ? 'completed' : 'failed',
       result: { ...job.result, ...result },
       completed_at: new Date()
     })
@@ -683,4 +683,4 @@ This architecture achieves:
 - **Security**: HMAC signatures prevent message tampering
 - **Flexibility**: Supports both pull (polling) and push (webhook) delivery
 
-Every new async feature follows the same pattern: enqueue → worker processes → webhook/poll updates status. This consistency makes the system easy to reason about and extend.
+Every new async feature follows the same pattern: enqueue -> worker processes -> webhook/poll updates status. This consistency makes the system easy to reason about and extend.

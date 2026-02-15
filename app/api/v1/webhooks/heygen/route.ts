@@ -119,13 +119,13 @@ export async function POST(req: NextRequest) {
       return ok({ status: "no_matching_job", requestId }, requestId);
     }
 
-    // --- Map HeyGen event to job status ---
+    // --- Map HeyGen event to job status (normalised to canonical set) ---
     const statusMap: Record<string, string> = {
-      "video.completed": "succeeded",
-      "video.success": "succeeded",
+      "video.completed": "completed",
+      "video.success": "completed",
       "video.failed": "failed",
       "video.processing": "running",
-      "avatar_video.success": "succeeded",
+      "avatar_video.success": "completed",
       "avatar_video.failed": "failed",
     };
 
@@ -136,7 +136,7 @@ export async function POST(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    if (newStatus === "succeeded" && payload.data.video_url) {
+    if (newStatus === "completed" && payload.data.video_url) {
       updateData.result = {
         ...(matchingJob.payload as Record<string, unknown>),
         video_url: payload.data.video_url,

@@ -862,7 +862,7 @@ Returns the research job status and, if complete, the full research artefact.
   "data": {
     "job": {
       "id": "uuid",
-      "status": "succeeded",
+      "status": "completed",
       "type": "research_social",
       "error": null,
       "created_at": "...",
