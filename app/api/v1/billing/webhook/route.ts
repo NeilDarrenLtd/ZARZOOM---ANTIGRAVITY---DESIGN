@@ -108,8 +108,16 @@ export async function POST(req: NextRequest) {
           typeof sub.customer === "string" ? sub.customer : sub.customer.id;
         const status = sub.status;
         const cancelAtPeriodEnd = sub.cancel_at_period_end;
-        const currentPeriodStart = epochToISO(sub.current_period_start);
-        const currentPeriodEnd = epochToISO(sub.current_period_end);
+
+        // In Stripe API >= basil (2025-03-31), period dates moved to
+        // the subscription item level. Extract from the first item.
+        const firstItem = sub.items?.data?.[0];
+        const currentPeriodStart = epochToISO(
+          firstItem?.current_period_start
+        );
+        const currentPeriodEnd = epochToISO(
+          firstItem?.current_period_end
+        );
 
         // Extract plan/price metadata set during checkout
         const metadata = sub.metadata ?? {};
