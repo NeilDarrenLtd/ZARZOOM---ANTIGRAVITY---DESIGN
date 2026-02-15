@@ -131,6 +131,7 @@ export const RETRY_DEFAULTS: Record<string, RetryConfig> = {
     maxDelayMs: 300_000,
   },
   prompt_test: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+  test_provider_key: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
 };
 
 /**
