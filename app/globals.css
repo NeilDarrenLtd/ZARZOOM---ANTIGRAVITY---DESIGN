@@ -6,11 +6,28 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+
+  /* ---- Design tokens ---- */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 9%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --border: 0 0% 90%;
+  --ring: 142 71% 45%;
+  --primary: 142 71% 45%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 142 71% 95%;
+  --accent-foreground: 142 71% 30%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --radius: 0.625rem;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: white;
+  background: hsl(var(--background));
   overflow-x: hidden;
 }
 
