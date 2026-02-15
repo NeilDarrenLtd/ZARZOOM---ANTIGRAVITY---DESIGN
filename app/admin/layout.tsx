@@ -15,6 +15,7 @@ import {
   LogOut,
   LayoutDashboard,
   CreditCard,
+  Webhook,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -115,6 +116,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/billing",
       label: t("billing.admin.title"),
       icon: CreditCard,
+    },
+    {
+      href: "/admin/billing/stripe",
+      label: "Stripe Debug",
+      icon: Webhook,
     },
   ];
 
