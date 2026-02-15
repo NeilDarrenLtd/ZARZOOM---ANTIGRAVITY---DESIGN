@@ -5,8 +5,6 @@ import {
   accepted,
   badRequest,
   enqueueJob,
-  enforceQuota,
-  incrementUsage,
 } from "@/lib/api";
 import { createProfileSchema } from "@/lib/social";
 
@@ -21,6 +19,8 @@ import { createProfileSchema } from "@/lib/social";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requiredEntitlement: "social.profile.create",
+  quotaMetric: "social_profiles",
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     let body: unknown;
@@ -42,17 +42,11 @@ export const POST = createApiHandler({
     const tenantId = ctx.membership!.tenantId;
     const { profile_username } = parsed.data;
 
-    // Check entitlement / quota
-    await enforceQuota(tenantId, "social_profiles");
-
     // Enqueue job for the worker
     const { jobId } = await enqueueJob(tenantId, "social.profile.create", {
       profile_username,
       provider: "uploadpost",
     });
-
-    // Increment usage counter
-    await incrementUsage(tenantId, "social_profiles");
 
     return accepted(
       {

@@ -3,9 +3,9 @@ import {
   createApiHandler,
   accepted,
   badRequest,
+  enqueueJob,
   enforceQuota,
   incrementUsage,
-  enqueueJob,
   ValidationError,
   NotFoundError,
 } from "@/lib/api";
@@ -41,6 +41,7 @@ import { videoGenerateSchema } from "@/lib/videos";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requiredEntitlement: "video_generate",
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
