@@ -12,6 +12,7 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   SITE_URL: z.string().url().optional().default("http://localhost:3000"),
   ENCRYPTION_MASTER_KEY: z.string().min(32).optional(),
+  API_KEY_PEPPER: z.string().min(16).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
