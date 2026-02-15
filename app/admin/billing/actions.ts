@@ -80,11 +80,12 @@ export async function createNewPlan(
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
       description: formData.get("description") as string,
-      status: formData.get("status") as string,
-      displayOrder: formData.get("displayOrder") as string,
-      trialDays: formData.get("trialDays") as string,
-      quotaPolicy: {},
-      featureFlags: {},
+      is_active: formData.get("is_active") === "true",
+      display_order: formData.get("display_order") as string,
+      highlight: formData.get("highlight") === "true",
+      quota_policy: JSON.parse((formData.get("quota_policy") as string) || "{}"),
+      features: JSON.parse((formData.get("features") as string) || "[]"),
+      entitlements: JSON.parse((formData.get("entitlements") as string) || "{}"),
       prices: JSON.parse((formData.get("prices") as string) || "[]"),
     };
 
@@ -100,11 +101,14 @@ export async function createNewPlan(
         name: planFields.name,
         slug: planFields.slug,
         description: planFields.description || null,
-        status: planFields.status,
-        display_order: planFields.displayOrder,
-        trial_days: planFields.trialDays,
-        quota_policy: planFields.quotaPolicy,
-        feature_flags: planFields.featureFlags,
+        is_active: planFields.is_active,
+        scope: null,
+        tenant_id: null,
+        display_order: planFields.display_order,
+        highlight: planFields.highlight,
+        quota_policy: planFields.quota_policy,
+        features: planFields.features,
+        entitlements: planFields.entitlements,
       },
       prices.map((p) => ({
         currency: p.currency,
@@ -126,46 +130,43 @@ export async function updateExistingPlan(
   try {
     await requireAdmin();
 
+    const id = formData.get("id") as string;
+    if (!id) return { error: "Plan ID is required" };
+
     const raw = {
-      id: formData.get("id") as string,
-      name: formData.get("name") as string,
-      slug: formData.get("slug") as string,
-      description: formData.get("description") as string,
-      status: formData.get("status") as string,
-      displayOrder: formData.get("displayOrder") as string,
-      trialDays: formData.get("trialDays") as string,
-      prices: JSON.parse((formData.get("prices") as string) || "[]"),
+      name: formData.get("name") as string | undefined,
+      description: formData.get("description") as string | undefined,
+      is_active: formData.has("is_active")
+        ? formData.get("is_active") === "true"
+        : undefined,
+      display_order: formData.has("display_order")
+        ? formData.get("display_order")
+        : undefined,
+      highlight: formData.has("highlight")
+        ? formData.get("highlight") === "true"
+        : undefined,
+      quota_policy: formData.has("quota_policy")
+        ? JSON.parse(formData.get("quota_policy") as string)
+        : undefined,
+      features: formData.has("features")
+        ? JSON.parse(formData.get("features") as string)
+        : undefined,
+      entitlements: formData.has("entitlements")
+        ? JSON.parse(formData.get("entitlements") as string)
+        : undefined,
     };
 
-    const result = updatePlanSchema.safeParse(raw);
+    // Strip undefined values so partial update works
+    const cleaned = Object.fromEntries(
+      Object.entries(raw).filter(([, v]) => v !== undefined)
+    );
+
+    const result = updatePlanSchema.safeParse(cleaned);
     if (!result.success) {
       return { errors: result.error.flatten().fieldErrors as Record<string, string[]> };
     }
 
-    const { id, prices, ...updates } = result.data;
-
-    await updatePlanQuery(
-      id,
-      {
-        ...(updates.name !== undefined && { name: updates.name }),
-        ...(updates.slug !== undefined && { slug: updates.slug }),
-        ...(updates.description !== undefined && {
-          description: updates.description || null,
-        }),
-        ...(updates.status !== undefined && { status: updates.status }),
-        ...(updates.displayOrder !== undefined && {
-          display_order: updates.displayOrder,
-        }),
-        ...(updates.trialDays !== undefined && {
-          trial_days: updates.trialDays,
-        }),
-      },
-      prices?.map((p) => ({
-        currency: p.currency,
-        interval: p.interval,
-        unit_amount: p.unitAmount,
-      }))
-    );
+    await updatePlanQuery(id, result.data);
 
     return { success: true };
   } catch (err) {
