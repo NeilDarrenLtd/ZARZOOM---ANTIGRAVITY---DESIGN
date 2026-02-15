@@ -1253,9 +1253,9 @@ Receives HeyGen video generation status callbacks.
 
 | HeyGen Event            | Internal Status |
 |-------------------------|-----------------|
-| `video.completed`       | `succeeded`     |
-| `video.success`         | `succeeded`     |
-| `avatar_video.success`  | `succeeded`     |
+| `video.completed`       | `completed`     |
+| `video.success`         | `completed`     |
+| `avatar_video.success`  | `completed`     |
 | `video.failed`          | `failed`        |
 | `avatar_video.failed`   | `failed`        |
 | `video.processing`      | `running`       |
