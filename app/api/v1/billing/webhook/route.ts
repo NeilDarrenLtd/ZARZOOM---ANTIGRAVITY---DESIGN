@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   if (webhookSecret && sig) {
     try {
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2025-04-30.basil",
+        apiVersion: "2026-01-28.clover",
       });
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } catch (err) {
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   await supabase.from("social_webhook_events").insert({
     event_type: event.type,
     payload_hash: payloadHash,
-    payload: event.data.object as Record<string, unknown>,
+    payload: event.data.object as unknown as Record<string, unknown>,
     processed: false,
   });
 
@@ -108,8 +108,16 @@ export async function POST(req: NextRequest) {
           typeof sub.customer === "string" ? sub.customer : sub.customer.id;
         const status = sub.status;
         const cancelAtPeriodEnd = sub.cancel_at_period_end;
-        const currentPeriodStart = epochToISO(sub.current_period_start);
-        const currentPeriodEnd = epochToISO(sub.current_period_end);
+
+        // In Stripe API >= basil (2025-03-31), period dates moved to
+        // the subscription item level. Extract from the first item.
+        const firstItem = sub.items?.data?.[0];
+        const currentPeriodStart = epochToISO(
+          firstItem?.current_period_start
+        );
+        const currentPeriodEnd = epochToISO(
+          firstItem?.current_period_end
+        );
 
         // Extract plan/price metadata set during checkout
         const metadata = sub.metadata ?? {};
@@ -200,10 +208,13 @@ export async function POST(req: NextRequest) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
+        // In Stripe API >= clover, `invoice.subscription` was removed.
+        // The subscription reference now lives under `invoice.parent`.
+        const parentSub = invoice.parent?.subscription_details?.subscription;
         const stripeSubId =
-          typeof invoice.subscription === "string"
-            ? invoice.subscription
-            : invoice.subscription?.id;
+          typeof parentSub === "string"
+            ? parentSub
+            : parentSub?.id ?? null;
 
         if (stripeSubId) {
           const { data: row } = await supabase

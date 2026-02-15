@@ -69,7 +69,7 @@ export const POST = createApiHandler({
 
     // Create Stripe Portal session
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
-      apiVersion: "2025-04-30.basil",
+      apiVersion: "2026-01-28.clover",
     });
 
     const session = await stripe.billingPortal.sessions.create({

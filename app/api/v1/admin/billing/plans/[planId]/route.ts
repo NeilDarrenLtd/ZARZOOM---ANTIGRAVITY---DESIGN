@@ -48,7 +48,7 @@ export const PUT = createApiHandler({
     const after: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(parsed.data)) {
-      const existingValue = (existing as Record<string, unknown>)[key];
+      const existingValue = (existing as unknown as Record<string, unknown>)[key];
       if (JSON.stringify(existingValue) !== JSON.stringify(value)) {
         before[key] = existingValue;
         after[key] = value;
