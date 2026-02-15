@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   await supabase.from("social_webhook_events").insert({
     event_type: event.type,
     payload_hash: payloadHash,
-    payload: event.data.object as Record<string, unknown>,
+    payload: event.data.object as unknown as Record<string, unknown>,
     processed: false,
   });
 
