@@ -64,6 +64,7 @@ export {
   checkQuota,
   enforceQuota,
   incrementUsage,
+  quotaHeaders,
   type QuotaStatus,
 } from "./quotas";
 
@@ -79,4 +80,16 @@ export {
 export { resolveLanguage, type SupportedLanguage } from "./language";
 
 // Handler factory
-export { createApiHandler, type ApiContext, type HandlerConfig } from "./handler";
+export {
+  createApiHandler,
+  type ApiContext,
+  type HandlerConfig,
+  type AuthMethod,
+} from "./handler";
+
+// API key validation
+export {
+  parseAuthorizationBearer,
+  validateZarzApiKey,
+  type ApiKeyIdentity,
+} from "@/lib/api-keys/validate";
