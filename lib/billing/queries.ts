@@ -25,8 +25,10 @@ export async function getPlans(
     .select("*, plan_prices(*)")
     .order("display_order", { ascending: true });
 
-  if (opts.status) {
-    query = query.eq("status", opts.status);
+  if (opts.status === "active") {
+    query = query.eq("is_active", true);
+  } else if (opts.status === "archived") {
+    query = query.eq("is_active", false);
   }
 
   const { data, error } = await query;
@@ -77,11 +79,12 @@ export async function createPlan(
       name: plan.name,
       slug: plan.slug,
       description: plan.description,
-      status: plan.status,
+      is_active: plan.is_active ?? true,
       display_order: plan.display_order,
-      trial_days: plan.trial_days,
+      highlight: plan.highlight ?? false,
       quota_policy: plan.quota_policy,
-      feature_flags: plan.feature_flags,
+      features: plan.features ?? [],
+      entitlements: plan.entitlements ?? {},
     })
     .select()
     .single();

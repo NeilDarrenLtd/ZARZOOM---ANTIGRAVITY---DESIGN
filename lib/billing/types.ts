@@ -65,13 +65,22 @@ export interface PlanRow {
   name: string;
   slug: string;
   description: string | null;
-  status: PlanStatus;
+  is_active: boolean;
+  scope: string | null;
+  tenant_id: string | null;
   display_order: number;
-  trial_days: number;
+  highlight: boolean;
   quota_policy: Record<string, unknown>;
-  feature_flags: Record<string, boolean>;
+  features: unknown[] | null;
+  entitlements: Record<string, unknown> | null;
   created_at: string;
   updated_at: string;
+  /** Legacy alias -- some query helpers pass `status` */
+  status?: PlanStatus;
+  /** Legacy alias -- kept for backward compatibility */
+  trial_days?: number;
+  /** Legacy alias */
+  feature_flags?: Record<string, boolean>;
 }
 
 export interface PlanPriceRow {
@@ -80,21 +89,28 @@ export interface PlanPriceRow {
   currency: Currency;
   interval: BillingInterval;
   unit_amount: number;
-  stripe_price_id: string | null;
+  billing_provider_price_id: string | null;
+  is_active: boolean;
+  effective_from: string | null;
+  effective_to: string | null;
+  created_by: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface TenantSubscriptionRow {
   id: string;
   tenant_id: string;
   plan_id: string;
+  price_id: string | null;
+  user_id: string | null;
   status: SubscriptionStatus;
+  billing_provider: string | null;
+  billing_provider_subscription_id: string | null;
+  billing_provider_customer_id: string | null;
   current_period_start: string | null;
   current_period_end: string | null;
   cancel_at_period_end: boolean;
-  stripe_subscription_id: string | null;
-  stripe_customer_id: string | null;
-  metadata: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

@@ -13,6 +13,8 @@ const envSchema = z.object({
   SITE_URL: z.string().url().optional().default("http://localhost:3000"),
   ENCRYPTION_MASTER_KEY: z.string().min(32).optional(),
   API_KEY_PEPPER: z.string().min(16).optional(),
+  STRIPE_SECRET_KEY: z.string().min(1).optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
