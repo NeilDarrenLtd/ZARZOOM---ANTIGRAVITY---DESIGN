@@ -42,19 +42,40 @@ export const createPlanSchema = z.object({
     .string()
     .min(1, "Slug is required")
     .max(50)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with dashes"),
+    .regex(/^[a-z0-9_-]+$/, "Slug must be lowercase alphanumeric with dashes or underscores"),
   description: z.string().max(500).optional().default(""),
-  status: z.enum(PLAN_STATUSES).default("draft"),
-  displayOrder: z.coerce.number().int().min(0).default(0),
-  trialDays: z.coerce.number().int().min(0).max(365).default(0),
-  quotaPolicy: z.record(z.unknown()).optional().default({}),
-  featureFlags: z.record(z.boolean()).optional().default({}),
+  is_active: z.boolean().default(true),
+  display_order: z.coerce.number().int().min(0).default(0),
+  highlight: z.boolean().default(false),
+  quota_policy: z.record(z.unknown()).optional().default({}),
+  features: z.array(z.string()).optional().default([]),
+  entitlements: z.record(z.unknown()).optional().default({}),
   prices: z.array(planPriceSchema).min(1, "At least one price is required"),
 });
 
-export const updatePlanSchema = createPlanSchema.partial().extend({
-  id: z.string().uuid(),
+export const updatePlanSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  description: z.string().max(500).optional(),
+  is_active: z.boolean().optional(),
+  display_order: z.coerce.number().int().min(0).optional(),
+  highlight: z.boolean().optional(),
+  quota_policy: z.record(z.unknown()).optional(),
+  features: z.array(z.string()).optional(),
+  entitlements: z.record(z.unknown()).optional(),
 });
+
+/** Well-known quota policy keys used in the structured editor. */
+export const QUOTA_KEYS = [
+  "images_per_month",
+  "videos_per_month",
+  "articles_per_month",
+  "scripts_per_month",
+  "social_posts_per_month",
+  "social_profiles",
+  "research_per_month",
+  "max_api_keys",
+] as const;
+export type QuotaKey = (typeof QUOTA_KEYS)[number];
 
 /* ------------------------------------------------------------------ */
 /*  Row Types (matching Supabase table shapes)                         */
