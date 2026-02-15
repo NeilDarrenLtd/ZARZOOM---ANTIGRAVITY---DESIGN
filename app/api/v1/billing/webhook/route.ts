@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
   if (webhookSecret && sig) {
     try {
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2025-04-30.basil",
+        apiVersion: "2026-01-28.clover",
       });
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } catch (err) {
