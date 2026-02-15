@@ -208,10 +208,13 @@ export async function POST(req: NextRequest) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
+        // In Stripe API >= clover, `invoice.subscription` was removed.
+        // The subscription reference now lives under `invoice.parent`.
+        const parentSub = invoice.parent?.subscription_details?.subscription;
         const stripeSubId =
-          typeof invoice.subscription === "string"
-            ? invoice.subscription
-            : invoice.subscription?.id;
+          typeof parentSub === "string"
+            ? parentSub
+            : parentSub?.id ?? null;
 
         if (stripeSubId) {
           const { data: row } = await supabase
