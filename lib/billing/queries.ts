@@ -25,8 +25,10 @@ export async function getPlans(
     .select("*, plan_prices(*)")
     .order("display_order", { ascending: true });
 
-  if (opts.status) {
-    query = query.eq("status", opts.status);
+  if (opts.status === "active") {
+    query = query.eq("is_active", true);
+  } else if (opts.status === "archived") {
+    query = query.eq("is_active", false);
   }
 
   const { data, error } = await query;
@@ -77,11 +79,12 @@ export async function createPlan(
       name: plan.name,
       slug: plan.slug,
       description: plan.description,
-      status: plan.status,
+      is_active: plan.is_active ?? true,
       display_order: plan.display_order,
-      trial_days: plan.trial_days,
+      highlight: plan.highlight ?? false,
       quota_policy: plan.quota_policy,
-      feature_flags: plan.feature_flags,
+      features: plan.features ?? [],
+      entitlements: plan.entitlements ?? {},
     })
     .select()
     .single();
@@ -108,15 +111,14 @@ export async function createPlan(
   };
 }
 
-/** Update a plan and replace its prices */
+/** Update plan metadata (not prices -- use versionPrice for that). */
 export async function updatePlan(
   id: string,
-  updates: Partial<Omit<PlanRow, "id" | "created_at" | "updated_at">>,
-  prices?: { currency: Currency; interval: BillingInterval; unit_amount: number }[]
+  updates: Partial<Omit<PlanRow, "id" | "created_at" | "updated_at">>
 ): Promise<PlanWithPrices> {
   const supabase = await createAdminClient();
 
-  const { data: planData, error: planError } = await supabase
+  const { error: planError } = await supabase
     .from("subscription_plans")
     .update({ ...updates, updated_at: new Date().toISOString() })
     .eq("id", id)
@@ -125,38 +127,75 @@ export async function updatePlan(
 
   if (planError) throw planError;
 
-  if (prices) {
-    // Delete existing prices and re-insert
-    const { error: deleteError } = await supabase
-      .from("plan_prices")
-      .delete()
-      .eq("plan_id", id);
-
-    if (deleteError) throw deleteError;
-
-    const priceRows = prices.map((p) => ({
-      plan_id: id,
-      currency: p.currency,
-      interval: p.interval,
-      unit_amount: p.unit_amount,
-    }));
-
-    const { error: insertError } = await supabase
-      .from("plan_prices")
-      .insert(priceRows);
-
-    if (insertError) throw insertError;
-  }
-
   return getPlanById(id) as Promise<PlanWithPrices>;
 }
 
-/** Archive a plan (soft delete) */
+/**
+ * Add a new price version for a plan.
+ * Sets `effective_to` on the old active price for the same
+ * (plan_id, currency, interval) combination -- never overwrites.
+ */
+export async function versionPrice(
+  planId: string,
+  price: {
+    currency: Currency;
+    interval: BillingInterval;
+    unit_amount: number;
+    billing_provider_price_id?: string | null;
+    created_by?: string;
+  }
+): Promise<PlanPriceRow> {
+  const supabase = await createAdminClient();
+  const now = new Date().toISOString();
+
+  // Deactivate the current active price for this slot
+  await supabase
+    .from("plan_prices")
+    .update({ effective_to: now, is_active: false, updated_at: now })
+    .eq("plan_id", planId)
+    .eq("currency", price.currency)
+    .eq("interval", price.interval)
+    .eq("is_active", true);
+
+  // Insert the new version
+  const { data, error } = await supabase
+    .from("plan_prices")
+    .insert({
+      plan_id: planId,
+      currency: price.currency,
+      interval: price.interval,
+      unit_amount: price.unit_amount,
+      billing_provider_price_id: price.billing_provider_price_id ?? null,
+      is_active: true,
+      effective_from: now,
+      created_by: price.created_by ?? null,
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data as PlanPriceRow;
+}
+
+/** Deactivate (soft-disable) a specific price version. */
+export async function deactivatePrice(priceId: string): Promise<void> {
+  const supabase = await createAdminClient();
+  const now = new Date().toISOString();
+
+  const { error } = await supabase
+    .from("plan_prices")
+    .update({ is_active: false, effective_to: now, updated_at: now })
+    .eq("id", priceId);
+
+  if (error) throw error;
+}
+
+/** Archive a plan (soft-disable, never hard-delete) */
 export async function archivePlan(id: string): Promise<void> {
   const supabase = await createAdminClient();
   const { error } = await supabase
     .from("subscription_plans")
-    .update({ status: "archived", updated_at: new Date().toISOString() })
+    .update({ is_active: false, updated_at: new Date().toISOString() })
     .eq("id", id);
 
   if (error) throw error;

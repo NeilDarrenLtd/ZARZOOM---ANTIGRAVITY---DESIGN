@@ -1,87 +1,129 @@
 import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 import { createAdminClient } from "@/lib/supabase/server";
+import { invalidateEntitlements } from "@/lib/billing/entitlements";
+import crypto from "node:crypto";
 
-/**
- * POST /api/v1/billing/webhook
- *
- * Stripe webhook handler. Processes subscription lifecycle events and
- * updates the tenant_subscriptions table accordingly.
- *
- * Note: Stripe signature verification requires the `stripe` package
- * and the STRIPE_WEBHOOK_SECRET env var. When Stripe is not yet
- * connected, this handler logs the event and returns 200 so the
- * endpoint is wired up and ready.
- */
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
+
+/** Convert Stripe epoch seconds to ISO string. */
+function epochToISO(epoch: unknown): string | null {
+  if (typeof epoch !== "number" || epoch === 0) return null;
+  return new Date(epoch * 1000).toISOString();
+}
+
+/** SHA-256 hash of the raw webhook body for deduplication. */
+function hashPayload(body: string): string {
+  return crypto.createHash("sha256").update(body).digest("hex");
+}
+
+/* ------------------------------------------------------------------ */
+/*  POST /api/v1/billing/webhook                                       */
+/*                                                                     */
+/*  Stripe webhook handler. Verifies signature, deduplicates events,   */
+/*  updates tenant_subscriptions with correct column names, and        */
+/*  invalidates the entitlements cache so quota middleware picks up     */
+/*  changes immediately.                                               */
+/*                                                                     */
+/*  Handled events:                                                    */
+/*    customer.subscription.created                                    */
+/*    customer.subscription.updated                                    */
+/*    customer.subscription.deleted                                    */
+/*    invoice.payment_failed                                           */
+/*                                                                     */
+/*  Replay prevention:                                                 */
+/*    Each event body is SHA-256 hashed and stored in                  */
+/*    social_webhook_events. Duplicate hashes return 200 immediately.  */
+/* ------------------------------------------------------------------ */
+
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
 
-  // If Stripe is configured, verify the webhook signature
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  let event: {
-    type: string;
-    data: { object: Record<string, unknown> };
-  };
+  /* -- Signature verification ------------------------------------- */
+  let event: Stripe.Event;
 
   if (webhookSecret && sig) {
     try {
-      // Dynamic import so the app doesn't break if stripe isn't installed yet
-      const stripe = (await import("stripe")).default;
-      const stripeClient = new stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2026-01-28.clover",
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: "2025-04-30.basil",
       });
-      event = stripeClient.webhooks.constructEvent(
-        body,
-        sig,
-        webhookSecret
-      ) as unknown as typeof event;
+      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } catch (err) {
-      console.error("[Stripe Webhook] Signature verification failed:", err);
+      console.error("[Billing Webhook] Signature verification failed:", err);
       return NextResponse.json(
         { error: "Webhook signature verification failed" },
         { status: 400 }
       );
     }
   } else {
-    // No Stripe configured yet -- parse raw JSON for development
+    // Development fallback -- no Stripe configured yet
     try {
-      event = JSON.parse(body);
+      event = JSON.parse(body) as Stripe.Event;
     } catch {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
     console.warn(
-      "[Stripe Webhook] No STRIPE_WEBHOOK_SECRET set. Skipping signature verification."
+      "[Billing Webhook] No STRIPE_WEBHOOK_SECRET set. Skipping signature verification."
     );
   }
 
   const supabase = await createAdminClient();
 
+  /* -- Replay / deduplication ------------------------------------- */
+  const payloadHash = hashPayload(body);
+
+  const { data: existing } = await supabase
+    .from("social_webhook_events")
+    .select("id")
+    .eq("payload_hash", payloadHash)
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    // Already processed -- return 200 to acknowledge
+    return NextResponse.json({ received: true, deduplicated: true });
+  }
+
+  // Record event for deduplication
+  await supabase.from("social_webhook_events").insert({
+    event_type: event.type,
+    payload_hash: payloadHash,
+    payload: event.data.object as Record<string, unknown>,
+    processed: false,
+  });
+
+  /* -- Event processing ------------------------------------------- */
   try {
     switch (event.type) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
-        const sub = event.data.object;
-        const stripeSubId = sub.id as string;
-        const stripeCustomerId = sub.customer as string;
-        const status = sub.status as string;
-        const cancelAtPeriodEnd = sub.cancel_at_period_end as boolean;
-        const currentPeriodStart = sub.current_period_start
-          ? new Date((sub.current_period_start as number) * 1000).toISOString()
-          : null;
-        const currentPeriodEnd = sub.current_period_end
-          ? new Date((sub.current_period_end as number) * 1000).toISOString()
-          : null;
+        const sub = event.data.object as Stripe.Subscription;
+        const stripeSubId = sub.id;
+        const stripeCustomerId =
+          typeof sub.customer === "string" ? sub.customer : sub.customer.id;
+        const status = sub.status;
+        const cancelAtPeriodEnd = sub.cancel_at_period_end;
+        const currentPeriodStart = epochToISO(sub.current_period_start);
+        const currentPeriodEnd = epochToISO(sub.current_period_end);
 
-        // Find the tenant by stripe_customer_id
-        const { data: existing } = await supabase
+        // Extract plan/price metadata set during checkout
+        const metadata = sub.metadata ?? {};
+        const planIdFromMeta = metadata.plan_id ?? null;
+        const priceIdFromMeta = metadata.price_id ?? null;
+
+        // Try to find by billing_provider_subscription_id first
+        const { data: existingRow } = await supabase
           .from("tenant_subscriptions")
           .select("id, tenant_id")
-          .eq("stripe_subscription_id", stripeSubId)
-          .single();
+          .eq("billing_provider_subscription_id", stripeSubId)
+          .maybeSingle();
 
-        if (existing) {
-          // Update existing subscription
+        if (existingRow) {
           await supabase
             .from("tenant_subscriptions")
             .update({
@@ -89,34 +131,44 @@ export async function POST(req: NextRequest) {
               cancel_at_period_end: cancelAtPeriodEnd,
               current_period_start: currentPeriodStart,
               current_period_end: currentPeriodEnd,
+              ...(planIdFromMeta ? { plan_id: planIdFromMeta } : {}),
+              ...(priceIdFromMeta ? { price_id: priceIdFromMeta } : {}),
               updated_at: new Date().toISOString(),
             })
-            .eq("id", existing.id);
+            .eq("id", existingRow.id);
+
+          // Invalidate cached entitlements
+          invalidateEntitlements(existingRow.tenant_id);
         } else {
-          // Look up tenant by stripe_customer_id in metadata
-          const { data: tenantSub } = await supabase
+          // Fallback: match by billing_provider_customer_id
+          const { data: tenantRow } = await supabase
             .from("tenant_subscriptions")
             .select("id, tenant_id")
-            .eq("stripe_customer_id", stripeCustomerId)
+            .eq("billing_provider_customer_id", stripeCustomerId)
             .order("created_at", { ascending: false })
             .limit(1)
-            .single();
+            .maybeSingle();
 
-          if (tenantSub) {
+          if (tenantRow) {
             await supabase
               .from("tenant_subscriptions")
               .update({
-                stripe_subscription_id: stripeSubId,
+                billing_provider_subscription_id: stripeSubId,
+                billing_provider: "stripe",
                 status,
                 cancel_at_period_end: cancelAtPeriodEnd,
                 current_period_start: currentPeriodStart,
                 current_period_end: currentPeriodEnd,
+                ...(planIdFromMeta ? { plan_id: planIdFromMeta } : {}),
+                ...(priceIdFromMeta ? { price_id: priceIdFromMeta } : {}),
                 updated_at: new Date().toISOString(),
               })
-              .eq("id", tenantSub.id);
+              .eq("id", tenantRow.id);
+
+            invalidateEntitlements(tenantRow.tenant_id);
           } else {
             console.warn(
-              `[Stripe Webhook] No tenant found for customer ${stripeCustomerId}`
+              `[Billing Webhook] No tenant found for customer ${stripeCustomerId}`
             );
           }
         }
@@ -124,40 +176,70 @@ export async function POST(req: NextRequest) {
       }
 
       case "customer.subscription.deleted": {
-        const sub = event.data.object;
-        const stripeSubId = sub.id as string;
+        const sub = event.data.object as Stripe.Subscription;
 
-        await supabase
+        const { data: row } = await supabase
           .from("tenant_subscriptions")
-          .update({
-            status: "canceled",
-            updated_at: new Date().toISOString(),
-          })
-          .eq("stripe_subscription_id", stripeSubId);
+          .select("id, tenant_id")
+          .eq("billing_provider_subscription_id", sub.id)
+          .maybeSingle();
+
+        if (row) {
+          await supabase
+            .from("tenant_subscriptions")
+            .update({
+              status: "canceled",
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", row.id);
+
+          invalidateEntitlements(row.tenant_id);
+        }
         break;
       }
 
       case "invoice.payment_failed": {
-        const invoice = event.data.object;
-        const stripeSubId = invoice.subscription as string;
+        const invoice = event.data.object as Stripe.Invoice;
+        const stripeSubId =
+          typeof invoice.subscription === "string"
+            ? invoice.subscription
+            : invoice.subscription?.id;
 
         if (stripeSubId) {
-          await supabase
+          const { data: row } = await supabase
             .from("tenant_subscriptions")
-            .update({
-              status: "past_due",
-              updated_at: new Date().toISOString(),
-            })
-            .eq("stripe_subscription_id", stripeSubId);
+            .select("id, tenant_id")
+            .eq("billing_provider_subscription_id", stripeSubId)
+            .maybeSingle();
+
+          if (row) {
+            await supabase
+              .from("tenant_subscriptions")
+              .update({
+                status: "past_due",
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", row.id);
+
+            invalidateEntitlements(row.tenant_id);
+          }
         }
         break;
       }
 
       default:
-        console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
+        console.log(
+          `[Billing Webhook] Unhandled event type: ${event.type}`
+        );
     }
+
+    // Mark dedup record as processed
+    await supabase
+      .from("social_webhook_events")
+      .update({ processed: true })
+      .eq("payload_hash", payloadHash);
   } catch (err) {
-    console.error("[Stripe Webhook] Error processing event:", err);
+    console.error("[Billing Webhook] Error processing event:", err);
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }

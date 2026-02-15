@@ -8,6 +8,11 @@ import { requireRole, type Role } from "./roles";
 import { enforceRateLimit, rateLimitHeaders } from "./rate-limit";
 import { resolveLanguage, type SupportedLanguage } from "./language";
 import {
+  parseAuthorizationBearer,
+  validateZarzApiKey,
+  type ApiKeyIdentity,
+} from "@/lib/api-keys/validate";
+import {
   ok,
   badRequest,
   unauthorized,
@@ -22,6 +27,7 @@ import {
   ForbiddenError,
   NotFoundError,
   RateLimitError,
+  QuotaExceededError,
   ValidationError,
 } from "./errors";
 
@@ -29,19 +35,30 @@ import {
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
+/** How the request was authenticated. */
+export type AuthMethod = "session" | "api_key";
+
 export interface ApiContext {
   /** Correlation ID for this request. */
   requestId: string;
-  /** Authenticated Supabase user (only present if `auth: true`). */
+  /** Authenticated Supabase user (only present for session auth). */
   user: User | null;
-  /** Supabase client scoped to the user's session. */
+  /** Supabase client scoped to the user's session (only for session auth). */
   supabase: SupabaseClient | null;
-  /** Resolved tenant membership (only present if `auth: true`). */
+  /** Resolved tenant membership (present for both auth methods). */
   membership: TenantMembership | null;
   /** Resolved language for this request. */
   language: SupportedLanguage;
   /** The raw Next.js request. */
   req: NextRequest;
+  /** How this request was authenticated. */
+  authMethod: AuthMethod | null;
+  /** API key identity (only present for API key auth). */
+  apiKey: ApiKeyIdentity | null;
+  /** Client IP address (for audit logging). */
+  ip: string;
+  /** Client User-Agent (for audit logging). */
+  userAgent: string;
 }
 
 export interface HandlerConfig {
@@ -110,24 +127,55 @@ export function createApiHandler(config: HandlerConfig) {
     let rateLimitResult: Awaited<ReturnType<typeof enforceRateLimit>> | null =
       null;
 
+    // Extract client metadata once (for audit logging)
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
+    const userAgent = req.headers.get("user-agent") ?? "unknown";
+
     try {
       /* -- Auth ---------------------------------------------------- */
       let user: User | null = null;
       let supabase: SupabaseClient | null = null;
       let membership: TenantMembership | null = null;
+      let authMethod: AuthMethod | null = null;
+      let apiKeyIdentity: ApiKeyIdentity | null = null;
 
       if (needsAuth) {
-        const auth = await authenticateRequest(req);
-        user = auth.user;
-        supabase = auth.supabase;
-
-        // Tenant resolution -- prefer X-Tenant-Id header
-        const preferredTenantId = req.headers.get("x-tenant-id");
-        membership = await resolveTenant(
-          supabase,
-          user.id,
-          preferredTenantId
+        const bearerToken = parseAuthorizationBearer(
+          req.headers.get("authorization")
         );
+
+        // Strategy 1: ZARZOOM API key (zarz_live_...)
+        if (bearerToken) {
+          apiKeyIdentity = await validateZarzApiKey(bearerToken);
+        }
+
+        if (apiKeyIdentity) {
+          // API key auth succeeded -- build a synthetic membership
+          authMethod = "api_key";
+          membership = {
+            id: apiKeyIdentity.apiKeyId,
+            tenantId: apiKeyIdentity.tenantId,
+            userId: apiKeyIdentity.userId,
+            role: "member", // API keys always get member-level access
+          };
+        } else {
+          // Strategy 2: Supabase session (cookies or bearer JWT)
+          const auth = await authenticateRequest(req);
+          user = auth.user;
+          supabase = auth.supabase;
+          authMethod = "session";
+
+          // Tenant resolution -- prefer X-Tenant-Id header
+          const preferredTenantId = req.headers.get("x-tenant-id");
+          membership = await resolveTenant(
+            supabase,
+            user.id,
+            preferredTenantId
+          );
+        }
 
         // Role check
         if (config.requiredRole) {
@@ -157,6 +205,10 @@ export function createApiHandler(config: HandlerConfig) {
         membership,
         language,
         req,
+        authMethod,
+        apiKey: apiKeyIdentity,
+        ip,
+        userAgent,
       };
 
       const response = await config.handler(ctx);
@@ -184,6 +236,24 @@ export function createApiHandler(config: HandlerConfig) {
       }
       if (err instanceof NotFoundError) {
         return notFound(requestId, err.message);
+      }
+      if (err instanceof QuotaExceededError) {
+        return NextResponse.json(
+          {
+            error: {
+              code: err.code,
+              message: err.message,
+              requestId,
+            },
+          },
+          {
+            status: 402,
+            headers: {
+              "X-Request-Id": requestId,
+              "X-Quota-Exceeded": "true",
+            },
+          }
+        );
       }
       if (err instanceof RateLimitError) {
         return tooManyRequests(requestId, err.retryAfterSeconds, err.message);
