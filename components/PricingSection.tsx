@@ -186,7 +186,7 @@ export default function PricingSection({
                 {interval !== "annual" && <div className="mb-4" />}
 
                 {/* Trial */}
-                {plan.trial_days > 0 && (
+                {plan.trial_days && plan.trial_days > 0 && (
                   <p className="text-xs text-gray-400 mb-4">
                     {t("billing.pricing.trialDays").replace("{days}", String(plan.trial_days))}
                   </p>
