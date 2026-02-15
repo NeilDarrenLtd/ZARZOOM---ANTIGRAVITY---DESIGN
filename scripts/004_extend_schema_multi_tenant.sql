@@ -219,10 +219,12 @@ ALTER TABLE public.plan_prices
   ADD COLUMN IF NOT EXISTS effective_to   TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS created_by     UUID REFERENCES auth.users(id);
 
--- Composite index for the active-prices view
+-- Composite index for the active-prices view.
+-- NOTE: We cannot use now() in a partial-index predicate (must be IMMUTABLE).
+-- Instead we index all active prices; the view handles temporal filtering.
 CREATE INDEX IF NOT EXISTS plan_prices_active_lookup_idx
-  ON public.plan_prices (plan_id, currency, interval, is_active)
-  WHERE is_active = true AND (effective_to IS NULL OR effective_to > now());
+  ON public.plan_prices (plan_id, currency, interval, effective_from)
+  WHERE is_active = true;
 
 
 -- ============================================================================
