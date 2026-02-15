@@ -99,10 +99,10 @@ export async function POST(req: NextRequest) {
       return ok({ status: "no_matching_job", requestId }, requestId);
     }
 
-    // --- Map status ---
+    // --- Map status (normalised to canonical set) ---
     const statusMap: Record<string, string> = {
-      completed: "succeeded",
-      success: "succeeded",
+      completed: "completed",
+      success: "completed",
       failed: "failed",
       processing: "running",
     };
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    if (newStatus === "succeeded" && payload.video_url) {
+    if (newStatus === "completed" && payload.video_url) {
       updateData.result = {
         video_url: payload.video_url,
         kling_task_id: payload.task_id,

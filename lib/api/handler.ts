@@ -21,6 +21,8 @@ import {
   tooManyRequests,
   serverError,
 } from "./http-responses";
+import { enforcePlanEntitlement } from "@/lib/billing/enforce";
+import { enforceQuota as enforceQuotaCheck, incrementUsage, type QuotaStatus } from "./quotas";
 import {
   ApiError,
   AuthError,
@@ -59,6 +61,8 @@ export interface ApiContext {
   ip: string;
   /** Client User-Agent (for audit logging). */
   userAgent: string;
+  /** Populated when `quotaMetric` is set on the handler config. */
+  quotaStatus: QuotaStatus | null;
 }
 
 export interface HandlerConfig {
@@ -83,6 +87,31 @@ export interface HandlerConfig {
     maxRequests: number;
     windowMs?: number;
   };
+
+  /**
+   * Declarative plan-level entitlement gate.
+   *
+   * When set, the handler factory calls `enforcePlanEntitlement(tenantId, action)`
+   * **before** the route handler runs. If the tenant's plan is too low, a
+   * `ForbiddenError` (403) is returned automatically.
+   *
+   * Use action keys from `ACTION_PLAN_MAP` (e.g. "research_social",
+   * "video_generate", "social.publish").
+   */
+  requiredEntitlement?: string;
+
+  /**
+   * Declarative quota enforcement.
+   *
+   * When set, the handler factory calls `enforceQuota(tenantId, metric)`
+   * before the handler runs and makes the quota status available on `ctx.quotaStatus`.
+   * After the handler returns a success response (2xx), it automatically
+   * calls `incrementUsage(tenantId, metric)`.
+   *
+   * This replaces the manual `enforceQuota()` + `incrementUsage()` calls in
+   * each route handler.
+   */
+  quotaMetric?: string;
 
   /**
    * The actual handler function. Receives the enriched `ApiContext` and must
@@ -141,6 +170,7 @@ export function createApiHandler(config: HandlerConfig) {
       let membership: TenantMembership | null = null;
       let authMethod: AuthMethod | null = null;
       let apiKeyIdentity: ApiKeyIdentity | null = null;
+      let quotaStatus: QuotaStatus | null = null;
 
       if (needsAuth) {
         const bearerToken = parseAuthorizationBearer(
@@ -153,7 +183,7 @@ export function createApiHandler(config: HandlerConfig) {
         }
 
         if (apiKeyIdentity) {
-          // API key auth succeeded -- build a synthetic membership
+          // API key auth verified -- build a synthetic membership
           authMethod = "api_key";
           membership = {
             id: apiKeyIdentity.apiKeyId,
@@ -180,6 +210,22 @@ export function createApiHandler(config: HandlerConfig) {
         // Role check
         if (config.requiredRole) {
           requireRole(membership, config.requiredRole);
+        }
+
+        // Plan-level entitlement gate
+        if (config.requiredEntitlement) {
+          await enforcePlanEntitlement(
+            membership.tenantId,
+            config.requiredEntitlement
+          );
+        }
+
+        // Declarative quota enforcement (pre-handler check)
+        if (config.quotaMetric) {
+          quotaStatus = await enforceQuotaCheck(
+            membership.tenantId,
+            config.quotaMetric
+          );
         }
 
         // Rate limit (per tenant)
@@ -209,9 +255,20 @@ export function createApiHandler(config: HandlerConfig) {
         apiKey: apiKeyIdentity,
         ip,
         userAgent,
+        quotaStatus,
       };
 
       const response = await config.handler(ctx);
+
+      // Auto-increment quota after a successful response
+      if (
+        config.quotaMetric &&
+        membership &&
+        response.status >= 200 &&
+        response.status < 300
+      ) {
+        await incrementUsage(membership.tenantId, config.quotaMetric);
+      }
 
       // Attach request ID and rate-limit headers to the response
       response.headers.set("X-Request-Id", requestId);

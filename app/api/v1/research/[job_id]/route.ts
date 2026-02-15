@@ -53,7 +53,7 @@ export const GET = createApiHandler({
 
     // Fetch associated artefact if job is complete
     let artefact = null;
-    if (job.status === "succeeded") {
+    if (job.status === "completed") {
       const { data } = await admin
         .from("artefacts")
         .select("artefact_id, title, kind, content, language, created_at")

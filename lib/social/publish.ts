@@ -3,6 +3,7 @@ import type { ApiContext } from "@/lib/api/handler";
 import { accepted, badRequest } from "@/lib/api/http-responses";
 import { NotFoundError } from "@/lib/api/errors";
 import { enforceQuota, incrementUsage, enqueueJob } from "@/lib/api";
+import { enforcePlanEntitlement } from "@/lib/billing/enforce";
 import { env } from "@/lib/api/env";
 import { createServerClient } from "@supabase/ssr";
 import type { Platform } from "./schemas";
@@ -48,6 +49,9 @@ export async function publishPost(
     SUPABASE_SERVICE_ROLE_KEY,
     { cookies: { getAll: () => [], setAll() {} } }
   );
+
+  // 0. Plan-level entitlement gate
+  await enforcePlanEntitlement(tenantId, `social.post.${postType}`);
 
   // 1. Resolve profile
   const { data: profile, error: profileError } = await admin

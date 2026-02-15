@@ -87,6 +87,14 @@ export {
   type AuthMethod,
 } from "./handler";
 
+// Plan entitlement enforcement
+export {
+  enforcePlanEntitlement,
+  meetsMinimumTier,
+  ACTION_PLAN_MAP,
+  type PlanTier,
+} from "@/lib/billing/enforce";
+
 // API key validation
 export {
   parseAuthorizationBearer,

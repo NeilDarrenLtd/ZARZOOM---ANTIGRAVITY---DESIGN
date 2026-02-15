@@ -14,36 +14,45 @@ import { NextResponse } from "next/server";
 /* ------------------------------------------------------------------ */
 
 const checkoutSchema = z.object({
-  /** The plan_prices.id to subscribe to. */
-  priceId: z.string().uuid("Invalid price ID"),
-  /** Where to redirect after success. */
-  successUrl: z.string().url().optional(),
-  /** Where to redirect if the user cancels. */
-  cancelUrl: z.string().url().optional(),
+  /**
+   * Plan code (slug) to subscribe to. The caller passes a human-friendly
+   * code like "basic", "pro", or "advanced" and we resolve the plan from
+   * the database.
+   */
+  plan_code: z.string().min(1, "plan_code is required"),
+  /** Billing currency. */
+  currency: z.enum(["GBP", "USD", "EUR"]),
+  /** Billing interval. */
+  interval: z.enum(["month", "year"]),
 });
 
 /**
  * POST /api/v1/billing/checkout
  *
- * Creates a Stripe Checkout Session for the selected plan price.
+ * Creates a Stripe Checkout Session for the selected plan + currency +
+ * interval combination.
  *
  * Request body:
- *   { priceId: uuid, successUrl?: string, cancelUrl?: string }
+ *   { plan_code: string, currency: "GBP"|"USD"|"EUR", interval: "month"|"year" }
  *
  * Response (200):
  *   { url: string }        -- Stripe Checkout redirect URL
  *
  * Error responses:
- *   400 -- invalid body, missing price, or price has no Stripe ID
+ *   400 -- invalid body, plan not found, price not found, or price has no Stripe ID
  *   500 -- Stripe API failure
  *
  * Flow:
  *   1. Validate body against checkoutSchema
- *   2. Look up plan_prices row by priceId, join subscription_plans for name
- *   3. Verify billing_provider_price_id exists on that price row
- *   4. Look up or create Stripe customer for the tenant
- *   5. Create Stripe Checkout Session in "subscription" mode
- *   6. Return { url } for client redirect
+ *   2. Resolve plan by slug (must be active)
+ *   3. Resolve active plan_price row matching currency + interval via the
+ *      active_plan_prices view (effective_from <= now, effective_to null or > now)
+ *   4. Ensure stripe_product_id exists on the plan
+ *   5. Ensure billing_provider_price_id exists on the price
+ *   6. Look up or create Stripe customer for the tenant
+ *   7. Create Stripe Checkout Session in "subscription" mode
+ *   8. Upsert an "incomplete" subscription row
+ *   9. Return { url } for client redirect
  */
 export const POST = createApiHandler({
   requiredRole: "member",
@@ -66,46 +75,67 @@ export const POST = createApiHandler({
       );
     }
 
-    const { priceId, successUrl, cancelUrl } = parsed.data;
+    const { plan_code, currency, interval } = parsed.data;
     const tenantId = ctx.membership!.tenantId;
     const userId = ctx.user!.id;
     const userEmail = ctx.user!.email;
 
-    // 2. Look up the plan price + parent plan
     const supabase = await createAdminClient();
 
-    const { data: priceRow, error: priceErr } = await supabase
-      .from("plan_prices")
-      .select(
-        `
-        id,
-        plan_id,
-        currency,
-        interval,
-        unit_amount,
-        billing_provider_price_id,
-        is_active,
-        plan:subscription_plans ( id, name, slug )
-      `
-      )
-      .eq("id", priceId)
+    // 2. Resolve the plan by slug (must be active)
+    const { data: plan, error: planErr } = await supabase
+      .from("subscription_plans")
+      .select("id, name, slug, stripe_product_id, is_active")
+      .eq("slug", plan_code)
       .eq("is_active", true)
       .single();
 
-    if (priceErr || !priceRow) {
-      return badRequest(ctx.requestId, "Price not found or inactive");
+    if (planErr || !plan) {
+      return badRequest(
+        ctx.requestId,
+        `Plan "${plan_code}" not found or inactive`
+      );
     }
 
-    // 3. Verify Stripe price ID exists
+    // 3. Resolve the active price via the active_plan_prices view
+    //    This view already filters: is_active = true, effective_from <= now(),
+    //    (effective_to IS NULL OR effective_to > now()), and sp.is_active = true
+    const intervalDb = interval === "year" ? "annual" : "monthly";
+
+    const { data: priceRow, error: priceErr } = await supabase
+      .from("active_plan_prices")
+      .select("price_id, plan_id, unit_amount, billing_provider_price_id")
+      .eq("plan_id", plan.id)
+      .eq("currency", currency)
+      .eq("interval", intervalDb)
+      .limit(1)
+      .single();
+
+    if (priceErr || !priceRow) {
+      return badRequest(
+        ctx.requestId,
+        `No active price found for plan "${plan_code}" in ${currency}/${interval}`
+      );
+    }
+
+    // 4. Ensure stripe_product_id exists on the plan
+    if (!plan.stripe_product_id) {
+      return badRequest(
+        ctx.requestId,
+        "This plan is not yet connected to the billing provider. Please ask an admin to sync products."
+      );
+    }
+
+    // 5. Ensure billing_provider_price_id exists on the price
     const stripePriceId = priceRow.billing_provider_price_id;
     if (!stripePriceId) {
       return badRequest(
         ctx.requestId,
-        "This price is not yet connected to the billing provider. Please contact support."
+        "This price is not yet connected to the billing provider. Please ask an admin to sync prices."
       );
     }
 
-    // 4. Resolve or create Stripe customer
+    // 6. Resolve or create Stripe customer
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
       apiVersion: "2026-01-28.clover",
     });
@@ -123,8 +153,6 @@ export const POST = createApiHandler({
     let stripeCustomerId = existingSub?.billing_provider_customer_id ?? null;
 
     if (!stripeCustomerId) {
-      // Create a new Stripe customer
-      const plan = priceRow.plan as unknown as { name: string; slug: string };
       const customer = await stripe.customers.create({
         email: userEmail ?? undefined,
         metadata: {
@@ -135,42 +163,39 @@ export const POST = createApiHandler({
       stripeCustomerId = customer.id;
     }
 
-    // 5. Create Checkout Session
-    const baseUrl = successUrl
-      ? new URL(successUrl).origin
-      : SITE_URL;
+    // 7. Create Checkout Session
+    const baseUrl = SITE_URL;
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: stripeCustomerId,
       client_reference_id: tenantId,
       line_items: [{ price: stripePriceId, quantity: 1 }],
-      success_url:
-        successUrl ?? `${baseUrl}/dashboard?checkout=success`,
-      cancel_url: cancelUrl ?? `${baseUrl}/pricing?checkout=canceled`,
+      success_url: `${baseUrl}/dashboard?checkout=success`,
+      cancel_url: `${baseUrl}/pricing?checkout=canceled`,
       subscription_data: {
         metadata: {
           tenant_id: tenantId,
           user_id: userId,
-          plan_id: priceRow.plan_id,
-          price_id: priceRow.id,
+          plan_id: plan.id,
+          price_id: priceRow.price_id,
         },
       },
       metadata: {
         tenant_id: tenantId,
-        price_id: priceRow.id,
+        price_id: priceRow.price_id,
       },
     });
 
-    // 6. Upsert a pending subscription row so the webhook has something to match
+    // 8. Upsert a pending subscription row so the webhook has something to match
     const { error: upsertErr } = await supabase
       .from("tenant_subscriptions")
       .upsert(
         {
           tenant_id: tenantId,
           user_id: userId,
-          plan_id: priceRow.plan_id,
-          price_id: priceRow.id,
+          plan_id: plan.id,
+          price_id: priceRow.price_id,
           status: "incomplete",
           billing_provider: "stripe",
           billing_provider_customer_id: stripeCustomerId,
@@ -183,6 +208,7 @@ export const POST = createApiHandler({
       console.error("[Checkout] Failed to upsert subscription row:", upsertErr);
     }
 
+    // 9. Return redirect URL
     return NextResponse.json(
       { url: session.url },
       {

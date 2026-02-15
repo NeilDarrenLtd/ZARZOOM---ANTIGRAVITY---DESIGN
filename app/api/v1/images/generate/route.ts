@@ -3,8 +3,6 @@ import {
   createApiHandler,
   accepted,
   badRequest,
-  enforceQuota,
-  incrementUsage,
   enqueueJob,
   ValidationError,
 } from "@/lib/api";
@@ -20,7 +18,7 @@ import { imageGenerateSchema } from "@/lib/images";
  * - Call OpenAI Images API (generations endpoint)
  * - Decode base64 or fetch URL output
  * - Store in bucket, create asset row
- * - Mark job succeeded with output_asset_ids in result JSONB
+ * - Mark job completed with output_asset_ids in result JSONB
  * - Increment usage counters
  * - If callback_url provided, POST result there
  *
@@ -29,6 +27,8 @@ import { imageGenerateSchema } from "@/lib/images";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requiredEntitlement: "image_generate",
+  quotaMetric: "image_generations",
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
@@ -47,9 +47,6 @@ export const POST = createApiHandler({
     }
 
     const input = parsed.data;
-
-    // --- Entitlements / quota ---
-    await enforceQuota(tenantId, "image_generations");
 
     // --- Enrich prompt with language hint ---
     const enrichedPrompt =
@@ -75,9 +72,6 @@ export const POST = createApiHandler({
         callbackUrl: input.callback_url,
       }
     );
-
-    // --- Increment usage ---
-    await incrementUsage(tenantId, "image_generations", input.n);
 
     return accepted(
       {

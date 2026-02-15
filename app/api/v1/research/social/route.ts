@@ -2,8 +2,6 @@ import {
   createApiHandler,
   accepted,
   badRequest,
-  enforceQuota,
-  incrementUsage,
   enqueueJob,
   ValidationError,
 } from "@/lib/api";
@@ -31,6 +29,8 @@ import { resolvePromptTemplate } from "@/lib/research/prompts";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requiredEntitlement: "research_social",
+  quotaMetric: "research_social",
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
@@ -49,9 +49,6 @@ export const POST = createApiHandler({
     }
 
     const input = parsed.data;
-
-    // --- Entitlements / quota ---
-    await enforceQuota(tenantId, "research_social");
 
     // --- Resolve language (input > tenant default > ctx.language) ---
     const language = input.language ?? ctx.language;
@@ -81,9 +78,6 @@ export const POST = createApiHandler({
         callbackUrl: input.callback_url,
       }
     );
-
-    // --- Increment usage ---
-    await incrementUsage(tenantId, "research_social");
 
     return accepted(
       {

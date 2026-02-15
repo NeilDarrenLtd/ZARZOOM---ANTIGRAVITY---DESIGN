@@ -21,7 +21,7 @@ import { imageEditSchema } from "@/lib/images";
  * - Call OpenAI Images API (edits endpoint) with image + mask + prompt
  * - Decode base64 or fetch URL output
  * - Store in bucket, create asset row
- * - Mark job succeeded with output_asset_ids in result JSONB
+ * - Mark job completed with output_asset_ids in result JSONB
  * - Increment usage counters
  * - If callback_url provided, POST result there
  */
