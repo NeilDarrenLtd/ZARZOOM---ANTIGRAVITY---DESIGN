@@ -484,6 +484,7 @@
         "label": "Connect Social Accounts",
         "help": "Link your social media accounts via Upload-Post.",
         "button": "Open Upload-Post",
+        "manage": "Manage Connections",
         "connected": "Social accounts connected",
         "notConnected": "No accounts connected yet"
       },
@@ -500,6 +501,18 @@
         "placeholder": "Anything else you'd like us to know about your brand or content preferences...",
         "help": "Optional notes for our AI to consider."
       }
+    },
+    "modal": {
+      "title": "Connect Social Accounts",
+      "loading": "Preparing social connector...",
+      "checking": "Checking connection...",
+      "close": "Done",
+      "openInNewTab": "Open in new tab",
+      "skipConnect": "Skip for now",
+      "errorGeneric": "Could not load the social connector. Please try again later.",
+      "errorNoUrl": "No connect URL was returned. Please try again.",
+      "demoTitle": "Social Connector Coming Soon",
+      "demoDescription": "Upload-Post is not yet configured for this environment. Your social account connections will be available once the provider is set up by an administrator."
     },
     "errors": {
       "loadFailed": "Failed to load your onboarding data. Please try again.",

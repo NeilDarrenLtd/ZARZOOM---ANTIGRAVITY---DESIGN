@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
-import { ExternalLink, CheckCircle2, Circle } from "lucide-react";
+import { ExternalLink, CheckCircle2, Circle, Loader2 } from "lucide-react";
+import UploadPostConnectModal from "@/components/social/UploadPostConnectModal";
 
 interface Step5Props {
   data: OnboardingUpdate;
@@ -13,9 +14,38 @@ interface Step5Props {
 export default function Step5Connect({ data, onChange }: Step5Props) {
   const { t } = useI18n();
   const [showModal, setShowModal] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const inputClass =
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
+
+  const handleModalClose = useCallback(
+    async (connected: boolean) => {
+      setShowModal(false);
+
+      if (connected) {
+        onChange({ socials_connected: true });
+        return;
+      }
+
+      // Even if modal said not connected, do a final status check
+      setRefreshing(true);
+      try {
+        const res = await fetch("/api/v1/onboarding/social-connect/status");
+        if (res.ok) {
+          const body = await res.json();
+          if (body.data?.connected) {
+            onChange({ socials_connected: true });
+          }
+        }
+      } catch {
+        // silently ignore
+      } finally {
+        setRefreshing(false);
+      }
+    },
+    [onChange]
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -38,7 +68,9 @@ export default function Step5Connect({ data, onChange }: Step5Props) {
         </p>
 
         <div className="flex items-center gap-3 mb-3">
-          {data.socials_connected ? (
+          {refreshing ? (
+            <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+          ) : data.socials_connected ? (
             <CheckCircle2 className="w-5 h-5 text-green-600" />
           ) : (
             <Circle className="w-5 h-5 text-gray-300" />
@@ -50,19 +82,24 @@ export default function Step5Connect({ data, onChange }: Step5Props) {
                 : "text-gray-500"
             }`}
           >
-            {data.socials_connected
-              ? t("onboarding.step5.connectSocials.connected")
-              : t("onboarding.step5.connectSocials.notConnected")}
+            {refreshing
+              ? t("onboarding.modal.checking")
+              : data.socials_connected
+                ? t("onboarding.step5.connectSocials.connected")
+                : t("onboarding.step5.connectSocials.notConnected")}
           </span>
         </div>
 
         <button
           type="button"
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+          disabled={refreshing}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
         >
           <ExternalLink className="w-4 h-4" />
-          {t("onboarding.step5.connectSocials.button")}
+          {data.socials_connected
+            ? t("onboarding.step5.connectSocials.manage")
+            : t("onboarding.step5.connectSocials.button")}
         </button>
       </div>
 
@@ -145,36 +182,8 @@ export default function Step5Connect({ data, onChange }: Step5Props) {
         </p>
       </div>
 
-      {/* Upload-Post modal placeholder */}
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-xl flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-gray-900">Upload-Post</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              {"The Upload-Post social connector will be integrated here. For now, this is a placeholder modal."}
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                type="button"
-                onClick={() => {
-                  onChange({ socials_connected: true });
-                  setShowModal(false);
-                }}
-                className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
-              >
-                {"Simulate Connect"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                {"Close"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Upload-Post connect modal */}
+      <UploadPostConnectModal open={showModal} onClose={handleModalClose} />
     </div>
   );
 }
