@@ -60,12 +60,12 @@ export const POST = createApiHandler({
     // Fetch ticket details for email notification
     const { data: ticket } = await ctx.supabase!
       .from("support_tickets")
-      .select("subject, user_id, profiles!inner(email)")
+      .select("subject, user_id, profiles(email)")
       .eq("ticket_id", ticketId)
       .single();
 
     if (ticket) {
-      const ticketOwnerEmail = (ticket.profiles as { email: string }).email;
+      const ticketOwnerEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
 
       if (isAdmin) {
         // Admin comment → Email to user

@@ -47,7 +47,7 @@ export const PATCH = createApiHandler({
         last_activity_at: new Date().toISOString(),
       })
       .eq("ticket_id", ticketId)
-      .select("ticket_id, subject, status, priority, category, updated_at, last_activity_at, user_id, profiles!inner(email)")
+      .select("ticket_id, subject, status, priority, category, updated_at, last_activity_at, user_id, profiles(email)")
       .single();
 
     if (error) {
@@ -59,7 +59,7 @@ export const PATCH = createApiHandler({
 
     // Send email notification if status changed
     if (updates.status && oldStatus && oldStatus !== updates.status) {
-      const userEmail = (ticket.profiles as { email: string }).email;
+      const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
       sendStatusChangeNotification({
         ticketId: ticket.ticket_id,
         ticketSubject: ticket.subject,

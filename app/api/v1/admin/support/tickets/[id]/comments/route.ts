@@ -26,7 +26,7 @@ export const POST = createApiHandler({
     // Verify ticket exists and fetch details for email
     const { data: ticket, error: ticketError } = await ctx.supabase!
       .from("support_tickets")
-      .select("ticket_id, subject, user_id, profiles!inner(email)")
+      .select("ticket_id, subject, user_id, profiles(email)")
       .eq("ticket_id", ticketId)
       .single();
 
@@ -57,7 +57,7 @@ export const POST = createApiHandler({
       .eq("ticket_id", ticketId);
 
     // Send email notification to ticket owner
-    const userEmail = (ticket.profiles as { email: string }).email;
+    const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
     sendAdminCommentNotification({
       ticketId,
       ticketSubject: ticket.subject,
