@@ -265,6 +265,132 @@
     },
     "back": "Back to Dashboard"
   },
+  "support": {
+    "nav": {
+      "title": "Support",
+      "myTickets": "My Tickets",
+      "createTicket": "Create Ticket",
+      "backToSupport": "Back to Support",
+      "backToDashboard": "Back to Dashboard"
+    },
+    "landing": {
+      "title": "Get Support",
+      "subtitle": "We're here to help you get the most out of ZARZOOM.",
+      "description": "Submit a support ticket and our team will respond within 24 hours on business days.",
+      "createTicketBtn": "Create Ticket",
+      "myTicketsBtn": "My Tickets"
+    },
+    "list": {
+      "title": "My Support Tickets",
+      "subtitle": "View and manage your support requests.",
+      "empty": "No tickets yet",
+      "emptyDescription": "You haven't created any support tickets. Click the button below to get started.",
+      "createFirstTicket": "Create Your First Ticket",
+      "table": {
+        "ticketId": "Ticket ID",
+        "subject": "Subject",
+        "status": "Status",
+        "lastUpdated": "Last Updated",
+        "created": "Created"
+      }
+    },
+    "create": {
+      "title": "Create Support Ticket",
+      "subtitle": "Describe your issue and we'll help you resolve it.",
+      "form": {
+        "subject": "Subject",
+        "subjectPlaceholder": "Brief description of your issue",
+        "subjectHelp": "Required. Keep it short and clear.",
+        "category": "Category",
+        "categoryHelp": "Optional. Select the category that best fits your issue.",
+        "priority": "Priority",
+        "priorityHelp": "Optional. Let us know how urgent this is.",
+        "description": "Description",
+        "descriptionPlaceholder": "Provide detailed information about your issue...",
+        "descriptionHelp": "Required. Include steps to reproduce, error messages, or any other relevant details.",
+        "attachments": "Attach Screenshots",
+        "attachmentsHelp": "Optional. Upload up to 3 screenshots (PNG, JPG, or WebP). Max 5MB each.",
+        "attachmentsBtn": "Choose Files",
+        "attachmentsSelected": "file(s) selected",
+        "removeAttachment": "Remove",
+        "submit": "Submit Ticket",
+        "submitting": "Creating ticket...",
+        "cancel": "Cancel"
+      },
+      "success": {
+        "title": "Ticket Created Successfully",
+        "message": "Your support ticket has been created. We'll respond within 24 hours on business days.",
+        "viewTicket": "View Ticket",
+        "createAnother": "Create Another Ticket"
+      },
+      "error": {
+        "title": "Failed to Create Ticket",
+        "message": "Something went wrong. Please try again.",
+        "retry": "Try Again"
+      }
+    },
+    "detail": {
+      "title": "Ticket Details",
+      "status": "Status",
+      "category": "Category",
+      "priority": "Priority",
+      "created": "Created",
+      "lastActivity": "Last Activity",
+      "comments": "Comments",
+      "addComment": "Add Comment",
+      "commentPlaceholder": "Type your message...",
+      "attachScreenshots": "Attach Screenshots",
+      "sendComment": "Send",
+      "sending": "Sending...",
+      "loadingTicket": "Loading ticket...",
+      "ticketNotFound": "Ticket not found",
+      "ticketNotFoundMessage": "This ticket doesn't exist or you don't have permission to view it.",
+      "noComments": "No comments yet",
+      "userRole": "You",
+      "adminRole": "Support Team",
+      "systemRole": "System",
+      "attachmentPreview": "Click to view full size",
+      "closeModal": "Close"
+    },
+    "status": {
+      "open": "Open",
+      "investigating": "Investigating",
+      "waiting_on_user": "Waiting on You",
+      "resolved": "Resolved",
+      "closed": "Closed"
+    },
+    "category": {
+      "none": "Not specified",
+      "technical": "Technical Issue",
+      "billing": "Billing",
+      "account": "Account",
+      "feature_request": "Feature Request",
+      "other": "Other"
+    },
+    "priority": {
+      "none": "Not specified",
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "attachments": {
+      "uploading": "Uploading attachments...",
+      "uploadSuccess": "Attachments uploaded successfully",
+      "uploadError": "Failed to upload some attachments",
+      "fileTypeError": "Only PNG, JPG, and WebP files are allowed",
+      "fileSizeError": "File size must be less than 5MB",
+      "fileCountError": "You can upload up to 3 files per comment",
+      "viewFullSize": "View full size"
+    },
+    "errors": {
+      "loadFailed": "Failed to load support tickets",
+      "createFailed": "Failed to create ticket",
+      "commentFailed": "Failed to add comment",
+      "unauthorized": "You don't have permission to access this ticket",
+      "networkError": "Network error. Please check your connection and try again."
+    }
+  },
   "pages": {
     "support": {
       "title": "Support Centre",
