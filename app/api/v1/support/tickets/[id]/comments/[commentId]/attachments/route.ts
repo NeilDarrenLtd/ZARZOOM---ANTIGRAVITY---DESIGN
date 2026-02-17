@@ -103,13 +103,17 @@ export const POST = createApiHandler({
         const { data: attachment, error: attachmentError } = await ctx.supabase!
           .from("support_attachments")
           .insert({
+            ticket_id: ticketId,
             comment_id: commentId,
+            uploaded_by_user_id: userId,
+            uploaded_by_role: isAdmin ? 'admin' : 'user',
+            kind: 'screenshot',
+            file_path: storagePath,
             file_name: file.name,
-            file_type: file.type,
+            mime_type: file.type,
             file_size: file.size,
-            storage_path: storagePath,
           })
-          .select("attachment_id, file_name, file_type, file_size, created_at")
+          .select("id, file_name, mime_type, file_size, file_path, created_at")
           .single();
 
         if (attachmentError || !attachment) {

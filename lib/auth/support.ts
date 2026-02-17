@@ -79,18 +79,22 @@ export async function verifyAttachmentAccess(
   // Get attachment with ticket info
   const { data: attachment, error } = await supabase
     .from("support_attachments")
-    .select("attachment_id, comment_id, storage_path, support_comments(ticket_id, support_tickets(user_id))")
-    .eq("attachment_id", attachmentId)
+    .select("id, comment_id, ticket_id, file_path")
+    .eq("id", attachmentId)
     .single();
 
   if (error || !attachment) {
     throw new NotFoundError("Attachment");
   }
 
-  const commentData = attachment.support_comments as any;
-  const ticketData = commentData?.support_tickets as any;
+  // Get ticket to verify ownership
+  const { data: ticket, error: ticketError } = await supabase
+    .from("support_tickets")
+    .select("user_id")
+    .eq("id", attachment.ticket_id)
+    .single();
 
-  if (!ticketData) {
+  if (ticketError || !ticket) {
     throw new NotFoundError("Ticket");
   }
 
@@ -98,12 +102,12 @@ export async function verifyAttachmentAccess(
   const isAdmin = await isUserAdmin(supabase, userId);
 
   // Verify ownership or admin
-  if (ticketData.user_id !== userId && !isAdmin) {
+  if (ticket.user_id !== userId && !isAdmin) {
     throw new ForbiddenError("You do not have access to this attachment");
   }
 
   return {
-    ticketId: commentData.ticket_id,
-    storagePath: attachment.storage_path,
+    ticketId: attachment.ticket_id,
+    storagePath: attachment.file_path,
   };
 }

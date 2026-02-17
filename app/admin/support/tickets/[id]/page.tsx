@@ -15,8 +15,8 @@ type Attachment = {
   id: string;
   file_name: string;
   file_size: number;
-  file_type: string;
-  storage_path: string;
+  mime_type: string;
+  file_path: string;
   created_at: string;
 };
 

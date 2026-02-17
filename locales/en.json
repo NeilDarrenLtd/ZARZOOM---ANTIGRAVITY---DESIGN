@@ -476,6 +476,18 @@
       "commentFailed": "Failed to add comment",
       "unauthorized": "You don't have permission to access this ticket",
       "networkError": "Network error. Please check your connection and try again."
+    },
+    "validation": {
+      "subjectRequired": "Subject is required",
+      "descriptionRequired": "Description is required",
+      "messageRequired": "Message is required",
+      "emailRequired": "Email is required",
+      "invalidEmail": "Please enter a valid email address",
+      "noUpdatesProvided": "No updates provided",
+      "noFilesProvided": "No files provided",
+      "tooManyFiles": "Too many files. Maximum {count} files allowed.",
+      "invalidFileType": "Invalid file type for {name}. Only PNG, JPG, and WebP files are allowed.",
+      "fileTooLarge": "File {name} is too large ({size}). Maximum size is 5MB."
     }
   },
   "pages": {
