@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   CreditCard,
   Webhook,
+  HelpCircle,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -111,6 +112,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/users",
       label: t("admin.users"),
       icon: Users,
+    },
+    {
+      href: "/admin/support",
+      label: t("adminSupport.nav.title"),
+      icon: HelpCircle,
     },
     {
       href: "/admin/billing",

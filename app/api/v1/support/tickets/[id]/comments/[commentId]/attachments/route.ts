@@ -10,7 +10,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { randomUUID } from "crypto";
 
 /**
- * POST /api/v1/support/tickets/[ticketId]/comments/[commentId]/attachments
+ * POST /api/v1/support/tickets/[id]/comments/[commentId]/attachments
  * Upload attachments for a comment (server-side multipart upload).
  */
 export const POST = createApiHandler({
@@ -18,7 +18,7 @@ export const POST = createApiHandler({
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const pathSegments = ctx.req.nextUrl.pathname.split("/");
-    const ticketId = pathSegments[5]!;
+    const ticketId = pathSegments[5]!; // Still refers to the ticket ID value
     const commentId = pathSegments[7]!;
     const userId = ctx.user!.id;
 

@@ -206,11 +206,98 @@
     "noUsersFound": "No users match your search.",
     "rbacNote": "Role-based access control (RBAC) will be implemented in a future release.",
     "settingsDashboard": "Settings Dashboard",
-    "manageSettings": "Manage your platform configuration",
-    "emailSettingsDesc": "Configure SMTP server for sending transactional emails and verification messages.",
-    "oauthSettingsDesc": "Configure OAuth provider keys to enable social login for your users.",
-    "smtpStubNote": "SMTP settings are saved securely. In production, these will be read from environment variables or a secrets manager.",
-    "oauthStubNote": "OAuth secrets are saved securely. In production, these will be configured via environment variables."
+    "manageSettings": "Manage platform configuration and settings.",
+    "emailSettingsDesc": "Configure SMTP server and email templates.",
+    "oauthSettingsDesc": "Manage OAuth provider keys for social login.",
+    "supportManagement": "Support Management",
+    "supportManagementDesc": "View and respond to user support tickets."
+  },
+  "adminSupport": {
+    "nav": {
+      "title": "Support Console",
+      "tickets": "Support Tickets",
+      "settings": "Support Settings"
+    },
+    "list": {
+      "title": "Support Tickets",
+      "subtitle": "View and manage all user support requests.",
+      "filters": {
+        "status": "Filter by Status",
+        "allStatuses": "All Statuses",
+        "search": "Search tickets...",
+        "searchPlaceholder": "Ticket ID, subject, or user email"
+      },
+      "table": {
+        "ticketId": "ID",
+        "subject": "Subject",
+        "user": "User",
+        "status": "Status",
+        "priority": "Priority",
+        "category": "Category",
+        "lastActivity": "Last Activity",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "empty": "No tickets found",
+      "emptyDescription": "No support tickets match your filters.",
+      "loading": "Loading tickets...",
+      "error": "Failed to load tickets"
+    },
+    "detail": {
+      "title": "Ticket Details",
+      "ticketInfo": "Ticket Information",
+      "user": "User",
+      "email": "Email",
+      "status": "Status",
+      "priority": "Priority",
+      "category": "Category",
+      "created": "Created",
+      "lastActivity": "Last Activity",
+      "updateStatus": "Update Status",
+      "updatePriority": "Update Priority",
+      "updateCategory": "Update Category",
+      "updating": "Updating...",
+      "updateSuccess": "Ticket updated successfully",
+      "updateError": "Failed to update ticket",
+      "conversation": "Conversation",
+      "adminReply": "Admin Reply",
+      "replyPlaceholder": "Type your response to the user...",
+      "attachScreenshots": "Attach Screenshots",
+      "sendReply": "Send Reply",
+      "sending": "Sending...",
+      "replySuccess": "Reply sent successfully",
+      "replyError": "Failed to send reply",
+      "noComments": "No comments yet",
+      "userRole": "User",
+      "adminRole": "Admin",
+      "systemRole": "System",
+      "viewFullSize": "View full size",
+      "closeModal": "Close",
+      "loading": "Loading ticket...",
+      "notFound": "Ticket not found",
+      "notFoundMessage": "This ticket doesn't exist or has been deleted."
+    },
+    "settings": {
+      "title": "Support Settings",
+      "subtitle": "Configure support system settings.",
+      "recipientEmail": {
+        "label": "Support Recipient Email",
+        "placeholder": "support@zarzoom.com",
+        "help": "Email address that receives support ticket notifications."
+      },
+      "save": "Save Settings",
+      "saving": "Saving...",
+      "saveSuccess": "Settings saved successfully",
+      "saveError": "Failed to save settings",
+      "loading": "Loading settings...",
+      "loadError": "Failed to load settings"
+    },
+    "actions": {
+      "view": "View",
+      "markAsResolved": "Mark as Resolved",
+      "reopen": "Reopen",
+      "delete": "Delete"
+    }
   },
   "dashboard": {
     "title": "Dashboard",
