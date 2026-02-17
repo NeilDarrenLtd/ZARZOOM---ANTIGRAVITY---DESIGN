@@ -1,0 +1,63 @@
+import { createApiHandler, ok } from "@/lib/api";
+import { ValidationError } from "@/lib/api/errors";
+import { addCommentSchema } from "@/lib/validation/support";
+import { verifyTicketOwnership, isUserAdmin } from "@/lib/auth/support";
+
+/**
+ * POST /api/v1/support/tickets/[id]/comments
+ * Add a comment to a ticket.
+ */
+export const POST = createApiHandler({
+  auth: true,
+  rateLimit: { maxRequests: 30, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const ticketId = ctx.req.nextUrl.pathname.split("/")[5]!;
+    const userId = ctx.user!.id;
+
+    const body = await ctx.req.json();
+    const parsed = addCommentSchema.safeParse(body);
+
+    if (!parsed.success) {
+      throw new ValidationError(parsed.error.flatten().fieldErrors);
+    }
+
+    const { message } = parsed.data;
+
+    // Check if user is admin
+    const isAdmin = await isUserAdmin(ctx.supabase!, userId);
+
+    // Verify ownership (or admin access)
+    if (!isAdmin) {
+      await verifyTicketOwnership(ctx.supabase!, userId, ticketId);
+    }
+
+    // Add comment
+    const { data: comment, error: commentError } = await ctx.supabase!
+      .from("support_comments")
+      .insert({
+        ticket_id: ticketId,
+        author_id: userId,
+        author_role: isAdmin ? "admin" : "user",
+        message,
+      })
+      .select("comment_id, message, author_role, created_at")
+      .single();
+
+    if (commentError || !comment) {
+      throw new Error(`Failed to add comment: ${commentError?.message ?? "unknown"}`);
+    }
+
+    // Update ticket's last_activity_at (trigger should handle this, but be explicit)
+    await ctx.supabase!
+      .from("support_tickets")
+      .update({ last_activity_at: new Date().toISOString() })
+      .eq("ticket_id", ticketId);
+
+    return ok(
+      {
+        comment,
+      },
+      ctx.requestId
+    );
+  },
+});
