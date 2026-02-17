@@ -1,6 +1,7 @@
 import { createApiHandler, ok } from "@/lib/api";
 import { ValidationError, NotFoundError } from "@/lib/api/errors";
 import { updateTicketSchema } from "@/lib/validation/support";
+import { sendStatusChangeNotification } from "@/lib/email/supportMailer";
 
 /**
  * PATCH /api/v1/admin/support/tickets/[id]
@@ -26,6 +27,17 @@ export const PATCH = createApiHandler({
       throw new ValidationError({ _form: ["support.validation.noUpdatesProvided"] });
     }
 
+    // Fetch current ticket status if status is being changed (for email notification)
+    let oldStatus: string | null = null;
+    if (updates.status) {
+      const { data: currentTicket } = await ctx.supabase!
+        .from("support_tickets")
+        .select("status")
+        .eq("ticket_id", ticketId)
+        .single();
+      oldStatus = currentTicket?.status || null;
+    }
+
     // Update ticket
     const { data: ticket, error } = await ctx.supabase!
       .from("support_tickets")
@@ -35,7 +47,7 @@ export const PATCH = createApiHandler({
         last_activity_at: new Date().toISOString(),
       })
       .eq("ticket_id", ticketId)
-      .select("ticket_id, subject, status, priority, category, updated_at, last_activity_at")
+      .select("ticket_id, subject, status, priority, category, updated_at, last_activity_at, user_id, profiles!inner(email)")
       .single();
 
     if (error) {
@@ -43,6 +55,20 @@ export const PATCH = createApiHandler({
         throw new NotFoundError("Ticket");
       }
       throw new Error(`Failed to update ticket: ${error.message}`);
+    }
+
+    // Send email notification if status changed
+    if (updates.status && oldStatus && oldStatus !== updates.status) {
+      const userEmail = (ticket.profiles as { email: string }).email;
+      sendStatusChangeNotification({
+        ticketId: ticket.ticket_id,
+        ticketSubject: ticket.subject,
+        userEmail,
+        oldStatus,
+        newStatus: updates.status,
+      }).catch((err) => {
+        console.error("[Support] Failed to send status change email:", err);
+      });
     }
 
     return ok(
