@@ -266,6 +266,78 @@ test("accepts full valid profile for completion", () => {
 });
 
 // ──────────────────────────────────────────────
+// Status transition safety tests
+// ──────────────────────────────────────────────
+console.log("\n--- Status Transition Safety ---\n");
+
+function resolveStatusAfterPut(currentStatus: string): string {
+  const preserveStatus = currentStatus === "completed" || currentStatus === "skipped";
+  return preserveStatus ? currentStatus : "in_progress";
+}
+
+test("PUT from not_started -> in_progress", () => {
+  assert(resolveStatusAfterPut("not_started") === "in_progress", "Should become in_progress");
+});
+
+test("PUT from in_progress -> stays in_progress", () => {
+  assert(resolveStatusAfterPut("in_progress") === "in_progress", "Should stay in_progress");
+});
+
+test("PUT from completed -> stays completed (no regression)", () => {
+  assert(resolveStatusAfterPut("completed") === "completed", "Must NOT regress to in_progress");
+});
+
+test("PUT from skipped -> stays skipped (no regression)", () => {
+  assert(resolveStatusAfterPut("skipped") === "skipped", "Must NOT regress to in_progress");
+});
+
+function canSkip(currentStatus: string): boolean {
+  return currentStatus !== "completed";
+}
+
+test("Skip allowed from not_started", () => {
+  assert(canSkip("not_started") === true, "Should allow skip");
+});
+
+test("Skip allowed from in_progress", () => {
+  assert(canSkip("in_progress") === true, "Should allow skip");
+});
+
+test("Skip blocked from completed", () => {
+  assert(canSkip("completed") === false, "Must NOT allow skip from completed");
+});
+
+// ──────────────────────────────────────────────
+// Client-side URL validation tests
+// ──────────────────────────────────────────────
+console.log("\n--- Client-side URL Validation ---\n");
+
+function isValidUrl(value: string): boolean {
+  if (!value) return true;
+  try { new URL(value); return true; } catch { return false; }
+}
+
+test("valid URL passes", () => {
+  assert(isValidUrl("https://example.com") === true, "Should pass");
+});
+
+test("URL with path passes", () => {
+  assert(isValidUrl("https://example.com/path/to/page") === true, "Should pass");
+});
+
+test("invalid URL fails", () => {
+  assert(isValidUrl("not-a-url") === false, "Should fail");
+});
+
+test("empty string passes (optional field)", () => {
+  assert(isValidUrl("") === true, "Should pass");
+});
+
+test("URL without protocol fails", () => {
+  assert(isValidUrl("example.com") === false, "Should fail");
+});
+
+// ──────────────────────────────────────────────
 // Summary
 // ──────────────────────────────────────────────
 console.log(`\n============================`);

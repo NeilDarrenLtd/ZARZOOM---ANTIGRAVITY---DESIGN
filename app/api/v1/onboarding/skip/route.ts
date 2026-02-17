@@ -42,6 +42,20 @@ export async function POST(request: Request) {
       updateData.onboarding_step = currentStep;
     }
 
+    // Don't allow downgrading from "completed" to "skipped"
+    const { data: currentProfile } = await supabase
+      .from("onboarding_profiles")
+      .select("onboarding_status")
+      .eq("user_id", user.id)
+      .single();
+
+    if (currentProfile?.onboarding_status === "completed") {
+      return NextResponse.json(
+        { error: "Onboarding is already completed and cannot be skipped." },
+        { status: 409 }
+      );
+    }
+
     // Try update first
     const { data: updated, error: updateError } = await supabase
       .from("onboarding_profiles")

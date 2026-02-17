@@ -108,10 +108,27 @@ export async function PUT(request: Request) {
       );
     }
 
+    // ── Fetch current status before updating ──────────────
+    // We must NOT regress status from "completed" or "skipped"
+    // back to "in_progress" when the profile page saves edits.
+    const { data: currentProfile } = await supabase
+      .from("onboarding_profiles")
+      .select("onboarding_status")
+      .eq("user_id", user.id)
+      .single();
+
+    const currentStatus = currentProfile?.onboarding_status;
+    const preserveStatus =
+      currentStatus === "completed" || currentStatus === "skipped";
+
     // Build the update payload
     const updateData: Record<string, unknown> = {
       ...parsed.data,
-      onboarding_status: "in_progress",
+      // Only set in_progress if the current status isn't already
+      // completed or skipped (i.e. don't regress)
+      ...(preserveStatus
+        ? {}
+        : { onboarding_status: "in_progress" }),
     };
 
     // If a step is provided, track it
