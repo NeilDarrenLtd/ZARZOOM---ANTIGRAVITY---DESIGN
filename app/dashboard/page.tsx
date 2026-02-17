@@ -7,7 +7,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle } from "lucide-react";
 
 export default function DashboardPage() {
   const { t } = useI18n();
@@ -150,6 +150,24 @@ export default function DashboardPage() {
               {t("dashboard.comingSoon")}
             </p>
           </div>
+
+          {/* Support card */}
+          <Link
+            href="/dashboard/support"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-green-300 hover:shadow-md transition-all block"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                <HelpCircle className="w-5 h-5 text-green-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("support.nav.title")}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Get help from our support team. Create and manage support tickets.
+            </p>
+          </Link>
         </div>
 
         {/* Quick links */}
