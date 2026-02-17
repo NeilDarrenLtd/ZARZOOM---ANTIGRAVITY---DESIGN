@@ -106,13 +106,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Account settings card */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <Link
+            href="/dashboard/profile"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-green-300 hover:shadow-md transition-all block"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                 <Settings className="w-5 h-5 text-blue-600" />
               </div>
               <h2 className="text-lg font-bold text-gray-900">
-                {t("dashboard.accountSettings")}
+                {t("dashboard.profile")}
               </h2>
             </div>
             <div className="flex flex-col gap-2 text-sm text-gray-500">
@@ -131,7 +134,7 @@ export default function DashboardPage() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* Connected accounts card */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">

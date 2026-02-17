@@ -220,7 +220,50 @@
     "connectedAccounts": "Connected Accounts",
     "comingSoon": "Coming soon - your social media command center.",
     "emailVerified": "Email verified",
-    "memberSince": "Member since"
+    "memberSince": "Member since",
+    "profile": "Brand Settings"
+  },
+  "profile": {
+    "title": "Brand Settings",
+    "subtitle": "Manage your brand, goals, plan, and social connections.",
+    "saving": "Saving...",
+    "saved": "Changes saved successfully.",
+    "saveFailed": "Failed to save changes. Please try again.",
+    "loadFailed": "Failed to load your profile. Please try again.",
+    "save": "Save Changes",
+    "sections": {
+      "brand": "Brand Basics",
+      "brandDesc": "Your business identity and content preferences.",
+      "goals": "Goals & Growth",
+      "goalsDesc": "What you want to achieve with ZARZOOM.",
+      "posting": "Posting Preferences",
+      "postingDesc": "How ZARZOOM publishes your content.",
+      "plan": "Your Plan",
+      "planDesc": "Current subscription and billing preferences.",
+      "social": "Social Connections",
+      "socialDesc": "Manage your connected social media accounts."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publish",
+        "help": "Allow ZARZOOM to automatically publish content on your behalf."
+      }
+    },
+    "plan": {
+      "current": "Current plan",
+      "noPlan": "No plan selected",
+      "annualBilling": "Annual billing",
+      "changePlan": "Change Plan"
+    },
+    "social": {
+      "username": "Upload-Post Username",
+      "noUsername": "Not configured yet",
+      "connected": "Social accounts connected",
+      "notConnected": "No accounts connected yet",
+      "connect": "Connect Accounts",
+      "manage": "Manage Connections"
+    },
+    "back": "Back to Dashboard"
   },
   "pages": {
     "support": {
