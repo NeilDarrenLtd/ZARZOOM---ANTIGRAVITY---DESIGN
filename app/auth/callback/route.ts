@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { resolvePostAuthRedirect } from "@/lib/auth/postAuthRedirect";
 import { NextResponse } from "next/server";
 
 function getBaseUrl(requestUrl: string): string {
@@ -25,14 +26,24 @@ function getBaseUrl(requestUrl: string): string {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  // If a "next" param points to a specific non-dashboard page (e.g. /auth/verified),
+  // honour it. Otherwise let the onboarding resolver decide.
+  const explicitNext = searchParams.get("next");
   const baseUrl = getBaseUrl(request.url);
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) {
-      return NextResponse.redirect(`${baseUrl}${next}`);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error && data.user) {
+      // If an explicit non-default next was requested (e.g. email-verify flow), use it
+      if (explicitNext && explicitNext !== "/dashboard") {
+        return NextResponse.redirect(`${baseUrl}${explicitNext}`);
+      }
+
+      // Use centralised onboarding-aware redirect
+      const destination = await resolvePostAuthRedirect(data.user.id);
+      return NextResponse.redirect(`${baseUrl}${destination}`);
     }
   }
 

@@ -73,7 +73,15 @@ export default function LoginLaunchPage() {
       setLoginError(error.message);
       setLoginLoading(false);
     } else {
-      window.location.href = "/dashboard";
+      // Resolve onboarding-aware redirect via API
+      try {
+        const res = await fetch("/api/v1/onboarding");
+        const body = await res.json();
+        const status = body?.data?.onboarding_status;
+        window.location.href = status === "completed" ? "/dashboard" : "/onboarding";
+      } catch {
+        window.location.href = "/onboarding";
+      }
     }
   }
 

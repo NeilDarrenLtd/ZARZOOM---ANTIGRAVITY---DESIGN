@@ -4,7 +4,13 @@ import { NextResponse, type NextRequest } from 'next/server'
 export async function updateSession(request: NextRequest) {
   const isProtectedRoute =
     request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/engine') ||
     (request.nextUrl.pathname.startsWith('/admin') && !request.nextUrl.pathname.startsWith('/admin/login'))
+
+  // Routes that require onboarding to be completed before access
+  const isOnboardingGuardedRoute =
+    request.nextUrl.pathname.startsWith('/dashboard') ||
+    request.nextUrl.pathname.startsWith('/engine')
 
   // For public routes, skip Supabase auth entirely to avoid blocking page loads
   if (!isProtectedRoute) {
@@ -55,6 +61,22 @@ export async function updateSession(request: NextRequest) {
       const url = request.nextUrl.clone()
       url.pathname = '/admin/login'
       return NextResponse.redirect(url)
+    }
+
+    // Onboarding guard: redirect to /onboarding if not completed
+    if (isOnboardingGuardedRoute && user) {
+      const { data: profile } = await supabase
+        .from('onboarding_profiles')
+        .select('onboarding_status')
+        .eq('user_id', user.id)
+        .single()
+
+      const status = profile?.onboarding_status
+      if (status !== 'completed') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/onboarding'
+        return NextResponse.redirect(url)
+      }
     }
 
     // If user is on /admin, check if they are admin
