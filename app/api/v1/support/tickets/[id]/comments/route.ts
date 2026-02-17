@@ -2,6 +2,10 @@ import { createApiHandler, ok } from "@/lib/api";
 import { ValidationError } from "@/lib/api/errors";
 import { addCommentSchema } from "@/lib/validation/support";
 import { verifyTicketOwnership, isUserAdmin } from "@/lib/auth/support";
+import {
+  sendUserCommentNotification,
+  sendAdminCommentNotification,
+} from "@/lib/email/supportMailer";
 
 /**
  * POST /api/v1/support/tickets/[id]/comments
@@ -52,6 +56,39 @@ export const POST = createApiHandler({
       .from("support_tickets")
       .update({ last_activity_at: new Date().toISOString() })
       .eq("ticket_id", ticketId);
+
+    // Fetch ticket details for email notification
+    const { data: ticket } = await ctx.supabase!
+      .from("support_tickets")
+      .select("subject, user_id, profiles!inner(email)")
+      .eq("ticket_id", ticketId)
+      .single();
+
+    if (ticket) {
+      const ticketOwnerEmail = (ticket.profiles as { email: string }).email;
+
+      if (isAdmin) {
+        // Admin comment → Email to user
+        sendAdminCommentNotification({
+          ticketId,
+          ticketSubject: ticket.subject,
+          userEmail: ticketOwnerEmail,
+          adminComment: message,
+        }).catch((err) => {
+          console.error("[Support] Failed to send admin comment email:", err);
+        });
+      } else {
+        // User comment → Email to support team
+        sendUserCommentNotification({
+          ticketId,
+          ticketSubject: ticket.subject,
+          userEmail: ctx.user!.email || "Unknown",
+          commentText: message,
+        }).catch((err) => {
+          console.error("[Support] Failed to send user comment email:", err);
+        });
+      }
+    }
 
     return ok(
       {

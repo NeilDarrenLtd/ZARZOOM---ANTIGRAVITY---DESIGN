@@ -1,6 +1,7 @@
 import { createApiHandler, ok } from "@/lib/api";
 import { ValidationError } from "@/lib/api/errors";
 import { createTicketSchema } from "@/lib/validation/support";
+import { sendNewTicketNotification } from "@/lib/email/supportMailer";
 
 /**
  * GET /api/v1/support/tickets
@@ -88,6 +89,16 @@ export const POST = createApiHandler({
 
       throw new Error(`Failed to create initial comment: ${commentError?.message ?? "unknown"}`);
     }
+
+    // Send email notification to support team (async, don't block response)
+    sendNewTicketNotification({
+      ticketId: ticket.ticket_id,
+      ticketSubject: ticket.subject,
+      userEmail: ctx.user!.email || "Unknown",
+      firstMessage: description,
+    }).catch((err) => {
+      console.error("[Support] Failed to send new ticket email:", err);
+    });
 
     return ok(
       {
