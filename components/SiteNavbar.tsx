@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 

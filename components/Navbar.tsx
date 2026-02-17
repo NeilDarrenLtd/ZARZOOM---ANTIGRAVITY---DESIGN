@@ -4,22 +4,31 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 
 export default function Navbar() {
   const { t } = useI18n();
+  const user = useAuthUser();
+  const isLoggedIn = !!user;
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
   const subMenuRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
-    { labelKey: "nav.about", href: "#about" },
-    { labelKey: "nav.features", href: "#features" },
-    { labelKey: "nav.pricing", href: "#pricing" },
-    { labelKey: "nav.contact", href: "#contact" },
-  ];
+  const navLinks = isLoggedIn
+    ? [
+        { labelKey: "nav.about", href: "#about" },
+        { labelKey: "nav.dashboard", href: "/dashboard" },
+        { labelKey: "nav.pricing", href: "#pricing" },
+      ]
+    : [
+        { labelKey: "nav.about", href: "#about" },
+        { labelKey: "nav.features", href: "#features" },
+        { labelKey: "nav.pricing", href: "#pricing" },
+        { labelKey: "nav.contact", href: "#contact" },
+      ];
 
   const subMenuLinks = [
     { labelKey: "nav.support", href: "/support" },
@@ -89,10 +98,10 @@ export default function Navbar() {
             <LanguageSwitcher />
 
             <Link
-              href="/auth"
+              href={isLoggedIn ? "/dashboard" : "/auth"}
               className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
             >
-              {t("nav.getStarted")}
+              {isLoggedIn ? t("nav.dashboard") : t("nav.getStarted")}
             </Link>
 
             {/* Desktop 3-line submenu toggle */}
@@ -194,11 +203,11 @@ export default function Navbar() {
 
               <div className="pt-2 px-4">
                 <Link
-                  href="/auth"
+                  href={isLoggedIn ? "/dashboard" : "/auth"}
                   onClick={() => setMobileMenuOpen(false)}
                   className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                 >
-                  {t("nav.getStarted")}
+                  {isLoggedIn ? t("nav.dashboard") : t("nav.getStarted")}
                 </Link>
               </div>
             </div>
