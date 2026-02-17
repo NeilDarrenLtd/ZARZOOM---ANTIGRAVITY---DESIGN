@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import Link from "next/link";
 
 export default function FinalCTA() {
   const { t } = useI18n();
@@ -26,17 +27,19 @@ export default function FinalCTA() {
         >
           {t("finalCta.subheading")}
         </motion.p>
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ delay: 0.5 }}
-          className="bg-green-600 text-white text-xl md:text-2xl px-12 py-6 rounded-full font-bold hover:bg-green-700 transition-colors flex items-center gap-3 mx-auto group"
-        >
-          {t("finalCta.button")}
-          <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-        </motion.button>
+        <Link href="/auth">
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ delay: 0.5 }}
+            className="bg-green-600 text-white text-xl md:text-2xl px-12 py-6 rounded-full font-bold hover:bg-green-700 transition-colors flex items-center gap-3 mx-auto group"
+          >
+            {t("finalCta.button")}
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+          </motion.button>
+        </Link>
       </div>
     </section>
   );

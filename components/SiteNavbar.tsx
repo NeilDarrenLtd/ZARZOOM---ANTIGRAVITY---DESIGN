@@ -6,27 +6,94 @@ import { Menu, X } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function SiteNavbar() {
   const { t } = useI18n();
+  const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const subMenuRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
-    { labelKey: "nav.about", href: "/#about" },
-    { labelKey: "nav.features", href: "/#features" },
-    { labelKey: "nav.pricing", href: "/#pricing" },
-    { labelKey: "nav.contact", href: "/#contact" },
-  ];
+  // Check authentication status on mount
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+      setIsLoading(false);
+    }
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [supabase]);
+
+  const navLinks = isLoggedIn
+    ? [
+        { labelKey: "nav.pricing", href: "/#pricing" },
+        { labelKey: "nav.support", href: "/support" },
+        { labelKey: "nav.contact", href: "/#contact" },
+      ]
+    : [
+        { labelKey: "nav.about", href: "/#about" },
+        { labelKey: "nav.features", href: "/#features" },
+        { labelKey: "nav.pricing", href: "/#pricing" },
+        { labelKey: "nav.contact", href: "/#contact" },
+      ];
 
   const subMenuLinks = [
-    { labelKey: "nav.support", href: "/support" },
     { labelKey: "nav.userTerms", href: "/terms-user" },
     { labelKey: "nav.websiteTerms", href: "/terms-website" },
     { labelKey: "nav.privacy", href: "/privacy" },
     { labelKey: "nav.cookies", href: "/cookies" },
   ];
+
+  const isOnDashboard = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+
+  const getTopRightButton = () => {
+    if (isLoading) {
+      return null;
+    }
+
+    if (isOnDashboard && isLoggedIn) {
+      return {
+        label: "LOGOUT",
+        onClick: async () => {
+          await supabase.auth.signOut();
+          router.push("/");
+        },
+        href: null,
+      };
+    }
+
+    if (isLoggedIn) {
+      return {
+        label: "DASHBOARD",
+        onClick: null,
+        href: "/dashboard",
+      };
+    }
+
+    return {
+      label: "LOGIN-LAUNCH",
+      onClick: null,
+      href: "/auth",
+    };
+  };
+
+  const topRightButton = getTopRightButton();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -71,12 +138,23 @@ export default function SiteNavbar() {
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
 
-            <Link
-              href="/auth"
-              className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
-            >
-              {t("nav.getStarted")}
-            </Link>
+            {topRightButton && (
+              topRightButton.onClick ? (
+                <button
+                  onClick={topRightButton.onClick}
+                  className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
+                >
+                  {topRightButton.label}
+                </button>
+              ) : (
+                <Link
+                  href={topRightButton.href || "/auth"}
+                  className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
+                >
+                  {topRightButton.label}
+                </Link>
+              )
+            )}
 
             {/* Desktop 3-line submenu toggle */}
             <div ref={subMenuRef} className="relative">
@@ -176,13 +254,24 @@ export default function SiteNavbar() {
               </div>
 
               <div className="pt-2 px-4">
-                <Link
-                  href="/auth"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
-                >
-                  {t("nav.getStarted")}
-                </Link>
+                {topRightButton && (
+                  topRightButton.onClick ? (
+                    <button
+                      onClick={topRightButton.onClick}
+                      className="block w-full bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
+                    >
+                      {topRightButton.label}
+                    </button>
+                  ) : (
+                    <Link
+                      href={topRightButton.href || "/auth"}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block w-full bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
+                    >
+                      {topRightButton.label}
+                    </Link>
+                  )
+                )}
               </div>
             </div>
           </motion.div>
