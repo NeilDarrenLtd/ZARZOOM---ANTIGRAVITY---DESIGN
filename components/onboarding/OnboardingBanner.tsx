@@ -52,7 +52,7 @@ export default function OnboardingBanner() {
             type="button"
             onClick={() => setDismissed(true)}
             className="p-1.5 rounded-lg text-amber-600 hover:bg-amber-100 transition-colors"
-            aria-label="Dismiss banner"
+            aria-label={t("onboarding.a11y.dismissBanner")}
           >
             <X className="w-4 h-4" />
           </button>

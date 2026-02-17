@@ -132,7 +132,7 @@ export default function Step4Plan({ data, onChange }: Step4Props) {
 
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="text-3xl font-bold text-gray-900">
-                  {"£"}{displayPrice}
+                  {t("onboarding.a11y.currency")}{displayPrice}
                 </span>
                 <span className="text-sm text-gray-400">
                   {t("onboarding.step4.perMonth")}

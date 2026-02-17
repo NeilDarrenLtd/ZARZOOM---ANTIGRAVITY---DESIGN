@@ -571,6 +571,15 @@
       "title": "Setup Required",
       "description": "Complete your onboarding setup to unlock this feature. It only takes a few minutes.",
       "cta": "Complete Setup"
+    },
+    "a11y": {
+      "brandLogoAlt": "Brand logo",
+      "socialConnectorTitle": "Upload-Post Social Connector",
+      "dismissBanner": "Dismiss banner",
+      "currency": "£"
+    },
+    "validation": {
+      "invalidUrl": "Please enter a valid URL (e.g. https://example.com)"
     }
   },
   "billing": {

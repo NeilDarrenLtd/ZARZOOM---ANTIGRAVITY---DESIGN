@@ -4,6 +4,60 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
 import { X, Loader2, Wifi, WifiOff, ExternalLink } from "lucide-react";
 
+/**
+ * Traps focus inside a container element.
+ * Returns a ref to attach to the container.
+ */
+function useFocusTrap(active: boolean) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!active || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
+    // Focus the first focusable element
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea, input:not([disabled]), select, [tabindex]:not([tabindex="-1"]), iframe';
+
+    function getFocusable() {
+      return Array.from(
+        container.querySelectorAll<HTMLElement>(focusableSelector)
+      ).filter((el) => el.offsetParent !== null);
+    }
+
+    const firstFocusable = getFocusable()[0];
+    firstFocusable?.focus();
+
+    function handleTab(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+
+    container.addEventListener("keydown", handleTab);
+
+    return () => {
+      container.removeEventListener("keydown", handleTab);
+      previouslyFocused?.focus();
+    };
+  }, [active]);
+
+  return containerRef;
+}
+
 interface UploadPostConnectModalProps {
   open: boolean;
   onClose: (connected: boolean) => void;
@@ -31,6 +85,7 @@ export default function UploadPostConnectModal({
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const focusTrapRef = useFocusTrap(open);
 
   // Initiate the connection when modal opens
   useEffect(() => {
@@ -114,6 +169,7 @@ export default function UploadPostConnectModal({
 
   return (
     <div
+      ref={focusTrapRef}
       className="fixed inset-0 z-50 flex flex-col bg-gray-900/70 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
@@ -210,7 +266,7 @@ export default function UploadPostConnectModal({
               ref={iframeRef}
               src={connectUrl}
               className="w-full h-full border-0"
-              title="Upload-Post Social Connector"
+              title={t("onboarding.a11y.socialConnectorTitle")}
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-top-navigation"
               allow="clipboard-write"
             />

@@ -526,7 +526,7 @@ export default function ProfilePage() {
                   {data.logo_url ? (
                     <img
                       src={data.logo_url}
-                      alt="Brand logo"
+                      alt={t("onboarding.a11y.brandLogoAlt")}
                       className="w-16 h-16 rounded-lg border border-gray-200 object-contain bg-white"
                     />
                   ) : (
@@ -745,7 +745,7 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* ───────── SECTION 4: Your Plan ───────── */}
+          {/* ───────── SECTION 4: Your Plan ��──────── */}
           <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-1">
               {t("profile.sections.plan")}
@@ -766,7 +766,7 @@ export default function ProfilePage() {
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-green-800">
-                      {"£"}
+                      {t("onboarding.a11y.currency")}
                       {isAnnual
                         ? Math.round(PLAN_PRICES[selectedPlan].annual / 12)
                         : PLAN_PRICES[selectedPlan].monthly}
@@ -845,7 +845,7 @@ export default function ProfilePage() {
 
                     <div className="mt-3 flex items-baseline gap-1">
                       <span className="text-2xl font-bold text-gray-900">
-                        {"£"}{displayPrice}
+                        {t("onboarding.a11y.currency")}{displayPrice}
                       </span>
                       <span className="text-xs text-gray-400">
                         {t("onboarding.step4.perMonth")}

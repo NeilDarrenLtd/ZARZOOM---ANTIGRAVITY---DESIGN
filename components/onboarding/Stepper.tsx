@@ -29,7 +29,11 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
           const isCurrent = step === currentStep;
 
           return (
-            <li key={step} className="flex items-center flex-1">
+            <li
+              key={step}
+              className="flex items-center flex-1"
+              aria-current={isCurrent ? "step" : undefined}
+            >
               <div className="flex flex-col items-center gap-1.5 flex-1 relative">
                 {/* Connector line */}
                 {i > 0 && (

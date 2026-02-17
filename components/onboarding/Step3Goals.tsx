@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { GOAL_OPTIONS } from "@/lib/validation/onboarding";
 import type { OnboardingUpdate, Goal } from "@/lib/validation/onboarding";
@@ -36,6 +37,7 @@ export default function Step3Goals({ data, onChange }: Step3Props) {
   const inputClass =
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
 
+  const [urlErrors, setUrlErrors] = useState<Record<string, string>>({});
   const goals = data.goals ?? [];
 
   function toggleGoal(goal: Goal) {
@@ -43,6 +45,30 @@ export default function Step3Goals({ data, onChange }: Step3Props) {
       onChange({ goals: goals.filter((g) => g !== goal) });
     } else {
       onChange({ goals: [...goals, goal] });
+    }
+  }
+
+  function validateUrl(field: string, value: string) {
+    if (!value) {
+      setUrlErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+      return;
+    }
+    try {
+      new URL(value);
+      setUrlErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    } catch {
+      setUrlErrors((prev) => ({
+        ...prev,
+        [field]: t("onboarding.validation.invalidUrl"),
+      }));
     }
   }
 
@@ -110,46 +136,64 @@ export default function Step3Goals({ data, onChange }: Step3Props) {
       </div>
 
       {/* Conditional: Website URL */}
-      {needsWebsite && (
-        <div>
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          needsWebsite ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="pt-1">
           <label className="block text-xs font-medium text-gray-700 mb-1">
             {t("onboarding.step3.websiteUrl.label")}
           </label>
           <input
             type="url"
             value={data.website_or_landing_url ?? ""}
-            onChange={(e) =>
-              onChange({ website_or_landing_url: e.target.value || null })
-            }
-            className={inputClass}
+            onChange={(e) => {
+              onChange({ website_or_landing_url: e.target.value || null });
+              validateUrl("website_or_landing_url", e.target.value);
+            }}
+            onBlur={(e) => validateUrl("website_or_landing_url", e.target.value)}
+            className={`${inputClass} ${urlErrors.website_or_landing_url ? "border-red-400 focus:ring-red-400" : ""}`}
             placeholder={t("onboarding.step3.websiteUrl.placeholder")}
           />
+          {urlErrors.website_or_landing_url && (
+            <p className="text-xs text-red-500 mt-1">{urlErrors.website_or_landing_url}</p>
+          )}
           <p className="text-xs text-gray-400 mt-1">
             {t("onboarding.step3.websiteUrl.help")}
           </p>
         </div>
-      )}
+      </div>
 
       {/* Conditional: Product URL */}
-      {needsProduct && (
-        <div>
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          needsProduct ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="pt-1">
           <label className="block text-xs font-medium text-gray-700 mb-1">
             {t("onboarding.step3.productUrl.label")}
           </label>
           <input
             type="url"
             value={data.product_or_sales_url ?? ""}
-            onChange={(e) =>
-              onChange({ product_or_sales_url: e.target.value || null })
-            }
-            className={inputClass}
+            onChange={(e) => {
+              onChange({ product_or_sales_url: e.target.value || null });
+              validateUrl("product_or_sales_url", e.target.value);
+            }}
+            onBlur={(e) => validateUrl("product_or_sales_url", e.target.value)}
+            className={`${inputClass} ${urlErrors.product_or_sales_url ? "border-red-400 focus:ring-red-400" : ""}`}
             placeholder={t("onboarding.step3.productUrl.placeholder")}
           />
+          {urlErrors.product_or_sales_url && (
+            <p className="text-xs text-red-500 mt-1">{urlErrors.product_or_sales_url}</p>
+          )}
           <p className="text-xs text-gray-400 mt-1">
             {t("onboarding.step3.productUrl.help")}
           </p>
         </div>
-      )}
+      </div>
     </div>
   );
 }

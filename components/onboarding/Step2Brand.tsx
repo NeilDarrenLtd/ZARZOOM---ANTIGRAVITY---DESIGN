@@ -18,6 +18,20 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
     "idle" | "success" | "error"
   >("idle");
   const [uploading, setUploading] = useState(false);
+  const [urlError, setUrlError] = useState("");
+
+  function validateWebsiteUrl(value: string) {
+    if (!value) {
+      setUrlError("");
+      return;
+    }
+    try {
+      new URL(value);
+      setUrlError("");
+    } catch {
+      setUrlError(t("onboarding.validation.invalidUrl"));
+    }
+  }
 
   const inputClass =
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
@@ -148,8 +162,12 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
           <input
             type="url"
             value={data.website_url ?? ""}
-            onChange={(e) => onChange({ website_url: e.target.value || null })}
-            className={`${inputClass} flex-1`}
+            onChange={(e) => {
+              onChange({ website_url: e.target.value || null });
+              validateWebsiteUrl(e.target.value);
+            }}
+            onBlur={(e) => validateWebsiteUrl(e.target.value)}
+            className={`${inputClass} flex-1 ${urlError ? "border-red-400 focus:ring-red-400" : ""}`}
             placeholder={t("onboarding.step2.websiteUrl.placeholder")}
           />
           <button
@@ -179,6 +197,9 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
           <p className="text-xs text-red-500 mt-1">
             {t("onboarding.step2.investigate.error")}
           </p>
+        )}
+        {urlError && (
+          <p className="text-xs text-red-500 mt-1">{urlError}</p>
         )}
         <p className="text-xs text-gray-400 mt-1">
           {t("onboarding.step2.websiteUrl.help")}
@@ -316,7 +337,7 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
           {data.logo_url ? (
             <img
               src={data.logo_url}
-              alt="Brand logo"
+              alt={t("onboarding.a11y.brandLogoAlt")}
               className="w-16 h-16 rounded-lg border border-gray-200 object-contain bg-white"
             />
           ) : (

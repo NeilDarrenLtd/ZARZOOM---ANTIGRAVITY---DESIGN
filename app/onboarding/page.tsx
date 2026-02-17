@@ -146,7 +146,10 @@ export default function OnboardingPage() {
 
   async function handleBack() {
     if (step > 1) {
-      setStep(step - 1);
+      const prevStep = step - 1;
+      setStep(prevStep);
+      // Persist the step so resume works even after browser close
+      await saveProgress(prevStep);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
