@@ -7,12 +7,13 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw } from "lucide-react";
 
 export default function DashboardPage() {
   const { t } = useI18n();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [restarting, setRestarting] = useState(false);
 
   useEffect(() => {
     async function getUser() {
@@ -32,6 +33,20 @@ export default function DashboardPage() {
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = "/";
+  }
+
+  async function handleRestartOnboarding() {
+    setRestarting(true);
+    try {
+      const res = await fetch("/api/v1/onboarding/restart", { method: "POST" });
+      if (res.ok) {
+        window.location.href = "/onboarding";
+      } else {
+        setRestarting(false);
+      }
+    } catch {
+      setRestarting(false);
+    }
   }
 
   if (loading) {
@@ -91,13 +106,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Account settings card */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <Link
+            href="/dashboard/profile"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-green-300 hover:shadow-md transition-all block"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                 <Settings className="w-5 h-5 text-blue-600" />
               </div>
               <h2 className="text-lg font-bold text-gray-900">
-                {t("dashboard.accountSettings")}
+                {t("dashboard.profile")}
               </h2>
             </div>
             <div className="flex flex-col gap-2 text-sm text-gray-500">
@@ -116,7 +134,7 @@ export default function DashboardPage() {
                 </p>
               )}
             </div>
-          </div>
+          </Link>
 
           {/* Connected accounts card */}
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
@@ -136,6 +154,14 @@ export default function DashboardPage() {
 
         {/* Quick links */}
         <div className="mt-8 flex flex-wrap gap-3">
+          <button
+            onClick={handleRestartOnboarding}
+            disabled={restarting}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
+          >
+            <RotateCcw className={`w-4 h-4 ${restarting ? "animate-spin" : ""}`} />
+            {restarting ? "Restarting..." : "Restart Setup"}
+          </button>
           <Link
             href="/support"
             className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors"

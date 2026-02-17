@@ -87,7 +87,7 @@ export default function AuthPage() {
       setLoginError(result.error);
       setLoginLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push(result.redirectTo ?? "/dashboard");
     }
   }
 

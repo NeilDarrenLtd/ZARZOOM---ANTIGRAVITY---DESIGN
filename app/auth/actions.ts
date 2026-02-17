@@ -33,7 +33,7 @@ async function getBaseUrl(): Promise<string> {
 export async function signInWithEmail(email: string, password: string) {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -42,7 +42,13 @@ export async function signInWithEmail(email: string, password: string) {
     return { error: error.message };
   }
 
-  return { success: true };
+  // Resolve onboarding-aware redirect destination
+  const { resolvePostAuthRedirect } = await import(
+    "@/lib/auth/postAuthRedirect"
+  );
+  const redirectTo = await resolvePostAuthRedirect(data.user.id);
+
+  return { success: true, redirectTo };
 }
 
 export async function signUpWithEmail(email: string, password: string) {

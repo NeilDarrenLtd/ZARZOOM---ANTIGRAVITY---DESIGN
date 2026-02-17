@@ -220,7 +220,50 @@
     "connectedAccounts": "Connected Accounts",
     "comingSoon": "Coming soon - your social media command center.",
     "emailVerified": "Email verified",
-    "memberSince": "Member since"
+    "memberSince": "Member since",
+    "profile": "Brand Settings"
+  },
+  "profile": {
+    "title": "Brand Settings",
+    "subtitle": "Manage your brand, goals, plan, and social connections.",
+    "saving": "Saving...",
+    "saved": "Changes saved successfully.",
+    "saveFailed": "Failed to save changes. Please try again.",
+    "loadFailed": "Failed to load your profile. Please try again.",
+    "save": "Save Changes",
+    "sections": {
+      "brand": "Brand Basics",
+      "brandDesc": "Your business identity and content preferences.",
+      "goals": "Goals & Growth",
+      "goalsDesc": "What you want to achieve with ZARZOOM.",
+      "posting": "Posting Preferences",
+      "postingDesc": "How ZARZOOM publishes your content.",
+      "plan": "Your Plan",
+      "planDesc": "Current subscription and billing preferences.",
+      "social": "Social Connections",
+      "socialDesc": "Manage your connected social media accounts."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publish",
+        "help": "Allow ZARZOOM to automatically publish content on your behalf."
+      }
+    },
+    "plan": {
+      "current": "Current plan",
+      "noPlan": "No plan selected",
+      "annualBilling": "Annual billing",
+      "changePlan": "Change Plan"
+    },
+    "social": {
+      "username": "Upload-Post Username",
+      "noUsername": "Not configured yet",
+      "connected": "Social accounts connected",
+      "notConnected": "No accounts connected yet",
+      "connect": "Connect Accounts",
+      "manage": "Manage Connections"
+    },
+    "back": "Back to Dashboard"
   },
   "pages": {
     "support": {
@@ -311,6 +354,232 @@
       "s4Text": "Some cookies are placed by third-party services that appear on our pages. We do not control these cookies. Please refer to the respective third-party privacy policies for more information.",
       "s5Title": "5. Contact Us",
       "s5Text": "If you have questions about our use of cookies, please contact us at privacy@zarzoom.com."
+    }
+  },
+  "onboarding": {
+    "title": "Set Up Your ZARZOOM",
+    "subtitle": "Let's get your social media autopilot configured in a few quick steps.",
+    "stepper": {
+      "step1": "Account",
+      "step2": "Brand",
+      "step3": "Goals",
+      "step4": "Plan",
+      "step5": "Connect"
+    },
+    "nav": {
+      "back": "Back",
+      "next": "Continue",
+      "saveExit": "Save & Exit",
+      "skipForNow": "Skip for now",
+      "finish": "Launch ZARZOOM",
+      "saving": "Saving..."
+    },
+    "step1": {
+      "title": "Account Created",
+      "subtitle": "You're signed in and ready to go.",
+      "signedInAs": "Signed in as",
+      "continue": "Let's set up your brand"
+    },
+    "step2": {
+      "title": "Brand Basics",
+      "subtitle": "Tell us about your business so we can tailor content to your brand.",
+      "businessName": {
+        "label": "Business Name",
+        "placeholder": "e.g. Acme Corp",
+        "help": "The name of your business or brand."
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Briefly describe what your business does...",
+        "help": "A short summary so our AI understands your brand voice."
+      },
+      "websiteUrl": {
+        "label": "Website URL",
+        "placeholder": "https://yourwebsite.com",
+        "help": "We'll analyse your site to tailor content."
+      },
+      "investigate": {
+        "button": "Investigate Website",
+        "loading": "Analysing your website...",
+        "success": "Website analysed successfully!",
+        "error": "Could not analyse website. Please fill in details manually."
+      },
+      "contentLanguage": {
+        "label": "Content Language",
+        "help": "The primary language for your generated content."
+      },
+      "articleStyles": {
+        "label": "Article Styles",
+        "help": "Choose the types of content you'd like ZARZOOM to create.",
+        "options": {
+          "let_zarzoom_decide": "Let ZARZOOM Decide",
+          "how_to_guides": "How-to Guides",
+          "listicles": "Listicles",
+          "opinion_pieces": "Opinion Pieces",
+          "case_studies": "Case Studies",
+          "news_commentary": "News Commentary",
+          "tutorials": "Tutorials",
+          "interviews": "Interviews",
+          "product_reviews": "Product Reviews"
+        }
+      },
+      "styleLinks": {
+        "label": "Style Reference Links",
+        "placeholder": "https://example.com/article",
+        "help": "Add up to 3 links to articles whose style you'd like to emulate.",
+        "add": "Add Link",
+        "max": "Maximum 3 links"
+      },
+      "brandColor": {
+        "label": "Brand Colour",
+        "help": "Your primary brand colour for generated visuals."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Upload your brand logo (JPG format).",
+        "upload": "Upload Logo",
+        "change": "Change Logo",
+        "uploading": "Uploading..."
+      }
+    },
+    "step3": {
+      "title": "Goals & Growth",
+      "subtitle": "What do you want to achieve with ZARZOOM?",
+      "goals": {
+        "label": "Select Your Goals",
+        "help": "Choose one or more goals. We'll tailor your strategy accordingly.",
+        "options": {
+          "increase_website_traffic": "Increase Website Traffic",
+          "get_more_subscribers_leads": "Get More Subscribers & Leads",
+          "promote_product_or_service": "Promote a Product or Service",
+          "increase_sales": "Increase Sales",
+          "build_brand_authority": "Build Brand Authority",
+          "improve_seo": "Improve SEO",
+          "educate_audience": "Educate Your Audience",
+          "generate_social_content": "Generate Social Content"
+        }
+      },
+      "websiteUrl": {
+        "label": "Website or Landing Page URL",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "Required when your goals include website traffic or lead generation."
+      },
+      "productUrl": {
+        "label": "Product or Sales Page URL",
+        "placeholder": "https://yoursite.com/product",
+        "help": "Required when your goals include product promotion or sales."
+      }
+    },
+    "step4": {
+      "title": "Choose Your Plan",
+      "subtitle": "Start with a plan that matches your growth ambitions.",
+      "discount": {
+        "label": "Annual billing",
+        "save": "Save {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Up to 3 social profiles",
+          "postsPerMonth": "30 posts per month",
+          "aiGeneration": "Basic AI content generation",
+          "scheduling": "Post scheduling",
+          "emailSupport": "Email support"
+        },
+        "pro": {
+          "socialProfiles": "Up to 10 social profiles",
+          "postsPerMonth": "150 posts per month",
+          "aiGeneration": "Advanced AI content generation",
+          "scheduling": "Smart scheduling with optimal times",
+          "analytics": "Analytics dashboard",
+          "prioritySupport": "Priority support"
+        },
+        "scale": {
+          "socialProfiles": "Unlimited social profiles",
+          "postsPerMonth": "Unlimited posts",
+          "aiGeneration": "Premium AI with custom brand voice",
+          "scheduling": "AI-powered auto-scheduling",
+          "analytics": "Advanced analytics and reporting",
+          "customBranding": "Custom branding and white-label",
+          "dedicatedSupport": "Dedicated account manager",
+          "apiAccess": "Full API access"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Perfect for getting started with social media automation.",
+        "pro": "For growing businesses that need more power and insights.",
+        "scale": "Unlimited everything for teams and agencies."
+      },
+      "popular": "Most Popular",
+      "perMonth": "/mo",
+      "selectPlan": "Select Plan",
+      "selected": "Selected",
+      "trialDays": "{days}-day free trial"
+    },
+    "step5": {
+      "title": "Connect & Launch",
+      "subtitle": "Connect your social accounts and set your preferences.",
+      "connectSocials": {
+        "label": "Connect Social Accounts",
+        "help": "Link your social media accounts via Upload-Post.",
+        "button": "Open Upload-Post",
+        "manage": "Manage Connections",
+        "connected": "Social accounts connected",
+        "notConnected": "No accounts connected yet"
+      },
+      "approval": {
+        "label": "Content Approval",
+        "help": "Choose how ZARZOOM publishes your content.",
+        "auto": "Auto-publish",
+        "autoHelp": "ZARZOOM publishes content automatically on schedule.",
+        "manual": "Manual approval",
+        "manualHelp": "Review and approve each post before it goes live."
+      },
+      "notes": {
+        "label": "Additional Notes",
+        "placeholder": "Anything else you'd like us to know about your brand or content preferences...",
+        "help": "Optional notes for our AI to consider."
+      }
+    },
+    "modal": {
+      "title": "Connect Social Accounts",
+      "loading": "Preparing social connector...",
+      "checking": "Checking connection...",
+      "close": "Done",
+      "openInNewTab": "Open in new tab",
+      "skipConnect": "Skip for now",
+      "errorGeneric": "Could not load the social connector. Please try again later.",
+      "errorNoUrl": "No connect URL was returned. Please try again.",
+      "demoTitle": "Social Connector Coming Soon",
+      "demoDescription": "Upload-Post is not yet configured for this environment. Your social account connections will be available once the provider is set up by an administrator."
+    },
+    "errors": {
+      "loadFailed": "Failed to load your onboarding data. Please try again.",
+      "saveFailed": "Failed to save. Please try again.",
+      "completeFailed": "Could not complete onboarding. Please check all required fields."
+    },
+    "banner": {
+      "skipped": "You skipped setup. Complete it to unlock all features.",
+      "inProgress": "Your setup is incomplete. Finish it to get started.",
+      "cta": "Complete Setup"
+    },
+    "gate": {
+      "title": "Setup Required",
+      "description": "Complete your onboarding setup to unlock this feature. It only takes a few minutes.",
+      "cta": "Complete Setup"
+    },
+    "a11y": {
+      "brandLogoAlt": "Brand logo",
+      "socialConnectorTitle": "Upload-Post Social Connector",
+      "dismissBanner": "Dismiss banner",
+      "currency": "£"
+    },
+    "validation": {
+      "invalidUrl": "Please enter a valid URL (e.g. https://example.com)"
     }
   },
   "billing": {
