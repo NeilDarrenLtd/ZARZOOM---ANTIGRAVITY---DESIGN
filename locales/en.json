@@ -505,6 +505,16 @@
       "loadFailed": "Failed to load your onboarding data. Please try again.",
       "saveFailed": "Failed to save. Please try again.",
       "completeFailed": "Could not complete onboarding. Please check all required fields."
+    },
+    "banner": {
+      "skipped": "You skipped setup. Complete it to unlock all features.",
+      "inProgress": "Your setup is incomplete. Finish it to get started.",
+      "cta": "Complete Setup"
+    },
+    "gate": {
+      "title": "Setup Required",
+      "description": "Complete your onboarding setup to unlock this feature. It only takes a few minutes.",
+      "cta": "Complete Setup"
     }
   },
   "billing": {
