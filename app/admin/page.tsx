@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { Mail, KeyRound, Users, CreditCard } from "lucide-react";
+import { Mail, KeyRound, Users, CreditCard, HelpCircle } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -14,6 +14,13 @@ export default function AdminDashboardPage() {
       title: t("admin.userManagement"),
       description: "View and manage platform users and roles.",
       color: "bg-blue-50 text-blue-600",
+    },
+    {
+      href: "/admin/support",
+      icon: HelpCircle,
+      title: t("admin.supportManagement"),
+      description: t("admin.supportManagementDesc"),
+      color: "bg-green-50 text-green-600",
     },
     {
       href: "/admin/settings/email",
@@ -34,7 +41,7 @@ export default function AdminDashboardPage() {
       icon: CreditCard,
       title: t("billing.admin.title"),
       description: t("billing.admin.subtitle"),
-      color: "bg-green-50 text-green-600",
+      color: "bg-purple-50 text-purple-600",
     },
   ];
 
