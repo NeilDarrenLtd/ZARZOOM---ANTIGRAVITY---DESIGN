@@ -43,7 +43,7 @@ export default function SiteNavbar() {
   const navLinks = isLoggedIn
     ? [
         { labelKey: "nav.pricing", href: "/#pricing" },
-        { labelKey: "nav.support", href: "/support" },
+        { labelKey: "nav.support", href: "/dashboard/support" },
         { labelKey: "nav.contact", href: "/#contact" },
       ]
     : [
