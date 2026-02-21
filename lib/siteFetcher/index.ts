@@ -129,7 +129,6 @@ async function fetchPage(
         Accept: "text/html,application/xhtml+xml",
       },
       redirect: "follow",
-      // @ts-expect-error - Next.js specific
       next: { revalidate: 0 },
     });
 
