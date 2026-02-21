@@ -9,6 +9,7 @@ import { sendNewTicketNotification } from "@/lib/email/supportMailer";
  */
 export const GET = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const { data: tickets, error } = await ctx.supabase!
@@ -36,6 +37,7 @@ export const GET = createApiHandler({
  */
 export const POST = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();

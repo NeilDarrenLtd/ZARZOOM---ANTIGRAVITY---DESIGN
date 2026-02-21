@@ -8,6 +8,7 @@ import { verifyTicketOwnership, isUserAdmin } from "@/lib/auth/support";
  */
 export const GET = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const ticketId = ctx.req.nextUrl.pathname.split("/").pop()!;

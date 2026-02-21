@@ -9,6 +9,7 @@ import { sendStatusChangeNotification } from "@/lib/email/supportMailer";
  */
 export const PATCH = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true, // Admins can access support tickets without tenant membership
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const ticketId = ctx.req.nextUrl.pathname.split("/").pop()!;

@@ -8,6 +8,7 @@ import { ticketFiltersSchema } from "@/lib/validation/support";
  */
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true, // Admins can access support tickets without tenant membership
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const searchParams = Object.fromEntries(ctx.req.nextUrl.searchParams.entries());

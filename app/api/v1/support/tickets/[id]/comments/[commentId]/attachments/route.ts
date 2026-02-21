@@ -15,6 +15,7 @@ import { randomUUID } from "crypto";
  */
 export const POST = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const pathSegments = ctx.req.nextUrl.pathname.split("/");
