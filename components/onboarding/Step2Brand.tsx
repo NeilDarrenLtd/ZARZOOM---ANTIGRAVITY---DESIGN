@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useI18n, languages } from "@/lib/i18n";
-import { Search, Plus, X, Upload, Loader2 } from "lucide-react";
+import { Search, Plus, X, Upload, Loader2, FileText, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { ARTICLE_STYLE_OPTIONS } from "@/lib/validation/onboarding";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 
@@ -11,14 +11,16 @@ interface Step2Props {
   onChange: (patch: Partial<OnboardingUpdate>) => void;
 }
 
+type AutoFillStatus = "idle" | "loading" | "success" | "partial" | "error";
+
 export default function Step2Brand({ data, onChange }: Step2Props) {
   const { t } = useI18n();
   const [investigating, setInvestigating] = useState(false);
-  const [investigateResult, setInvestigateResult] = useState<
-    "idle" | "success" | "error"
-  >("idle");
+  const [websiteStatus, setWebsiteStatus] = useState<AutoFillStatus>("idle");
+  const [fileStatus, setFileStatus] = useState<AutoFillStatus>("idle");
   const [uploading, setUploading] = useState(false);
   const [urlError, setUrlError] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   function validateWebsiteUrl(value: string) {
     if (!value) {
@@ -39,7 +41,7 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
   async function handleInvestigate() {
     if (!data.website_url) return;
     setInvestigating(true);
-    setInvestigateResult("idle");
+    setWebsiteStatus("loading");
 
     try {
       const res = await fetch("/api/v1/onboarding/investigate-website", {
@@ -53,19 +55,44 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
       const body = await res.json();
       if (body.data) {
         const patch: Partial<OnboardingUpdate> = {};
+        let fieldsFilledCount = 0;
+        
         if (body.data.business_description && !data.business_description) {
           patch.business_description = body.data.business_description;
+          fieldsFilledCount++;
         }
         if (body.data.suggested_styles) {
           patch.article_styles = body.data.suggested_styles;
+          fieldsFilledCount++;
         }
+        
         onChange(patch);
-        setInvestigateResult("success");
+        // Determine if success or partial based on fields filled
+        setWebsiteStatus(fieldsFilledCount > 0 ? "success" : "partial");
       }
     } catch {
-      setInvestigateResult("error");
+      setWebsiteStatus("error");
     } finally {
       setInvestigating(false);
+    }
+  }
+
+  async function handleFileAnalyse() {
+    if (!selectedFile) return;
+    setFileStatus("loading");
+
+    // Simulate file analysis (no backend yet)
+    setTimeout(() => {
+      // For now, set to partial since it's not implemented
+      setFileStatus("partial");
+    }, 2000);
+  }
+
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileStatus("idle");
     }
   }
 
@@ -110,13 +137,153 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">
-          {t("onboarding.step2.title")}
-        </h2>
-        <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-          {t("onboarding.step2.subtitle")}
-        </p>
+      {/* Brand Basics Card */}
+      <div className="bg-white border border-gray-200 rounded-xl p-6">
+        <div className="mb-4">
+          <h3 className="text-base font-semibold text-gray-900">
+            Brand Basics
+          </h3>
+          <p className="text-gray-500 text-sm mt-1 leading-relaxed">
+            Tell us about your business so we can tailor content to your brand.
+          </p>
+        </div>
+
+        {/* Website URL + Auto-fill (moved to top) */}
+        <div className="mb-6">
+          <label className="block text-xs font-medium text-gray-700 mb-2">
+            {t("onboarding.step2.websiteUrl.label")}
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={data.website_url ?? ""}
+              onChange={(e) => {
+                onChange({ website_url: e.target.value || null });
+                validateWebsiteUrl(e.target.value);
+                setWebsiteStatus("idle");
+              }}
+              onBlur={(e) => validateWebsiteUrl(e.target.value)}
+              className={`${inputClass} flex-1 ${urlError ? "border-red-400 focus:ring-red-400" : ""}`}
+              placeholder={t("onboarding.step2.websiteUrl.placeholder")}
+            />
+            <button
+              type="button"
+              onClick={handleInvestigate}
+              disabled={!data.website_url || investigating}
+              className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
+            >
+              {investigating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              <span className="hidden sm:inline">
+                {investigating ? "Analysing..." : "Auto-fill from website"}
+              </span>
+            </button>
+          </div>
+          
+          {/* Website analysis status messages */}
+          {websiteStatus === "success" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-green-700">
+                We filled what we could. Please review and adjust if needed.
+              </p>
+            </div>
+          )}
+          {websiteStatus === "partial" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-amber-700">
+                We couldn't get everything. Please complete the remaining fields below.
+              </p>
+            </div>
+          )}
+          {websiteStatus === "error" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-red-700">
+                We couldn't analyse that right now. Please try again or fill in manually.
+              </p>
+            </div>
+          )}
+          
+          {urlError && (
+            <p className="text-xs text-red-500 mt-2">{urlError}</p>
+          )}
+          <p className="text-xs text-gray-400 mt-2">
+            {t("onboarding.step2.websiteUrl.help")}
+          </p>
+        </div>
+
+        {/* Import from file section */}
+        <div className="pt-6 border-t border-gray-200">
+          <label className="block text-xs font-medium text-gray-700 mb-2">
+            Import from file
+          </label>
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <label className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                <FileText className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                <span className="text-sm text-gray-700 truncate">
+                  {selectedFile ? selectedFile.name : "Choose PDF or Word document"}
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={handleFileSelect}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+            <button
+              type="button"
+              onClick={handleFileAnalyse}
+              disabled={!selectedFile || fileStatus === "loading"}
+              className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
+            >
+              {fileStatus === "loading" ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              <span className="hidden sm:inline">
+                {fileStatus === "loading" ? "Analysing..." : "Analyse file"}
+              </span>
+            </button>
+          </div>
+
+          {/* File analysis status messages */}
+          {fileStatus === "success" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-green-700">
+                We filled what we could. Please review and adjust if needed.
+              </p>
+            </div>
+          )}
+          {fileStatus === "partial" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-amber-700">
+                We couldn't get everything. Please complete the remaining fields below.
+              </p>
+            </div>
+          )}
+          {fileStatus === "error" && (
+            <div className="flex items-start gap-2 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-red-700">
+                We couldn't analyse that right now. Please try again or fill in manually.
+              </p>
+            </div>
+          )}
+          
+          <p className="text-xs text-gray-400 mt-2">
+            Upload a PDF/Word document and we'll try to auto-fill the wizard.
+          </p>
+        </div>
       </div>
 
       {/* Business Name */}
@@ -150,59 +317,6 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
         />
         <p className="text-xs text-gray-400 mt-1">
           {t("onboarding.step2.description.help")}
-        </p>
-      </div>
-
-      {/* Website URL + Investigate */}
-      <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">
-          {t("onboarding.step2.websiteUrl.label")}
-        </label>
-        <div className="flex gap-2">
-          <input
-            type="url"
-            value={data.website_url ?? ""}
-            onChange={(e) => {
-              onChange({ website_url: e.target.value || null });
-              validateWebsiteUrl(e.target.value);
-            }}
-            onBlur={(e) => validateWebsiteUrl(e.target.value)}
-            className={`${inputClass} flex-1 ${urlError ? "border-red-400 focus:ring-red-400" : ""}`}
-            placeholder={t("onboarding.step2.websiteUrl.placeholder")}
-          />
-          <button
-            type="button"
-            onClick={handleInvestigate}
-            disabled={!data.website_url || investigating}
-            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
-          >
-            {investigating ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Search className="w-4 h-4" />
-            )}
-            <span className="hidden sm:inline">
-              {investigating
-                ? t("onboarding.step2.investigate.loading")
-                : t("onboarding.step2.investigate.button")}
-            </span>
-          </button>
-        </div>
-        {investigateResult === "success" && (
-          <p className="text-xs text-green-600 mt-1">
-            {t("onboarding.step2.investigate.success")}
-          </p>
-        )}
-        {investigateResult === "error" && (
-          <p className="text-xs text-red-500 mt-1">
-            {t("onboarding.step2.investigate.error")}
-          </p>
-        )}
-        {urlError && (
-          <p className="text-xs text-red-500 mt-1">{urlError}</p>
-        )}
-        <p className="text-xs text-gray-400 mt-1">
-          {t("onboarding.step2.websiteUrl.help")}
         </p>
       </div>
 
@@ -366,20 +480,6 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
         </p>
       </div>
 
-      {/* Investigate overlay */}
-      {investigating && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-2xl p-8 flex flex-col items-center gap-4 shadow-xl max-w-sm mx-4">
-            <Loader2 className="w-10 h-10 text-green-600 animate-spin" />
-            <p className="text-sm font-medium text-gray-900">
-              {t("onboarding.step2.investigate.loading")}
-            </p>
-            <p className="text-xs text-gray-400 text-center">
-              {t("onboarding.step2.websiteUrl.help")}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
