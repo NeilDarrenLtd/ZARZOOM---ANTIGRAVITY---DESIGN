@@ -75,6 +75,23 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
+    // ── Suspension guard ────────────────────────────────────────────
+    // Check if user is suspended (for ALL protected routes)
+    if (user && !request.nextUrl.pathname.startsWith('/suspended')) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_suspended')
+        .eq('id', user.id)
+        .single()
+
+      if (profile?.is_suspended) {
+        // Sign the user out and redirect to suspended page
+        const url = request.nextUrl.clone()
+        url.pathname = '/suspended'
+        return NextResponse.redirect(url)
+      }
+    }
+
     // ── Onboarding guard ──────────────────────────────────────────
     // Engine routes: hard-gate (only completed users may enter)
     // Dashboard routes: soft-gate (skipped users may enter but see banner;

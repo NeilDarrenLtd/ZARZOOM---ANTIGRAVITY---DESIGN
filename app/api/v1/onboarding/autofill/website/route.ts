@@ -17,6 +17,11 @@ import {
   getCachedWebsiteAnalysis,
   cacheWebsiteAnalysis,
 } from "@/lib/security/analysisCache";
+import {
+  checkAutofillUsage,
+  incrementAutofillUsage,
+  freeBasicAnalysis,
+} from "@/lib/wizard/usageGuard";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/website
@@ -40,7 +45,33 @@ export async function POST(request: Request) {
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
 
-    // 2. Check rate limit
+    // 2. Check autofill usage (2/day combined, degrade after 10 lifetime)
+    const usage = await checkAutofillUsage(supabase, userId);
+
+    if (!usage.allowed) {
+      const messages: Record<string, string> = {
+        daily_limit:
+          "You have reached your daily limit of 2 auto-fill analyses. Please try again tomorrow.",
+        blocked:
+          "Auto-fill has been disabled for your account. Please contact support for assistance.",
+        suspended:
+          "Your account has been suspended. Please contact support for assistance.",
+        profile_not_found: "User profile not found.",
+      };
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: messages[usage.reason || "daily_limit"] || "Auto-fill unavailable",
+          error: usage.reason || "daily_limit",
+          dailyRemaining: usage.dailyRemaining,
+          lifetimeTotal: usage.lifetimeTotal,
+        },
+        { status: 429 }
+      );
+    }
+
+    // 3. Check rate limit
     const rateLimit = checkRateLimit(
       userId,
       "website-autofill",
@@ -161,82 +192,105 @@ export async function POST(request: Request) {
       `[v0] Extracted ${siteResult.combinedText.length} characters from ${siteResult.pages.length} pages`
     );
 
-    // 7. Load admin-configured prompts
-    const prompts = await getPromptSettings(supabase);
+    // 7. Branch: degraded (free) vs premium (OpenRouter)
+    let analysisStatus: "success" | "partial" | "fail";
+    let analysisData: Record<string, unknown> | undefined;
+    let analysisMissing: string[] = [];
+    let analysisConfidence: Record<string, number> | undefined;
+    let analysisMessage: string;
+    let isDegraded = usage.degraded;
 
-    // 8. Analyze with OpenRouter
-    const analysis = await analyzeContentWithOpenRouter(
-      prompts.website_prompt_text,
-      siteResult.combinedText,
-      "website"
-    );
-
-    // 9. Handle analysis failure
-    if (analysis.status === "fail" || !analysis.data) {
-      await logAutofillAudit(
-        supabase,
-        userId,
-        "website",
-        url,
-        "fail",
-        analysis.error || analysis.message
+    if (isDegraded) {
+      // ── DEGRADED: free basic analysis (no OpenRouter cost) ──
+      console.log("[v0] User is degraded, using free basic analysis");
+      const basic = freeBasicAnalysis(siteResult.combinedText, "website");
+      analysisStatus = basic.fieldsPopulated > 0 ? "partial" : "fail";
+      analysisData = basic.data as Record<string, unknown>;
+      analysisMissing = basic.missingFields;
+      analysisMessage =
+        basic.fieldsPopulated > 0
+          ? `Basic analysis extracted ${basic.fieldsPopulated} fields. Upgrade or contact support for full AI-powered analysis.`
+          : "Basic analysis could not extract fields from this website.";
+    } else {
+      // ── PREMIUM: full OpenRouter analysis ──
+      const prompts = await getPromptSettings(supabase);
+      const analysis = await analyzeContentWithOpenRouter(
+        prompts.website_prompt_text,
+        siteResult.combinedText,
+        "website"
       );
 
-      return NextResponse.json(
-        {
-          status: "fail",
-          message: analysis.message,
-          error: analysis.error,
-        },
-        { status: 500 }
+      if (analysis.status === "fail" || !analysis.data) {
+        await logAutofillAudit(
+          supabase,
+          userId,
+          "website",
+          url,
+          "fail",
+          analysis.error || analysis.message
+        );
+
+        return NextResponse.json(
+          {
+            status: "fail",
+            message: analysis.message,
+            error: analysis.error,
+          },
+          { status: 500 }
+        );
+      }
+
+      analysisStatus = analysis.status;
+      analysisData = analysis.data as Record<string, unknown>;
+      analysisMissing = analysis.missingFields || [];
+      analysisConfidence = analysis.confidence;
+      analysisMessage = analysis.message;
+    }
+
+    // 8. Persist results to database
+    if (analysisData && Object.keys(analysisData).length > 0) {
+      await persistAutofillResults(
+        supabase,
+        userId,
+        analysisData as any,
+        "website",
+        url
       );
     }
 
-    // 10. Persist results to database
-    await persistAutofillResults(
-      supabase,
-      userId,
-      analysis.data,
-      "website",
-      url
-    );
+    // 9. Increment usage counter (counts regardless of degraded/premium)
+    await incrementAutofillUsage(supabase, userId);
 
-    // 11. Log audit
+    // 10. Log audit
     await logAutofillAudit(
       supabase,
       userId,
       "website",
       url,
-      analysis.status,
+      analysisStatus,
       undefined,
-      Object.keys(analysis.data).length,
-      analysis.confidence
+      analysisData ? Object.keys(analysisData).length : 0,
+      analysisConfidence
     );
 
     const duration = Date.now() - startTime;
-    console.log(`[v0] Website autofill completed in ${duration}ms`);
 
-    // 12. Cache successful result
+    // 11. Build and cache response
     const responseData = {
-      status: analysis.status,
-      message: analysis.message,
-      missingFields: analysis.missingFields || [],
-      fieldsPopulated: Object.keys(analysis.data).length,
-      confidence: analysis.confidence,
+      status: analysisStatus,
+      message: analysisMessage,
+      missingFields: analysisMissing,
+      fieldsPopulated: analysisData ? Object.keys(analysisData).length : 0,
+      confidence: analysisConfidence,
       processingTime: duration,
+      degraded: isDegraded,
+      dailyRemaining: usage.dailyRemaining - 1,
+      lifetimeTotal: usage.lifetimeTotal + 1,
     };
 
     cacheWebsiteAnalysis(userId, url, responseData);
 
-    // 13. Return success response
     return NextResponse.json(responseData);
-      status: analysis.status,
-      message: analysis.message,
-      missingFields: analysis.missingFields || [],
-      fieldsPopulated: Object.keys(analysis.data).length,
-      confidence: analysis.confidence,
-      processingTime: duration,
-    });
   } catch (error) {
     const duration = Date.now() - startTime;
     console.error("[v0] Website autofill error:", error);

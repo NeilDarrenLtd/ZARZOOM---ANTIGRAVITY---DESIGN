@@ -42,6 +42,20 @@ export async function signInWithEmail(email: string, password: string) {
     return { error: error.message };
   }
 
+  // Check if user is suspended
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const adminSupabase = await createAdminClient();
+  const { data: profile } = await adminSupabase
+    .from("profiles")
+    .select("is_suspended")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profile?.is_suspended) {
+    await supabase.auth.signOut();
+    return { error: "suspended", redirectTo: "/suspended" };
+  }
+
   // Resolve onboarding-aware redirect destination
   const { resolvePostAuthRedirect } = await import(
     "@/lib/auth/postAuthRedirect"

@@ -84,6 +84,10 @@ export default function AuthPage() {
     const result = await signInWithEmail(loginEmail, loginPassword);
 
     if (result.error) {
+      if (result.error === "suspended" && result.redirectTo) {
+        router.push(result.redirectTo);
+        return;
+      }
       setLoginError(result.error);
       setLoginLoading(false);
     } else {
