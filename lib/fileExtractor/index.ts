@@ -131,8 +131,9 @@ export function validateFile(
 async function extractFromPDF(buffer: Buffer): Promise<ExtractedContent> {
   try {
     // Dynamic import to keep bundle size down
+    // pdf-parse is an ESM module that exports the function directly
     const pdfParseModule = await import("pdf-parse");
-    const pdfParse = pdfParseModule.default || pdfParseModule;
+    const pdfParse = (pdfParseModule as any).default || (pdfParseModule as any);
     
     const data = await pdfParse(buffer);
 
