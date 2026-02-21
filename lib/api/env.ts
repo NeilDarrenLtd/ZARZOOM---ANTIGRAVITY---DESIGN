@@ -16,6 +16,7 @@ const envSchema = z.object({
   API_KEY_PEPPER: z.string().min(16).optional(),
   STRIPE_SECRET_KEY: z.string().min(1).optional(),
   STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+  OPENROUTER_API_KEY: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
