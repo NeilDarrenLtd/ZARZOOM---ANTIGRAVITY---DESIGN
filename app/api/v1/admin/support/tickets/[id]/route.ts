@@ -33,7 +33,7 @@ export const PATCH = createApiHandler({
       const { data: currentTicket } = await ctx.supabase!
         .from("support_tickets")
         .select("status")
-        .eq("ticket_id", ticketId)
+        .eq("id", ticketId)
         .single();
       oldStatus = currentTicket?.status || null;
     }
@@ -46,8 +46,8 @@ export const PATCH = createApiHandler({
         updated_at: new Date().toISOString(),
         last_activity_at: new Date().toISOString(),
       })
-      .eq("ticket_id", ticketId)
-      .select("ticket_id, subject, status, priority, category, updated_at, last_activity_at, user_id, profiles(email)")
+      .eq("id", ticketId)
+      .select("id, subject, status, priority, category, updated_at, last_activity_at, user_id")
       .single();
 
     if (error) {
@@ -59,9 +59,9 @@ export const PATCH = createApiHandler({
 
     // Send email notification if status changed
     if (updates.status && oldStatus && oldStatus !== updates.status) {
-      const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
+      const userEmail = ctx.user!.email || 'unknown@example.com';
       sendStatusChangeNotification({
-        ticketId: ticket.ticket_id,
+        ticketId: ticket.id,
         ticketSubject: ticket.subject,
         userEmail,
         oldStatus,

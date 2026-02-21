@@ -206,15 +206,48 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     onChange({ article_style_links: current });
   }
 
-  function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate file size (2MB max for logos)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Logo must be under 2MB");
+      return;
+    }
+
+    // Validate type
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      alert("Only JPEG, PNG, and WebP images are allowed");
+      return;
+    }
+
     setUploading(true);
 
-    // Create a local object URL for preview (in production, upload to Supabase Storage)
-    const url = URL.createObjectURL(file);
-    onChange({ logo_url: url });
-    setUploading(false);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/v1/onboarding/upload-logo", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to upload logo");
+      }
+
+      const body = await res.json();
+      if (body.success && body.data?.url) {
+        onChange({ logo_url: body.data.url });
+      }
+    } catch (err: any) {
+      console.error("[v0] Logo upload error:", err);
+      alert(err.message || "Failed to upload logo");
+    } finally {
+      setUploading(false);
+    }
   }
 
   // Check if we have missing critical fields after partial autofill
@@ -561,7 +594,11 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
           {t("onboarding.step2.logo.label")}
         </label>
         <div className="flex items-center gap-4">
-          {data.logo_url ? (
+          {uploading ? (
+            <div className="w-16 h-16 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center">
+              <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+            </div>
+          ) : data.logo_url ? (
             <img
               src={data.logo_url}
               alt={t("onboarding.a11y.brandLogoAlt")}

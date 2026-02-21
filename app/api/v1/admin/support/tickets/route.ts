@@ -25,18 +25,14 @@ export const GET = createApiHandler({
       .from("support_tickets")
       .select(
         `
-        ticket_id,
+        id,
         subject,
         status,
         priority,
         category,
         last_activity_at,
         created_at,
-        user_id,
-        profiles!support_tickets_user_id_fkey (
-          email,
-          full_name
-        )
+        user_id
       `,
         { count: "exact" }
       );
@@ -55,9 +51,9 @@ export const GET = createApiHandler({
     }
 
     if (search) {
-      // Search in ticket_id, subject, or user email
+      // Search in id or subject
       query = query.or(
-        `ticket_id.ilike.%${search}%,subject.ilike.%${search}%,profiles.email.ilike.%${search}%`
+        `id.ilike.%${search}%,subject.ilike.%${search}%`
       );
     }
 

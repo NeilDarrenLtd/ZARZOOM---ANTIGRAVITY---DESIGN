@@ -12,6 +12,8 @@ interface PromptSettings {
   website_prompt: string | null;
   file_prompt: string | null;
   feature_enabled: boolean;
+  openrouter_api_key: string | null;
+  openrouter_model: string | null;
   updated_at: string | null;
   updated_by: string | null;
 }
@@ -51,6 +53,9 @@ export default function OpenRouterPromptsPage() {
 
   const [websitePrompt, setWebsitePrompt] = useState("");
   const [filePrompt, setFilePrompt] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [model, setModel] = useState("openai/gpt-4o-mini");
+  const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>({ status: "idle" });
   const [resetState, setResetState] = useState<"idle" | "confirming" | "resetting">("idle");
@@ -60,6 +65,8 @@ export default function OpenRouterPromptsPage() {
     if (data?.data) {
       setWebsitePrompt(data.data.website_prompt ?? "");
       setFilePrompt(data.data.file_prompt ?? "");
+      setApiKey(data.data.openrouter_api_key ?? "");
+      setModel(data.data.openrouter_model ?? "openai/gpt-4o-mini");
       setHasUnsavedChanges(false);
     }
   }, [data]);
@@ -70,10 +77,12 @@ export default function OpenRouterPromptsPage() {
     
     const changed =
       websitePrompt !== (data.data.website_prompt ?? "") ||
-      filePrompt !== (data.data.file_prompt ?? "");
+      filePrompt !== (data.data.file_prompt ?? "") ||
+      apiKey !== (data.data.openrouter_api_key ?? "") ||
+      model !== (data.data.openrouter_model ?? "openai/gpt-4o-mini");
     
     setHasUnsavedChanges(changed);
-  }, [websitePrompt, filePrompt, data]);
+  }, [websitePrompt, filePrompt, apiKey, model, data]);
 
   /* -- Save handler ---------------------------------------------- */
   const handleSave = useCallback(async () => {
@@ -86,6 +95,8 @@ export default function OpenRouterPromptsPage() {
         body: JSON.stringify({
           website_prompt: websitePrompt || null,
           file_prompt: filePrompt || null,
+          openrouter_api_key: apiKey || null,
+          openrouter_model: model || null,
         }),
       });
 
@@ -235,6 +246,75 @@ export default function OpenRouterPromptsPage() {
               )}
             </div>
           )}
+
+          {/* OpenRouter Configuration Card */}
+          <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-zinc-900">OpenRouter Configuration</h3>
+
+            {/* API Key */}
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+                OpenRouter API Key
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type={showApiKey ? "text" : "password"}
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="sk-or-v1-..."
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey(!showApiKey)}
+                  className="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors shrink-0"
+                >
+                  {showApiKey ? "Hide" : "Show"}
+                </button>
+              </div>
+              <p className="text-xs text-zinc-500 mt-1.5">
+                Your OpenRouter API key. Get one at{" "}
+                <a
+                  href="https://openrouter.ai/keys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-600 hover:text-purple-700 underline"
+                >
+                  openrouter.ai/keys
+                </a>
+                . This key is stored securely in the database and used server-side only.
+              </p>
+            </div>
+
+            {/* Model */}
+            <div>
+              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+                Model
+              </label>
+              <input
+                type="text"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                placeholder="openai/gpt-4o-mini"
+              />
+              <p className="text-xs text-zinc-500 mt-1.5">
+                The OpenRouter model identifier (e.g. <code className="bg-zinc-100 px-1 rounded text-[11px]">openai/gpt-4o-mini</code>,{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">anthropic/claude-3.5-sonnet</code>).
+                See{" "}
+                <a
+                  href="https://openrouter.ai/models"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-600 hover:text-purple-700 underline"
+                >
+                  openrouter.ai/models
+                </a>{" "}
+                for available models.
+              </p>
+            </div>
+          </div>
 
           {/* Website Prompt */}
           <div>

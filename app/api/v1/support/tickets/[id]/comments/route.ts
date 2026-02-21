@@ -40,11 +40,11 @@ export const POST = createApiHandler({
       .from("support_comments")
       .insert({
         ticket_id: ticketId,
-        author_id: userId,
+        author_user_id: userId,
         author_role: isAdmin ? "admin" : "user",
         message,
       })
-      .select("comment_id, message, author_role, created_at")
+      .select("id, message, author_role, created_at")
       .single();
 
     if (commentError || !comment) {
@@ -55,17 +55,17 @@ export const POST = createApiHandler({
     await ctx.supabase!
       .from("support_tickets")
       .update({ last_activity_at: new Date().toISOString() })
-      .eq("ticket_id", ticketId);
+      .eq("id", ticketId);
 
     // Fetch ticket details for email notification
     const { data: ticket } = await ctx.supabase!
       .from("support_tickets")
-      .select("subject, user_id, profiles(email)")
-      .eq("ticket_id", ticketId)
+      .select("subject, user_id")
+      .eq("id", ticketId)
       .single();
 
     if (ticket) {
-      const ticketOwnerEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
+      const ticketOwnerEmail = ctx.user!.email || 'unknown@example.com';
 
       if (isAdmin) {
         // Admin comment → Email to user
