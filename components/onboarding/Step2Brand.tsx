@@ -44,33 +44,40 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
     setWebsiteStatus("loading");
 
     try {
-      const res = await fetch("/api/v1/onboarding/investigate-website", {
+      console.log("[v0] Calling website autofill API...");
+      
+      const res = await fetch("/api/v1/onboarding/autofill/website", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: data.website_url }),
       });
 
-      if (!res.ok) throw new Error("Failed");
-
       const body = await res.json();
-      if (body.data) {
-        const patch: Partial<OnboardingUpdate> = {};
-        let fieldsFilledCount = 0;
-        
-        if (body.data.business_description && !data.business_description) {
-          patch.business_description = body.data.business_description;
-          fieldsFilledCount++;
-        }
-        if (body.data.suggested_styles) {
-          patch.article_styles = body.data.suggested_styles;
-          fieldsFilledCount++;
-        }
-        
-        onChange(patch);
-        // Determine if success or partial based on fields filled
-        setWebsiteStatus(fieldsFilledCount > 0 ? "success" : "partial");
+      console.log("[v0] Website autofill response:", body);
+
+      if (!res.ok) {
+        throw new Error(body.error || body.message || "Failed to analyze website");
       }
-    } catch {
+
+      // Check status and reload wizard data
+      if (body.status === "success" || body.status === "partial") {
+        // Reload the wizard data from the database since it was updated server-side
+        const profileRes = await fetch("/api/v1/onboarding");
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          if (profileData.data) {
+            // Apply all fields from the updated profile
+            onChange(profileData.data);
+          }
+        }
+        
+        setWebsiteStatus(body.status);
+        console.log(`[v0] Website autofill ${body.status}: ${body.fieldsPopulated} fields populated`);
+      } else {
+        setWebsiteStatus("error");
+      }
+    } catch (error: any) {
+      console.error("[v0] Website autofill error:", error);
       setWebsiteStatus("error");
     } finally {
       setInvestigating(false);
@@ -82,31 +89,64 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
     setFileStatus("loading");
 
     try {
-      // Upload and parse file
+      console.log("[v0] Step 1: Uploading and extracting text from file...");
+      
+      // Step 1: Upload and extract text from file
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const res = await fetch("/api/v1/onboarding/upload-file", {
+      const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        const errorBody = await res.json();
+      if (!uploadRes.ok) {
+        const errorBody = await uploadRes.json();
         console.error("[v0] File upload failed:", errorBody);
         throw new Error(errorBody.error || "Failed to upload file");
       }
 
-      const body = await res.json();
-      console.log("[v0] File uploaded successfully:", body);
+      const uploadBody = await uploadRes.json();
+      console.log("[v0] File uploaded successfully, extracted text length:", uploadBody.data?.extractedText?.length);
 
-      if (body.success && body.data) {
-        // TODO: Call OpenRouter to analyze the extracted text
-        // For now, just show success since text extraction worked
-        setFileStatus("success");
+      if (!uploadBody.success || !uploadBody.data) {
+        throw new Error("Failed to extract text from file");
+      }
+
+      // Step 2: Analyze the extracted text with OpenRouter
+      console.log("[v0] Step 2: Analyzing file content with AI...");
+      
+      const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          storageFilePath: uploadBody.data.storagePath,
+          extractedText: uploadBody.data.extractedText,
+          fileName: selectedFile.name,
+        }),
+      });
+
+      const analyzeBody = await analyzeRes.json();
+      console.log("[v0] File autofill response:", analyzeBody);
+
+      if (!analyzeRes.ok) {
+        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
+      }
+
+      // Check status and reload wizard data
+      if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
+        // Reload the wizard data from the database since it was updated server-side
+        const profileRes = await fetch("/api/v1/onboarding");
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
+          if (profileData.data) {
+            // Apply all fields from the updated profile
+            onChange(profileData.data);
+          }
+        }
         
-        // Placeholder - in next step we'll analyze the text with AI
-        console.log("[v0] Extracted text length:", body.data.extractedText?.length);
+        setFileStatus(analyzeBody.status);
+        console.log(`[v0] File autofill ${analyzeBody.status}: ${analyzeBody.fieldsPopulated} fields populated`);
       } else {
         setFileStatus("error");
       }
