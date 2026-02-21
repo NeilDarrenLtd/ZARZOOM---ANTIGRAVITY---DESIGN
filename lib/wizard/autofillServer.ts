@@ -1,13 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import {
-  wizardAutoFillResponseSchema,
-  validateAndNormalizeAutoFill,
-  getPromptSchemaGuidance,
-} from "@/lib/validation/wizardAutofillSchema";
-import { mapAutoFillToOnboarding } from "@/lib/validation/wizardAutofillMapper";
-import { openRouterClient } from "@/lib/openrouter";
-import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 
 // ──────────────────────────────────────────────
 // Authentication & Authorization
@@ -34,58 +26,22 @@ export async function requireAuthenticatedUser() {
 export interface PromptSettings {
   website_prompt_text: string;
   file_prompt_text: string;
+  openrouter_api_key: string | null;
+  openrouter_model: string | null;
   updated_at: string | null;
   updated_by_user_id: string | null;
 }
 
-const DEFAULT_WEBSITE_PROMPT = `You are a brand analysis AI. Analyze the provided website content and extract structured brand information.
-
-IMPORTANT: You MUST respond with ONLY valid JSON matching the schema provided. Do not include any explanatory text before or after the JSON.
-
-Website Content:
-{CONTENT}
-
-Extract and return a JSON object following this structure:
-{SCHEMA_GUIDANCE}
-
-Focus on:
-- Business name and description (short and long versions)
-- Industry and target audience
-- Tone of voice from the writing style
-- Brand colors if visible in design
-- Social media links found on the site
-- Content style preferences based on existing content
-- Any goals or value propositions mentioned
-
-Be conservative - only include fields you're confident about. Mark your confidence level in the metadata section.`;
-
-const DEFAULT_FILE_PROMPT = `You are a brand analysis AI. Analyze the provided document content and extract structured brand information.
-
-IMPORTANT: You MUST respond with ONLY valid JSON matching the schema provided. Do not include any explanatory text before or after the JSON.
-
-Document Content:
-{CONTENT}
-
-Extract and return a JSON object following this structure:
-{SCHEMA_GUIDANCE}
-
-Look for:
-- Company/brand name and descriptions
-- Mission, vision, values statements
-- Target audience and market positioning
-- Product/service descriptions
-- Brand guidelines (colors, tone, style)
-- Business goals and objectives
-- Contact information and social links
-
-Be conservative - only include fields you're confident about. Mark your confidence level in the metadata section.`;
+const DEFAULT_WEBSITE_PROMPT = `Analyze the website content and extract brand information as JSON.`;
+const DEFAULT_FILE_PROMPT = `Analyze the document content and extract brand information as JSON.`;
 
 export async function getPromptSettings(
   supabase: SupabaseClient
 ): Promise<PromptSettings> {
   const { data, error } = await supabase
     .from("wizard_autofill_settings")
-    .select("website_prompt_text, file_prompt_text, updated_at, updated_by_user_id")
+    .select("website_prompt_text, file_prompt_text, openrouter_api_key, openrouter_model, updated_at, updated_by_user_id")
+    .eq("id", 1)
     .single();
 
   if (error || !data) {
@@ -96,6 +52,8 @@ export async function getPromptSettings(
     return {
       website_prompt_text: DEFAULT_WEBSITE_PROMPT,
       file_prompt_text: DEFAULT_FILE_PROMPT,
+      openrouter_api_key: null,
+      openrouter_model: null,
       updated_at: null,
       updated_by_user_id: null,
     };
@@ -104,6 +62,8 @@ export async function getPromptSettings(
   return {
     website_prompt_text: data.website_prompt_text || DEFAULT_WEBSITE_PROMPT,
     file_prompt_text: data.file_prompt_text || DEFAULT_FILE_PROMPT,
+    openrouter_api_key: data.openrouter_api_key,
+    openrouter_model: data.openrouter_model || "openai/gpt-4o-mini",
     updated_at: data.updated_at,
     updated_by_user_id: data.updated_by_user_id,
   };
@@ -115,7 +75,7 @@ export async function getPromptSettings(
 
 export interface AnalysisResult {
   status: "success" | "partial" | "fail";
-  data?: OnboardingUpdate;
+  data?: Record<string, unknown>;
   missingFields?: string[];
   confidence?: Record<string, number>;
   message: string;
@@ -130,186 +90,155 @@ export async function analyzeContentWithOpenRouter(
   try {
     console.log(`[v0] Starting ${sourceType} analysis with OpenRouter...`);
 
-    // Prepare the prompt
-    const schemaGuidance = getPromptSchemaGuidance();
-    const prompt = promptTemplate
-      .replace("{CONTENT}", content.slice(0, 30000)) // Limit content to 30k chars
-      .replace("{SCHEMA_GUIDANCE}", schemaGuidance);
+    // Get OpenRouter credentials from settings
+    const supabase = await createClient();
+    const settings = await getPromptSettings(supabase);
 
-    console.log(`[v0] Prompt length: ${prompt.length} characters`);
-
-    // Call OpenRouter with JSON mode
-    const response = await openRouterClient.chatCompletion(
-      [
-        {
-          role: "system",
-          content:
-            "You are a precise brand analysis AI. Extract brand information and respond with ONLY valid JSON matching the provided schema. Do not include markdown formatting or explanatory text.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      {
-        temperature: 0.3, // Lower temperature for more consistent extraction
-        maxTokens: 3000,
-      }
-    );
-
-    console.log("[v0] OpenRouter response received");
-
-    if (!response.content) {
-      throw new Error("Empty response from OpenRouter");
-    }
-
-    // Parse and validate the JSON response
-    const parsed = wizardAutoFillResponseSchema.safeParse(response.content);
-
-    if (!parsed.success) {
-      console.error("[v0] Validation failed:", parsed.error.issues);
+    if (!settings.openrouter_api_key) {
+      console.warn("[v0] No OpenRouter API key configured");
       return {
         status: "fail",
-        message: "Failed to parse AI response into valid schema",
-        error: parsed.error.issues.map((i) => i.message).join(", "),
+        message: "OpenRouter API key not configured. Please add it in Admin > OpenRouter Prompts.",
+        error: "missing_api_key",
       };
     }
 
-    // Normalize and check completeness
-    const validation = validateAndNormalizeAutoFill(parsed.data);
+    // Call OpenRouter API
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${settings.openrouter_api_key}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "https://zarzoom.com",
+        "X-Title": "Zarzoom Wizard",
+      },
+      body: JSON.stringify({
+        model: settings.openrouter_model || "openai/gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "You are a brand analysis AI. Extract structured information and respond with ONLY valid JSON.",
+          },
+          {
+            role: "user",
+            content: `${promptTemplate}\n\n${content.slice(0, 30000)}`,
+          },
+        ],
+        response_format: { type: "json_object" },
+      }),
+    });
 
-    // Map to onboarding schema
-    const onboardingData = mapAutoFillToOnboarding(validation.data);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("[v0] OpenRouter API error:", response.status, errorText);
+      return {
+        status: "fail",
+        message: `OpenRouter API error: ${response.status}`,
+        error: errorText,
+      };
+    }
 
-    console.log(
-      `[v0] Analysis complete. Fields populated: ${Object.keys(onboardingData).length}, Missing: ${validation.missingFields.length}`
-    );
+    const result = await response.json();
+    const aiText = result.choices?.[0]?.message?.content;
+
+    if (!aiText) {
+      return {
+        status: "fail",
+        message: "OpenRouter returned empty response",
+        error: "empty_response",
+      };
+    }
+
+    // Parse JSON response
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(aiText);
+    } catch (err) {
+      console.error("[v0] Failed to parse OpenRouter JSON:", err);
+      return {
+        status: "fail",
+        message: "Failed to parse AI response as JSON",
+        error: "invalid_json",
+      };
+    }
+
+    console.log(`[v0] OpenRouter analysis complete, extracted ${Object.keys(parsed).length} fields`);
 
     return {
-      status: validation.isPartial ? "partial" : "success",
-      data: onboardingData,
-      missingFields: validation.missingFields,
-      confidence: validation.data.metadata?.confidence_by_section,
-      message: validation.isPartial
-        ? `Successfully extracted ${Object.keys(onboardingData).length} fields. Some fields could not be determined from the ${sourceType}.`
-        : `Successfully extracted all available information from the ${sourceType}.`,
+      status: "success",
+      data: parsed,
+      missingFields: [],
+      message: `Successfully analyzed ${sourceType}`,
     };
-  } catch (error) {
-    console.error(`[v0] ${sourceType} analysis error:`, error);
+  } catch (err: any) {
+    console.error(`[v0] ${sourceType} analysis error:`, err);
     return {
       status: "fail",
-      message: `Failed to analyze ${sourceType} content`,
-      error: error instanceof Error ? error.message : "Unknown error",
+      message: `Analysis failed: ${err.message}`,
+      error: err.message,
     };
   }
 }
 
 // ──────────────────────────────────────────────
-// Persistence & Audit
+// Persistence
 // ──────────────────────────────────────────────
 
 export async function persistAutofillResults(
   supabase: SupabaseClient,
   userId: string,
-  onboardingData: OnboardingUpdate,
-  sourceType: "website" | "file",
-  sourceValue: string
+  data: Record<string, unknown>,
+  source: "website" | "file",
+  sourceUrl?: string
 ): Promise<void> {
-  console.log(`[v0] Persisting ${Object.keys(onboardingData).length} fields to onboarding_profiles...`);
-
-  // Update the onboarding profile with AI-filled data
-  const { error: updateError } = await supabase
+  // Update onboarding_profiles with extracted data
+  const { error } = await supabase
     .from("onboarding_profiles")
-    .update({
-      ...onboardingData,
-      ai_filled: true,
-      ai_filled_source: sourceType,
-      ai_filled_at: new Date().toISOString(),
-    })
-    .eq("user_id", userId);
-
-  if (updateError) {
-    // If no profile exists, create one
-    if (updateError.code === "PGRST116") {
-      const { error: insertError } = await supabase
-        .from("onboarding_profiles")
-        .insert({
-          user_id: userId,
-          ...onboardingData,
-          ai_filled: true,
-          ai_filled_source: sourceType,
-          ai_filled_at: new Date().toISOString(),
-          onboarding_status: "in_progress",
-        });
-
-      if (insertError) {
-        throw new Error(
-          `Failed to create onboarding profile: ${insertError.message}`
-        );
+    .upsert(
+      {
+        user_id: userId,
+        ...data,
+        updated_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "user_id",
       }
-    } else {
-      throw new Error(
-        `Failed to update onboarding profile: ${updateError.message}`
-      );
-    }
+    );
+
+  if (error) {
+    console.error("[v0] Failed to persist autofill results:", error);
+    throw new Error(`Failed to save results: ${error.message}`);
   }
 
-  console.log("[v0] Persisted successfully");
+  console.log(`[v0] Persisted autofill results for user ${userId}`);
 }
+
+// ──────────────────────────────────────────────
+// Audit Logging
+// ──────────────────────────────────────────────
 
 export async function logAutofillAudit(
   supabase: SupabaseClient,
   userId: string,
-  sourceType: "website" | "file",
-  sourceValue: string,
-  status: "success" | "partial" | "fail",
+  source: "website" | "file",
+  sourceIdentifier: string,
+  status: string,
   errorMessage?: string,
   fieldsPopulated?: number,
-  confidenceScores?: Record<string, number>
+  confidence?: Record<string, number>
 ): Promise<void> {
-  console.log(`[v0] Logging audit: ${status} for ${sourceType}`);
-
-  // Sanitize error message to avoid logging secrets
-  let sanitizedError = errorMessage || null;
-  if (sanitizedError) {
-    // Remove potential API keys, tokens, passwords
-    sanitizedError = sanitizedError
-      .replace(/api[_-]?key[:\s=]+[a-zA-Z0-9_-]+/gi, "api_key=[REDACTED]")
-      .replace(/bearer\s+[a-zA-Z0-9_-]+/gi, "bearer [REDACTED]")
-      .replace(/token[:\s=]+[a-zA-Z0-9_-]+/gi, "token=[REDACTED]")
-      .replace(/password[:\s=]+[^\s]+/gi, "password=[REDACTED]")
-      .replace(/secret[:\s=]+[a-zA-Z0-9_-]+/gi, "secret=[REDACTED]");
-    
-    // Truncate very long error messages
-    if (sanitizedError.length > 500) {
-      sanitizedError = sanitizedError.slice(0, 497) + "...";
-    }
-  }
-
-  // Sanitize source value (URL or filename) to prevent storing PII
-  let sanitizedSource = sourceValue;
-  if (sourceType === "website") {
-    try {
-      const url = new URL(sourceValue);
-      // Remove query parameters that might contain tokens
-      sanitizedSource = `${url.protocol}//${url.hostname}${url.pathname}`;
-    } catch {
-      // Keep as-is if not a valid URL
-    }
-  }
-
   const { error } = await supabase.from("wizard_autofill_audit").insert({
     user_id: userId,
-    source_type: sourceType,
-    source_value: sanitizedSource,
+    source_type: source,
+    source_identifier: sourceIdentifier,
     status,
-    error_message: sanitizedError,
+    error_message: errorMessage || null,
     fields_populated: fieldsPopulated || 0,
-    confidence_scores: confidenceScores || null,
+    confidence_scores: confidence || null,
+    created_at: new Date().toISOString(),
   });
 
   if (error) {
-    console.error("[v0] Failed to log audit:", error.message);
-    // Don't throw - audit logging failure shouldn't break the main flow
+    console.error("[v0] Failed to log autofill audit:", error);
   }
 }
