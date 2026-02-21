@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { Search, AlertCircle, Eye } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 type Ticket = {
   id: string;
@@ -15,9 +14,7 @@ type Ticket = {
   created_at: string;
   last_activity_at: string;
   user_id: string;
-  profiles?: {
-    email: string;
-  };
+  user_email?: string;
 };
 
 export default function AdminSupportPage() {
@@ -37,30 +34,34 @@ export default function AdminSupportPage() {
       setLoading(true);
       setError(null);
 
-      const supabase = createClient();
-      
-      let query = supabase
-        .from("support_tickets")
-        .select(`
-          *,
-          profiles:user_id (
-            email
-          )
-        `)
-        .order("last_activity_at", { ascending: false });
-
+      const params = new URLSearchParams();
       if (statusFilter !== "all") {
-        query = query.eq("status", statusFilter);
+        params.set("status", statusFilter);
       }
 
-      const { data, error: fetchError } = await query;
+      const res = await fetch(`/api/v1/admin/support/tickets?${params.toString()}`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error?.message || `Failed to load tickets (${res.status})`);
+      }
 
-      if (fetchError) throw fetchError;
+      const body = await res.json();
+      const mapped = (body.data?.tickets || []).map((t: any) => ({
+        id: t.ticket_id || t.id,
+        subject: t.subject,
+        status: t.status,
+        priority: t.priority,
+        category: t.category,
+        created_at: t.created_at,
+        last_activity_at: t.last_activity_at,
+        user_id: t.user_id,
+        user_email: t.profiles?.email || "Unknown",
+      }));
 
-      setTickets(data || []);
-    } catch (err) {
+      setTickets(mapped);
+    } catch (err: any) {
       console.error("Failed to load tickets:", err);
-      setError(t("adminSupport.list.error"));
+      setError(err.message || t("adminSupport.list.error"));
     } finally {
       setLoading(false);
     }
@@ -76,7 +77,7 @@ export default function AdminSupportPage() {
     return (
       ticket.id.toLowerCase().includes(query) ||
       ticket.subject.toLowerCase().includes(query) ||
-      ticket.profiles?.email?.toLowerCase().includes(query)
+      ticket.user_email?.toLowerCase().includes(query)
     );
   });
 
@@ -229,7 +230,7 @@ export default function AdminSupportPage() {
                       <div className="max-w-xs truncate">{ticket.subject}</div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      {ticket.profiles?.email || "Unknown"}
+                      {ticket.user_email || "Unknown"}
                     </td>
                     <td className="px-4 py-3">
                       <span

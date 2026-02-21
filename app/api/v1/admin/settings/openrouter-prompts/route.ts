@@ -54,17 +54,27 @@ export async function GET(req: NextRequest) {
           website_prompt: null,
           file_prompt: null,
           feature_enabled: true,
+          openrouter_api_key: null,
+          openrouter_model: "openai/gpt-4o-mini",
           updated_at: null,
           updated_by: null,
         },
       });
     }
 
+    // Mask the API key for display (only show last 4 chars)
+    const maskedKey = settings.openrouter_api_key
+      ? "sk-or-......" + settings.openrouter_api_key.slice(-4)
+      : null;
+
     return NextResponse.json({
       data: {
         website_prompt: settings.website_prompt,
         file_prompt: settings.file_prompt,
         feature_enabled: settings.feature_enabled,
+        openrouter_api_key: maskedKey,
+        openrouter_api_key_set: !!settings.openrouter_api_key,
+        openrouter_model: settings.openrouter_model,
         updated_at: settings.updated_at,
         updated_by: settings.updated_by,
       },
@@ -113,6 +123,8 @@ export async function PUT(req: NextRequest) {
       website_prompt: z.string().min(1).max(10000).nullable().optional(),
       file_prompt: z.string().min(1).max(10000).nullable().optional(),
       feature_enabled: z.boolean().optional(),
+      openrouter_api_key: z.string().max(200).nullable().optional(),
+      openrouter_model: z.string().max(200).nullable().optional(),
     });
 
     const parsed = schema.safeParse(body);
@@ -128,20 +140,33 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const { website_prompt, file_prompt, feature_enabled } = parsed.data;
+    const { website_prompt, file_prompt, feature_enabled, openrouter_api_key, openrouter_model } = parsed.data;
+
+    // Build update payload -- only include API key if the user actually sent a new one
+    // (a masked value like "sk-or-......xxxx" should not overwrite the real key)
+    const upsertPayload: Record<string, unknown> = {
+      id: 1,
+      website_prompt,
+      file_prompt,
+      feature_enabled,
+      openrouter_model,
+      updated_at: new Date().toISOString(),
+      updated_by: user.id,
+    };
+
+    // Only update the API key if it looks like a real key (not a masked one)
+    if (openrouter_api_key && !openrouter_api_key.startsWith("sk-or-......")) {
+      upsertPayload.openrouter_api_key = openrouter_api_key;
+    } else if (openrouter_api_key === null) {
+      // Explicitly clearing the key
+      upsertPayload.openrouter_api_key = null;
+    }
 
     // Update or insert settings (upsert)
     const { data: updated, error: updateError } = await supabase
       .from("wizard_autofill_settings")
       .upsert(
-        {
-          id: 1, // Singleton row
-          website_prompt,
-          file_prompt,
-          feature_enabled,
-          updated_at: new Date().toISOString(),
-          updated_by: user.id,
-        },
+        upsertPayload,
         {
           onConflict: "id",
         }
@@ -157,11 +182,18 @@ export async function PUT(req: NextRequest) {
       );
     }
 
+    const maskedUpdatedKey = updated.openrouter_api_key
+      ? "sk-or-......" + updated.openrouter_api_key.slice(-4)
+      : null;
+
     return NextResponse.json({
       data: {
         website_prompt: updated.website_prompt,
         file_prompt: updated.file_prompt,
         feature_enabled: updated.feature_enabled,
+        openrouter_api_key: maskedUpdatedKey,
+        openrouter_api_key_set: !!updated.openrouter_api_key,
+        openrouter_model: updated.openrouter_model,
         updated_at: updated.updated_at,
         updated_by: updated.updated_by,
       },

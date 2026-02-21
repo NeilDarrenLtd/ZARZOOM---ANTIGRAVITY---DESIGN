@@ -7,6 +7,15 @@ import {
   persistAutofillResults,
   logAutofillAudit,
 } from "@/lib/wizard/autofillServer";
+import {
+  checkRateLimit,
+  RATE_LIMIT_CONFIGS,
+} from "@/lib/security/rateLimiter";
+import {
+  checkAutofillUsage,
+  incrementAutofillUsage,
+  freeBasicAnalysis,
+} from "@/lib/wizard/usageGuard";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/file
@@ -32,7 +41,67 @@ export async function POST(request: Request) {
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
 
-    // 2. Validate request body
+    // 2. Check autofill usage (2/day combined, degrade after 10 lifetime)
+    const usage = await checkAutofillUsage(supabase, userId);
+
+    if (!usage.allowed) {
+      const messages: Record<string, string> = {
+        daily_limit:
+          "You have reached your daily limit of 2 auto-fill analyses. Please try again tomorrow.",
+        blocked:
+          "Auto-fill has been disabled for your account. Please contact support for assistance.",
+        suspended:
+          "Your account has been suspended. Please contact support for assistance.",
+        profile_not_found: "User profile not found.",
+      };
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: messages[usage.reason || "daily_limit"] || "Auto-fill unavailable",
+          error: usage.reason || "daily_limit",
+          dailyRemaining: usage.dailyRemaining,
+          lifetimeTotal: usage.lifetimeTotal,
+        },
+        { status: 429 }
+      );
+    }
+
+    // 3. Check rate limit
+    const rateLimit = checkRateLimit(
+      userId,
+      "file-autofill",
+      RATE_LIMIT_CONFIGS.FILE_AUTOFILL
+    );
+
+    if (!rateLimit.allowed) {
+      const minutesRemaining = Math.ceil(
+        (rateLimit.resetAt - Date.now()) / 60000
+      );
+
+      console.log(`[v0] Rate limit exceeded for user ${userId}`);
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: "Too many requests",
+          error: `You've reached the limit of ${RATE_LIMIT_CONFIGS.FILE_AUTOFILL.maxRequests} file analyses per ${RATE_LIMIT_CONFIGS.FILE_AUTOFILL.windowMs / 60000} minutes. Please try again in ${minutesRemaining} minute${minutesRemaining !== 1 ? "s" : ""}.`,
+          resetAt: new Date(rateLimit.resetAt).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(RATE_LIMIT_CONFIGS.FILE_AUTOFILL.maxRequests),
+            "X-RateLimit-Remaining": String(rateLimit.remaining),
+            "X-RateLimit-Reset": String(rateLimit.resetAt),
+          },
+        }
+      );
+    }
+
+    console.log(`[v0] Rate limit check passed. Remaining: ${rateLimit.remaining}`);
+
+    // 3. Validate request body
     const body = await request.json();
     const validation = requestSchema.safeParse(body);
 
@@ -54,7 +123,7 @@ export async function POST(request: Request) {
       `[v0] Analyzing file: ${fileName} (${extractedText.length} characters)`
     );
 
-    // 3. Verify file access (ensure user owns this file via RLS)
+    // 4. Verify file access (ensure user owns this file via RLS)
     const { data: fileMetadata, error: fileError } = await supabase.storage
       .from("wizard-uploads")
       .list(user.id, {
@@ -73,7 +142,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Validate extracted text length
+    // 5. Validate extracted text length (additional server-side check)
     if (extractedText.length < 100) {
       await logAutofillAudit(
         supabase,
@@ -94,45 +163,84 @@ export async function POST(request: Request) {
       );
     }
 
-    // 5. Load admin-configured prompts
-    const prompts = await getPromptSettings(supabase);
+    // Enforce max text length for safety
+    const MAX_TEXT_LENGTH = 50000;
+    const textToAnalyze = extractedText.length > MAX_TEXT_LENGTH 
+      ? extractedText.slice(0, MAX_TEXT_LENGTH)
+      : extractedText;
 
-    // 6. Analyze with OpenRouter
-    const analysis = await analyzeContentWithOpenRouter(
-      prompts.file_prompt_text,
-      extractedText,
-      "file"
-    );
+    if (extractedText.length > MAX_TEXT_LENGTH) {
+      console.log(`[v0] Truncated file text from ${extractedText.length} to ${MAX_TEXT_LENGTH} characters`);
+    }
 
-    // 7. Handle analysis failure
-    if (analysis.status === "fail" || !analysis.data) {
-      await logAutofillAudit(
-        supabase,
-        userId,
-        "file",
-        fileName,
-        "fail",
-        analysis.error || analysis.message
+    // 6. Branch: degraded (free) vs premium (OpenRouter)
+    let analysisStatus: "success" | "partial" | "fail";
+    let analysisData: Record<string, unknown> | undefined;
+    let analysisMissing: string[] = [];
+    let analysisConfidence: Record<string, number> | undefined;
+    let analysisMessage: string;
+    let isDegraded = usage.degraded;
+
+    if (isDegraded) {
+      // ── DEGRADED: free basic analysis ──
+      console.log("[v0] User is degraded, using free basic analysis for file");
+      const basic = freeBasicAnalysis(textToAnalyze, "file");
+      analysisStatus = basic.fieldsPopulated > 0 ? "partial" : "fail";
+      analysisData = basic.data as Record<string, unknown>;
+      analysisMissing = basic.missingFields;
+      analysisMessage =
+        basic.fieldsPopulated > 0
+          ? `Basic analysis extracted ${basic.fieldsPopulated} fields. Upgrade or contact support for full AI-powered analysis.`
+          : "Basic analysis could not extract fields from this file.";
+    } else {
+      // ── PREMIUM: full OpenRouter analysis ──
+      const prompts = await getPromptSettings(supabase);
+      const analysis = await analyzeContentWithOpenRouter(
+        prompts.file_prompt_text,
+        textToAnalyze,
+        "file"
       );
 
-      return NextResponse.json(
-        {
-          status: "fail",
-          message: analysis.message,
-          error: analysis.error,
-        },
-        { status: 500 }
+      if (analysis.status === "fail" || !analysis.data) {
+        await logAutofillAudit(
+          supabase,
+          userId,
+          "file",
+          fileName,
+          "fail",
+          analysis.error || analysis.message
+        );
+
+        return NextResponse.json(
+          {
+            status: "fail",
+            message: analysis.message,
+            error: analysis.error,
+          },
+          { status: 500 }
+        );
+      }
+
+      analysisStatus = analysis.status;
+      analysisData = analysis.data as Record<string, unknown>;
+      analysisMissing = analysis.missingFields || [];
+      analysisConfidence = analysis.confidence;
+      analysisMessage = analysis.message;
+    }
+
+    // 7. Persist results to database
+    if (analysisData && Object.keys(analysisData).length > 0) {
+      await persistAutofillResults(
+        supabase,
+        userId,
+        analysisData as any,
+        "file",
+        fileName
       );
     }
 
-    // 8. Persist results to database
-    await persistAutofillResults(
-      supabase,
-      userId,
-      analysis.data,
-      "file",
-      fileName
-    );
+    // 8. Increment usage counter
+    await incrementAutofillUsage(supabase, userId);
 
     // 9. Log audit
     await logAutofillAudit(
@@ -140,23 +248,26 @@ export async function POST(request: Request) {
       userId,
       "file",
       fileName,
-      analysis.status,
+      analysisStatus,
       undefined,
-      Object.keys(analysis.data).length,
-      analysis.confidence
+      analysisData ? Object.keys(analysisData).length : 0,
+      analysisConfidence
     );
 
     const duration = Date.now() - startTime;
     console.log(`[v0] File autofill completed in ${duration}ms`);
 
-    // 10. Return success response
+    // 10. Return response
     return NextResponse.json({
-      status: analysis.status,
-      message: analysis.message,
-      missingFields: analysis.missingFields || [],
-      fieldsPopulated: Object.keys(analysis.data).length,
-      confidence: analysis.confidence,
+      status: analysisStatus,
+      message: analysisMessage,
+      missingFields: analysisMissing,
+      fieldsPopulated: analysisData ? Object.keys(analysisData).length : 0,
+      confidence: analysisConfidence,
       processingTime: duration,
+      degraded: isDegraded,
+      dailyRemaining: usage.dailyRemaining - 1,
+      lifetimeTotal: usage.lifetimeTotal + 1,
     });
   } catch (error) {
     const duration = Date.now() - startTime;

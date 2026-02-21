@@ -74,6 +74,14 @@ export interface HandlerConfig {
   auth?: boolean;
 
   /**
+   * Make tenant membership optional for this endpoint.
+   * When `true`, the handler will not fail if the user has no tenant membership.
+   * Useful for user-scoped resources (like support tickets) that don't require multi-tenancy.
+   * Default: `false`.
+   */
+  tenantOptional?: boolean;
+
+  /**
    * Minimum role required. Implies `auth: true`.
    * Uses hierarchy: super_admin > admin > member > viewer.
    */
@@ -199,40 +207,73 @@ export function createApiHandler(config: HandlerConfig) {
           authMethod = "session";
 
           // Tenant resolution -- prefer X-Tenant-Id header
-          const preferredTenantId = req.headers.get("x-tenant-id");
-          membership = await resolveTenant(
-            supabase,
-            user.id,
-            preferredTenantId
-          );
+          // Skip tenant resolution if tenantOptional is true
+          if (!config.tenantOptional) {
+            const preferredTenantId = req.headers.get("x-tenant-id");
+            membership = await resolveTenant(
+              supabase,
+              user.id,
+              preferredTenantId
+            );
+          } else {
+            // Try to resolve tenant but don't fail if not found
+            try {
+              const preferredTenantId = req.headers.get("x-tenant-id");
+              membership = await resolveTenant(
+                supabase,
+                user.id,
+                preferredTenantId
+              );
+            } catch (err) {
+              // Tenant membership not required for this endpoint
+              membership = null;
+            }
+          }
         }
 
-        // Role check
+        // Role check (only if membership exists, or check global admin for tenant-optional endpoints)
         if (config.requiredRole) {
-          requireRole(membership, config.requiredRole);
+          if (membership) {
+            requireRole(membership, config.requiredRole);
+          } else if (config.tenantOptional && config.requiredRole === "admin") {
+            // For tenant-optional endpoints that require admin, check the global is_admin flag
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("is_admin")
+              .eq("id", user!.id)
+              .single();
+
+            if (!profile?.is_admin) {
+              throw new ForbiddenError("Admin access required");
+            }
+          } else {
+            // Required role but no membership and not tenant-optional admin check
+            throw new ForbiddenError(`Role "${config.requiredRole}" required but no tenant membership found`);
+          }
         }
 
-        // Plan-level entitlement gate
-        if (config.requiredEntitlement) {
+        // Plan-level entitlement gate (only if membership exists)
+        if (config.requiredEntitlement && membership) {
           await enforcePlanEntitlement(
             membership.tenantId,
             config.requiredEntitlement
           );
         }
 
-        // Declarative quota enforcement (pre-handler check)
-        if (config.quotaMetric) {
+        // Declarative quota enforcement (pre-handler check, only if membership exists)
+        if (config.quotaMetric && membership) {
           quotaStatus = await enforceQuotaCheck(
             membership.tenantId,
             config.quotaMetric
           );
         }
 
-        // Rate limit (per tenant)
+        // Rate limit (per tenant or per user if no tenant)
         if (config.rateLimit) {
           const endpoint = `${req.method} ${req.nextUrl.pathname}`;
+          const limitKey = membership?.tenantId || user?.id || ip;
           rateLimitResult = await enforceRateLimit(
-            membership.tenantId,
+            limitKey,
             endpoint,
             config.rateLimit.maxRequests,
             config.rateLimit.windowMs

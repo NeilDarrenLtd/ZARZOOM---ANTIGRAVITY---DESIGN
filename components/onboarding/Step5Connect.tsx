@@ -9,9 +9,10 @@ import UploadPostConnectModal from "@/components/social/UploadPostConnectModal";
 interface Step5Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
+  aiFilledFields?: string[];
 }
 
-export default function Step5Connect({ data, onChange }: Step5Props) {
+export default function Step5Connect({ data, onChange, aiFilledFields = [] }: Step5Props) {
   const { t } = useI18n();
   const [showModal, setShowModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);

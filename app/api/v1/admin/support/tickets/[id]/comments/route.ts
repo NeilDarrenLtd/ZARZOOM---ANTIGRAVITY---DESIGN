@@ -9,6 +9,7 @@ import { sendAdminCommentNotification } from "@/lib/email/supportMailer";
  */
 export const POST = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true, // Admins can access support tickets without tenant membership
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const ticketId = ctx.req.nextUrl.pathname.split("/")[6]!;
@@ -26,8 +27,8 @@ export const POST = createApiHandler({
     // Verify ticket exists and fetch details for email
     const { data: ticket, error: ticketError } = await ctx.supabase!
       .from("support_tickets")
-      .select("ticket_id, subject, user_id, profiles(email)")
-      .eq("ticket_id", ticketId)
+      .select("id, subject, user_id")
+      .eq("id", ticketId)
       .single();
 
     if (ticketError || !ticket) {
@@ -39,11 +40,11 @@ export const POST = createApiHandler({
       .from("support_comments")
       .insert({
         ticket_id: ticketId,
-        author_id: userId,
+        author_user_id: userId,
         author_role: "admin",
         message,
       })
-      .select("comment_id, message, author_role, created_at")
+      .select("id, message, author_role, created_at")
       .single();
 
     if (commentError || !comment) {
@@ -54,10 +55,10 @@ export const POST = createApiHandler({
     await ctx.supabase!
       .from("support_tickets")
       .update({ last_activity_at: new Date().toISOString() })
-      .eq("ticket_id", ticketId);
+      .eq("id", ticketId);
 
     // Send email notification to ticket owner
-    const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
+    const userEmail = ctx.user!.email || 'unknown@example.com';
     sendAdminCommentNotification({
       ticketId,
       ticketSubject: ticket.subject,

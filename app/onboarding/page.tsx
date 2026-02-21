@@ -33,6 +33,7 @@ export default function OnboardingPage() {
     discount_opt_in: true,
     approval_preference: "auto",
   });
+  const [aiFilledFields, setAiFilledFields] = useState<string[]>([]);
 
   // Load user + existing onboarding data
   useEffect(() => {
@@ -84,6 +85,11 @@ export default function OnboardingPage() {
 
             setData(merged);
 
+            // Track AI-filled fields
+            if (profile.autofill_fields_filled && Array.isArray(profile.autofill_fields_filled)) {
+              setAiFilledFields(profile.autofill_fields_filled);
+            }
+
             // Resume at the saved step
             if (profile.onboarding_step && profile.onboarding_step >= 1 && profile.onboarding_step <= 5) {
               setStep(profile.onboarding_step);
@@ -104,6 +110,48 @@ export default function OnboardingPage() {
   const handleChange = useCallback((patch: Partial<OnboardingUpdate>) => {
     setData((prev) => ({ ...prev, ...patch }));
   }, []);
+
+  // Reload wizard data from DB (used after autofill)
+  const reloadWizardData = useCallback(async () => {
+    try {
+      const res = await fetch("/api/v1/onboarding");
+      if (res.ok) {
+        const body = await res.json();
+        const profile = body.data;
+
+        if (profile) {
+          const merged: OnboardingUpdate = { ...data };
+
+          if (profile.business_name) merged.business_name = profile.business_name;
+          if (profile.business_description) merged.business_description = profile.business_description;
+          if (profile.website_url) merged.website_url = profile.website_url;
+          if (profile.content_language) merged.content_language = profile.content_language;
+          if (profile.article_styles) merged.article_styles = profile.article_styles;
+          if (profile.article_style_links) merged.article_style_links = profile.article_style_links;
+          if (profile.brand_color_hex) merged.brand_color_hex = profile.brand_color_hex;
+          if (profile.logo_url) merged.logo_url = profile.logo_url;
+          if (profile.goals) merged.goals = profile.goals;
+          if (profile.website_or_landing_url) merged.website_or_landing_url = profile.website_or_landing_url;
+          if (profile.product_or_sales_url) merged.product_or_sales_url = profile.product_or_sales_url;
+          if (profile.selected_plan) merged.selected_plan = profile.selected_plan;
+          if (profile.discount_opt_in !== undefined) merged.discount_opt_in = profile.discount_opt_in;
+          if (profile.approval_preference) merged.approval_preference = profile.approval_preference;
+          if (profile.uploadpost_profile_username) merged.uploadpost_profile_username = profile.uploadpost_profile_username;
+          if (profile.socials_connected) merged.socials_connected = profile.socials_connected;
+          if (profile.additional_notes) merged.additional_notes = profile.additional_notes;
+
+          setData(merged);
+
+          // Update AI-filled fields
+          if (profile.autofill_fields_filled && Array.isArray(profile.autofill_fields_filled)) {
+            setAiFilledFields(profile.autofill_fields_filled);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("[v0] Failed to reload wizard data:", error);
+    }
+  }, [data]);
 
   async function saveProgress(nextStep?: number) {
     setSaving(true);
@@ -242,10 +290,35 @@ export default function OnboardingPage() {
         {/* Step content card */}
         <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
           {step === 1 && <Step1Account userEmail={userEmail} />}
-          {step === 2 && <Step2Brand data={data} onChange={handleChange} />}
-          {step === 3 && <Step3Goals data={data} onChange={handleChange} />}
-          {step === 4 && <Step4Plan data={data} onChange={handleChange} />}
-          {step === 5 && <Step5Connect data={data} onChange={handleChange} />}
+          {step === 2 && (
+            <Step2Brand 
+              data={data} 
+              onChange={handleChange} 
+              aiFilledFields={aiFilledFields}
+              onReload={reloadWizardData}
+            />
+          )}
+          {step === 3 && (
+            <Step3Goals 
+              data={data} 
+              onChange={handleChange}
+              aiFilledFields={aiFilledFields}
+            />
+          )}
+          {step === 4 && (
+            <Step4Plan 
+              data={data} 
+              onChange={handleChange}
+              aiFilledFields={aiFilledFields}
+            />
+          )}
+          {step === 5 && (
+            <Step5Connect 
+              data={data} 
+              onChange={handleChange}
+              aiFilledFields={aiFilledFields}
+            />
+          )}
         </section>
 
         {/* Error */}

@@ -30,8 +30,8 @@ export async function verifyTicketOwnership(
 ): Promise<void> {
   const { data: ticket, error } = await supabase
     .from("support_tickets")
-    .select("ticket_id, user_id")
-    .eq("ticket_id", ticketId)
+    .select("id, user_id")
+    .eq("id", ticketId)
     .single();
 
   if (error || !ticket) {
@@ -58,8 +58,8 @@ export async function verifyCommentOwnership(
   // Then verify comment belongs to ticket
   const { data: comment, error } = await supabase
     .from("support_comments")
-    .select("comment_id, ticket_id")
-    .eq("comment_id", commentId)
+    .select("id, ticket_id")
+    .eq("id", commentId)
     .eq("ticket_id", ticketId)
     .single();
 

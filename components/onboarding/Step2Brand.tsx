@@ -5,15 +5,18 @@ import { useI18n, languages } from "@/lib/i18n";
 import { Search, Plus, X, Upload, Loader2, FileText, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { ARTICLE_STYLE_OPTIONS } from "@/lib/validation/onboarding";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
+import { AIFilledField } from "./AIFilledField";
 
 interface Step2Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
+  aiFilledFields?: string[];
+  onReload?: () => Promise<void>;
 }
 
 type AutoFillStatus = "idle" | "loading" | "success" | "partial" | "error";
 
-export default function Step2Brand({ data, onChange }: Step2Props) {
+export default function Step2Brand({ data, onChange, aiFilledFields = [], onReload }: Step2Props) {
   const { t } = useI18n();
   const [investigating, setInvestigating] = useState(false);
   const [websiteStatus, setWebsiteStatus] = useState<AutoFillStatus>("idle");
@@ -62,13 +65,8 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
       // Check status and reload wizard data
       if (body.status === "success" || body.status === "partial") {
         // Reload the wizard data from the database since it was updated server-side
-        const profileRes = await fetch("/api/v1/onboarding");
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          if (profileData.data) {
-            // Apply all fields from the updated profile
-            onChange(profileData.data);
-          }
+        if (onReload) {
+          await onReload();
         }
         
         setWebsiteStatus(body.status);
@@ -136,13 +134,8 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
       // Check status and reload wizard data
       if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
         // Reload the wizard data from the database since it was updated server-side
-        const profileRes = await fetch("/api/v1/onboarding");
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          if (profileData.data) {
-            // Apply all fields from the updated profile
-            onChange(profileData.data);
-          }
+        if (onReload) {
+          await onReload();
         }
         
         setFileStatus(analyzeBody.status);
@@ -213,19 +206,79 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
     onChange({ article_style_links: current });
   }
 
-  function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Validate file size (2MB max for logos)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Logo must be under 2MB");
+      return;
+    }
+
+    // Validate type
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      alert("Only JPEG, PNG, and WebP images are allowed");
+      return;
+    }
+
     setUploading(true);
 
-    // Create a local object URL for preview (in production, upload to Supabase Storage)
-    const url = URL.createObjectURL(file);
-    onChange({ logo_url: url });
-    setUploading(false);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/v1/onboarding/upload-logo", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to upload logo");
+      }
+
+      const body = await res.json();
+      if (body.success && body.data?.url) {
+        onChange({ logo_url: body.data.url });
+      }
+    } catch (err: any) {
+      console.error("[v0] Logo upload error:", err);
+      alert(err.message || "Failed to upload logo");
+    } finally {
+      setUploading(false);
+    }
   }
+
+  // Check if we have missing critical fields after partial autofill
+  const hasPartialAutofill = websiteStatus === "partial" || fileStatus === "partial";
+  const criticalFields = ["business_name", "business_description"];
+  const missingCriticalFields = criticalFields.filter(
+    (field) => !data[field as keyof OnboardingUpdate]
+  );
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Partial autofill helper message */}
+      {hasPartialAutofill && missingCriticalFields.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <h4 className="text-sm font-medium text-amber-900 mb-1">
+            Complete remaining fields
+          </h4>
+          <p className="text-xs text-amber-700 mb-2">
+            We filled what we could, but still need:
+          </p>
+          <ul className="text-xs text-amber-700 list-disc list-inside space-y-0.5">
+            {missingCriticalFields.includes("business_name") && (
+              <li>Business name</li>
+            )}
+            {missingCriticalFields.includes("business_description") && (
+              <li>Business description</li>
+            )}
+          </ul>
+        </div>
+      )}
+
       {/* Brand Basics Card */}
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <div className="mb-4">
@@ -376,38 +429,42 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
       </div>
 
       {/* Business Name */}
-      <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">
-          {t("onboarding.step2.businessName.label")}
-        </label>
-        <input
-          type="text"
-          value={data.business_name ?? ""}
-          onChange={(e) => onChange({ business_name: e.target.value })}
-          className={inputClass}
-          placeholder={t("onboarding.step2.businessName.placeholder")}
-        />
-        <p className="text-xs text-gray-400 mt-1">
-          {t("onboarding.step2.businessName.help")}
-        </p>
-      </div>
+      <AIFilledField isAIFilled={aiFilledFields.includes("business_name")}>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+            {t("onboarding.step2.businessName.label")}
+          </label>
+          <input
+            type="text"
+            value={data.business_name ?? ""}
+            onChange={(e) => onChange({ business_name: e.target.value })}
+            className={inputClass}
+            placeholder={t("onboarding.step2.businessName.placeholder")}
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            {t("onboarding.step2.businessName.help")}
+          </p>
+        </div>
+      </AIFilledField>
 
       {/* Description */}
-      <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">
-          {t("onboarding.step2.description.label")}
-        </label>
-        <textarea
-          value={data.business_description ?? ""}
-          onChange={(e) => onChange({ business_description: e.target.value })}
-          className={`${inputClass} resize-none`}
-          rows={3}
-          placeholder={t("onboarding.step2.description.placeholder")}
-        />
-        <p className="text-xs text-gray-400 mt-1">
-          {t("onboarding.step2.description.help")}
-        </p>
-      </div>
+      <AIFilledField isAIFilled={aiFilledFields.includes("business_description")}>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+            {t("onboarding.step2.description.label")}
+          </label>
+          <textarea
+            value={data.business_description ?? ""}
+            onChange={(e) => onChange({ business_description: e.target.value })}
+            className={`${inputClass} resize-none`}
+            rows={3}
+            placeholder={t("onboarding.step2.description.placeholder")}
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            {t("onboarding.step2.description.help")}
+          </p>
+        </div>
+      </AIFilledField>
 
       {/* Content Language */}
       <div>
@@ -537,7 +594,11 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
           {t("onboarding.step2.logo.label")}
         </label>
         <div className="flex items-center gap-4">
-          {data.logo_url ? (
+          {uploading ? (
+            <div className="w-16 h-16 rounded-lg border border-gray-200 bg-gray-50 flex items-center justify-center">
+              <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+            </div>
+          ) : data.logo_url ? (
             <img
               src={data.logo_url}
               alt={t("onboarding.a11y.brandLogoAlt")}

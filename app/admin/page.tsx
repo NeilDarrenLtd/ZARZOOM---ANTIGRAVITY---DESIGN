@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { Mail, KeyRound, Users, CreditCard, HelpCircle } from "lucide-react";
+import { Mail, KeyRound, Users, CreditCard, HelpCircle, Sparkles } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -35,6 +35,13 @@ export default function AdminDashboardPage() {
       title: t("admin.oauthKeys"),
       description: t("admin.oauthSettingsDesc"),
       color: "bg-violet-50 text-violet-600",
+    },
+    {
+      href: "/admin/settings/openrouter-prompts",
+      icon: Sparkles,
+      title: "OpenRouter Prompts",
+      description: "Configure AI prompts, API key, and model for wizard auto-fill.",
+      color: "bg-pink-50 text-pink-600",
     },
     {
       href: "/admin/billing",

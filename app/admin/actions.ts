@@ -275,28 +275,126 @@ export async function sendTestEmail(recipientEmail: string) {
 }
 
 // ─── User management ───────────────────────────────────────────
+
+export interface AdminUserProfile {
+  id: string;
+  email: string;
+  display_name: string | null;
+  is_admin: boolean;
+  is_suspended: boolean;
+  suspended_at: string | null;
+  suspended_reason: string | null;
+  autofill_lifetime_count: number;
+  autofill_daily_count: number;
+  autofill_degraded: boolean;
+  autofill_blocked: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export async function getUsers() {
   await requireAdmin();
-  // Use admin client (service role) to bypass RLS for reading all profiles
   const supabase = await createAdminClient();
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("*")
+    .select(
+      "id, email, display_name, is_admin, is_suspended, suspended_at, suspended_reason, autofill_lifetime_count, autofill_daily_count, autofill_degraded, autofill_blocked, created_at, updated_at"
+    )
     .order("created_at", { ascending: false });
 
   if (error) return { error: error.message, users: [] };
-  return { users: data || [] };
+  return { users: (data || []) as AdminUserProfile[] };
 }
 
 export async function updateUserRole(userId: string, isAdmin: boolean) {
   await requireAdmin();
-  // Use admin client (service role) to bypass RLS for role updates
   const supabase = await createAdminClient();
 
   const { error } = await supabase
     .from("profiles")
-    .update({ is_admin: isAdmin })
+    .update({ is_admin: isAdmin, updated_at: new Date().toISOString() })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+// ─── Suspend / Unsuspend ─────────────────────────────────────────
+
+export async function suspendUser(userId: string, reason?: string) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      is_suspended: true,
+      suspended_at: new Date().toISOString(),
+      suspended_reason: reason || "Suspended by administrator",
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function unsuspendUser(userId: string) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      is_suspended: false,
+      suspended_at: null,
+      suspended_reason: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+// ─── Delete user (removes from auth.users, cascades to profiles) ──
+
+export async function deleteUser(userId: string) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  // Delete from Supabase Auth (cascades to profiles via FK)
+  const { error } = await supabase.auth.admin.deleteUser(userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+// ─── Autofill controls ──────────────────────────────────────────
+
+export async function resetAutofillUsage(userId: string) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase.rpc("admin_reset_autofill", {
+    p_user_id: userId,
+  });
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+export async function toggleAutofillBlocked(userId: string, blocked: boolean) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      autofill_blocked: blocked,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", userId);
 
   if (error) return { error: error.message };

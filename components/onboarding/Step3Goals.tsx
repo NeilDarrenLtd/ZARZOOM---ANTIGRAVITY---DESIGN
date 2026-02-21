@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { GOAL_OPTIONS } from "@/lib/validation/onboarding";
 import type { OnboardingUpdate, Goal } from "@/lib/validation/onboarding";
+import { AIFilledField } from "./AIFilledField";
 import {
   Globe,
   Users,
@@ -18,6 +19,7 @@ import {
 interface Step3Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
+  aiFilledFields?: string[];
 }
 
 const GOAL_ICONS: Record<Goal, React.ReactNode> = {
@@ -31,7 +33,7 @@ const GOAL_ICONS: Record<Goal, React.ReactNode> = {
   generate_social_content: <Share2 className="w-5 h-5" />,
 };
 
-export default function Step3Goals({ data, onChange }: Step3Props) {
+export default function Step3Goals({ data, onChange, aiFilledFields = [] }: Step3Props) {
   const { t } = useI18n();
 
   const inputClass =

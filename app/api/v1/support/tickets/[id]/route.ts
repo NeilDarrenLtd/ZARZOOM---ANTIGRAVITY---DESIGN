@@ -8,6 +8,7 @@ import { verifyTicketOwnership, isUserAdmin } from "@/lib/auth/support";
  */
 export const GET = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const ticketId = ctx.req.nextUrl.pathname.split("/").pop()!;
@@ -24,8 +25,8 @@ export const GET = createApiHandler({
     // Fetch ticket details
     const { data: ticket, error: ticketError } = await ctx.supabase!
       .from("support_tickets")
-      .select("ticket_id, subject, status, priority, category, last_activity_at, created_at, updated_at")
-      .eq("ticket_id", ticketId)
+      .select("id, subject, status, priority, category, last_activity_at, created_at, updated_at")
+      .eq("id", ticketId)
       .single();
 
     if (ticketError || !ticket) {
@@ -36,14 +37,15 @@ export const GET = createApiHandler({
     const { data: comments, error: commentsError } = await ctx.supabase!
       .from("support_comments")
       .select(`
-        comment_id,
+        id,
         message,
         author_role,
+        author_user_id,
         created_at,
         support_attachments (
-          attachment_id,
+          id,
           file_name,
-          file_type,
+          mime_type,
           file_size,
           created_at
         )

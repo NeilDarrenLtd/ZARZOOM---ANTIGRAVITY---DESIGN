@@ -220,11 +220,12 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.category.none")}</option>
+              <option value="">{t("support.category.none") || "Select a category"}</option>
               <option value="technical">{t("support.category.technical")}</option>
               <option value="billing">{t("support.category.billing")}</option>
-              <option value="account">{t("support.category.account")}</option>
+              <option value="bug_report">{t("support.category.bug_report") || "Bug Report"}</option>
               <option value="feature_request">{t("support.category.feature_request")}</option>
+              <option value="general">{t("support.category.general") || "General"}</option>
               <option value="other">{t("support.category.other")}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.categoryHelp")}</p>
@@ -244,7 +245,7 @@ export default function CreateTicketPage() {
             >
               <option value="">{t("support.priority.none")}</option>
               <option value="low">{t("support.priority.low")}</option>
-              <option value="normal">{t("support.priority.normal")}</option>
+              <option value="medium">{t("support.priority.medium") || "Medium"}</option>
               <option value="high">{t("support.priority.high")}</option>
               <option value="urgent">{t("support.priority.urgent")}</option>
             </select>

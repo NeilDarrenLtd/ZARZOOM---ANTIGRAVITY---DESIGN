@@ -9,6 +9,10 @@ import {
   type ExtractionError,
   type ExtractedContent,
 } from "@/lib/fileExtractor";
+import {
+  checkRateLimit,
+  RATE_LIMIT_CONFIGS,
+} from "@/lib/security/rateLimiter";
 import { randomUUID } from "crypto";
 
 /**
@@ -35,6 +39,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
+      );
+    }
+
+    // Check rate limit
+    const rateLimit = checkRateLimit(
+      user.id,
+      "file-upload",
+      RATE_LIMIT_CONFIGS.FILE_UPLOAD
+    );
+
+    if (!rateLimit.allowed) {
+      const minutesRemaining = Math.ceil(
+        (rateLimit.resetAt - Date.now()) / 60000
+      );
+
+      return NextResponse.json(
+        {
+          error: "Too many requests",
+          message: `You've reached the limit of ${RATE_LIMIT_CONFIGS.FILE_UPLOAD.maxRequests} file uploads per ${RATE_LIMIT_CONFIGS.FILE_UPLOAD.windowMs / 60000} minutes. Please try again in ${minutesRemaining} minute${minutesRemaining !== 1 ? "s" : ""}.`,
+          resetAt: new Date(rateLimit.resetAt).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(RATE_LIMIT_CONFIGS.FILE_UPLOAD.maxRequests),
+            "X-RateLimit-Remaining": String(rateLimit.remaining),
+            "X-RateLimit-Reset": String(rateLimit.resetAt),
+          },
+        }
       );
     }
 
