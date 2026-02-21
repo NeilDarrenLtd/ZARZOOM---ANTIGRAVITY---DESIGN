@@ -8,6 +8,7 @@ import { Check } from "lucide-react";
 interface Step4Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
+  aiFilledFields?: string[];
 }
 
 const PLAN_PRICES: Record<Plan, { monthly: number; annual: number }> = {
