@@ -81,19 +81,68 @@ export default function Step2Brand({ data, onChange }: Step2Props) {
     if (!selectedFile) return;
     setFileStatus("loading");
 
-    // Simulate file analysis (no backend yet)
-    setTimeout(() => {
-      // For now, set to partial since it's not implemented
-      setFileStatus("partial");
-    }, 2000);
+    try {
+      // Upload and parse file
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const res = await fetch("/api/v1/onboarding/upload-file", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errorBody = await res.json();
+        console.error("[v0] File upload failed:", errorBody);
+        throw new Error(errorBody.error || "Failed to upload file");
+      }
+
+      const body = await res.json();
+      console.log("[v0] File uploaded successfully:", body);
+
+      if (body.success && body.data) {
+        // TODO: Call OpenRouter to analyze the extracted text
+        // For now, just show success since text extraction worked
+        setFileStatus("success");
+        
+        // Placeholder - in next step we'll analyze the text with AI
+        console.log("[v0] Extracted text length:", body.data.extractedText?.length);
+      } else {
+        setFileStatus("error");
+      }
+    } catch (error: any) {
+      console.error("[v0] File analysis error:", error);
+      setFileStatus("error");
+    }
   }
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      setFileStatus("idle");
+    if (!file) return;
+
+    // Validate file size (10MB max)
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      setFileStatus("error");
+      alert(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+      return;
     }
+
+    // Validate file type
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    
+    if (!allowedTypes.includes(file.type)) {
+      setFileStatus("error");
+      alert("Only PDF, DOC, and DOCX files are supported");
+      return;
+    }
+
+    setSelectedFile(file);
+    setFileStatus("idle");
   }
 
   function toggleStyle(style: string) {
