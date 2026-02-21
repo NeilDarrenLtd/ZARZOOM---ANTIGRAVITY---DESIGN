@@ -59,6 +59,7 @@ export default function OpenRouterPromptsPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>({ status: "idle" });
   const [resetState, setResetState] = useState<"idle" | "confirming">("idle");
+  const [isResetting, setIsResetting] = useState(false);
 
   // Sync form state when data loads
   useEffect(() => {
@@ -129,7 +130,7 @@ export default function OpenRouterPromptsPage() {
     }
 
     if (resetState === "confirming") {
-      setResetState("resetting");
+      setIsResetting(true);
 
       try {
         const res = await fetch("/api/v1/admin/settings/openrouter-prompts/reset", {
@@ -155,6 +156,8 @@ export default function OpenRouterPromptsPage() {
           status: "error",
           message: err instanceof Error ? err.message : "Failed to reset prompts",
         });
+      } finally {
+        setIsResetting(false);
       }
     }
   }, [resetState, mutate]);
@@ -369,10 +372,10 @@ export default function OpenRouterPromptsPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleReset}
-                    disabled={resetState === "resetting"}
+                    disabled={isResetting}
                     className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
                   >
-                    {resetState === "resetting" ? (
+                    {isResetting ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
                         Resetting...
@@ -386,7 +389,7 @@ export default function OpenRouterPromptsPage() {
                   </button>
                   <button
                     onClick={handleCancelReset}
-                    disabled={resetState === "resetting"}
+                    disabled={isResetting}
                     className="px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors disabled:opacity-50"
                   >
                     Cancel
