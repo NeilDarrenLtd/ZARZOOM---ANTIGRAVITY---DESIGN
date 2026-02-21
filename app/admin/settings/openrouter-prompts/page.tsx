@@ -58,7 +58,7 @@ export default function OpenRouterPromptsPage() {
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>({ status: "idle" });
-  const [resetState, setResetState] = useState<"idle" | "confirming">("idle");
+  const [resetState, setResetState] = useState<"idle" | "confirming" | "resetting">("idle");
 
   // Sync form state when data loads
   useEffect(() => {
