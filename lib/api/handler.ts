@@ -238,7 +238,7 @@ export function createApiHandler(config: HandlerConfig) {
           } else if (config.tenantOptional && config.requiredRole === "admin") {
             // For tenant-optional endpoints that require admin, check the global is_admin flag
             if (!supabase) {
-              throw new UnauthorizedError("Authentication required");
+              throw new AuthError("Authentication required");
             }
             
             const { data: profile } = await supabase
