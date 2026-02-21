@@ -9,9 +9,8 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-import enTranslations from "@/locales/en.json";
 
-type Translations = typeof enTranslations;
+type Translations = Record<string, any>;
 type NestedKeyOf<T, Prefix extends string = ""> = T extends object
   ? {
       [K in keyof T & string]: T[K] extends object
@@ -20,7 +19,7 @@ type NestedKeyOf<T, Prefix extends string = ""> = T extends object
     }[keyof T & string]
   : never;
 
-export type TranslationKey = NestedKeyOf<Translations>;
+export type TranslationKey = string; // Relaxed type since translations are now dynamic
 
 interface I18nContextType {
   locale: string;
@@ -32,9 +31,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 // Cache loaded translations to avoid re-fetching
-const translationCache: Record<string, Translations> = {
-  en: enTranslations,
-};
+const translationCache: Record<string, Translations> = {};
 
 async function loadTranslation(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -42,12 +39,21 @@ async function loadTranslation(locale: string): Promise<Translations> {
   }
 
   try {
+    // Dynamically import translation files to avoid bundling large strings
     const mod = await import(`@/locales/${locale}.json`);
     translationCache[locale] = mod.default;
     return mod.default;
   } catch {
     // Fallback to English if translation file not found
-    return enTranslations;
+    console.warn(`Failed to load translation for locale: ${locale}`);
+    try {
+      const enMod = await import(`@/locales/en.json`);
+      translationCache[locale] = enMod.default;
+      return enMod.default;
+    } catch (enError) {
+      console.error("Failed to load English translation:", enError);
+      return {};
+    }
   }
 }
 
@@ -66,23 +72,29 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
-  const [translations, setTranslations] =
-    useState<Translations>(enTranslations);
+  const [translations, setTranslations] = useState<Translations>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Detect browser language on mount
+  // Load translations on mount
   useEffect(() => {
-    const stored = localStorage.getItem("zarzoom-locale");
-    if (stored) {
-      setLocaleState(stored);
-      loadTranslation(stored).then(setTranslations);
-    } else {
-      const browserLang = navigator.language || defaultLanguage;
-      const detected = getSupportedLanguageCode(browserLang);
-      setLocaleState(detected);
-      if (detected !== defaultLanguage) {
-        loadTranslation(detected).then(setTranslations);
+    const initTranslations = async () => {
+      const stored = localStorage.getItem("zarzoom-locale");
+      let targetLocale = defaultLanguage;
+
+      if (stored) {
+        targetLocale = stored;
+      } else {
+        const browserLang = navigator.language || defaultLanguage;
+        targetLocale = getSupportedLanguageCode(browserLang);
       }
-    }
+
+      setLocaleState(targetLocale);
+      const loaded = await loadTranslation(targetLocale);
+      setTranslations(loaded);
+      setIsLoading(false);
+    };
+
+    initTranslations();
   }, []);
 
   // Update HTML lang and dir attributes
@@ -99,7 +111,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = useCallback(
     (key: string, fallback?: string): string => {
       const value = getNestedValue(
-        translations as unknown as Record<string, unknown>,
+        translations as Record<string, unknown>,
         key
       );
       if (value === key && fallback) return fallback;
