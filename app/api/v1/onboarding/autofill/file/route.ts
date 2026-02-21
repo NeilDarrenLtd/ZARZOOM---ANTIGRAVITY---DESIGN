@@ -7,6 +7,10 @@ import {
   persistAutofillResults,
   logAutofillAudit,
 } from "@/lib/wizard/autofillServer";
+import {
+  checkRateLimit,
+  RATE_LIMIT_CONFIGS,
+} from "@/lib/security/rateLimiter";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/file
@@ -32,7 +36,41 @@ export async function POST(request: Request) {
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
 
-    // 2. Validate request body
+    // 2. Check rate limit
+    const rateLimit = checkRateLimit(
+      userId,
+      "file-autofill",
+      RATE_LIMIT_CONFIGS.FILE_AUTOFILL
+    );
+
+    if (!rateLimit.allowed) {
+      const minutesRemaining = Math.ceil(
+        (rateLimit.resetAt - Date.now()) / 60000
+      );
+
+      console.log(`[v0] Rate limit exceeded for user ${userId}`);
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: "Too many requests",
+          error: `You've reached the limit of ${RATE_LIMIT_CONFIGS.FILE_AUTOFILL.maxRequests} file analyses per ${RATE_LIMIT_CONFIGS.FILE_AUTOFILL.windowMs / 60000} minutes. Please try again in ${minutesRemaining} minute${minutesRemaining !== 1 ? "s" : ""}.`,
+          resetAt: new Date(rateLimit.resetAt).toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(RATE_LIMIT_CONFIGS.FILE_AUTOFILL.maxRequests),
+            "X-RateLimit-Remaining": String(rateLimit.remaining),
+            "X-RateLimit-Reset": String(rateLimit.resetAt),
+          },
+        }
+      );
+    }
+
+    console.log(`[v0] Rate limit check passed. Remaining: ${rateLimit.remaining}`);
+
+    // 3. Validate request body
     const body = await request.json();
     const validation = requestSchema.safeParse(body);
 
@@ -54,7 +92,7 @@ export async function POST(request: Request) {
       `[v0] Analyzing file: ${fileName} (${extractedText.length} characters)`
     );
 
-    // 3. Verify file access (ensure user owns this file via RLS)
+    // 4. Verify file access (ensure user owns this file via RLS)
     const { data: fileMetadata, error: fileError } = await supabase.storage
       .from("wizard-uploads")
       .list(user.id, {
@@ -73,7 +111,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Validate extracted text length
+    // 5. Validate extracted text length (additional server-side check)
     if (extractedText.length < 100) {
       await logAutofillAudit(
         supabase,
@@ -94,17 +132,27 @@ export async function POST(request: Request) {
       );
     }
 
-    // 5. Load admin-configured prompts
+    // Enforce max text length for safety
+    const MAX_TEXT_LENGTH = 50000;
+    const textToAnalyze = extractedText.length > MAX_TEXT_LENGTH 
+      ? extractedText.slice(0, MAX_TEXT_LENGTH)
+      : extractedText;
+
+    if (extractedText.length > MAX_TEXT_LENGTH) {
+      console.log(`[v0] Truncated file text from ${extractedText.length} to ${MAX_TEXT_LENGTH} characters`);
+    }
+
+    // 6. Load admin-configured prompts
     const prompts = await getPromptSettings(supabase);
 
-    // 6. Analyze with OpenRouter
+    // 7. Analyze with OpenRouter
     const analysis = await analyzeContentWithOpenRouter(
       prompts.file_prompt_text,
-      extractedText,
+      textToAnalyze,
       "file"
     );
 
-    // 7. Handle analysis failure
+    // 8. Handle analysis failure
     if (analysis.status === "fail" || !analysis.data) {
       await logAutofillAudit(
         supabase,
@@ -125,7 +173,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 8. Persist results to database
+    // 9. Persist results to database
     await persistAutofillResults(
       supabase,
       userId,
@@ -134,7 +182,7 @@ export async function POST(request: Request) {
       fileName
     );
 
-    // 9. Log audit
+    // 10. Log audit
     await logAutofillAudit(
       supabase,
       userId,
@@ -149,7 +197,7 @@ export async function POST(request: Request) {
     const duration = Date.now() - startTime;
     console.log(`[v0] File autofill completed in ${duration}ms`);
 
-    // 10. Return success response
+    // 11. Return success response
     return NextResponse.json({
       status: analysis.status,
       message: analysis.message,

@@ -269,12 +269,41 @@ export async function logAutofillAudit(
 ): Promise<void> {
   console.log(`[v0] Logging audit: ${status} for ${sourceType}`);
 
+  // Sanitize error message to avoid logging secrets
+  let sanitizedError = errorMessage || null;
+  if (sanitizedError) {
+    // Remove potential API keys, tokens, passwords
+    sanitizedError = sanitizedError
+      .replace(/api[_-]?key[:\s=]+[a-zA-Z0-9_-]+/gi, "api_key=[REDACTED]")
+      .replace(/bearer\s+[a-zA-Z0-9_-]+/gi, "bearer [REDACTED]")
+      .replace(/token[:\s=]+[a-zA-Z0-9_-]+/gi, "token=[REDACTED]")
+      .replace(/password[:\s=]+[^\s]+/gi, "password=[REDACTED]")
+      .replace(/secret[:\s=]+[a-zA-Z0-9_-]+/gi, "secret=[REDACTED]");
+    
+    // Truncate very long error messages
+    if (sanitizedError.length > 500) {
+      sanitizedError = sanitizedError.slice(0, 497) + "...";
+    }
+  }
+
+  // Sanitize source value (URL or filename) to prevent storing PII
+  let sanitizedSource = sourceValue;
+  if (sourceType === "website") {
+    try {
+      const url = new URL(sourceValue);
+      // Remove query parameters that might contain tokens
+      sanitizedSource = `${url.protocol}//${url.hostname}${url.pathname}`;
+    } catch {
+      // Keep as-is if not a valid URL
+    }
+  }
+
   const { error } = await supabase.from("wizard_autofill_audit").insert({
     user_id: userId,
     source_type: sourceType,
-    source_value: sourceValue,
+    source_value: sanitizedSource,
     status,
-    error_message: errorMessage || null,
+    error_message: sanitizedError,
     fields_populated: fieldsPopulated || 0,
     confidence_scores: confidenceScores || null,
   });

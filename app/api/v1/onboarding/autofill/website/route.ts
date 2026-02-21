@@ -8,6 +8,15 @@ import {
   logAutofillAudit,
 } from "@/lib/wizard/autofillServer";
 import { fetchSiteContent } from "@/lib/siteFetcher";
+import { validateURL } from "@/lib/siteFetcher/urlValidator";
+import {
+  checkRateLimit,
+  RATE_LIMIT_CONFIGS,
+} from "@/lib/security/rateLimiter";
+import {
+  getCachedWebsiteAnalysis,
+  cacheWebsiteAnalysis,
+} from "@/lib/security/analysisCache";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/website
@@ -31,7 +40,42 @@ export async function POST(request: Request) {
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
 
-    // 2. Validate request body
+    // 2. Check rate limit
+    const rateLimit = checkRateLimit(
+      userId,
+      "website-autofill",
+      RATE_LIMIT_CONFIGS.WEBSITE_AUTOFILL
+    );
+
+    if (!rateLimit.allowed) {
+      const resetDate = new Date(rateLimit.resetAt);
+      const minutesRemaining = Math.ceil(
+        (rateLimit.resetAt - Date.now()) / 60000
+      );
+
+      console.log(`[v0] Rate limit exceeded for user ${userId}`);
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: "Too many requests",
+          error: `You've reached the limit of ${RATE_LIMIT_CONFIGS.WEBSITE_AUTOFILL.maxRequests} website analyses per ${RATE_LIMIT_CONFIGS.WEBSITE_AUTOFILL.windowMs / 60000} minutes. Please try again in ${minutesRemaining} minute${minutesRemaining !== 1 ? "s" : ""}.`,
+          resetAt: resetDate.toISOString(),
+        },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(RATE_LIMIT_CONFIGS.WEBSITE_AUTOFILL.maxRequests),
+            "X-RateLimit-Remaining": String(rateLimit.remaining),
+            "X-RateLimit-Reset": String(rateLimit.resetAt),
+          },
+        }
+      );
+    }
+
+    console.log(`[v0] Rate limit check passed. Remaining: ${rateLimit.remaining}`);
+
+    // 3. Validate request body
     const body = await request.json();
     const validation = requestSchema.safeParse(body);
 
@@ -47,9 +91,46 @@ export async function POST(request: Request) {
     }
 
     url = validation.data.url;
+
+    // 4. Enforce SSRF protection server-side
+    try {
+      validateURL(url);
+      console.log(`[v0] URL passed SSRF validation: ${url}`);
+    } catch (ssrfError: any) {
+      console.error(`[v0] SSRF validation failed for ${url}:`, ssrfError.message);
+
+      await logAutofillAudit(
+        supabase,
+        userId,
+        "website",
+        url,
+        "fail",
+        `SSRF blocked: ${ssrfError.message}`
+      );
+
+      return NextResponse.json(
+        {
+          status: "fail",
+          message: "Invalid or blocked URL",
+          error: "This URL cannot be accessed for security reasons. Private IPs, localhost, and internal networks are not allowed.",
+        },
+        { status: 422 }
+      );
+    }
+
+    // 5. Check cache for recent analysis
+    const cachedResult = getCachedWebsiteAnalysis(userId, url);
+    if (cachedResult) {
+      console.log(`[v0] Returning cached result for ${url}`);
+      return NextResponse.json({
+        ...cachedResult,
+        cached: true,
+      });
+    }
+
     console.log(`[v0] Analyzing website: ${url}`);
 
-    // 3. Fetch website content
+    // 6. Fetch website content
     const siteResult = await fetchSiteContent(url, {
       maxPages: 5,
       timeout: 10000,
@@ -80,17 +161,17 @@ export async function POST(request: Request) {
       `[v0] Extracted ${siteResult.combinedText.length} characters from ${siteResult.pages.length} pages`
     );
 
-    // 4. Load admin-configured prompts
+    // 7. Load admin-configured prompts
     const prompts = await getPromptSettings(supabase);
 
-    // 5. Analyze with OpenRouter
+    // 8. Analyze with OpenRouter
     const analysis = await analyzeContentWithOpenRouter(
       prompts.website_prompt_text,
       siteResult.combinedText,
       "website"
     );
 
-    // 6. Handle analysis failure
+    // 9. Handle analysis failure
     if (analysis.status === "fail" || !analysis.data) {
       await logAutofillAudit(
         supabase,
@@ -111,7 +192,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 7. Persist results to database
+    // 10. Persist results to database
     await persistAutofillResults(
       supabase,
       userId,
@@ -120,7 +201,7 @@ export async function POST(request: Request) {
       url
     );
 
-    // 8. Log audit
+    // 11. Log audit
     await logAutofillAudit(
       supabase,
       userId,
@@ -135,8 +216,20 @@ export async function POST(request: Request) {
     const duration = Date.now() - startTime;
     console.log(`[v0] Website autofill completed in ${duration}ms`);
 
-    // 9. Return success response
-    return NextResponse.json({
+    // 12. Cache successful result
+    const responseData = {
+      status: analysis.status,
+      message: analysis.message,
+      missingFields: analysis.missingFields || [],
+      fieldsPopulated: Object.keys(analysis.data).length,
+      confidence: analysis.confidence,
+      processingTime: duration,
+    };
+
+    cacheWebsiteAnalysis(userId, url, responseData);
+
+    // 13. Return success response
+    return NextResponse.json(responseData);
       status: analysis.status,
       message: analysis.message,
       missingFields: analysis.missingFields || [],
