@@ -70,7 +70,7 @@ export default function Navbar() {
 
     if (isOnDashboard && isLoggedIn) {
       return {
-        label: "LOGOUT",
+        labelKey: "nav.logout",
         onClick: async () => {
           await supabase.auth.signOut();
           router.push("/");
@@ -81,14 +81,14 @@ export default function Navbar() {
 
     if (isLoggedIn) {
       return {
-        label: "DASHBOARD",
+        labelKey: "nav.dashboard",
         onClick: null,
         href: "/dashboard",
       };
     }
 
     return {
-      label: "LOGIN-LAUNCH",
+      labelKey: "nav.getStarted",
       onClick: null,
       href: "/auth",
     };
@@ -161,14 +161,14 @@ export default function Navbar() {
                   onClick={topRightButton.onClick}
                   className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
                 >
-                  {topRightButton.label}
+                  {t(topRightButton.labelKey)}
                 </button>
               ) : (
                 <Link
                   href={topRightButton.href || "/auth"}
                   className="bg-green-600 text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-green-700 transition-colors duration-200 tracking-wide uppercase"
                 >
-                  {topRightButton.label}
+                  {t(topRightButton.labelKey)}
                 </Link>
               )
             )}
@@ -277,7 +277,7 @@ export default function Navbar() {
                       onClick={topRightButton.onClick}
                       className="block w-full bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                     >
-                      {topRightButton.label}
+                      {t(topRightButton.labelKey)}
                     </button>
                   ) : (
                     <Link
@@ -285,7 +285,7 @@ export default function Navbar() {
                       onClick={() => setMobileMenuOpen(false)}
                       className="block w-full bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-green-700 transition-colors text-center tracking-wide uppercase"
                     >
-                      {topRightButton.label}
+                      {t(topRightButton.labelKey)}
                     </Link>
                   )
                 )}
