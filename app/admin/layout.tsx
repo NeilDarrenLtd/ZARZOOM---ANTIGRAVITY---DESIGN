@@ -17,6 +17,7 @@ import {
   CreditCard,
   Webhook,
   HelpCircle,
+  Sparkles,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -140,6 +141,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/settings/oauth",
       label: t("admin.oauthKeys"),
       icon: KeyRound,
+    },
+    {
+      href: "/admin/settings/openrouter-prompts",
+      label: "OpenRouter Prompts",
+      icon: Sparkles,
     },
   ];
 
