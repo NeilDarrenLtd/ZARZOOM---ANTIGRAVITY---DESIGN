@@ -101,8 +101,13 @@ export interface AnalysisResult {
   data?: Record<string, unknown>;
   missingFields?: string[];
   confidence?: Record<string, number>;
-  message: string;
+  message?: string;
   error?: string;
+  debug?: {
+    promptSent?: string;
+    responseReceived?: string;
+    fieldsExtracted?: Record<string, unknown>;
+  };
 }
 
 export async function analyzeContentWithOpenRouter(
@@ -166,6 +171,9 @@ export async function analyzeContentWithOpenRouter(
       }),
     });
 
+    // Capture the user message for debug logging (truncated)
+    const userMessage = `${finalPrompt}\n\n--- BEGIN CONTENT ---\n${content.slice(0, 1000)}...[truncated]\n--- END CONTENT ---`;
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("[v0] OpenRouter API error:", response.status, errorText);
@@ -173,6 +181,10 @@ export async function analyzeContentWithOpenRouter(
         status: "fail",
         message: `OpenRouter API error: ${response.status}`,
         error: errorText,
+        debug: {
+          promptSent: userMessage.slice(0, 2000),
+          responseReceived: errorText.slice(0, 2000),
+        },
       };
     }
 
@@ -184,6 +196,10 @@ export async function analyzeContentWithOpenRouter(
         status: "fail",
         message: "OpenRouter returned empty response",
         error: "empty_response",
+        debug: {
+          promptSent: userMessage.slice(0, 2000),
+          responseReceived: JSON.stringify(result).slice(0, 2000),
+        },
       };
     }
 
@@ -197,6 +213,10 @@ export async function analyzeContentWithOpenRouter(
         status: "fail",
         message: "Failed to parse AI response as JSON",
         error: "invalid_json",
+        debug: {
+          promptSent: userMessage.slice(0, 2000),
+          responseReceived: aiText.slice(0, 2000),
+        },
       };
     }
 
@@ -230,6 +250,11 @@ export async function analyzeContentWithOpenRouter(
       message: status === "success"
         ? `Successfully analyzed ${sourceType} and extracted ${fieldsPopulated} fields`
         : `Partial analysis: extracted ${fieldsPopulated} fields but some are missing`,
+      debug: {
+        promptSent: userMessage.slice(0, 2000),
+        responseReceived: aiText.slice(0, 2000),
+        fieldsExtracted: normalized,
+      },
     };
   } catch (err: any) {
     console.error(`[v0] ${sourceType} analysis error:`, err);
@@ -252,13 +277,49 @@ export async function persistAutofillResults(
   source: "website" | "file",
   sourceUrl?: string
 ): Promise<void> {
+  // Only allow known DB columns to be persisted
+  // NOTE: website_url is NOT included because the user already entered it
+  const allowedColumns = [
+    "business_name", "business_description", "brand_color_hex",
+    "article_styles", "goals", "content_language",
+    "logo_url", "additional_notes",
+  ];
+
+  // PostgreSQL text[] array columns - need special formatting
+  const arrayColumns = ["article_styles", "goals"];
+
+  const cleanData: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (!allowedColumns.includes(key) || value == null || value === "") continue;
+
+    if (arrayColumns.includes(key)) {
+      // Ensure it's a proper array of strings for PostgreSQL text[]
+      if (Array.isArray(value)) {
+        cleanData[key] = value.map(String);
+      } else if (typeof value === "string") {
+        // If AI returned a comma-separated string, split it
+        cleanData[key] = value.split(",").map((s: string) => s.trim()).filter(Boolean);
+      }
+    } else {
+      // For text columns, ensure it's a string
+      cleanData[key] = typeof value === "string" ? value : String(value);
+    }
+  }
+
+  if (Object.keys(cleanData).length === 0) {
+    console.warn("[v0] No valid fields to persist from autofill results");
+    return;
+  }
+
+  console.log("[v0] Persisting autofill fields:", Object.keys(cleanData).join(", "));
+
   // Update onboarding_profiles with extracted data
   const { error } = await supabase
     .from("onboarding_profiles")
     .upsert(
       {
         user_id: userId,
-        ...data,
+        ...cleanData,
         updated_at: new Date().toISOString(),
       },
       {
@@ -271,7 +332,7 @@ export async function persistAutofillResults(
     throw new Error(`Failed to save results: ${error.message}`);
   }
 
-  console.log(`[v0] Persisted autofill results for user ${userId}`);
+  console.log(`[v0] Persisted ${Object.keys(cleanData).length} autofill fields for user ${userId}`);
 }
 
 // ──────────────────────────────────────────────
@@ -286,7 +347,8 @@ export async function logAutofillAudit(
   status: string,
   errorMessage?: string,
   fieldsPopulated?: number,
-  confidence?: Record<string, number>
+  confidence?: Record<string, number>,
+  debugData?: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> }
 ): Promise<void> {
   const { error } = await supabase.from("wizard_autofill_audit").insert({
     user_id: userId,
@@ -296,6 +358,7 @@ export async function logAutofillAudit(
     error_message: errorMessage || null,
     fields_populated: fieldsPopulated || 0,
     confidence_scores: confidence || null,
+    debug_data: debugData ? JSON.stringify(debugData) : null,
     created_at: new Date().toISOString(),
   });
 

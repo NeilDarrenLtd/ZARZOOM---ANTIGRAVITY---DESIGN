@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save } from "lucide-react";
+import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save, ChevronDown, ChevronUp, Clock, User, Globe, FileText } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -471,6 +471,210 @@ export default function OpenRouterPromptsPage() {
             </kbd>
             <span>to save</span>
           </div>
+        </div>
+      )}
+
+      {/* ── Audit Log Section ────────────────────────────── */}
+      <AuditLogViewer />
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  Audit Log Viewer Component                                         */
+/* ================================================================== */
+
+interface AuditEntry {
+  id: string;
+  user_id: string;
+  source_type: "website" | "file";
+  source_identifier: string;
+  status: string;
+  error_message: string | null;
+  fields_populated: number;
+  confidence_scores: Record<string, number> | null;
+  debug_data: string | null;
+  created_at: string;
+  profiles?: { email?: string } | null;
+}
+
+function AuditLogViewer() {
+  const { data, error, isLoading } = useSWR<{ data: AuditEntry[] }>(
+    "/api/v1/admin/settings/openrouter-prompts/audit",
+    (url: string) => fetch(url).then((r) => r.json())
+  );
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+        <div className="flex items-center gap-2 text-sm text-zinc-500">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Loading audit logs...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+        <p className="text-sm text-red-600">Failed to load audit logs</p>
+      </div>
+    );
+  }
+
+  const entries = data?.data || [];
+
+  return (
+    <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+      <h3 className="text-lg font-semibold text-zinc-900 mb-1">
+        Auto-fill Audit Log
+      </h3>
+      <p className="text-sm text-zinc-500 mb-4">
+        Recent auto-fill queries, responses, and usage tracking. Click a row to see the full prompt and response.
+      </p>
+
+      {entries.length === 0 ? (
+        <p className="text-sm text-zinc-400 py-4 text-center">No auto-fill runs yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {entries.map((entry) => {
+            const isExpanded = expandedId === entry.id;
+            let debugParsed: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | null = null;
+            if (entry.debug_data) {
+              try {
+                debugParsed = typeof entry.debug_data === "string" ? JSON.parse(entry.debug_data) : entry.debug_data;
+              } catch {
+                // ignore
+              }
+            }
+
+            return (
+              <div key={entry.id} className="border border-zinc-200 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedId(isExpanded ? null : entry.id)}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
+                >
+                  {/* Status indicator */}
+                  <span
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                      entry.status === "success"
+                        ? "bg-green-500"
+                        : entry.status === "partial"
+                        ? "bg-amber-500"
+                        : "bg-red-500"
+                    }`}
+                  />
+
+                  {/* Source type icon */}
+                  {entry.source_type === "website" ? (
+                    <Globe className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  ) : (
+                    <FileText className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  )}
+
+                  {/* Source identifier */}
+                  <span className="text-sm text-zinc-700 truncate flex-1 font-mono">
+                    {entry.source_identifier}
+                  </span>
+
+                  {/* Fields populated */}
+                  <span className="text-xs text-zinc-500 flex-shrink-0">
+                    {entry.fields_populated} fields
+                  </span>
+
+                  {/* User email */}
+                  <span className="text-xs text-zinc-400 flex-shrink-0 hidden sm:block">
+                    <User className="w-3 h-3 inline mr-1" />
+                    {entry.profiles?.email || entry.user_id.slice(0, 8)}
+                  </span>
+
+                  {/* Timestamp */}
+                  <span className="text-xs text-zinc-400 flex-shrink-0">
+                    <Clock className="w-3 h-3 inline mr-1" />
+                    {new Date(entry.created_at).toLocaleString()}
+                  </span>
+
+                  {/* Expand icon */}
+                  {isExpanded ? (
+                    <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <div className="px-4 pb-4 border-t border-zinc-100 bg-zinc-50 space-y-3">
+                    {/* Status and error */}
+                    <div className="pt-3 flex items-center gap-2">
+                      <span
+                        className={`text-xs font-medium px-2 py-0.5 rounded ${
+                          entry.status === "success"
+                            ? "bg-green-100 text-green-700"
+                            : entry.status === "partial"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {entry.status.toUpperCase()}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {entry.source_type} analysis
+                      </span>
+                    </div>
+
+                    {entry.error_message && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-xs font-medium text-red-700 mb-1">Error</p>
+                        <p className="text-xs text-red-600 font-mono whitespace-pre-wrap">
+                          {entry.error_message}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Debug: Prompt Sent */}
+                    {debugParsed?.promptSent && (
+                      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p className="text-xs font-medium text-blue-700 mb-1">Prompt Sent (truncated)</p>
+                        <pre className="text-xs text-blue-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {debugParsed.promptSent}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* Debug: Response Received */}
+                    {debugParsed?.responseReceived && (
+                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-xs font-medium text-green-700 mb-1">AI Response (raw)</p>
+                        <pre className="text-xs text-green-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {debugParsed.responseReceived}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* Debug: Fields Extracted */}
+                    {debugParsed?.fieldsExtracted && (
+                      <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                        <p className="text-xs font-medium text-purple-700 mb-1">Fields Extracted</p>
+                        <pre className="text-xs text-purple-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {JSON.stringify(debugParsed.fieldsExtracted, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* No debug data available */}
+                    {!debugParsed && (
+                      <p className="text-xs text-zinc-400 italic">
+                        No debug data available for this run (runs before this update won&apos;t have debug info).
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
