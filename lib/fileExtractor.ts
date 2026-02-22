@@ -1,4 +1,11 @@
-import { extractText, getDocumentProxy } from "unpdf";
+// Dynamic import of unpdf to avoid bundling issues in dev server
+let _unpdf: typeof import("unpdf") | null = null;
+async function getUnpdf() {
+  if (!_unpdf) {
+    _unpdf = await import("unpdf");
+  }
+  return _unpdf;
+}
 
 // File validation constants
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -70,8 +77,9 @@ async function extractFromPdf(
   buffer: Buffer
 ): Promise<ExtractedContent | ExtractionError> {
   try {
-    const pdf = await getDocumentProxy(new Uint8Array(buffer));
-    const { totalPages, text } = await extractText(pdf, { mergePages: true });
+    const unpdf = await getUnpdf();
+    const pdf = await unpdf.getDocumentProxy(new Uint8Array(buffer));
+    const { totalPages, text } = await unpdf.extractText(pdf, { mergePages: true });
 
     if (!text || text.trim().length === 0) {
       return {
