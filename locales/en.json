@@ -448,18 +448,21 @@
     },
     "category": {
       "none": "Not specified",
-      "technical": "Technical Issue",
-      "billing": "Billing",
-      "account": "Account",
+      "account_login": "Account & Login",
+      "billing_subscription": "Billing & Subscription",
+      "social_connections": "Social Connections",
+      "content_generation": "Content Generation",
+      "publishing_issues": "Publishing Issues",
+      "technical_bug": "Technical Bug",
       "feature_request": "Feature Request",
-      "other": "Other"
+      "general_question": "General Question"
     },
     "priority": {
       "none": "Not specified",
-      "low": "Low",
-      "normal": "Normal",
-      "high": "High",
-      "urgent": "Urgent"
+      "urgent": "Urgent \u2013 System Blocking",
+      "high": "High \u2013 Major Issue",
+      "normal": "Normal \u2013 Standard",
+      "low": "Low \u2013 Minor / Suggestion"
     },
     "attachments": {
       "uploading": "Uploading attachments...",

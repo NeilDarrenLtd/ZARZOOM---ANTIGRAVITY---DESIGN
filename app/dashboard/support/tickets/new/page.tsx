@@ -75,6 +75,13 @@ export default function CreateTicketPage() {
     setError(null);
 
     try {
+      console.log("[v0] Creating ticket with data:", {
+        subject: formData.subject,
+        category: formData.category,
+        priority: formData.priority,
+        description: formData.description.substring(0, 100),
+      });
+      
       // Step 1: Create ticket with initial comment
       const ticketRes = await fetch("/api/v1/support/tickets", {
         method: "POST",
@@ -87,12 +94,17 @@ export default function CreateTicketPage() {
         }),
       });
 
+      console.log("[v0] Ticket response status:", ticketRes.status);
+
       if (!ticketRes.ok) {
         const errorData = await ticketRes.json();
+        console.log("[v0] Error response:", errorData);
         throw new Error(errorData.message || "Failed to create ticket");
       }
 
       const ticketData = await ticketRes.json();
+      console.log("[v0] Ticket data received:", ticketData);
+      
       const ticketId = ticketData.ticket.id;
       const firstCommentId = ticketData.ticket.first_comment_id;
 
@@ -220,13 +232,15 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.category.none") || "Select a category"}</option>
-              <option value="technical">{t("support.category.technical")}</option>
-              <option value="billing">{t("support.category.billing")}</option>
-              <option value="bug_report">{t("support.category.bug_report") || "Bug Report"}</option>
-              <option value="feature_request">{t("support.category.feature_request")}</option>
-              <option value="general">{t("support.category.general") || "General"}</option>
-              <option value="other">{t("support.category.other")}</option>
+              <option value="">{t("support.category.none", "Not specified")}</option>
+              <option value="account_login">{t("support.category.account_login", "Account & Login")}</option>
+              <option value="billing_subscription">{t("support.category.billing_subscription", "Billing & Subscription")}</option>
+              <option value="social_connections">{t("support.category.social_connections", "Social Connections")}</option>
+              <option value="content_generation">{t("support.category.content_generation", "Content Generation")}</option>
+              <option value="publishing_issues">{t("support.category.publishing_issues", "Publishing Issues")}</option>
+              <option value="technical_bug">{t("support.category.technical_bug", "Technical Bug")}</option>
+              <option value="feature_request">{t("support.category.feature_request", "Feature Request")}</option>
+              <option value="general_question">{t("support.category.general_question", "General Question")}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.categoryHelp")}</p>
           </div>
@@ -243,11 +257,11 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.priority.none")}</option>
-              <option value="low">{t("support.priority.low")}</option>
-              <option value="medium">{t("support.priority.medium") || "Medium"}</option>
-              <option value="high">{t("support.priority.high")}</option>
-              <option value="urgent">{t("support.priority.urgent")}</option>
+              <option value="">{t("support.priority.none", "Not specified")}</option>
+              <option value="urgent">{t("support.priority.urgent", "Urgent – System Blocking")}</option>
+              <option value="high">{t("support.priority.high", "High – Major Issue")}</option>
+              <option value="normal">{t("support.priority.normal", "Normal – Standard")}</option>
+              <option value="low">{t("support.priority.low", "Low – Minor / Suggestion")}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.priorityHelp")}</p>
           </div>

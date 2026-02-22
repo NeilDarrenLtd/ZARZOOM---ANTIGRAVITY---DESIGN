@@ -12,15 +12,22 @@ export const supportStatusEnum = z.enum([
   "closed",
 ]);
 
-export const supportPriorityEnum = z.enum(["low", "medium", "high", "urgent"]);
+export const supportPriorityEnum = z.enum([
+  "urgent",
+  "high",
+  "normal",
+  "low",
+]);
 
 export const supportCategoryEnum = z.enum([
-  "technical",
-  "billing",
+  "account_login",
+  "billing_subscription",
+  "social_connections",
+  "content_generation",
+  "publishing_issues",
+  "technical_bug",
   "feature_request",
-  "bug_report",
-  "general",
-  "other",
+  "general_question",
 ]);
 
 export const authorRoleEnum = z.enum(["user", "admin", "system"]);
@@ -32,7 +39,7 @@ export const createTicketSchema = z.object({
   subject: z.string().min(1, "support.validation.subjectRequired").max(200),
   description: z.string().min(1, "support.validation.descriptionRequired"),
   category: supportCategoryEnum.optional(),
-  priority: supportPriorityEnum.optional().default("medium"),
+  priority: supportPriorityEnum.optional().default("normal"),
 });
 
 /**

@@ -2,6 +2,7 @@ import { createApiHandler, ok } from "@/lib/api";
 import { ValidationError, NotFoundError } from "@/lib/api/errors";
 import { addCommentSchema } from "@/lib/validation/support";
 import { sendAdminCommentNotification } from "@/lib/email/supportMailer";
+import { createAdminClient } from "@/lib/supabase/server";
 
 /**
  * POST /api/v1/admin/support/tickets/[id]/comments
@@ -57,12 +58,19 @@ export const POST = createApiHandler({
       .update({ last_activity_at: new Date().toISOString() })
       .eq("id", ticketId);
 
-    // Send email notification to ticket owner
-    const userEmail = ctx.user!.email || 'unknown@example.com';
+    // Send email notification to ticket OWNER (not the admin who commented)
+    const adminClient = await createAdminClient();
+    const { data: ownerProfile } = await adminClient
+      .from("profiles")
+      .select("email")
+      .eq("id", ticket.user_id)
+      .single();
+
+    const ownerEmail = ownerProfile?.email || 'unknown@example.com';
     sendAdminCommentNotification({
       ticketId,
       ticketSubject: ticket.subject,
-      userEmail,
+      userEmail: ownerEmail,
       adminComment: message,
     }).catch((err) => {
       console.error("[Support] Failed to send admin comment email:", err);

@@ -45,11 +45,15 @@ async function getSmtpConfig() {
  * Send an email using the configured SMTP server
  */
 async function sendEmail(options: EmailOptions): Promise<boolean> {
+  console.log("[SupportMailer] Attempting to send email to:", options.to, "Subject:", options.subject);
+  
   const smtp = await getSmtpConfig();
   if (!smtp) {
-    console.error("[SupportMailer] Cannot send email: SMTP not configured");
+    console.error("[SupportMailer] Cannot send email: SMTP not configured. Check site_settings for smtp_host, smtp_user, smtp_pass.");
     return false;
   }
+
+  console.log("[SupportMailer] SMTP config found. Host:", smtp.smtp_host, "Port:", smtp.smtp_port || "587");
 
   try {
     const nodemailer = await import("nodemailer");
@@ -98,15 +102,21 @@ async function getSupportRecipientEmail(): Promise<string | null> {
   const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("support_settings")
-    .select("recipient_email")
+    .select("support_recipient_email")
     .single();
 
-  if (error || !data?.recipient_email) {
+  if (error || !data?.support_recipient_email) {
     console.warn("[SupportMailer] No support recipient email configured");
+    // Fall back to SMTP username as admin email
+    const smtp = await getSmtpConfig();
+    if (smtp?.smtp_user) {
+      console.log("[SupportMailer] Using SMTP username as fallback:", smtp.smtp_user);
+      return smtp.smtp_user;
+    }
     return null;
   }
 
-  return data.recipient_email;
+  return data.support_recipient_email;
 }
 
 /**

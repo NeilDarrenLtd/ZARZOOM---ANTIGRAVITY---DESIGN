@@ -50,15 +50,14 @@ export const POST = createApiHandler({
     const { subject, description, category, priority } = parsed.data;
     const userId = ctx.user!.id;
 
-    // Create ticket (support_tickets has: id, user_id, subject, status, priority, category, last_activity_at, created_at, updated_at)
     const { data: ticket, error: ticketError } = await ctx.supabase!
       .from("support_tickets")
       .insert({
         user_id: userId,
         subject,
         status: "open",
-        priority: priority || "medium",
-        category: category || "general",
+        priority: priority || "normal",
+        category: category || "general_question",
         last_activity_at: new Date().toISOString(),
       })
       .select("id, subject, status, priority, category, created_at")
@@ -69,7 +68,6 @@ export const POST = createApiHandler({
     }
 
     // Create initial comment with description
-    // support_comments has: id, ticket_id, author_user_id, author_role, message, created_at
     const { data: comment, error: commentError } = await ctx.supabase!
       .from("support_comments")
       .insert({
@@ -90,7 +88,7 @@ export const POST = createApiHandler({
 
       throw new Error(`Failed to create initial comment: ${commentError?.message ?? "unknown"}`);
     }
-
+    
     // Send email notification to support team (async, don't block response)
     sendNewTicketNotification({
       ticketId: ticket.id,

@@ -46,7 +46,7 @@ export default function AdminSupportPage() {
       }
 
       const body = await res.json();
-      const mapped = (body.data?.tickets || []).map((t: any) => ({
+      const mapped = (body.data?.tickets || body.tickets || []).map((t: any) => ({
         id: t.ticket_id || t.id,
         subject: t.subject,
         status: t.status,
