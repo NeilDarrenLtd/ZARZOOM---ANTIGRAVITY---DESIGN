@@ -13,6 +13,7 @@ const SMTP_KEYS = [
   "smtp_from_email",
   "smtp_from_name",
   "smtp_encryption",
+  "support_recipient_email",
 ] as const;
 
 const SECRET_KEYS = new Set(["smtp_pass"]);
@@ -27,6 +28,7 @@ export default function EmailSettingsPage() {
     smtp_from_email: "",
     smtp_from_name: "ZARZOOM",
     smtp_encryption: "tls",
+    support_recipient_email: "",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -57,6 +59,20 @@ export default function EmailSettingsPage() {
           hasSecrets = true;
         }
         setHasExistingSecrets(hasSecrets);
+
+        // Load support recipient email from support_settings table
+        try {
+          const res = await fetch("/api/v1/admin/support/settings");
+          if (res.ok) {
+            const data = await res.json();
+            if (data.data?.support_recipient_email) {
+              loaded.support_recipient_email = data.data.support_recipient_email;
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load support settings:", err);
+        }
+
         setForm(loaded);
       }
     }
@@ -74,23 +90,49 @@ export default function EmailSettingsPage() {
     setError("");
     setSaved(false);
 
-    const entries = SMTP_KEYS.map((key) => ({
-      key,
-      value: form[key],
-      encrypted: SECRET_KEYS.has(key),
-    }));
+    // Save SMTP settings to site_settings (exclude support_recipient_email)
+    const smtpEntries = SMTP_KEYS.filter((key) => key !== "support_recipient_email").map(
+      (key) => ({
+        key,
+        value: form[key],
+        encrypted: SECRET_KEYS.has(key),
+      })
+    );
 
-    const result = await saveSettings(entries);
-    setSaving(false);
-
+    const result = await saveSettings(smtpEntries);
     if (result.error) {
+      setSaving(false);
       setError(result.error);
-    } else {
-      setSaved(true);
-      setHasExistingSecrets(true);
-      // Clear the password field after save to show it's masked
-      setForm((prev) => ({ ...prev, smtp_pass: "" }));
+      return;
     }
+
+    // Save support recipient email to support_settings table separately
+    if (form.support_recipient_email) {
+      try {
+        const res = await fetch("/api/v1/admin/support/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            support_recipient_email: form.support_recipient_email,
+          }),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData?.error?.message || "Failed to save support email");
+        }
+      } catch (err: any) {
+        setSaving(false);
+        setError(err.message || "Failed to save support email");
+        return;
+      }
+    }
+
+    setSaving(false);
+    setSaved(true);
+    setHasExistingSecrets(true);
+    // Clear the password field after save to show it's masked
+    setForm((prev) => ({ ...prev, smtp_pass: "" }));
   }
 
   const [testError, setTestError] = useState("");
@@ -266,6 +308,24 @@ export default function EmailSettingsPage() {
               className={inputClass}
               placeholder="ZARZOOM"
             />
+          </div>
+
+          {/* Support Email */}
+          <div className="pt-4 border-t border-gray-200">
+            <label htmlFor="support_recipient_email" className={labelClass}>
+              Support Email Address
+            </label>
+            <input
+              id="support_recipient_email"
+              type="email"
+              value={form.support_recipient_email}
+              onChange={(e) => updateField("support_recipient_email", e.target.value)}
+              className={inputClass}
+              placeholder="support@yourcompany.com (optional - defaults to SMTP username)"
+            />
+            <p className="text-xs text-gray-500 mt-1.5">
+              Email address where support ticket notifications will be sent. If left blank, notifications will be sent to the SMTP username above.
+            </p>
           </div>
         </div>
 

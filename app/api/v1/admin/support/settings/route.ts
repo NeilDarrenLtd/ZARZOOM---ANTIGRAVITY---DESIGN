@@ -1,6 +1,11 @@
 import { createApiHandler, ok } from "@/lib/api";
 import { ValidationError } from "@/lib/api/errors";
-import { updateSettingsSchema } from "@/lib/validation/support";
+import { createAdminClient } from "@/lib/supabase/server";
+import { z } from "zod";
+
+const supportSettingsSchema = z.object({
+  support_recipient_email: z.string().email().optional().nullable(),
+});
 
 /**
  * GET /api/v1/admin/support/settings
@@ -8,32 +13,27 @@ import { updateSettingsSchema } from "@/lib/validation/support";
  */
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true, // Support is not tenant-scoped
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { data: settings, error } = await ctx.supabase!
+    const adminClient = await createAdminClient();
+    
+    const { data: settings, error } = await adminClient
       .from("support_settings")
-      .select("support_recipient_email, updated_at")
+      .select("support_recipient_email")
       .single();
 
     if (error) {
       // If no settings exist yet, return default
       if (error.code === "PGRST116") {
-        return ok(
-          {
-            settings: {
-              support_recipient_email: null,
-              updated_at: null,
-            },
-          },
-          ctx.requestId
-        );
+        return ok({ support_recipient_email: "" }, ctx.requestId);
       }
       throw new Error(`Failed to fetch settings: ${error.message}`);
     }
 
     return ok(
       {
-        settings,
+        support_recipient_email: settings?.support_recipient_email || "",
       },
       ctx.requestId
     );
@@ -41,48 +41,40 @@ export const GET = createApiHandler({
 });
 
 /**
- * PUT /api/v1/admin/support/settings
+ * POST /api/v1/admin/support/settings
  * Update support settings (admin only).
  */
-export const PUT = createApiHandler({
+export const POST = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true, // Support is not tenant-scoped
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();
-    const parsed = updateSettingsSchema.safeParse(body);
+    const parsed = supportSettingsSchema.safeParse(body);
 
     if (!parsed.success) {
       throw new ValidationError(parsed.error.flatten().fieldErrors);
     }
 
     const { support_recipient_email } = parsed.data;
-    const tenantId = ctx.membership!.tenantId;
+    const adminClient = await createAdminClient();
 
-    // Upsert settings
-    const { data: settings, error } = await ctx.supabase!
+    // Upsert settings (there should be only one row with id=1)
+    const { error } = await adminClient
       .from("support_settings")
       .upsert(
         {
-          tenant_id: tenantId,
-          support_recipient_email,
+          id: 1,
+          support_recipient_email: support_recipient_email || null,
           updated_at: new Date().toISOString(),
         },
-        {
-          onConflict: "tenant_id",
-        }
-      )
-      .select("support_recipient_email, updated_at")
-      .single();
+        { onConflict: "id" }
+      );
 
-    if (error || !settings) {
-      throw new Error(`Failed to update settings: ${error?.message ?? "unknown"}`);
+    if (error) {
+      throw new Error(`Failed to update settings: ${error.message}`);
     }
 
-    return ok(
-      {
-        settings,
-      },
-      ctx.requestId
-    );
+    return ok({ success: true }, ctx.requestId);
   },
 });
