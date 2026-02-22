@@ -41,7 +41,7 @@ Your task is to extract as much onboarding information as possible for a content
   "business_description": "string — a concise 1-2 sentence summary of what the business does, its products/services, and target audience",
   "brand_color_hex": "string — the dominant brand colour in #RRGGBB hex format (look at logo, header, buttons, accent colours)",
   "content_language": "string — 2-letter ISO 639-1 code for the primary language used on the site (e.g. en, es, fr, de, pt, zh, ja)",
-  "article_styles": ["array — choose 2-4 that best fit the brand's voice and industry. ONLY use these exact values: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews"],
+  "article_styles": ["array — choose 2-4 that best fit the brand's voice and industry. ONLY use these exact values: how_to_guides, listicles, tutorials, opinion_pieces, case_studies, news_commentary, interviews, product_reviews, explainer_articles, comparisons_vs_articles, ultimate_guides_pillar, checklists_cheat_sheets, best_top_forecasts, problem_solution_posts, myth_busting, resource_roundups, faqs_qa_content, personal_stories, research_summaries, historical_timeline, satire_humor, explained_in_minutes"],
   "goals": ["array — choose 2-4 marketing goals that align with the business. ONLY use these exact values: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content"],
   "website_or_landing_url": "string — the main website URL or landing page (use [WEBSITE-URL] if nothing more specific is found)",
   "product_or_sales_url": "string — a dedicated product, shop, or sales page URL if one exists on the site (omit if none found)",
@@ -50,7 +50,7 @@ Your task is to extract as much onboarding information as possible for a content
 }
 
 IMPORTANT RULES:
-- For article_styles: NEVER include "let_zarzoom_decide". Only use the 8 specific style values listed above.
+- For article_styles: NEVER include "let_zarzoom_decide". Only use the 22 specific style values listed above.
 - For goals: Only use the 8 specific goal values listed above. Infer goals from the site's content, calls-to-action, and business model.
 - For brand_color_hex: Extract the actual brand colour from the site design, not a generic colour. Prefer the colour used in the logo, navigation, or primary buttons.
 - Return ONLY valid JSON. No markdown, no explanation, no code fences.`;
@@ -64,7 +64,7 @@ Your task is to extract as much onboarding information as possible for a content
   "business_description": "string — a concise 1-2 sentence summary of what the business does",
   "brand_color_hex": "string — brand colour in #RRGGBB hex format if explicitly mentioned",
   "content_language": "string — 2-letter ISO 639-1 code for the language used in the document",
-  "article_styles": ["array — choose 2-4 from: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews"],
+  "article_styles": ["array — choose 2-4 from: how_to_guides, listicles, tutorials, opinion_pieces, case_studies, news_commentary, interviews, product_reviews, explainer_articles, comparisons_vs_articles, ultimate_guides_pillar, checklists_cheat_sheets, best_top_forecasts, problem_solution_posts, myth_busting, resource_roundups, faqs_qa_content, personal_stories, research_summaries, historical_timeline, satire_humor, explained_in_minutes"],
   "goals": ["array — choose 2-4 from: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content"],
   "website_or_landing_url": "string — any website URL mentioned in the document",
   "product_or_sales_url": "string — any product or sales page URL mentioned",
@@ -73,7 +73,7 @@ Your task is to extract as much onboarding information as possible for a content
 }
 
 IMPORTANT RULES:
-- For article_styles: NEVER include "let_zarzoom_decide". Only use the 8 specific style values listed.
+- For article_styles: NEVER include "let_zarzoom_decide". Only use the 22 specific style values listed.
 - For goals: Only use the 8 specific goal values listed.
 - Return ONLY valid JSON. No markdown, no explanation, no code fences.`;
 
@@ -175,7 +175,7 @@ export async function analyzeContentWithOpenRouter(
         messages: [
           {
             role: "system",
-            content: "You are a brand analysis AI for Zarzoom, a content-marketing platform. Extract structured information from websites and documents. Respond with ONLY valid JSON, no markdown fences. Use these exact field names: business_name (string), business_description (string), brand_color_hex (#RRGGBB string), content_language (2-letter ISO code), article_styles (array from: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews), goals (array from: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content), website_or_landing_url (string), product_or_sales_url (string), approval_preference ('auto' or 'manual'), additional_notes (string).",
+            content: "You are a brand analysis AI for Zarzoom, a content-marketing platform. Extract structured information from websites and documents. Respond with ONLY valid JSON, no markdown fences. Use these exact field names: business_name (string), business_description (string), brand_color_hex (#RRGGBB string), content_language (2-letter ISO code), article_styles (array from: how_to_guides, listicles, tutorials, opinion_pieces, case_studies, news_commentary, interviews, product_reviews, explainer_articles, comparisons_vs_articles, ultimate_guides_pillar, checklists_cheat_sheets, best_top_forecasts, problem_solution_posts, myth_busting, resource_roundups, faqs_qa_content, personal_stories, research_summaries, historical_timeline, satire_humor, explained_in_minutes), goals (array from: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content), website_or_landing_url (string), product_or_sales_url (string), approval_preference ('auto' or 'manual'), additional_notes (string).",
           },
           {
             role: "user",
@@ -242,8 +242,12 @@ export async function analyzeContentWithOpenRouter(
 
     // Valid enum values for validation
     const validArticleStyles = [
-      "how_to_guides", "listicles", "opinion_pieces", "case_studies",
-      "news_commentary", "tutorials", "interviews", "product_reviews",
+      "how_to_guides", "listicles", "tutorials", "opinion_pieces", "case_studies",
+      "news_commentary", "interviews", "product_reviews", "explainer_articles",
+      "comparisons_vs_articles", "ultimate_guides_pillar", "checklists_cheat_sheets",
+      "best_top_forecasts", "problem_solution_posts", "myth_busting",
+      "resource_roundups", "faqs_qa_content", "personal_stories",
+      "research_summaries", "historical_timeline", "satire_humor", "explained_in_minutes",
     ];
     const validGoals = [
       "increase_website_traffic", "get_more_subscribers_leads",
