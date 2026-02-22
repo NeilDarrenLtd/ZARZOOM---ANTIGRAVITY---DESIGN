@@ -42,7 +42,18 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
 
   async function handleInvestigate() {
-    if (!data.website_url) return;
+    if (!data.website_url || !data.website_url.trim()) {
+      setUrlError("Please enter a website URL before clicking Auto-fill.");
+      return;
+    }
+    // Validate it's a proper URL
+    try {
+      new URL(data.website_url);
+    } catch {
+      setUrlError("Please enter a valid URL (e.g. https://example.com)");
+      return;
+    }
+    setUrlError("");
     setInvestigating(true);
     setWebsiteStatus("loading");
 
@@ -82,8 +93,14 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     }
   }
 
+  const [fileError, setFileError] = useState("");
+
   async function handleFileAnalyse() {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      setFileError("Please select a file before clicking Analyse.");
+      return;
+    }
+    setFileError("");
     setFileStatus("loading");
 
     try {
@@ -176,6 +193,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
 
     setSelectedFile(file);
     setFileStatus("idle");
+    setFileError("");
   }
 
   function toggleStyle(style: string) {
@@ -311,7 +329,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
             <button
               type="button"
               onClick={handleInvestigate}
-              disabled={!data.website_url || investigating}
+              disabled={investigating}
               className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
             >
               {investigating ? (
@@ -382,7 +400,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
             <button
               type="button"
               onClick={handleFileAnalyse}
-              disabled={!selectedFile || fileStatus === "loading"}
+              disabled={fileStatus === "loading"}
               className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
             >
               {fileStatus === "loading" ? (
@@ -395,6 +413,11 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
               </span>
             </button>
           </div>
+
+          {/* File validation error */}
+          {fileError && (
+            <p className="text-xs text-red-500 mt-2">{fileError}</p>
+          )}
 
           {/* File analysis status messages */}
           {fileStatus === "success" && (

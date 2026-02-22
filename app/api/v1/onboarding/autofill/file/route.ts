@@ -16,6 +16,7 @@ import {
   incrementAutofillUsage,
   freeBasicAnalysis,
 } from "@/lib/wizard/usageGuard";
+import { createAdminClient } from "@/lib/supabase/server";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/file
@@ -194,11 +195,14 @@ export async function POST(request: Request) {
           : "Basic analysis could not extract fields from this file.";
     } else {
       // ── PREMIUM: full OpenRouter analysis ──
-      const prompts = await getPromptSettings(supabase);
+      // Use admin client to read settings (RLS only allows admin reads)
+      const adminSupabase = await createAdminClient();
+      const prompts = await getPromptSettings(adminSupabase);
       const analysis = await analyzeContentWithOpenRouter(
         prompts.file_prompt_text,
         textToAnalyze,
-        "file"
+        "file",
+        fileName // pass filename for [FILE-NAME] placeholder substitution
       );
 
       if (analysis.status === "fail" || !analysis.data) {

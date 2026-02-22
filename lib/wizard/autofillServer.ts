@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 // ──────────────────────────────────────────────
@@ -32,8 +32,31 @@ export interface PromptSettings {
   updated_by: string | null;
 }
 
-const DEFAULT_WEBSITE_PROMPT = `Analyze the website content and extract brand information as JSON.`;
-const DEFAULT_FILE_PROMPT = `Analyze the document content and extract brand information as JSON.`;
+const DEFAULT_WEBSITE_PROMPT = `Analyze the website at [WEBSITE-URL] using the content provided below. Extract brand information and return a JSON object with these exact keys:
+
+{
+  "business_name": "The company or brand name",
+  "business_description": "A concise 1-2 sentence description of what the business does",
+  "brand_color_hex": "#RRGGBB format hex color that best represents the brand",
+  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
+  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
+  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+}
+
+Only include fields you are confident about. Omit any field where you cannot determine the value.`;
+
+const DEFAULT_FILE_PROMPT = `Analyze the document named [FILE-NAME] using the content provided below. Extract brand information and return a JSON object with these exact keys:
+
+{
+  "business_name": "The company or brand name",
+  "business_description": "A concise 1-2 sentence description of what the business does",
+  "brand_color_hex": "#RRGGBB format hex color if mentioned, otherwise omit",
+  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
+  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
+  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+}
+
+Only include fields you are confident about. Omit any field where you cannot determine the value.`;
 
 export async function getPromptSettings(
   supabase: SupabaseClient
@@ -85,14 +108,16 @@ export interface AnalysisResult {
 export async function analyzeContentWithOpenRouter(
   promptTemplate: string,
   content: string,
-  sourceType: "website" | "file"
+  sourceType: "website" | "file",
+  sourceIdentifier?: string
 ): Promise<AnalysisResult> {
   try {
     console.log(`[v0] Starting ${sourceType} analysis with OpenRouter...`);
 
-    // Get OpenRouter credentials from settings
-    const supabase = await createClient();
-    const settings = await getPromptSettings(supabase);
+    // Get OpenRouter credentials from settings -- must use admin client
+    // because wizard_autofill_settings has RLS that only allows admin reads
+    const adminSupabase = await createAdminClient();
+    const settings = await getPromptSettings(adminSupabase);
 
     if (!settings.openrouter_api_key) {
       console.warn("[v0] No OpenRouter API key configured");
@@ -102,6 +127,19 @@ export async function analyzeContentWithOpenRouter(
         error: "missing_api_key",
       };
     }
+
+    // Substitute placeholders in the prompt template
+    let finalPrompt = promptTemplate;
+    if (sourceType === "website" && sourceIdentifier) {
+      finalPrompt = finalPrompt.replace(/\[WEBSITE-URL\]/gi, sourceIdentifier);
+      finalPrompt = finalPrompt.replace(/\[URL\]/gi, sourceIdentifier);
+    }
+    if (sourceType === "file" && sourceIdentifier) {
+      finalPrompt = finalPrompt.replace(/\[FILE-NAME\]/gi, sourceIdentifier);
+      finalPrompt = finalPrompt.replace(/\[FILENAME\]/gi, sourceIdentifier);
+    }
+
+    console.log(`[v0] Prompt template length: ${finalPrompt.length}, content length: ${content.length}`);
 
     // Call OpenRouter API
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -117,11 +155,11 @@ export async function analyzeContentWithOpenRouter(
         messages: [
           {
             role: "system",
-            content: "You are a brand analysis AI. Extract structured information and respond with ONLY valid JSON.",
+            content: "You are a brand analysis AI. Extract structured information and respond with ONLY valid JSON. Map your findings to these exact field names for the database: business_name, business_description, brand_color_hex, article_styles (array of strings like professional/casual/technical/storytelling/educational/promotional/conversational/authoritative/humorous), goals (array of strings like brand_awareness/lead_gen/seo/thought_leadership/drive_sales/community_building/educate_audience/social_growth), content_language (2-letter ISO code like en/es/fr).",
           },
           {
             role: "user",
-            content: `${promptTemplate}\n\n${content.slice(0, 30000)}`,
+            content: `${finalPrompt}\n\n--- BEGIN CONTENT ---\n${content.slice(0, 30000)}\n--- END CONTENT ---`,
           },
         ],
         response_format: { type: "json_object" },
@@ -153,8 +191,8 @@ export async function analyzeContentWithOpenRouter(
     let parsed: Record<string, unknown>;
     try {
       parsed = JSON.parse(aiText);
-    } catch (err) {
-      console.error("[v0] Failed to parse OpenRouter JSON:", err);
+    } catch {
+      console.error("[v0] Failed to parse OpenRouter JSON, raw response:", aiText.slice(0, 500));
       return {
         status: "fail",
         message: "Failed to parse AI response as JSON",
@@ -162,13 +200,36 @@ export async function analyzeContentWithOpenRouter(
       };
     }
 
-    console.log(`[v0] OpenRouter analysis complete, extracted ${Object.keys(parsed).length} fields`);
+    // Normalize field names: strip any nested objects, only keep known DB columns
+    const allowedFields = [
+      "business_name", "business_description", "brand_color_hex",
+      "article_styles", "goals", "content_language",
+      "website_url", "logo_url", "additional_notes",
+    ];
+    const normalized: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(parsed)) {
+      const normalizedKey = key.toLowerCase().replace(/\s+/g, "_");
+      if (allowedFields.includes(normalizedKey) && value != null && value !== "") {
+        normalized[normalizedKey] = value;
+      }
+    }
+
+    const fieldsPopulated = Object.keys(normalized).length;
+    const missingFields = allowedFields
+      .filter(f => !normalized[f])
+      .filter(f => ["business_name", "business_description", "brand_color_hex", "article_styles", "goals"].includes(f));
+
+    console.log(`[v0] OpenRouter analysis complete, extracted ${fieldsPopulated} fields, missing: ${missingFields.join(", ")}`);
+
+    const status = fieldsPopulated >= 3 ? "success" : fieldsPopulated > 0 ? "partial" : "fail";
 
     return {
-      status: "success",
-      data: parsed,
-      missingFields: [],
-      message: `Successfully analyzed ${sourceType}`,
+      status,
+      data: normalized,
+      missingFields,
+      message: status === "success"
+        ? `Successfully analyzed ${sourceType} and extracted ${fieldsPopulated} fields`
+        : `Partial analysis: extracted ${fieldsPopulated} fields but some are missing`,
     };
   } catch (err: any) {
     console.error(`[v0] ${sourceType} analysis error:`, err);

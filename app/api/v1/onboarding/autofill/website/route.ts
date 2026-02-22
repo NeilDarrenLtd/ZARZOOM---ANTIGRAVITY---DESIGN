@@ -22,6 +22,7 @@ import {
   incrementAutofillUsage,
   freeBasicAnalysis,
 } from "@/lib/wizard/usageGuard";
+import { createAdminClient } from "@/lib/supabase/server";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/website
@@ -213,11 +214,14 @@ export async function POST(request: Request) {
           : "Basic analysis could not extract fields from this website.";
     } else {
       // ── PREMIUM: full OpenRouter analysis ──
-      const prompts = await getPromptSettings(supabase);
+      // Use admin client to read settings (RLS only allows admin reads)
+      const adminSupabase = await createAdminClient();
+      const prompts = await getPromptSettings(adminSupabase);
       const analysis = await analyzeContentWithOpenRouter(
         prompts.website_prompt_text,
         siteResult.combinedText,
-        "website"
+        "website",
+        url // pass URL for [WEBSITE-URL] placeholder substitution
       );
 
       if (analysis.status === "fail" || !analysis.data) {
