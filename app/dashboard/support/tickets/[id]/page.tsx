@@ -27,7 +27,6 @@ interface Comment {
 
 interface Ticket {
   id: string;
-  ticket_number: number;
   subject: string;
   status: string;
   category: string | null;
@@ -70,7 +69,11 @@ export default function TicketDetailPage() {
         return;
       }
       const data = await res.json();
-      setTicket(data.ticket);
+      // API returns ticket and comments separately, merge them
+      setTicket({
+        ...data.ticket,
+        comments: data.comments || [],
+      });
     } catch (err) {
       setError(t("support.errors.networkError"));
     } finally {
@@ -244,7 +247,7 @@ export default function TicketDetailPage() {
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-sm font-medium text-gray-500">
-                  #{ticket.ticket_number}
+                  #{ticket.id.slice(0, 8)}
                 </span>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${getStatusBadgeClass(

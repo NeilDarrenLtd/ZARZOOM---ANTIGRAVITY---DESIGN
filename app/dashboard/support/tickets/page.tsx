@@ -10,7 +10,6 @@ import { Ticket, Plus } from "lucide-react";
 
 interface TicketItem {
   id: string;
-  ticket_number: number;
   subject: string;
   status: string;
   last_activity_at: string;
@@ -152,7 +151,7 @@ export default function TicketsListPage() {
                           href={`/dashboard/support/tickets/${ticket.id}`}
                           className="text-green-600 hover:text-green-700 font-medium"
                         >
-                          #{ticket.ticket_number}
+                          #{ticket.id.slice(0, 8)}
                         </Link>
                       </td>
                       <td className="px-6 py-4">

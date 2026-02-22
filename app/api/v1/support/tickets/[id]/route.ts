@@ -47,6 +47,7 @@ export const GET = createApiHandler({
           file_name,
           mime_type,
           file_size,
+          file_path,
           created_at
         )
       `)
@@ -57,10 +58,19 @@ export const GET = createApiHandler({
       throw new Error(`Failed to fetch comments: ${commentsError.message}`);
     }
 
+    // Transform the nested structure to match frontend expectations
+    const formattedComments = (comments ?? []).map((comment: any) => ({
+      id: comment.id,
+      message: comment.message,
+      author_role: comment.author_role,
+      created_at: comment.created_at,
+      attachments: comment.support_attachments || [],
+    }));
+
     return ok(
       {
         ticket,
-        comments: comments ?? [],
+        comments: formattedComments,
       },
       ctx.requestId
     );
