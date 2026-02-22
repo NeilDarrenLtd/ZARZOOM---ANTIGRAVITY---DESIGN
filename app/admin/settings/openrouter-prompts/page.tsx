@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save } from "lucide-react";
+import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save, ChevronDown, ChevronUp, Clock, User, Globe, FileText } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -54,6 +54,7 @@ export default function OpenRouterPromptsPage() {
   const [websitePrompt, setWebsitePrompt] = useState("");
   const [filePrompt, setFilePrompt] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [apiKeySet, setApiKeySet] = useState(false); // tracks if a key is stored in DB
   const [model, setModel] = useState("openai/gpt-4o-mini");
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -66,7 +67,9 @@ export default function OpenRouterPromptsPage() {
     if (data?.data) {
       setWebsitePrompt(data.data.website_prompt ?? "");
       setFilePrompt(data.data.file_prompt ?? "");
-      setApiKey(data.data.openrouter_api_key ?? "");
+      // Don't populate apiKey with masked value - keep it empty so users enter fresh key
+      setApiKey("");
+      setApiKeySet(!!(data.data as any).openrouter_api_key_set);
       setModel(data.data.openrouter_model ?? "openai/gpt-4o-mini");
       setHasUnsavedChanges(false);
     }
@@ -79,7 +82,7 @@ export default function OpenRouterPromptsPage() {
     const changed =
       websitePrompt !== (data.data.website_prompt ?? "") ||
       filePrompt !== (data.data.file_prompt ?? "") ||
-      apiKey !== (data.data.openrouter_api_key ?? "") ||
+      apiKey !== "" || // any new key typed = unsaved change
       model !== (data.data.openrouter_model ?? "openai/gpt-4o-mini");
     
     setHasUnsavedChanges(changed);
@@ -90,15 +93,21 @@ export default function OpenRouterPromptsPage() {
     setSaveState({ status: "saving" });
 
     try {
+      // Only send API key if user entered a new one (non-empty)
+      const payload: Record<string, unknown> = {
+        website_prompt: websitePrompt || null,
+        file_prompt: filePrompt || null,
+        openrouter_model: model || null,
+      };
+      // Only include API key in payload if user typed a new value
+      if (apiKey.trim()) {
+        payload.openrouter_api_key = apiKey.trim();
+      }
+
       const res = await fetch("/api/v1/admin/settings/openrouter-prompts", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          website_prompt: websitePrompt || null,
-          file_prompt: filePrompt || null,
-          openrouter_api_key: apiKey || null,
-          openrouter_model: model || null,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -107,7 +116,7 @@ export default function OpenRouterPromptsPage() {
       }
 
       await mutate();
-      setSaveState({ status: "success", message: "Prompts saved successfully" });
+      setSaveState({ status: "success", message: "Settings saved successfully" });
       setHasUnsavedChanges(false);
       
       // Clear success message after 3 seconds
@@ -117,10 +126,10 @@ export default function OpenRouterPromptsPage() {
     } catch (err) {
       setSaveState({
         status: "error",
-        message: err instanceof Error ? err.message : "Failed to save prompts",
+        message: err instanceof Error ? err.message : "Failed to save settings",
       });
     }
-  }, [websitePrompt, filePrompt, mutate]);
+  }, [websitePrompt, filePrompt, apiKey, model, mutate]);
 
   /* -- Reset handler --------------------------------------------- */
   const handleReset = useCallback(async () => {
@@ -265,7 +274,7 @@ export default function OpenRouterPromptsPage() {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="sk-or-v1-..."
+                  placeholder={apiKeySet ? "Key is saved - enter new key to replace" : "sk-or-v1-..."}
                   autoComplete="off"
                 />
                 <button
@@ -276,6 +285,18 @@ export default function OpenRouterPromptsPage() {
                   {showApiKey ? "Hide" : "Show"}
                 </button>
               </div>
+              {apiKeySet && !apiKey && (
+                <div className="flex items-center gap-1.5 mt-1.5 text-xs text-green-600">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>API key is saved and active. Leave blank to keep current key.</span>
+                </div>
+              )}
+              {!apiKeySet && !apiKey && (
+                <div className="flex items-center gap-1.5 mt-1.5 text-xs text-amber-600">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>No API key configured. Auto-fill features will not work until a key is saved.</span>
+                </div>
+              )}
               <p className="text-xs text-zinc-500 mt-1.5">
                 Your OpenRouter API key. Get one at{" "}
                 <a
@@ -450,6 +471,212 @@ export default function OpenRouterPromptsPage() {
             </kbd>
             <span>to save</span>
           </div>
+        </div>
+      )}
+
+      {/* ── Audit Log Section ────────────────────────────── */}
+      <AuditLogViewer />
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  Audit Log Viewer Component                                         */
+/* ================================================================== */
+
+interface AuditEntry {
+  id: string;
+  user_id: string;
+  user_email?: string;
+  source_type: "website" | "file";
+  source_identifier: string;
+  status: string;
+  error_message: string | null;
+  fields_populated: number;
+  confidence_scores: Record<string, number> | null;
+  debug_data: Record<string, unknown> | null;
+  created_at: string;
+}
+
+function AuditLogViewer() {
+  const { data, error, isLoading } = useSWR<{ data: AuditEntry[] }>(
+    "/api/v1/admin/settings/openrouter-prompts/audit-log",
+    (url: string) => fetch(url).then((r) => r.json())
+  );
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+        <div className="flex items-center gap-2 text-sm text-zinc-500">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Loading audit logs...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+        <p className="text-sm text-red-600">Failed to load audit logs</p>
+      </div>
+    );
+  }
+
+  const entries = data?.data || [];
+
+  return (
+    <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+      <h3 className="text-lg font-semibold text-zinc-900 mb-1">
+        Auto-fill Audit Log
+      </h3>
+      <p className="text-sm text-zinc-500 mb-4">
+        Recent auto-fill queries, responses, and usage tracking. Click a row to see the full prompt and response.
+      </p>
+
+      {entries.length === 0 ? (
+        <p className="text-sm text-zinc-400 py-4 text-center">No auto-fill runs yet.</p>
+      ) : (
+        <div className="space-y-2">
+          {entries.map((entry) => {
+            const isExpanded = expandedId === entry.id;
+            let debugParsed: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | null = null;
+            if (entry.debug_data) {
+              try {
+                debugParsed = typeof entry.debug_data === "string"
+                  ? JSON.parse(entry.debug_data)
+                  : entry.debug_data as { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> };
+              } catch {
+                // ignore
+              }
+            }
+
+            return (
+              <div key={entry.id} className="border border-zinc-200 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedId(isExpanded ? null : entry.id)}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
+                >
+                  {/* Status indicator */}
+                  <span
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                      entry.status === "success"
+                        ? "bg-green-500"
+                        : entry.status === "partial"
+                        ? "bg-amber-500"
+                        : "bg-red-500"
+                    }`}
+                  />
+
+                  {/* Source type icon */}
+                  {entry.source_type === "website" ? (
+                    <Globe className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  ) : (
+                    <FileText className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  )}
+
+                  {/* Source identifier */}
+                  <span className="text-sm text-zinc-700 truncate flex-1 font-mono">
+                    {entry.source_identifier}
+                  </span>
+
+                  {/* Fields populated */}
+                  <span className="text-xs text-zinc-500 flex-shrink-0">
+                    {entry.fields_populated} fields
+                  </span>
+
+                  {/* User email */}
+                  <span className="text-xs text-zinc-400 flex-shrink-0 hidden sm:block">
+                    <User className="w-3 h-3 inline mr-1" />
+                    {entry.user_email || entry.user_id.slice(0, 8)}
+                  </span>
+
+                  {/* Timestamp */}
+                  <span className="text-xs text-zinc-400 flex-shrink-0">
+                    <Clock className="w-3 h-3 inline mr-1" />
+                    {new Date(entry.created_at).toLocaleString()}
+                  </span>
+
+                  {/* Expand icon */}
+                  {isExpanded ? (
+                    <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                  )}
+                </button>
+
+                {isExpanded && (
+                  <div className="px-4 pb-4 border-t border-zinc-100 bg-zinc-50 space-y-3">
+                    {/* Status and error */}
+                    <div className="pt-3 flex items-center gap-2">
+                      <span
+                        className={`text-xs font-medium px-2 py-0.5 rounded ${
+                          entry.status === "success"
+                            ? "bg-green-100 text-green-700"
+                            : entry.status === "partial"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {entry.status.toUpperCase()}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {entry.source_type} analysis
+                      </span>
+                    </div>
+
+                    {entry.error_message && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-xs font-medium text-red-700 mb-1">Error</p>
+                        <p className="text-xs text-red-600 font-mono whitespace-pre-wrap">
+                          {entry.error_message}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Debug: Prompt Sent */}
+                    {debugParsed?.promptSent && (
+                      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <p className="text-xs font-medium text-blue-700 mb-1">Prompt Sent (truncated)</p>
+                        <pre className="text-xs text-blue-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {debugParsed.promptSent}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* Debug: Response Received */}
+                    {debugParsed?.responseReceived && (
+                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-xs font-medium text-green-700 mb-1">AI Response (raw)</p>
+                        <pre className="text-xs text-green-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {debugParsed.responseReceived}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* Debug: Fields Extracted */}
+                    {debugParsed?.fieldsExtracted && (
+                      <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                        <p className="text-xs font-medium text-purple-700 mb-1">Fields Extracted</p>
+                        <pre className="text-xs text-purple-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                          {JSON.stringify(debugParsed.fieldsExtracted, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+
+                    {/* No debug data available */}
+                    {!debugParsed && (
+                      <p className="text-xs text-zinc-400 italic">
+                        No debug data available for this run (runs before this update won&apos;t have debug info).
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

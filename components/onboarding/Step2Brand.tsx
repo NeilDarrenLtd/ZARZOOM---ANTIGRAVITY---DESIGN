@@ -42,7 +42,18 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
 
   async function handleInvestigate() {
-    if (!data.website_url) return;
+    if (!data.website_url || !data.website_url.trim()) {
+      setUrlError("Please enter a website URL before clicking Auto-fill.");
+      return;
+    }
+    // Validate it's a proper URL
+    try {
+      new URL(data.website_url);
+    } catch {
+      setUrlError("Please enter a valid URL (e.g. https://example.com)");
+      return;
+    }
+    setUrlError("");
     setInvestigating(true);
     setWebsiteStatus("loading");
 
@@ -82,13 +93,17 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     }
   }
 
+  const [fileError, setFileError] = useState("");
+
   async function handleFileAnalyse() {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      setFileError("Please select a file before clicking Analyse.");
+      return;
+    }
+    setFileError("");
     setFileStatus("loading");
 
     try {
-      console.log("[v0] Step 1: Uploading and extracting text from file...");
-      
       // Step 1: Upload and extract text from file
       const formData = new FormData();
       formData.append("file", selectedFile);
@@ -100,32 +115,27 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
 
       if (!uploadRes.ok) {
         const errorBody = await uploadRes.json();
-        console.error("[v0] File upload failed:", errorBody);
         throw new Error(errorBody.error || "Failed to upload file");
       }
 
       const uploadBody = await uploadRes.json();
-      console.log("[v0] File uploaded successfully, extracted text length:", uploadBody.data?.extractedText?.length);
 
       if (!uploadBody.success || !uploadBody.data) {
         throw new Error("Failed to extract text from file");
       }
 
       // Step 2: Analyze the extracted text with OpenRouter
-      console.log("[v0] Step 2: Analyzing file content with AI...");
-      
       const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          storageFilePath: uploadBody.data.storagePath,
+          storageFilePath: uploadBody.data.fileId,
           extractedText: uploadBody.data.extractedText,
           fileName: selectedFile.name,
         }),
       });
 
       const analyzeBody = await analyzeRes.json();
-      console.log("[v0] File autofill response:", analyzeBody);
 
       if (!analyzeRes.ok) {
         throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
@@ -133,18 +143,16 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
 
       // Check status and reload wizard data
       if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
-        // Reload the wizard data from the database since it was updated server-side
         if (onReload) {
           await onReload();
         }
         
         setFileStatus(analyzeBody.status);
-        console.log(`[v0] File autofill ${analyzeBody.status}: ${analyzeBody.fieldsPopulated} fields populated`);
       } else {
         setFileStatus("error");
       }
     } catch (error: any) {
-      console.error("[v0] File analysis error:", error);
+      console.error("File analysis error:", error);
       setFileStatus("error");
     }
   }
@@ -176,6 +184,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
 
     setSelectedFile(file);
     setFileStatus("idle");
+    setFileError("");
   }
 
   function toggleStyle(style: string) {
@@ -311,7 +320,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
             <button
               type="button"
               onClick={handleInvestigate}
-              disabled={!data.website_url || investigating}
+              disabled={investigating}
               className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
             >
               {investigating ? (
@@ -382,7 +391,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
             <button
               type="button"
               onClick={handleFileAnalyse}
-              disabled={!selectedFile || fileStatus === "loading"}
+              disabled={fileStatus === "loading"}
               className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
             >
               {fileStatus === "loading" ? (
@@ -395,6 +404,11 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
               </span>
             </button>
           </div>
+
+          {/* File validation error */}
+          {fileError && (
+            <p className="text-xs text-red-500 mt-2">{fileError}</p>
+          )}
 
           {/* File analysis status messages */}
           {fileStatus === "success" && (
@@ -492,7 +506,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         <label className="block text-xs font-medium text-gray-700 mb-1">
           {t("onboarding.step2.articleStyles.label")}
         </label>
-        <div className="flex flex-wrap gap-2 mt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
           {ARTICLE_STYLE_OPTIONS.map((style) => {
             const isSelected = (data.article_styles ?? []).includes(style);
             return (
@@ -500,13 +514,18 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 key={style}
                 type="button"
                 onClick={() => toggleStyle(style)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                className={`px-4 py-3 rounded-lg text-left transition-all border ${
                   isSelected
-                    ? "bg-green-600 text-white border-green-600"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700"
+                    ? "bg-green-50 border-green-600 ring-2 ring-green-600 ring-opacity-20"
+                    : "bg-white border-gray-200 hover:border-green-300 hover:bg-green-50/30"
                 }`}
               >
-                {t(`onboarding.step2.articleStyles.options.${style}`)}
+                <div className={`text-sm font-medium ${isSelected ? "text-green-900" : "text-gray-900"}`}>
+                  {t(`onboarding.step2.articleStyles.options.${style}`)}
+                </div>
+                <div className={`text-xs mt-0.5 ${isSelected ? "text-green-700" : "text-gray-500"}`}>
+                  {t(`onboarding.step2.articleStyles.descriptions.${style}`)}
+                </div>
               </button>
             );
           })}

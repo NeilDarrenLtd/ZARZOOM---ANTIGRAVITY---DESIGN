@@ -236,38 +236,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Default templates
-    const defaultWebsitePrompt = `You are an AI assistant that extracts brand information from websites. 
+    // Default templates - use [WEBSITE-URL] and [FILE-NAME] placeholders
+    const defaultWebsitePrompt = `Analyze the website at [WEBSITE-URL] using the content provided below. Extract brand information and return a JSON object with these exact keys:
 
-Given a website URL and its content, extract the following information:
-1. Business name
-2. Business description (1-2 sentences)
-3. Primary brand color (hex code)
-4. Suggested article writing styles (choose from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous)
-
-Return your response as a JSON object with these exact keys:
 {
-  "business_name": "string",
-  "business_description": "string",
-  "brand_color_hex": "#RRGGBB",
-  "article_styles": ["style1", "style2"]
-}`;
+  "business_name": "The company or brand name",
+  "business_description": "A concise 1-2 sentence description of what the business does",
+  "brand_color_hex": "#RRGGBB format hex color that best represents the brand",
+  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
+  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
+  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+}
 
-    const defaultFilePrompt = `You are an AI assistant that extracts brand information from documents.
+Only include fields you are confident about. Omit any field where you cannot determine the value.`;
 
-Given a document (PDF or Word), extract the following information:
-1. Business name
-2. Business description (1-2 sentences)
-3. Primary brand color (hex code) if mentioned
-4. Suggested article writing styles (choose from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous)
+    const defaultFilePrompt = `Analyze the document named [FILE-NAME] using the content provided below. Extract brand information and return a JSON object with these exact keys:
 
-Return your response as a JSON object with these exact keys:
 {
-  "business_name": "string",
-  "business_description": "string",
-  "brand_color_hex": "#RRGGBB or null",
-  "article_styles": ["style1", "style2"]
-}`;
+  "business_name": "The company or brand name",
+  "business_description": "A concise 1-2 sentence description of what the business does",
+  "brand_color_hex": "#RRGGBB format hex color if mentioned, otherwise omit",
+  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
+  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
+  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+}
+
+Only include fields you are confident about. Omit any field where you cannot determine the value.`;
 
     // Reset to defaults
     const { data: updated, error: updateError } = await supabase

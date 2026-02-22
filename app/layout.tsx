@@ -17,6 +17,17 @@ export const metadata: Metadata = {
     "social media growth",
     "ZARZOOM",
   ],
+  icons: {
+    icon: [
+      {
+        url: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/icon.ico-Lqu0yQE6L1NjbvrXAE9myLWQN95eFv.x-icon",
+        type: "image/x-icon",
+        sizes: "any",
+      },
+    ],
+    shortcut: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/icon.ico-Lqu0yQE6L1NjbvrXAE9myLWQN95eFv.x-icon",
+    apple: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/icon.ico-Lqu0yQE6L1NjbvrXAE9myLWQN95eFv.x-icon",
+  },
   openGraph: {
     title: "ZARZOOM - Social Media Autopilot",
     description:

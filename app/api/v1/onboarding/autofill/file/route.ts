@@ -16,6 +16,7 @@ import {
   incrementAutofillUsage,
   freeBasicAnalysis,
 } from "@/lib/wizard/usageGuard";
+import { createAdminClient } from "@/lib/supabase/server";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/file
@@ -179,6 +180,7 @@ export async function POST(request: Request) {
     let analysisMissing: string[] = [];
     let analysisConfidence: Record<string, number> | undefined;
     let analysisMessage: string;
+    let analysisDebug: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | undefined;
     let isDegraded = usage.degraded;
 
     if (isDegraded) {
@@ -194,11 +196,14 @@ export async function POST(request: Request) {
           : "Basic analysis could not extract fields from this file.";
     } else {
       // ── PREMIUM: full OpenRouter analysis ──
-      const prompts = await getPromptSettings(supabase);
+      // Use admin client to read settings (RLS only allows admin reads)
+      const adminSupabase = await createAdminClient();
+      const prompts = await getPromptSettings(adminSupabase);
       const analysis = await analyzeContentWithOpenRouter(
         prompts.file_prompt_text,
         textToAnalyze,
-        "file"
+        "file",
+        fileName // pass filename for [FILE-NAME] placeholder substitution
       );
 
       if (analysis.status === "fail" || !analysis.data) {
@@ -208,7 +213,10 @@ export async function POST(request: Request) {
           "file",
           fileName,
           "fail",
-          analysis.error || analysis.message
+          analysis.error || analysis.message,
+          0,
+          undefined,
+          analysis.debug
         );
 
         return NextResponse.json(
@@ -225,33 +233,41 @@ export async function POST(request: Request) {
       analysisData = analysis.data as Record<string, unknown>;
       analysisMissing = analysis.missingFields || [];
       analysisConfidence = analysis.confidence;
-      analysisMessage = analysis.message;
+      analysisMessage = analysis.message || "";
+      analysisDebug = analysis.debug;
     }
 
     // 7. Persist results to database
+    let persistError: string | undefined;
     if (analysisData && Object.keys(analysisData).length > 0) {
-      await persistAutofillResults(
-        supabase,
-        userId,
-        analysisData as any,
-        "file",
-        fileName
-      );
+      try {
+        await persistAutofillResults(
+          supabase,
+          userId,
+          analysisData as any,
+          "file",
+          fileName
+        );
+      } catch (err) {
+        persistError = err instanceof Error ? err.message : "Unknown persist error";
+        console.error("[v0] Persist failed but analysis succeeded:", persistError);
+      }
     }
 
     // 8. Increment usage counter
     await incrementAutofillUsage(supabase, userId);
 
-    // 9. Log audit
+    // 9. Log audit with debug data
     await logAutofillAudit(
       supabase,
       userId,
       "file",
       fileName,
-      analysisStatus,
-      undefined,
+      persistError ? "partial" : analysisStatus,
+      persistError,
       analysisData ? Object.keys(analysisData).length : 0,
-      analysisConfidence
+      analysisConfidence,
+      analysisDebug
     );
 
     const duration = Date.now() - startTime;

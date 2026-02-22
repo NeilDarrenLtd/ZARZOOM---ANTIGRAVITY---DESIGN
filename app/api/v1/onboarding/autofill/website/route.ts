@@ -22,6 +22,7 @@ import {
   incrementAutofillUsage,
   freeBasicAnalysis,
 } from "@/lib/wizard/usageGuard";
+import { createAdminClient } from "@/lib/supabase/server";
 
 // ──────────────────────────────────────────────
 // POST /api/v1/onboarding/autofill/website
@@ -198,6 +199,7 @@ export async function POST(request: Request) {
     let analysisMissing: string[] = [];
     let analysisConfidence: Record<string, number> | undefined;
     let analysisMessage: string;
+    let analysisDebug: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | undefined;
     let isDegraded = usage.degraded;
 
     if (isDegraded) {
@@ -213,11 +215,14 @@ export async function POST(request: Request) {
           : "Basic analysis could not extract fields from this website.";
     } else {
       // ── PREMIUM: full OpenRouter analysis ──
-      const prompts = await getPromptSettings(supabase);
+      // Use admin client to read settings (RLS only allows admin reads)
+      const adminSupabase = await createAdminClient();
+      const prompts = await getPromptSettings(adminSupabase);
       const analysis = await analyzeContentWithOpenRouter(
         prompts.website_prompt_text,
         siteResult.combinedText,
-        "website"
+        "website",
+        url // pass URL for [WEBSITE-URL] placeholder substitution
       );
 
       if (analysis.status === "fail" || !analysis.data) {
@@ -227,7 +232,10 @@ export async function POST(request: Request) {
           "website",
           url,
           "fail",
-          analysis.error || analysis.message
+          analysis.error || analysis.message,
+          0,
+          undefined,
+          analysis.debug
         );
 
         return NextResponse.json(
@@ -245,32 +253,42 @@ export async function POST(request: Request) {
       analysisMissing = analysis.missingFields || [];
       analysisConfidence = analysis.confidence;
       analysisMessage = analysis.message;
+      // Store debug data for audit logging
+      analysisDebug = analysis.debug;
     }
 
     // 8. Persist results to database
+    let persistError: string | undefined;
     if (analysisData && Object.keys(analysisData).length > 0) {
-      await persistAutofillResults(
-        supabase,
-        userId,
-        analysisData as any,
-        "website",
-        url
-      );
+      try {
+        await persistAutofillResults(
+          supabase,
+          userId,
+          analysisData as any,
+          "website",
+          url
+        );
+      } catch (err) {
+        // Don't fail the whole request - the analysis succeeded, persist can be retried
+        persistError = err instanceof Error ? err.message : "Unknown persist error";
+        console.error("[v0] Persist failed but analysis succeeded:", persistError);
+      }
     }
 
     // 9. Increment usage counter (counts regardless of degraded/premium)
     await incrementAutofillUsage(supabase, userId);
 
-    // 10. Log audit
+    // 10. Log audit with debug data
     await logAutofillAudit(
       supabase,
       userId,
       "website",
       url,
-      analysisStatus,
-      undefined,
+      persistError ? "partial" : analysisStatus,
+      persistError,
       analysisData ? Object.keys(analysisData).length : 0,
-      analysisConfidence
+      analysisConfidence,
+      analysisDebug
     );
 
     const duration = Date.now() - startTime;
