@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "ZARZOOM",
   ],
   icons: {
-    icon: "/favicon.jpg",
+    icon: "/favicon.svg",
   },
   openGraph: {
     title: "ZARZOOM - Social Media Autopilot",
