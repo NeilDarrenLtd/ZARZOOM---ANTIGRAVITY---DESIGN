@@ -32,31 +32,50 @@ export interface PromptSettings {
   updated_by: string | null;
 }
 
-const DEFAULT_WEBSITE_PROMPT = `Analyze the website at [WEBSITE-URL] using the content provided below. Extract brand information and return a JSON object with these exact keys:
+const DEFAULT_WEBSITE_PROMPT = `You are analysing the website at [WEBSITE-URL]. The full page content is provided below.
+
+Your task is to extract as much onboarding information as possible for a content-marketing platform called Zarzoom. Return a single JSON object using ONLY the exact keys and allowed values listed below. Omit any key where you cannot determine a confident answer.
 
 {
-  "business_name": "The company or brand name",
-  "business_description": "A concise 1-2 sentence description of what the business does",
-  "brand_color_hex": "#RRGGBB format hex color that best represents the brand",
-  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
-  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
-  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+  "business_name": "string — the company, brand, or trading name found on the site",
+  "business_description": "string — a concise 1-2 sentence summary of what the business does, its products/services, and target audience",
+  "brand_color_hex": "string — the dominant brand colour in #RRGGBB hex format (look at logo, header, buttons, accent colours)",
+  "content_language": "string — 2-letter ISO 639-1 code for the primary language used on the site (e.g. en, es, fr, de, pt, zh, ja)",
+  "article_styles": ["array — choose 2-4 that best fit the brand's voice and industry. ONLY use these exact values: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews"],
+  "goals": ["array — choose 2-4 marketing goals that align with the business. ONLY use these exact values: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content"],
+  "website_or_landing_url": "string — the main website URL or landing page (use [WEBSITE-URL] if nothing more specific is found)",
+  "product_or_sales_url": "string — a dedicated product, shop, or sales page URL if one exists on the site (omit if none found)",
+  "approval_preference": "string — ONLY 'auto' or 'manual'. Choose 'auto' if the site looks like a large publisher or e-commerce brand that would want content published immediately. Choose 'manual' for smaller businesses, professional services, or regulated industries that would want to review content first. When in doubt, choose 'manual'.",
+  "additional_notes": "string — any useful context about the brand that doesn't fit the above fields (e.g. 'B2B SaaS company targeting enterprise', 'Local bakery with strong community focus', 'Luxury fashion brand with minimalist aesthetic'). Keep to 1-2 sentences."
 }
 
-Only include fields you are confident about. Omit any field where you cannot determine the value.`;
+IMPORTANT RULES:
+- For article_styles: NEVER include "let_zarzoom_decide". Only use the 8 specific style values listed above.
+- For goals: Only use the 8 specific goal values listed above. Infer goals from the site's content, calls-to-action, and business model.
+- For brand_color_hex: Extract the actual brand colour from the site design, not a generic colour. Prefer the colour used in the logo, navigation, or primary buttons.
+- Return ONLY valid JSON. No markdown, no explanation, no code fences.`;
 
-const DEFAULT_FILE_PROMPT = `Analyze the document named [FILE-NAME] using the content provided below. Extract brand information and return a JSON object with these exact keys:
+const DEFAULT_FILE_PROMPT = `You are analysing a document named [FILE-NAME]. The full document content is provided below.
+
+Your task is to extract as much onboarding information as possible for a content-marketing platform called Zarzoom. Return a single JSON object using ONLY the exact keys and allowed values listed below. Omit any key where you cannot determine a confident answer.
 
 {
-  "business_name": "The company or brand name",
-  "business_description": "A concise 1-2 sentence description of what the business does",
-  "brand_color_hex": "#RRGGBB format hex color if mentioned, otherwise omit",
-  "article_styles": ["Choose 2-3 from: professional, casual, technical, storytelling, educational, promotional, conversational, authoritative, humorous"],
-  "goals": ["Choose 2-3 from: brand_awareness, lead_gen, seo, thought_leadership, drive_sales, community_building, educate_audience, social_growth"],
-  "content_language": "2-letter ISO language code (e.g. en, es, fr)"
+  "business_name": "string — the company, brand, or trading name found in the document",
+  "business_description": "string — a concise 1-2 sentence summary of what the business does",
+  "brand_color_hex": "string — brand colour in #RRGGBB hex format if explicitly mentioned",
+  "content_language": "string — 2-letter ISO 639-1 code for the language used in the document",
+  "article_styles": ["array — choose 2-4 from: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews"],
+  "goals": ["array — choose 2-4 from: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content"],
+  "website_or_landing_url": "string — any website URL mentioned in the document",
+  "product_or_sales_url": "string — any product or sales page URL mentioned",
+  "approval_preference": "string — 'auto' or 'manual'. Default to 'manual' unless context strongly suggests otherwise.",
+  "additional_notes": "string — any useful brand context not captured above (1-2 sentences)"
 }
 
-Only include fields you are confident about. Omit any field where you cannot determine the value.`;
+IMPORTANT RULES:
+- For article_styles: NEVER include "let_zarzoom_decide". Only use the 8 specific style values listed.
+- For goals: Only use the 8 specific goal values listed.
+- Return ONLY valid JSON. No markdown, no explanation, no code fences.`;
 
 export async function getPromptSettings(
   supabase: SupabaseClient
@@ -156,7 +175,7 @@ export async function analyzeContentWithOpenRouter(
         messages: [
           {
             role: "system",
-            content: "You are a brand analysis AI. Extract structured information and respond with ONLY valid JSON. Map your findings to these exact field names for the database: business_name, business_description, brand_color_hex, article_styles (array of strings like professional/casual/technical/storytelling/educational/promotional/conversational/authoritative/humorous), goals (array of strings like brand_awareness/lead_gen/seo/thought_leadership/drive_sales/community_building/educate_audience/social_growth), content_language (2-letter ISO code like en/es/fr).",
+            content: "You are a brand analysis AI for Zarzoom, a content-marketing platform. Extract structured information from websites and documents. Respond with ONLY valid JSON, no markdown fences. Use these exact field names: business_name (string), business_description (string), brand_color_hex (#RRGGBB string), content_language (2-letter ISO code), article_styles (array from: how_to_guides, listicles, opinion_pieces, case_studies, news_commentary, tutorials, interviews, product_reviews), goals (array from: increase_website_traffic, get_more_subscribers_leads, promote_product_or_service, increase_sales, build_brand_authority, improve_seo, educate_audience, generate_social_content), website_or_landing_url (string), product_or_sales_url (string), approval_preference ('auto' or 'manual'), additional_notes (string).",
           },
           {
             role: "user",
@@ -217,20 +236,50 @@ export async function analyzeContentWithOpenRouter(
     const allowedFields = [
       "business_name", "business_description", "brand_color_hex",
       "article_styles", "goals", "content_language",
-      "website_url", "logo_url", "additional_notes",
+      "website_or_landing_url", "product_or_sales_url",
+      "approval_preference", "additional_notes",
     ];
+
+    // Valid enum values for validation
+    const validArticleStyles = [
+      "how_to_guides", "listicles", "opinion_pieces", "case_studies",
+      "news_commentary", "tutorials", "interviews", "product_reviews",
+    ];
+    const validGoals = [
+      "increase_website_traffic", "get_more_subscribers_leads",
+      "promote_product_or_service", "increase_sales",
+      "build_brand_authority", "improve_seo",
+      "educate_audience", "generate_social_content",
+    ];
+    const validApproval = ["auto", "manual"];
+
     const normalized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(parsed)) {
       const normalizedKey = key.toLowerCase().replace(/\s+/g, "_");
-      if (allowedFields.includes(normalizedKey) && value != null && value !== "") {
+      if (!allowedFields.includes(normalizedKey) || value == null || value === "") continue;
+
+      // Validate array fields against allowed enums
+      if (normalizedKey === "article_styles" && Array.isArray(value)) {
+        const filtered = value.map(String).filter(v => validArticleStyles.includes(v));
+        if (filtered.length > 0) normalized[normalizedKey] = filtered;
+      } else if (normalizedKey === "goals" && Array.isArray(value)) {
+        const filtered = value.map(String).filter(v => validGoals.includes(v));
+        if (filtered.length > 0) normalized[normalizedKey] = filtered;
+      } else if (normalizedKey === "approval_preference") {
+        const val = String(value).toLowerCase();
+        if (validApproval.includes(val)) normalized[normalizedKey] = val;
+      } else if (normalizedKey === "brand_color_hex") {
+        // Ensure it's a valid hex colour
+        const hex = String(value);
+        if (/^#[0-9A-Fa-f]{6}$/.test(hex)) normalized[normalizedKey] = hex;
+      } else {
         normalized[normalizedKey] = value;
       }
     }
 
     const fieldsPopulated = Object.keys(normalized).length;
-    const missingFields = allowedFields
-      .filter(f => !normalized[f])
-      .filter(f => ["business_name", "business_description", "brand_color_hex", "article_styles", "goals"].includes(f));
+    const coreFields = ["business_name", "business_description", "brand_color_hex", "article_styles", "goals"];
+    const missingFields = coreFields.filter(f => !normalized[f]);
 
     console.log(`[v0] OpenRouter analysis complete, extracted ${fieldsPopulated} fields, missing: ${missingFields.join(", ")}`);
 
@@ -271,62 +320,64 @@ export async function persistAutofillResults(
   _source: "website" | "file",
   _sourceUrl?: string
 ): Promise<void> {
-  // Use admin client to bypass RLS restrictions on onboarding_profiles
+  // Use admin client to bypass RLS
   const adminSb = await createAdminClient();
 
-  const allowedColumns = [
-    "business_name", "business_description", "brand_color_hex",
-    "article_styles", "goals", "content_language",
-    "logo_url", "additional_notes",
-  ];
+  // Extract and validate each field
+  const getString = (key: string): string | null => {
+    const v = data[key];
+    if (v == null || v === "") return null;
+    return typeof v === "string" ? v : String(v);
+  };
 
-  const arrayColumns = ["article_styles", "goals"];
-
-  const cleanData: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(data)) {
-    if (!allowedColumns.includes(key) || value == null || value === "") continue;
-
-    if (arrayColumns.includes(key)) {
-      let arr: string[];
-      if (Array.isArray(value)) {
-        arr = value.map(String).filter(Boolean);
-      } else if (typeof value === "string") {
-        arr = value.split(",").map((s: string) => s.trim()).filter(Boolean);
-      } else {
-        continue;
-      }
-      if (arr.length > 0) {
-        cleanData[key] = arr;
-      }
-    } else {
-      cleanData[key] = typeof value === "string" ? value : String(value);
+  const getArray = (key: string): string[] | null => {
+    const v = data[key];
+    if (v == null) return null;
+    if (Array.isArray(v)) {
+      const arr = v.map(String).filter(Boolean);
+      return arr.length > 0 ? arr : null;
     }
-  }
+    if (typeof v === "string" && v.length > 0) {
+      const arr = v.split(",").map((s: string) => s.trim()).filter(Boolean);
+      return arr.length > 0 ? arr : null;
+    }
+    return null;
+  };
 
-  if (Object.keys(cleanData).length === 0) {
+  const rpcParams = {
+    p_user_id: userId,
+    p_business_name: getString("business_name"),
+    p_business_description: getString("business_description"),
+    p_brand_color_hex: getString("brand_color_hex"),
+    p_article_styles: getArray("article_styles"),
+    p_goals: getArray("goals"),
+    p_content_language: getString("content_language"),
+    p_website_or_landing_url: getString("website_or_landing_url"),
+    p_product_or_sales_url: getString("product_or_sales_url"),
+    p_approval_preference: getString("approval_preference"),
+    p_additional_notes: getString("additional_notes"),
+  };
+
+  // Count non-null fields (excluding user_id)
+  const fieldCount = Object.entries(rpcParams)
+    .filter(([k, v]) => k !== "p_user_id" && v != null).length;
+
+  if (fieldCount === 0) {
     console.warn("[v0] No valid fields to persist from autofill results");
     return;
   }
 
-  console.log("[v0] Persisting autofill fields:", Object.keys(cleanData).join(", "));
-  console.log("[v0] Persist data sample:", JSON.stringify(cleanData).slice(0, 500));
+  console.log(`[v0] Persisting ${fieldCount} autofill fields via RPC for user ${userId}`);
 
-  // Use UPDATE instead of UPSERT to avoid NOT NULL column issues
-  const { error: updateError } = await adminSb
-    .from("onboarding_profiles")
-    .update({
-      ...cleanData,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("user_id", userId);
+  // Use the dedicated RPC function which handles text[] arrays natively
+  const { error } = await adminSb.rpc("update_onboarding_autofill", rpcParams);
 
-  if (updateError) {
-    console.error("[v0] Failed to update onboarding_profiles:", updateError);
-    console.error("[v0] Attempted clean data:", JSON.stringify(cleanData));
-    throw new Error(`Failed to save results: ${updateError.message}`);
+  if (error) {
+    console.error("[v0] RPC update_onboarding_autofill failed:", error);
+    throw new Error(`Failed to save results: ${error.message}`);
   }
 
-  console.log(`[v0] Persisted ${Object.keys(cleanData).length} autofill fields for user ${userId}`);
+  console.log(`[v0] Successfully persisted ${fieldCount} autofill fields for user ${userId}`);
 }
 
 // ──────────────────────────────────────────────
