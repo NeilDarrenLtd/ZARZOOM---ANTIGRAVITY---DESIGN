@@ -1,9 +1,8 @@
+import { extractText, getDocumentProxy } from "unpdf";
+
 // File validation constants
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-export const ALLOWED_MIME_TYPES = [
-  "application/pdf",
-  "text/plain",
-];
+export const ALLOWED_MIME_TYPES = ["application/pdf", "text/plain"];
 
 export interface ExtractedContent {
   text: string;
@@ -36,7 +35,6 @@ export function validateFile(file: File): FileValidation {
     };
   }
 
-  // Also accept .txt files that might have generic mime type
   const isTxt = file.name.toLowerCase().endsWith(".txt");
   const isPdf = file.name.toLowerCase().endsWith(".pdf");
 
@@ -66,38 +64,37 @@ function extractFromText(buffer: Buffer): ExtractedContent {
 }
 
 /**
- * Extract text from a PDF buffer using pdf-parse
- * Uses the internal module path to avoid the known entry-point bug
+ * Extract text from a PDF buffer using unpdf (built on pdf.js, works in serverless)
  */
-async function extractFromPdf(buffer: Buffer): Promise<ExtractedContent | ExtractionError> {
+async function extractFromPdf(
+  buffer: Buffer
+): Promise<ExtractedContent | ExtractionError> {
   try {
-    // pdf-parse default import triggers a test-file bug in some environments.
-    // Dynamic import via a variable avoids the exports-field restriction at build time.
-    const moduleName = "pdf-parse";
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require(moduleName);
-    const data = await pdfParse(buffer);
+    const pdf = await getDocumentProxy(new Uint8Array(buffer));
+    const { totalPages, text } = await extractText(pdf, { mergePages: true });
 
-    if (!data.text || data.text.trim().length === 0) {
+    if (!text || text.trim().length === 0) {
       return {
-        error: "Could not extract text from PDF. The file may be image-based or empty.",
+        error:
+          "Could not extract text from PDF. The file may be image-based or empty.",
         code: "NO_TEXT_EXTRACTED",
       };
     }
 
     return {
-      text: data.text.trim(),
+      text: text.trim(),
       metadata: {
         fileType: "application/pdf",
-        originalLength: data.text.length,
+        originalLength: text.length,
         truncated: false,
-        pageCount: data.numpages,
+        pageCount: totalPages,
       },
     };
-  } catch (err: any) {
-    console.error("[fileExtractor] PDF parse error:", err);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[fileExtractor] PDF parse error:", message);
     return {
-      error: `Failed to parse PDF: ${err?.message || "Unknown error"}`,
+      error: `Failed to parse PDF: ${message}`,
       code: "PDF_PARSE_ERROR",
     };
   }
@@ -112,8 +109,11 @@ export async function extractTextFromFile(
   fileName: string,
   mimeType: string
 ): Promise<ExtractedContent | ExtractionError> {
-  const isPdf = mimeType === "application/pdf" || fileName.toLowerCase().endsWith(".pdf");
-  const isTxt = mimeType === "text/plain" || fileName.toLowerCase().endsWith(".txt");
+  const isPdf =
+    mimeType === "application/pdf" ||
+    fileName.toLowerCase().endsWith(".pdf");
+  const isTxt =
+    mimeType === "text/plain" || fileName.toLowerCase().endsWith(".txt");
 
   let result: ExtractedContent | ExtractionError;
 
