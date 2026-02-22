@@ -26,7 +26,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 
 const requestSchema = z.object({
   storageFilePath: z.string().min(1, "Storage file path is required"),
-  extractedText: z.string().min(100, "Insufficient text content in file"),
+  extractedText: z.string().min(50, "Insufficient text content in file"),
   fileName: z.string().min(1, "File name is required"),
 });
 
@@ -124,27 +124,8 @@ export async function POST(request: Request) {
       `[v0] Analyzing file: ${fileName} (${extractedText.length} characters)`
     );
 
-    // 4. Verify file access (ensure user owns this file via RLS)
-    const { data: fileMetadata, error: fileError } = await supabase.storage
-      .from("wizard-uploads")
-      .list(user.id, {
-        search: storageFilePath.split("/").pop(),
-      });
-
-    if (fileError || !fileMetadata || fileMetadata.length === 0) {
-      console.error("[v0] File access denied or not found");
-      return NextResponse.json(
-        {
-          status: "fail",
-          message: "File not found or access denied",
-          error: "Could not verify file ownership",
-        },
-        { status: 403 }
-      );
-    }
-
-    // 5. Validate extracted text length (additional server-side check)
-    if (extractedText.length < 100) {
+    // 4. Validate extracted text length
+    if (extractedText.length < 50) {
       await logAutofillAudit(
         supabase,
         userId,

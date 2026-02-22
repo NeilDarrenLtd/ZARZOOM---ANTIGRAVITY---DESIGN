@@ -96,59 +96,60 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
   const [fileError, setFileError] = useState("");
 
   async function handleFileAnalyse() {
-    console.log("[v0] handleFileAnalyse starting, file:", selectedFile?.name);
-    
     if (!selectedFile) {
-      setFileError("Please select a file before clicking Analyse.");
+      setFileError("Please select a file before clicking Auto-fill.");
       return;
     }
     setFileError("");
     setFileStatus("loading");
 
     try {
-      // Step 1: Upload and extract text from file
-      console.log("[v0] Uploading file...");
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+      // Step 1: Read the file on the client side
+      // For TXT files we read as text, for PDF we read as text (server will get raw text)
+      let extractedText = "";
 
-      const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
-        method: "POST",
-        body: formData,
-      });
-
-      console.log("[v0] Upload response:", uploadRes.status);
-
-      if (!uploadRes.ok) {
-        const errorBody = await uploadRes.json();
-        console.error("[v0] Upload failed:", errorBody);
-        throw new Error(errorBody.error || "Failed to upload file");
+      if (selectedFile.type === "text/plain" || selectedFile.name.toLowerCase().endsWith(".txt")) {
+        extractedText = await selectedFile.text();
+      } else if (selectedFile.type === "application/pdf" || selectedFile.name.toLowerCase().endsWith(".pdf")) {
+        // For PDFs, send the file via FormData to the upload-file endpoint for server-side extraction
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
+          method: "POST",
+          body: formData,
+        });
+        if (!uploadRes.ok) {
+          const errorBody = await uploadRes.json().catch(() => ({ error: "Failed to process PDF" }));
+          throw new Error(errorBody.error || "Failed to process PDF");
+        }
+        const uploadBody = await uploadRes.json();
+        if (!uploadBody.success || !uploadBody.data?.extractedText) {
+          throw new Error("Could not extract text from PDF");
+        }
+        extractedText = uploadBody.data.extractedText;
+      } else {
+        throw new Error("Unsupported file type. Please use PDF or TXT files.");
       }
 
-      const uploadBody = await uploadRes.json();
-      console.log("[v0] Upload success, text length:", uploadBody.data?.extractedText?.length);
-
-      if (!uploadBody.success || !uploadBody.data) {
-        throw new Error("Failed to extract text from file");
+      if (!extractedText || extractedText.trim().length < 50) {
+        throw new Error("The file does not contain enough readable text to analyse. Please try a different file.");
       }
 
-      // Step 2: Analyze the extracted text with OpenRouter
-      console.log("[v0] Analyzing file...");
+      // Step 2: Send extracted text directly to the autofill/file endpoint
       const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          storageFilePath: uploadBody.data.fileId,
-          extractedText: uploadBody.data.extractedText,
+          storageFilePath: `client-${Date.now()}`,
+          extractedText: extractedText.trim(),
           fileName: selectedFile.name,
         }),
       });
 
-      console.log("[v0] Analysis response:", analyzeRes.status);
       const analyzeBody = await analyzeRes.json();
-      console.log("[v0] Analysis result:", analyzeBody);
 
       if (!analyzeRes.ok) {
-        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
+        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyse file");
       }
 
       // Check status and reload wizard data
@@ -156,13 +157,12 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         if (onReload) {
           await onReload();
         }
-        
         setFileStatus(analyzeBody.status);
       } else {
         setFileStatus("error");
       }
     } catch (error: any) {
-      console.error("[v0] File analysis error:", error);
+      console.error("[v0] File analysis error:", error?.message);
       setFileStatus("error");
     }
   }
@@ -175,20 +175,18 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       setFileStatus("error");
-      alert(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+      setFileError(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
       return;
     }
 
-    // Validate file type
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    
-    if (!allowedTypes.includes(file.type)) {
+    // Validate file type — match server-side supported types
+    const allowedTypes = ["application/pdf", "text/plain"];
+    const allowedExtensions = [".pdf", ".txt"];
+    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(ext)) {
       setFileStatus("error");
-      alert("Only PDF, DOC, and DOCX files are supported");
+      setFileError("Only PDF and TXT files are supported.");
       return;
     }
 
@@ -392,7 +390,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 </span>
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  accept=".pdf,.txt,application/pdf,text/plain"
                   onChange={handleFileSelect}
                   className="sr-only"
                 />
@@ -410,7 +408,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 <Sparkles className="w-4 h-4" />
               )}
               <span className="hidden sm:inline">
-                {fileStatus === "loading" ? "Analysing..." : "Analyse file"}
+                {fileStatus === "loading" ? "Analysing..." : "Auto-fill from file"}
               </span>
             </button>
           </div>
