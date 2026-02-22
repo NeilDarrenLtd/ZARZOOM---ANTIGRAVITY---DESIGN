@@ -619,7 +619,7 @@ export default function ProfilePage() {
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   {t("onboarding.step2.articleStyles.label")}
                 </label>
-                <div className="flex flex-wrap gap-2 mt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {ARTICLE_STYLE_OPTIONS.map((style) => {
                     const isSelected = (data.article_styles ?? []).includes(style);
                     return (
@@ -627,13 +627,18 @@ export default function ProfilePage() {
                         key={style}
                         type="button"
                         onClick={() => toggleStyle(style)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${
+                        className={`px-4 py-3 rounded-lg text-left transition-all border ${
                           isSelected
-                            ? "bg-green-600 text-white border-green-600"
-                            : "bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700"
+                            ? "bg-green-50 border-green-600 ring-2 ring-green-600 ring-opacity-20"
+                            : "bg-white border-gray-200 hover:border-green-300 hover:bg-green-50/30"
                         }`}
                       >
-                        {t(`onboarding.step2.articleStyles.options.${style}`)}
+                        <div className={`text-sm font-medium ${isSelected ? "text-green-900" : "text-gray-900"}`}>
+                          {t(`onboarding.step2.articleStyles.options.${style}`)}
+                        </div>
+                        <div className={`text-xs mt-0.5 ${isSelected ? "text-green-700" : "text-gray-500"}`}>
+                          {t(`onboarding.step2.articleStyles.descriptions.${style}`)}
+                        </div>
                       </button>
                     );
                   })}
