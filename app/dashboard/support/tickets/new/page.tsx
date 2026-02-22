@@ -220,7 +220,7 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.category.none") || "Select a category"}</option>
+              <option value="">{t("support.category.none") || "Not specified"}</option>
               <option value="account_login">{t("support.category.account_login") || "Account & Login"}</option>
               <option value="billing_subscription">{t("support.category.billing_subscription") || "Billing & Subscription"}</option>
               <option value="social_connections">{t("support.category.social_connections") || "Social Connections"}</option>
@@ -245,7 +245,7 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.priority.none") || "Select priority"}</option>
+              <option value="">{t("support.priority.none") || "Not specified"}</option>
               <option value="urgent">{t("support.priority.urgent") || "Urgent – System Blocking"}</option>
               <option value="high">{t("support.priority.high") || "High – Major Issue"}</option>
               <option value="normal">{t("support.priority.normal") || "Normal – Standard"}</option>
