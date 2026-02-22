@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/server";
-import { requireAuthenticatedUser } from "@/lib/api/auth-helpers";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export async function GET() {
   try {
-    const { user } = await requireAuthenticatedUser();
-    const adminSb = await createAdminClient();
+    // Check admin auth
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    // Check admin
-    const { data: profile } = await adminSb
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: profile } = await supabase
       .from("profiles")
       .select("is_admin")
       .eq("id", user.id)
@@ -18,21 +23,11 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Fetch recent audit logs with user email
-    const { data: logs, error } = await adminSb
+    // Use admin client to read all audit records
+    const adminSupabase = await createAdminClient();
+    const { data: auditRows, error } = await adminSupabase
       .from("wizard_autofill_audit")
-      .select(`
-        id,
-        user_id,
-        source_type,
-        source_identifier,
-        status,
-        error_message,
-        fields_populated,
-        confidence_scores,
-        debug_data,
-        created_at
-      `)
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(50);
 
@@ -41,29 +36,30 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Enrich with user emails
-    const userIds = [...new Set((logs || []).map((l: any) => l.user_id))];
-    const { data: users } = await adminSb
-      .from("profiles")
-      .select("id, display_name, email")
-      .in("id", userIds);
+    // Enrich with user emails from profiles table
+    const userIds = [...new Set((auditRows || []).map((r: any) => r.user_id))];
+    let emailMap: Record<string, string> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await adminSupabase
+        .from("profiles")
+        .select("id, email")
+        .in("id", userIds);
+      if (profiles) {
+        emailMap = Object.fromEntries(profiles.map((p: any) => [p.id, p.email]));
+      }
+    }
 
-    const userMap = new Map((users || []).map((u: any) => [u.id, u]));
+    const enriched = (auditRows || []).map((row: any) => ({
+      ...row,
+      profiles: { email: emailMap[row.user_id] || null },
+    }));
 
-    const enrichedLogs = (logs || []).map((log: any) => {
-      const u = userMap.get(log.user_id);
-      return {
-        ...log,
-        user_email: u?.email || u?.display_name || log.user_id,
-        debug_data: typeof log.debug_data === "string"
-          ? JSON.parse(log.debug_data)
-          : log.debug_data,
-      };
-    });
-
-    return NextResponse.json({ data: enrichedLogs });
-  } catch (err: any) {
-    console.error("[v0] Audit log fetch error:", err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ data: enriched });
+  } catch (err) {
+    console.error("[v0] Audit log API error:", err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Unknown error" },
+      { status: 500 }
+    );
   }
 }
