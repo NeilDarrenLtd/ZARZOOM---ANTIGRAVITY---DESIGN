@@ -11,12 +11,20 @@ import {
   RATE_LIMIT_CONFIGS,
 } from "@/lib/security/rateLimiter";
 
+// Allow up to 10MB file uploads
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 /**
  * POST /api/v1/onboarding/upload-file
  * Receive a file (PDF or TXT), extract text in memory, and return it.
  * No file is stored — the text is used for AI analysis only.
  */
 export async function POST(req: NextRequest) {
+  console.log("[v0] upload-file: Route handler started");
   try {
     // Authenticate user
     const supabase = await createClient();

@@ -165,20 +165,18 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     const MAX_SIZE = 10 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
       setFileStatus("error");
-      alert(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+      setFileError(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
       return;
     }
 
-    // Validate file type
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    
-    if (!allowedTypes.includes(file.type)) {
+    // Validate file type — match server-side supported types
+    const allowedTypes = ["application/pdf", "text/plain"];
+    const allowedExtensions = [".pdf", ".txt"];
+    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(ext)) {
       setFileStatus("error");
-      alert("Only PDF, DOC, and DOCX files are supported");
+      setFileError("Only PDF and TXT files are supported.");
       return;
     }
 
@@ -382,7 +380,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 </span>
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  accept=".pdf,.txt,application/pdf,text/plain"
                   onChange={handleFileSelect}
                   className="sr-only"
                 />

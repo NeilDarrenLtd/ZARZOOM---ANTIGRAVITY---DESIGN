@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 
+/**
+ * GET /api/v1/admin/settings/openrouter-prompts/audit-log
+ * Returns recent autofill audit records for admin view.
+ */
 export async function GET() {
   try {
-    // Check admin auth
     const supabase = await createClient();
     const {
       data: { user },
@@ -23,7 +26,6 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Use admin client to read all audit records
     const adminSupabase = await createAdminClient();
     const { data: auditRows, error } = await adminSupabase
       .from("wizard_autofill_audit")
@@ -32,12 +34,11 @@ export async function GET() {
       .limit(50);
 
     if (error) {
-      console.error("[v0] Failed to fetch audit logs:", error);
+      console.error("Failed to fetch audit logs:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // Enrich with user emails from profiles table
-    const userIds = [...new Set((auditRows || []).map((r: any) => r.user_id))];
+    const userIds = [...new Set((auditRows || []).map((r: Record<string, unknown>) => r.user_id as string))];
     let emailMap: Record<string, string> = {};
     if (userIds.length > 0) {
       const { data: profiles } = await adminSupabase
@@ -45,18 +46,20 @@ export async function GET() {
         .select("id, email")
         .in("id", userIds);
       if (profiles) {
-        emailMap = Object.fromEntries(profiles.map((p: any) => [p.id, p.email]));
+        emailMap = Object.fromEntries(
+          profiles.map((p: Record<string, unknown>) => [p.id as string, p.email as string])
+        );
       }
     }
 
-    const enriched = (auditRows || []).map((row: any) => ({
+    const enriched = (auditRows || []).map((row: Record<string, unknown>) => ({
       ...row,
-      profiles: { email: emailMap[row.user_id] || null },
+      profiles: { email: emailMap[row.user_id as string] || null },
     }));
 
     return NextResponse.json({ data: enriched });
   } catch (err) {
-    console.error("[v0] Audit log API error:", err);
+    console.error("Audit log API error:", err);
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Unknown error" },
       { status: 500 }
