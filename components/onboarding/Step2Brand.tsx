@@ -135,7 +135,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          storageFilePath: uploadBody.data.storagePath,
+          storageFilePath: uploadBody.data.fileId,
           extractedText: uploadBody.data.extractedText,
           fileName: selectedFile.name,
         }),
