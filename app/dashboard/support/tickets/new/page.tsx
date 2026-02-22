@@ -75,6 +75,13 @@ export default function CreateTicketPage() {
     setError(null);
 
     try {
+      console.log("[v0] Creating ticket with data:", {
+        subject: formData.subject,
+        category: formData.category,
+        priority: formData.priority,
+        description: formData.description.substring(0, 100),
+      });
+      
       // Step 1: Create ticket with initial comment
       const ticketRes = await fetch("/api/v1/support/tickets", {
         method: "POST",
@@ -87,12 +94,17 @@ export default function CreateTicketPage() {
         }),
       });
 
+      console.log("[v0] Ticket response status:", ticketRes.status);
+
       if (!ticketRes.ok) {
         const errorData = await ticketRes.json();
+        console.log("[v0] Error response:", errorData);
         throw new Error(errorData.message || "Failed to create ticket");
       }
 
       const ticketData = await ticketRes.json();
+      console.log("[v0] Ticket data received:", ticketData);
+      
       const ticketId = ticketData.ticket.id;
       const firstCommentId = ticketData.ticket.first_comment_id;
 
