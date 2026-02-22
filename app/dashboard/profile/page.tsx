@@ -557,7 +557,7 @@ export default function ProfilePage() {
                       <Sparkles className="w-4 h-4" />
                     )}
                     <span className="hidden sm:inline">
-                      {fileStatus === "loading" ? "Analysing..." : "Analyse file"}
+                      {fileStatus === "loading" ? "Analysing..." : "Auto-fill from file"}
                     </span>
                   </button>
                 </div>
