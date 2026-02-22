@@ -224,37 +224,51 @@ export default function ProfilePage() {
 
   // ── Analyse file (matches wizard) ──────────────────────
   async function handleFileAnalyse() {
-    if (!selectedFile) return;
+    if (!selectedFile) {
+      setFileStatus("error");
+      return;
+    }
     setFileStatus("loading");
 
     try {
-      // Step 1: Upload and extract text
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+      // Step 1: Read the file on the client side
+      // For TXT files we read as text, for PDF we read as text (server will get raw text)
+      let extractedText = "";
 
-      const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!uploadRes.ok) {
-        const errorBody = await uploadRes.json();
-        throw new Error(errorBody.error || "Failed to upload file");
+      if (selectedFile.type === "text/plain" || selectedFile.name.toLowerCase().endsWith(".txt")) {
+        extractedText = await selectedFile.text();
+      } else if (selectedFile.type === "application/pdf" || selectedFile.name.toLowerCase().endsWith(".pdf")) {
+        // For PDFs, send the file via FormData to the upload-file endpoint for server-side extraction
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
+          method: "POST",
+          body: formData,
+        });
+        if (!uploadRes.ok) {
+          const errorBody = await uploadRes.json().catch(() => ({ error: "Failed to process PDF" }));
+          throw new Error(errorBody.error || "Failed to process PDF");
+        }
+        const uploadBody = await uploadRes.json();
+        if (!uploadBody.success || !uploadBody.data?.extractedText) {
+          throw new Error("Could not extract text from PDF");
+        }
+        extractedText = uploadBody.data.extractedText;
+      } else {
+        throw new Error("Unsupported file type. Please use PDF or TXT files.");
       }
 
-      const uploadBody = await uploadRes.json();
-
-      if (!uploadBody.success || !uploadBody.data) {
-        throw new Error("Failed to extract text from file");
+      if (!extractedText || extractedText.trim().length < 50) {
+        throw new Error("The file does not contain enough readable text to analyse. Please try a different file.");
       }
 
-      // Step 2: Analyze with OpenRouter
+      // Step 2: Send extracted text directly to the autofill/file endpoint
       const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          storageFilePath: uploadBody.data.storagePath,
-          extractedText: uploadBody.data.extractedText,
+          storageFilePath: `client-${Date.now()}`,
+          extractedText: extractedText.trim(),
           fileName: selectedFile.name,
         }),
       });
@@ -262,7 +276,7 @@ export default function ProfilePage() {
       const analyzeBody = await analyzeRes.json();
 
       if (!analyzeRes.ok) {
-        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
+        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyse file");
       }
 
       if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
@@ -271,7 +285,8 @@ export default function ProfilePage() {
       } else {
         setFileStatus("error");
       }
-    } catch {
+    } catch (error: any) {
+      console.error("[v0] File analysis error:", error?.message);
       setFileStatus("error");
     }
   }
