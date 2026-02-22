@@ -1,21 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <!-- Rocket body -->
-  <path d="M 128 20 L 145 80 L 145 180 Q 128 200 128 200 Q 128 200 111 180 L 111 80 Z" fill="#7FFF00" stroke="#5FCC00" stroke-width="2"/>
-  
-  <!-- Rocket nose cone -->
-  <path d="M 128 20 L 125 35 L 131 35 Z" fill="#9FFF00"/>
-  
-  <!-- Window -->
-  <circle cx="128" cy="80" r="12" fill="none" stroke="#5FCC00" stroke-width="2"/>
-  <circle cx="128" cy="80" r="8" fill="#E0FFFF" opacity="0.6"/>
-  
-  <!-- Left fin -->
-  <path d="M 111 130 L 80 160 L 111 140 Z" fill="#5FCC00"/>
-  
-  <!-- Right fin -->
-  <path d="M 145 130 L 176 160 L 145 140 Z" fill="#5FCC00"/>
-  
-  <!-- Flame -->
-  <path d="M 120 200 L 115 240 L 128 220 L 141 240 L 136 200 Z" fill="#FF6B00" opacity="0.8"/>
-  <path d="M 122 205 L 120 225 L 128 215 L 136 225 L 134 205 Z" fill="#FFD700" opacity="0.9"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <image href="zarzoom-favicon.png" width="512" height="512"/>
 </svg>
