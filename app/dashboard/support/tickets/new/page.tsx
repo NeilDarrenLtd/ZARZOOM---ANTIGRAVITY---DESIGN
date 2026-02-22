@@ -239,11 +239,10 @@ export default function CreateTicketPage() {
               onChange={handleInputChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
-              <option value="">{t("support.priority.none")}</option>
-              <option value="low">{t("support.priority.low")}</option>
+              <option value="">{t("support.priority.none") || "Select priority"}</option>
+              <option value="low">{t("support.priority.low") || "Low"}</option>
               <option value="medium">{t("support.priority.medium") || "Medium"}</option>
-              <option value="high">{t("support.priority.high")}</option>
-              <option value="urgent">{t("support.priority.urgent")}</option>
+              <option value="high">{t("support.priority.high") || "High"}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.priorityHelp")}</p>
           </div>

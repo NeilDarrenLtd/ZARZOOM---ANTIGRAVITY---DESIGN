@@ -12,15 +12,11 @@ export const supportStatusEnum = z.enum([
   "closed",
 ]);
 
-export const supportPriorityEnum = z.enum(["low", "medium", "high", "urgent"]);
+export const supportPriorityEnum = z.enum(["low", "medium", "high"]);
 
 export const supportCategoryEnum = z.enum([
-  "technical",
-  "billing",
-  "feature_request",
-  "bug_report",
+  "bug_fix",
   "general",
-  "other",
 ]);
 
 export const authorRoleEnum = z.enum(["user", "admin", "system"]);
