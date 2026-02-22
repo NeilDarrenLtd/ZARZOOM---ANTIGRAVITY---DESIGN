@@ -71,9 +71,11 @@ function extractFromText(buffer: Buffer): ExtractedContent {
  */
 async function extractFromPdf(buffer: Buffer): Promise<ExtractedContent | ExtractionError> {
   try {
-    // Use the internal module to avoid the "Object.defineProperty" entry-point bug
+    // pdf-parse default import triggers a test-file bug in some environments.
+    // Dynamic import via a variable avoids the exports-field restriction at build time.
+    const moduleName = "pdf-parse";
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require("pdf-parse/lib/pdf-parse.js");
+    const pdfParse = require(moduleName);
     const data = await pdfParse(buffer);
 
     if (!data.text || data.text.trim().length === 0) {
@@ -95,7 +97,7 @@ async function extractFromPdf(buffer: Buffer): Promise<ExtractedContent | Extrac
   } catch (err: any) {
     console.error("[fileExtractor] PDF parse error:", err);
     return {
-      error: "Failed to read PDF. Please ensure the file is not corrupted.",
+      error: `Failed to parse PDF: ${err?.message || "Unknown error"}`,
       code: "PDF_PARSE_ERROR",
     };
   }
