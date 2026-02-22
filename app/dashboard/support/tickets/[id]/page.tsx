@@ -49,6 +49,9 @@ export default function TicketDetailPage() {
   const [commentFiles, setCommentFiles] = useState<File[]>([]);
   const [sendingComment, setSendingComment] = useState(false);
   const [imageModalUrl, setImageModalUrl] = useState<string | null>(null);
+  const [showCloseDialog, setShowCloseDialog] = useState(false);
+  const [closeReason, setCloseReason] = useState("");
+  const [closingTicket, setClosingTicket] = useState(false);
 
   useEffect(() => {
     fetchTicket();
@@ -165,6 +168,36 @@ export default function TicketDetailPage() {
     }
   };
 
+  const handleCloseTicket = async () => {
+    if (closingTicket) return;
+    setClosingTicket(true);
+
+    try {
+      const res = await fetch(`/api/v1/support/tickets/${ticketId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "closed",
+          close_reason: closeReason.trim() || undefined,
+        }),
+      });
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error?.message || "Failed to close ticket");
+      }
+
+      // Refresh ticket data
+      await fetchTicket();
+      setShowCloseDialog(false);
+      setCloseReason("");
+    } catch (err: any) {
+      alert(err.message || "Failed to close ticket");
+    } finally {
+      setClosingTicket(false);
+    }
+  };
+
   const getStatusBadgeClass = (status: string) => {
     const classes = {
       open: "bg-blue-100 text-blue-700",
@@ -261,6 +294,14 @@ export default function TicketDetailPage() {
                 {ticket.subject}
               </h1>
             </div>
+            {ticket.status !== "closed" && (
+              <button
+                onClick={() => setShowCloseDialog(true)}
+                className="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors whitespace-nowrap"
+              >
+                Close Ticket
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -424,6 +465,49 @@ export default function TicketDetailPage() {
         </div>
       </div>
 
+      {/* Close Ticket Dialog */}
+      {showCloseDialog && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={() => !closingTicket && setShowCloseDialog(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Close Ticket</h3>
+            <p className="text-gray-600 mb-4">
+              Are you sure you want to close this ticket? You can optionally provide a reason.
+            </p>
+            <textarea
+              value={closeReason}
+              onChange={(e) => setCloseReason(e.target.value)}
+              placeholder="Optional: Why are you closing this ticket?"
+              className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4 resize-none"
+              rows={3}
+              maxLength={500}
+              disabled={closingTicket}
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => !closingTicket && setShowCloseDialog(false)}
+                disabled={closingTicket}
+                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCloseTicket}
+                disabled={closingTicket}
+                className="flex-1 px-4 py-2 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+              >
+                {closingTicket ? "Closing..." : "Close Ticket"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Image Modal */}
       {imageModalUrl && (
         <div
@@ -435,7 +519,7 @@ export default function TicketDetailPage() {
               onClick={() => setImageModalUrl(null)}
               className="absolute -top-12 right-0 text-white hover:text-gray-300 flex items-center gap-2"
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-4" />
               {t("support.detail.closeModal")}
             </button>
             <img

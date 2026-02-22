@@ -21,7 +21,7 @@ export const GET = createApiHandler({
     const { status, search, priority, category, page, limit } = parsed.data;
     const offset = (page - 1) * limit;
 
-    // Build query
+    // Build query with user email
     let query = ctx.supabase!
       .from("support_tickets")
       .select(
@@ -33,7 +33,10 @@ export const GET = createApiHandler({
         category,
         last_activity_at,
         created_at,
-        user_id
+        user_id,
+        profiles!support_tickets_user_id_fkey (
+          email
+        )
       `,
         { count: "exact" }
       );
