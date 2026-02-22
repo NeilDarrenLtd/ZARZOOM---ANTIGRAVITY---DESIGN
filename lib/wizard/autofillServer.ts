@@ -119,8 +119,6 @@ export async function analyzeContentWithOpenRouter(
   try {
     console.log(`[v0] Starting ${sourceType} analysis with OpenRouter...`);
 
-    // Get OpenRouter credentials from settings -- must use admin client
-    // because wizard_autofill_settings has RLS that only allows admin reads
     const adminSupabase = await createAdminClient();
     const settings = await getPromptSettings(adminSupabase);
 
@@ -133,7 +131,6 @@ export async function analyzeContentWithOpenRouter(
       };
     }
 
-    // Substitute placeholders in the prompt template
     let finalPrompt = promptTemplate;
     if (sourceType === "website" && sourceIdentifier) {
       finalPrompt = finalPrompt.replace(/\[WEBSITE-URL\]/gi, sourceIdentifier);
@@ -146,8 +143,7 @@ export async function analyzeContentWithOpenRouter(
 
     console.log(`[v0] Prompt template length: ${finalPrompt.length}, content length: ${content.length}`);
 
-    // Call OpenRouter API
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const orResponse = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${settings.openrouter_api_key}`,
@@ -171,15 +167,14 @@ export async function analyzeContentWithOpenRouter(
       }),
     });
 
-    // Capture the user message for debug logging (truncated)
     const userMessage = `${finalPrompt}\n\n--- BEGIN CONTENT ---\n${content.slice(0, 1000)}...[truncated]\n--- END CONTENT ---`;
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("[v0] OpenRouter API error:", response.status, errorText);
+    if (!orResponse.ok) {
+      const errorText = await orResponse.text();
+      console.error("[v0] OpenRouter API error:", orResponse.status, errorText);
       return {
         status: "fail",
-        message: `OpenRouter API error: ${response.status}`,
+        message: `OpenRouter API error: ${orResponse.status}`,
         error: errorText,
         debug: {
           promptSent: userMessage.slice(0, 2000),
@@ -188,7 +183,7 @@ export async function analyzeContentWithOpenRouter(
       };
     }
 
-    const result = await response.json();
+    const result = await orResponse.json();
     const aiText = result.choices?.[0]?.message?.content;
 
     if (!aiText) {
@@ -203,7 +198,6 @@ export async function analyzeContentWithOpenRouter(
       };
     }
 
-    // Parse JSON response
     let parsed: Record<string, unknown>;
     try {
       parsed = JSON.parse(aiText);
@@ -220,7 +214,6 @@ export async function analyzeContentWithOpenRouter(
       };
     }
 
-    // Normalize field names: strip any nested objects, only keep known DB columns
     const allowedFields = [
       "business_name", "business_description", "brand_color_hex",
       "article_styles", "goals", "content_language",
@@ -256,12 +249,13 @@ export async function analyzeContentWithOpenRouter(
         fieldsExtracted: normalized,
       },
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`[v0] ${sourceType} analysis error:`, err);
     return {
       status: "fail",
-      message: `Analysis failed: ${err.message}`,
-      error: err.message,
+      message: `Analysis failed: ${message}`,
+      error: message,
     };
   }
 }
@@ -274,71 +268,65 @@ export async function persistAutofillResults(
   _supabase: SupabaseClient,
   userId: string,
   data: Record<string, unknown>,
-  source: "website" | "file",
-  sourceUrl?: string
+  _source: "website" | "file",
+  _sourceUrl?: string
 ): Promise<void> {
-  // Use admin client to bypass RLS
+  // Use admin client to bypass RLS restrictions on onboarding_profiles
   const adminSb = await createAdminClient();
 
-  // Extract and validate fields from AI response
-  const getString = (key: string): string | undefined => {
-    const v = data[key];
-    if (v == null || v === "") return undefined;
-    return typeof v === "string" ? v : String(v);
-  };
+  const allowedColumns = [
+    "business_name", "business_description", "brand_color_hex",
+    "article_styles", "goals", "content_language",
+    "logo_url", "additional_notes",
+  ];
 
-  const getArray = (key: string): string[] | undefined => {
-    const v = data[key];
-    if (v == null) return undefined;
-    if (Array.isArray(v)) {
-      const arr = v.map(String).filter(Boolean);
-      return arr.length > 0 ? arr : undefined;
+  const arrayColumns = ["article_styles", "goals"];
+
+  const cleanData: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (!allowedColumns.includes(key) || value == null || value === "") continue;
+
+    if (arrayColumns.includes(key)) {
+      let arr: string[];
+      if (Array.isArray(value)) {
+        arr = value.map(String).filter(Boolean);
+      } else if (typeof value === "string") {
+        arr = value.split(",").map((s: string) => s.trim()).filter(Boolean);
+      } else {
+        continue;
+      }
+      if (arr.length > 0) {
+        cleanData[key] = arr;
+      }
+    } else {
+      cleanData[key] = typeof value === "string" ? value : String(value);
     }
-    if (typeof v === "string" && v.length > 0) {
-      const arr = v.split(",").map((s: string) => s.trim()).filter(Boolean);
-      return arr.length > 0 ? arr : undefined;
-    }
-    return undefined;
-  };
+  }
 
-  const businessName = getString("business_name");
-  const businessDescription = getString("business_description");
-  const brandColorHex = getString("brand_color_hex");
-  const articleStyles = getArray("article_styles");
-  const goals = getArray("goals");
-  const contentLanguage = getString("content_language");
-
-  // Count how many fields we actually extracted
-  const fieldCount = [businessName, businessDescription, brandColorHex, articleStyles, goals, contentLanguage]
-    .filter(v => v != null).length;
-
-  if (fieldCount === 0) {
+  if (Object.keys(cleanData).length === 0) {
     console.warn("[v0] No valid fields to persist from autofill results");
     return;
   }
 
-  console.log(`[v0] Persisting ${fieldCount} autofill fields via RPC: ` +
-    `business_name=${!!businessName}, business_description=${!!businessDescription}, ` +
-    `brand_color_hex=${!!brandColorHex}, article_styles=${articleStyles?.length ?? 0}, ` +
-    `goals=${goals?.length ?? 0}, content_language=${!!contentLanguage}`);
+  console.log("[v0] Persisting autofill fields:", Object.keys(cleanData).join(", "));
+  console.log("[v0] Persist data sample:", JSON.stringify(cleanData).slice(0, 500));
 
-  // Use the dedicated RPC function which handles text[] arrays natively
-  const { error } = await adminSb.rpc("update_onboarding_autofill", {
-    p_user_id: userId,
-    p_business_name: businessName ?? null,
-    p_business_description: businessDescription ?? null,
-    p_brand_color_hex: brandColorHex ?? null,
-    p_article_styles: articleStyles ?? null,
-    p_goals: goals ?? null,
-    p_content_language: contentLanguage ?? null,
-  });
+  // Use UPDATE instead of UPSERT to avoid NOT NULL column issues
+  const { error: updateError } = await adminSb
+    .from("onboarding_profiles")
+    .update({
+      ...cleanData,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("user_id", userId);
 
-  if (error) {
-    console.error("[v0] RPC update_onboarding_autofill failed:", error);
-    throw new Error(`Failed to save results: ${error.message}`);
+  if (updateError) {
+    console.error("[v0] Failed to update onboarding_profiles:", updateError);
+    console.error("[v0] Attempted clean data:", JSON.stringify(cleanData));
+    throw new Error(`Failed to save results: ${updateError.message}`);
   }
 
-  console.log(`[v0] Successfully persisted ${fieldCount} autofill fields for user ${userId}`);
+  console.log(`[v0] Persisted ${Object.keys(cleanData).length} autofill fields for user ${userId}`);
 }
 
 // ──────────────────────────────────────────────
@@ -354,7 +342,11 @@ export async function logAutofillAudit(
   errorMessage?: string,
   fieldsPopulated?: number,
   confidence?: Record<string, number>,
-  debugData?: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> }
+  debugData?: {
+    promptSent?: string;
+    responseReceived?: string;
+    fieldsExtracted?: Record<string, unknown>;
+  }
 ): Promise<void> {
   // Use admin client to bypass RLS on wizard_autofill_audit
   const adminSb = await createAdminClient();
@@ -366,7 +358,7 @@ export async function logAutofillAudit(
     error_message: errorMessage || null,
     fields_populated: fieldsPopulated || 0,
     confidence_scores: confidence || null,
-    debug_data: debugData ? JSON.stringify(debugData) : null,
+    debug_data: debugData || null,
     created_at: new Date().toISOString(),
   });
 
