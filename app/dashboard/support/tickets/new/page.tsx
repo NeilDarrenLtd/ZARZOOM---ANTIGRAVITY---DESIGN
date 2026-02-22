@@ -221,8 +221,14 @@ export default function CreateTicketPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="">{t("support.category.none") || "Select a category"}</option>
-              <option value="bug_fix">{t("support.category.bug_fix") || "Bug Fix"}</option>
-              <option value="general">{t("support.category.general") || "General"}</option>
+              <option value="account_login">{t("support.category.account_login") || "Account & Login"}</option>
+              <option value="billing_subscription">{t("support.category.billing_subscription") || "Billing & Subscription"}</option>
+              <option value="social_connections">{t("support.category.social_connections") || "Social Connections"}</option>
+              <option value="content_generation">{t("support.category.content_generation") || "Content Generation"}</option>
+              <option value="publishing_issues">{t("support.category.publishing_issues") || "Publishing Issues"}</option>
+              <option value="technical_bug">{t("support.category.technical_bug") || "Technical Bug"}</option>
+              <option value="feature_request">{t("support.category.feature_request") || "Feature Request"}</option>
+              <option value="general_question">{t("support.category.general_question") || "General Question"}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.categoryHelp")}</p>
           </div>
@@ -240,9 +246,10 @@ export default function CreateTicketPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="">{t("support.priority.none") || "Select priority"}</option>
-              <option value="low">{t("support.priority.low") || "Low"}</option>
-              <option value="medium">{t("support.priority.medium") || "Medium"}</option>
-              <option value="high">{t("support.priority.high") || "High"}</option>
+              <option value="urgent">{t("support.priority.urgent") || "Urgent – System Blocking"}</option>
+              <option value="high">{t("support.priority.high") || "High – Major Issue"}</option>
+              <option value="normal">{t("support.priority.normal") || "Normal – Standard"}</option>
+              <option value="low">{t("support.priority.low") || "Low – Minor / Suggestion"}</option>
             </select>
             <p className="text-xs text-gray-500 mt-1">{t("support.create.form.priorityHelp")}</p>
           </div>
