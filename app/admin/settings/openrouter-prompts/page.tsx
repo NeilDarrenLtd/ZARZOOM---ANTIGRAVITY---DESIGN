@@ -487,20 +487,20 @@ export default function OpenRouterPromptsPage() {
 interface AuditEntry {
   id: string;
   user_id: string;
+  user_email?: string;
   source_type: "website" | "file";
   source_identifier: string;
   status: string;
   error_message: string | null;
   fields_populated: number;
   confidence_scores: Record<string, number> | null;
-  debug_data: string | null;
+  debug_data: Record<string, unknown> | null;
   created_at: string;
-  profiles?: { email?: string } | null;
 }
 
 function AuditLogViewer() {
   const { data, error, isLoading } = useSWR<{ data: AuditEntry[] }>(
-    "/api/v1/admin/settings/openrouter-prompts/audit",
+    "/api/v1/admin/settings/openrouter-prompts/audit-log",
     (url: string) => fetch(url).then((r) => r.json())
   );
 
@@ -545,7 +545,9 @@ function AuditLogViewer() {
             let debugParsed: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | null = null;
             if (entry.debug_data) {
               try {
-                debugParsed = typeof entry.debug_data === "string" ? JSON.parse(entry.debug_data) : entry.debug_data;
+                debugParsed = typeof entry.debug_data === "string"
+                  ? JSON.parse(entry.debug_data)
+                  : entry.debug_data as { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> };
               } catch {
                 // ignore
               }
@@ -588,7 +590,7 @@ function AuditLogViewer() {
                   {/* User email */}
                   <span className="text-xs text-zinc-400 flex-shrink-0 hidden sm:block">
                     <User className="w-3 h-3 inline mr-1" />
-                    {entry.profiles?.email || entry.user_id.slice(0, 8)}
+                    {entry.user_email || entry.user_id.slice(0, 8)}
                   </span>
 
                   {/* Timestamp */}

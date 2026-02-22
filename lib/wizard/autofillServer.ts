@@ -271,68 +271,74 @@ export async function analyzeContentWithOpenRouter(
 // ──────────────────────────────────────────────
 
 export async function persistAutofillResults(
-  supabase: SupabaseClient,
+  _supabase: SupabaseClient,
   userId: string,
   data: Record<string, unknown>,
   source: "website" | "file",
   sourceUrl?: string
 ): Promise<void> {
-  // Only allow known DB columns to be persisted
-  // NOTE: website_url is NOT included because the user already entered it
-  const allowedColumns = [
-    "business_name", "business_description", "brand_color_hex",
-    "article_styles", "goals", "content_language",
-    "logo_url", "additional_notes",
-  ];
+  // Use admin client to bypass RLS
+  const adminSb = await createAdminClient();
 
-  // PostgreSQL text[] array columns - need special formatting
-  const arrayColumns = ["article_styles", "goals"];
+  // Extract and validate fields from AI response
+  const getString = (key: string): string | undefined => {
+    const v = data[key];
+    if (v == null || v === "") return undefined;
+    return typeof v === "string" ? v : String(v);
+  };
 
-  const cleanData: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(data)) {
-    if (!allowedColumns.includes(key) || value == null || value === "") continue;
-
-    if (arrayColumns.includes(key)) {
-      // Ensure it's a proper array of strings for PostgreSQL text[]
-      if (Array.isArray(value)) {
-        cleanData[key] = value.map(String);
-      } else if (typeof value === "string") {
-        // If AI returned a comma-separated string, split it
-        cleanData[key] = value.split(",").map((s: string) => s.trim()).filter(Boolean);
-      }
-    } else {
-      // For text columns, ensure it's a string
-      cleanData[key] = typeof value === "string" ? value : String(value);
+  const getArray = (key: string): string[] | undefined => {
+    const v = data[key];
+    if (v == null) return undefined;
+    if (Array.isArray(v)) {
+      const arr = v.map(String).filter(Boolean);
+      return arr.length > 0 ? arr : undefined;
     }
-  }
+    if (typeof v === "string" && v.length > 0) {
+      const arr = v.split(",").map((s: string) => s.trim()).filter(Boolean);
+      return arr.length > 0 ? arr : undefined;
+    }
+    return undefined;
+  };
 
-  if (Object.keys(cleanData).length === 0) {
+  const businessName = getString("business_name");
+  const businessDescription = getString("business_description");
+  const brandColorHex = getString("brand_color_hex");
+  const articleStyles = getArray("article_styles");
+  const goals = getArray("goals");
+  const contentLanguage = getString("content_language");
+
+  // Count how many fields we actually extracted
+  const fieldCount = [businessName, businessDescription, brandColorHex, articleStyles, goals, contentLanguage]
+    .filter(v => v != null).length;
+
+  if (fieldCount === 0) {
     console.warn("[v0] No valid fields to persist from autofill results");
     return;
   }
 
-  console.log("[v0] Persisting autofill fields:", Object.keys(cleanData).join(", "));
+  console.log(`[v0] Persisting ${fieldCount} autofill fields via RPC: ` +
+    `business_name=${!!businessName}, business_description=${!!businessDescription}, ` +
+    `brand_color_hex=${!!brandColorHex}, article_styles=${articleStyles?.length ?? 0}, ` +
+    `goals=${goals?.length ?? 0}, content_language=${!!contentLanguage}`);
 
-  // Update onboarding_profiles with extracted data
-  const { error } = await supabase
-    .from("onboarding_profiles")
-    .upsert(
-      {
-        user_id: userId,
-        ...cleanData,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: "user_id",
-      }
-    );
+  // Use the dedicated RPC function which handles text[] arrays natively
+  const { error } = await adminSb.rpc("update_onboarding_autofill", {
+    p_user_id: userId,
+    p_business_name: businessName ?? null,
+    p_business_description: businessDescription ?? null,
+    p_brand_color_hex: brandColorHex ?? null,
+    p_article_styles: articleStyles ?? null,
+    p_goals: goals ?? null,
+    p_content_language: contentLanguage ?? null,
+  });
 
   if (error) {
-    console.error("[v0] Failed to persist autofill results:", error);
+    console.error("[v0] RPC update_onboarding_autofill failed:", error);
     throw new Error(`Failed to save results: ${error.message}`);
   }
 
-  console.log(`[v0] Persisted ${Object.keys(cleanData).length} autofill fields for user ${userId}`);
+  console.log(`[v0] Successfully persisted ${fieldCount} autofill fields for user ${userId}`);
 }
 
 // ──────────────────────────────────────────────
@@ -340,7 +346,7 @@ export async function persistAutofillResults(
 // ──────────────────────────────────────────────
 
 export async function logAutofillAudit(
-  supabase: SupabaseClient,
+  _supabase: SupabaseClient,
   userId: string,
   source: "website" | "file",
   sourceIdentifier: string,
@@ -350,7 +356,9 @@ export async function logAutofillAudit(
   confidence?: Record<string, number>,
   debugData?: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> }
 ): Promise<void> {
-  const { error } = await supabase.from("wizard_autofill_audit").insert({
+  // Use admin client to bypass RLS on wizard_autofill_audit
+  const adminSb = await createAdminClient();
+  const { error } = await adminSb.from("wizard_autofill_audit").insert({
     user_id: userId,
     source_type: source,
     source_identifier: sourceIdentifier,

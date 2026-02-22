@@ -25,9 +25,9 @@ export async function GET() {
 
     // Use admin client to read all audit records
     const adminSupabase = await createAdminClient();
-    const { data, error } = await adminSupabase
+    const { data: auditRows, error } = await adminSupabase
       .from("wizard_autofill_audit")
-      .select("*, profiles:user_id(email)")
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(50);
 
@@ -36,7 +36,25 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ data: data || [] });
+    // Enrich with user emails from profiles table
+    const userIds = [...new Set((auditRows || []).map((r: any) => r.user_id))];
+    let emailMap: Record<string, string> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await adminSupabase
+        .from("profiles")
+        .select("id, email")
+        .in("id", userIds);
+      if (profiles) {
+        emailMap = Object.fromEntries(profiles.map((p: any) => [p.id, p.email]));
+      }
+    }
+
+    const enriched = (auditRows || []).map((row: any) => ({
+      ...row,
+      profiles: { email: emailMap[row.user_id] || null },
+    }));
+
+    return NextResponse.json({ data: enriched });
   } catch (err) {
     console.error("[v0] Audit log API error:", err);
     return NextResponse.json(

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { createAdminClient } from "@/lib/supabase/server";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 
 // ──────────────────────────────────────────────
@@ -19,11 +20,14 @@ export interface UsageCheckResult {
  * Calls the DB function which handles daily reset and degradation.
  */
 export async function checkAutofillUsage(
-  supabase: SupabaseClient,
+  _supabase: SupabaseClient,
   userId: string
 ): Promise<UsageCheckResult> {
+  // Use admin client to bypass RLS
+  const adminSb = await createAdminClient();
+
   // First check if user is suspended
-  const { data: profile } = await supabase
+  const { data: profile } = await adminSb
     .from("profiles")
     .select("is_suspended")
     .eq("id", userId)
@@ -39,7 +43,7 @@ export async function checkAutofillUsage(
     };
   }
 
-  const { data, error } = await supabase.rpc("check_autofill_usage", {
+  const { data, error } = await adminSb.rpc("check_autofill_usage", {
     p_user_id: userId,
   });
 
@@ -70,10 +74,12 @@ export async function checkAutofillUsage(
  * Increment autofill usage after a successful run.
  */
 export async function incrementAutofillUsage(
-  supabase: SupabaseClient,
+  _supabase: SupabaseClient,
   userId: string
 ): Promise<void> {
-  const { error } = await supabase.rpc("increment_autofill_usage", {
+  // Use admin client to bypass RLS
+  const adminSb = await createAdminClient();
+  const { error } = await adminSb.rpc("increment_autofill_usage", {
     p_user_id: userId,
   });
 
