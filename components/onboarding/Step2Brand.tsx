@@ -96,7 +96,10 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
   const [fileError, setFileError] = useState("");
 
   async function handleFileAnalyse() {
+    console.log("[v0] handleFileAnalyse called, selectedFile:", selectedFile?.name, selectedFile?.type, selectedFile?.size);
+    
     if (!selectedFile) {
+      console.error("[v0] No file selected, showing error");
       setFileError("Please select a file before clicking Analyse.");
       return;
     }
@@ -104,53 +107,68 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
     setFileStatus("loading");
 
     try {
-      console.log("[v0] Step 1: Uploading and extracting text from file...");
+      console.log("[v0] Step 1: Starting file upload...");
       
       // Step 1: Upload and extract text from file
       const formData = new FormData();
       formData.append("file", selectedFile);
+      console.log("[v0] FormData prepared, calling upload endpoint...");
 
       const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
         method: "POST",
         body: formData,
       });
 
+      console.log("[v0] Upload response received, status:", uploadRes.status, uploadRes.statusText);
+
       if (!uploadRes.ok) {
         const errorBody = await uploadRes.json();
-        console.error("[v0] File upload failed:", errorBody);
+        console.error("[v0] File upload failed with status", uploadRes.status, "error:", errorBody);
         throw new Error(errorBody.error || "Failed to upload file");
       }
 
       const uploadBody = await uploadRes.json();
-      console.log("[v0] File uploaded successfully, extracted text length:", uploadBody.data?.extractedText?.length);
+      console.log("[v0] Upload successful, response:", uploadBody);
+      console.log("[v0] Extracted text length:", uploadBody.data?.extractedText?.length);
 
       if (!uploadBody.success || !uploadBody.data) {
+        console.error("[v0] Upload response invalid, success:", uploadBody.success, "hasData:", !!uploadBody.data);
         throw new Error("Failed to extract text from file");
       }
 
       // Step 2: Analyze the extracted text with OpenRouter
-      console.log("[v0] Step 2: Analyzing file content with AI...");
+      console.log("[v0] Step 2: Calling file analysis endpoint...");
+      const analysisPayload = {
+        storageFilePath: uploadBody.data.fileId,
+        extractedText: uploadBody.data.extractedText,
+        fileName: selectedFile.name,
+      };
+      console.log("[v0] Analysis payload:", { 
+        storageFilePath: analysisPayload.storageFilePath,
+        extractedTextLength: analysisPayload.extractedText?.length,
+        fileName: analysisPayload.fileName 
+      });
       
       const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          storageFilePath: uploadBody.data.fileId,
-          extractedText: uploadBody.data.extractedText,
-          fileName: selectedFile.name,
-        }),
+        body: JSON.stringify(analysisPayload),
       });
 
+      console.log("[v0] Analysis response received, status:", analyzeRes.status, analyzeRes.statusText);
+
       const analyzeBody = await analyzeRes.json();
-      console.log("[v0] File autofill response:", analyzeBody);
+      console.log("[v0] Analysis response body:", analyzeBody);
 
       if (!analyzeRes.ok) {
+        console.error("[v0] Analysis failed with status", analyzeRes.status);
         throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
       }
 
       // Check status and reload wizard data
+      console.log("[v0] Analysis complete, status:", analyzeBody.status);
       if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
-        // Reload the wizard data from the database since it was updated server-side
+        console.log("[v0] Success/partial detected, reloading wizard data...");
         if (onReload) {
           await onReload();
         }
@@ -158,10 +176,13 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         setFileStatus(analyzeBody.status);
         console.log(`[v0] File autofill ${analyzeBody.status}: ${analyzeBody.fieldsPopulated} fields populated`);
       } else {
+        console.error("[v0] Unexpected status from analysis:", analyzeBody.status);
         setFileStatus("error");
       }
     } catch (error: any) {
-      console.error("[v0] File analysis error:", error);
+      console.error("[v0] File analysis error caught:", error);
+      console.error("[v0] Error message:", error?.message);
+      console.error("[v0] Error stack:", error?.stack);
       setFileStatus("error");
     }
   }
