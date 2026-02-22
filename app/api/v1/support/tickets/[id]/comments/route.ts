@@ -58,22 +58,21 @@ export const POST = createApiHandler({
       .update({ last_activity_at: new Date().toISOString() })
       .eq("id", ticketId);
 
-    // Fetch ticket details for email notification
+    // Fetch ticket details and owner email for email notification
     const { data: ticket } = await ctx.supabase!
       .from("support_tickets")
-      .select("subject, user_id")
+      .select("subject, user_id, profiles!support_tickets_user_id_fkey(email)")
       .eq("id", ticketId)
       .single();
 
     if (ticket) {
-      const ticketOwnerEmail = ctx.user!.email || 'unknown@example.com';
-
       if (isAdmin) {
-        // Admin comment → Email to user
+        // Admin comment → Email to ticket owner (user)
+        const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
         sendAdminCommentNotification({
           ticketId,
           ticketSubject: ticket.subject,
-          userEmail: ticketOwnerEmail,
+          userEmail,
           adminComment: message,
         }).catch((err) => {
           console.error("[Support] Failed to send admin comment email:", err);

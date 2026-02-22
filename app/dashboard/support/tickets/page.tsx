@@ -19,8 +19,10 @@ interface TicketItem {
 export default function TicketsListPage() {
   const { t } = useI18n();
   const [tickets, setTickets] = useState<TicketItem[]>([]);
+  const [filteredTickets, setFilteredTickets] = useState<TicketItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   useEffect(() => {
     async function fetchTickets() {
@@ -29,6 +31,7 @@ export default function TicketsListPage() {
         if (!res.ok) throw new Error("Failed to fetch tickets");
         const data = await res.json();
         setTickets(data.tickets || []);
+        setFilteredTickets(data.tickets || []);
       } catch (err) {
         setError(t("support.errors.loadFailed"));
       } finally {
@@ -37,6 +40,15 @@ export default function TicketsListPage() {
     }
     fetchTickets();
   }, [t]);
+
+  // Filter tickets when status filter changes
+  useEffect(() => {
+    if (statusFilter === "all") {
+      setFilteredTickets(tickets);
+    } else {
+      setFilteredTickets(tickets.filter((t) => t.status === statusFilter));
+    }
+  }, [statusFilter, tickets]);
 
   const getStatusBadgeClass = (status: string) => {
     const classes = {
@@ -66,7 +78,7 @@ export default function TicketsListPage() {
 
       <div className="flex-1 max-w-6xl mx-auto w-full px-4 py-12">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {t("support.list.title")}
@@ -81,6 +93,35 @@ export default function TicketsListPage() {
             {t("support.nav.createTicket")}
           </Link>
         </div>
+
+        {/* Filter Bar */}
+        {!loading && !error && tickets.length > 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6">
+            <div className="flex items-center gap-4 flex-wrap">
+              <label htmlFor="status-filter" className="text-sm font-semibold text-gray-700">
+                Filter by Status:
+              </label>
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+              >
+                <option value="all">All Tickets ({tickets.length})</option>
+                <option value="open">Open ({tickets.filter((t) => t.status === "open").length})</option>
+                <option value="investigating">Investigating ({tickets.filter((t) => t.status === "investigating").length})</option>
+                <option value="waiting_on_user">Waiting on User ({tickets.filter((t) => t.status === "waiting_on_user").length})</option>
+                <option value="resolved">Resolved ({tickets.filter((t) => t.status === "resolved").length})</option>
+                <option value="closed">Closed ({tickets.filter((t) => t.status === "closed").length})</option>
+              </select>
+              {statusFilter !== "all" && (
+                <span className="text-sm text-gray-600">
+                  Showing {filteredTickets.length} of {tickets.length} tickets
+                </span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Loading State */}
         {loading && (
@@ -97,7 +138,7 @@ export default function TicketsListPage() {
         )}
 
         {/* Empty State */}
-        {!loading && !error && tickets.length === 0 && (
+        {!loading && !error && filteredTickets.length === 0 && tickets.length === 0 && (
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
               <Ticket className="w-8 h-8 text-gray-400" />
@@ -116,8 +157,21 @@ export default function TicketsListPage() {
           </div>
         )}
 
+        {/* No Results Message */}
+        {!loading && !error && filteredTickets.length === 0 && tickets.length > 0 && (
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
+            <p className="text-gray-600">No tickets match the selected status filter.</p>
+            <button
+              onClick={() => setStatusFilter("all")}
+              className="mt-4 text-green-600 hover:text-green-700 font-medium"
+            >
+              Clear Filter
+            </button>
+          </div>
+        )}
+
         {/* Tickets Table */}
-        {!loading && !error && tickets.length > 0 && (
+        {!loading && !error && filteredTickets.length > 0 && (
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -141,7 +195,7 @@ export default function TicketsListPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {tickets.map((ticket) => (
+                  {filteredTickets.map((ticket) => (
                     <tr
                       key={ticket.id}
                       className="hover:bg-gray-50 transition-colors"

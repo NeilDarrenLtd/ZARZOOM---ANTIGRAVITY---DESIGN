@@ -98,15 +98,21 @@ async function getSupportRecipientEmail(): Promise<string | null> {
   const supabase = await createAdminClient();
   const { data, error } = await supabase
     .from("support_settings")
-    .select("recipient_email")
+    .select("support_recipient_email")
     .single();
 
-  if (error || !data?.recipient_email) {
+  if (error || !data?.support_recipient_email) {
     console.warn("[SupportMailer] No support recipient email configured");
+    // Fall back to SMTP username as admin email
+    const smtp = await getSmtpConfig();
+    if (smtp?.smtp_user) {
+      console.log("[SupportMailer] Using SMTP username as fallback:", smtp.smtp_user);
+      return smtp.smtp_user;
+    }
     return null;
   }
 
-  return data.recipient_email;
+  return data.support_recipient_email;
 }
 
 /**
