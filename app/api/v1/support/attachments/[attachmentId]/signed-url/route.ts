@@ -8,6 +8,7 @@ import { createAdminClient } from "@/lib/supabase/server";
  */
 export const GET = createApiHandler({
   auth: true,
+  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
   rateLimit: { maxRequests: 100, windowMs: 60_000 },
   handler: async (ctx) => {
     const attachmentId = ctx.req.nextUrl.pathname.split("/")[5]!;

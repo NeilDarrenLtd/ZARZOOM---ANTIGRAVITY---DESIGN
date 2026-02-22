@@ -45,11 +45,15 @@ async function getSmtpConfig() {
  * Send an email using the configured SMTP server
  */
 async function sendEmail(options: EmailOptions): Promise<boolean> {
+  console.log("[SupportMailer] Attempting to send email to:", options.to, "Subject:", options.subject);
+  
   const smtp = await getSmtpConfig();
   if (!smtp) {
-    console.error("[SupportMailer] Cannot send email: SMTP not configured");
+    console.error("[SupportMailer] Cannot send email: SMTP not configured. Check site_settings for smtp_host, smtp_user, smtp_pass.");
     return false;
   }
+
+  console.log("[SupportMailer] SMTP config found. Host:", smtp.smtp_host, "Port:", smtp.smtp_port || "587");
 
   try {
     const nodemailer = await import("nodemailer");

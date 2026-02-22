@@ -46,8 +46,6 @@ export default function AdminSupportPage() {
       }
 
       const body = await res.json();
-      console.log("[v0] Admin tickets response:", body);
-      
       const mapped = (body.data?.tickets || body.tickets || []).map((t: any) => ({
         id: t.ticket_id || t.id,
         subject: t.subject,
@@ -60,7 +58,6 @@ export default function AdminSupportPage() {
         user_email: t.profiles?.email || "Unknown",
       }));
 
-      console.log("[v0] Mapped tickets:", mapped);
       setTickets(mapped);
     } catch (err: any) {
       console.error("Failed to load tickets:", err);

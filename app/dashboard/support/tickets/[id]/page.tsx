@@ -71,7 +71,9 @@ export default function TicketDetailPage() {
         setLoading(false);
         return;
       }
-      const data = await res.json();
+      const body = await res.json();
+      // The ok() wrapper nests data under body.data
+      const data = body.data || body;
       // API returns ticket and comments separately, merge them
       setTicket({
         ...data.ticket,
@@ -127,7 +129,8 @@ export default function TicketDetailPage() {
       });
 
       if (!commentRes.ok) throw new Error("Failed to create comment");
-      const commentData = await commentRes.json();
+      const commentBody = await commentRes.json();
+      const commentData = commentBody.data || commentBody;
       const newCommentId = commentData.comment.id;
 
       // Upload attachments if any
@@ -161,8 +164,9 @@ export default function TicketDetailPage() {
     try {
       const res = await fetch(`/api/v1/support/attachments/${attachmentId}/signed-url`);
       if (!res.ok) throw new Error("Failed to load image");
-      const data = await res.json();
-      setImageModalUrl(data.signedUrl);
+      const body = await res.json();
+      // The ok() wrapper nests data under body.data
+      setImageModalUrl(body.data?.signedUrl || body.signedUrl);
     } catch (err) {
       alert("Failed to load image");
     }

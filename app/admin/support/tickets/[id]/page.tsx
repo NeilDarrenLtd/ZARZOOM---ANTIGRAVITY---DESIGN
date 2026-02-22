@@ -5,7 +5,6 @@ import { useI18n } from "@/lib/i18n";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, AlertCircle, Send, Paperclip, X, ImageIcon } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
 type Profile = {
   email: string;
@@ -23,7 +22,7 @@ type Attachment = {
 type Comment = {
   id: string;
   author_role: string;
-  content: string;
+  message: string;
   created_at: string;
   support_attachments: Attachment[];
 };
@@ -65,27 +64,29 @@ export default function AdminTicketDetailPage() {
       setLoading(true);
       setError(null);
 
-      const supabase = createClient();
-      const { data, error: fetchError } = await supabase
-        .from("support_tickets")
-        .select(`
-          *,
-          profiles:user_id (
-            email
-          ),
-          support_comments (
-            *,
-            support_attachments (*)
-          )
-        `)
-        .eq("id", ticketId)
-        .order("created_at", { foreignTable: "support_comments", ascending: true })
-        .single();
+      // Use the admin ticket detail API to avoid FK join issues
+      const res = await fetch(`/api/v1/admin/support/tickets/${ticketId}`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error?.message || `Failed to load ticket (${res.status})`);
+      }
 
-      if (fetchError) throw fetchError;
-      if (!data) throw new Error("Ticket not found");
+      const body = await res.json();
+      const data = body.data || body;
 
-      setTicket(data);
+      if (!data.ticket) throw new Error("Ticket not found");
+
+      // Map API response to expected Ticket shape
+      setTicket({
+        ...data.ticket,
+        support_comments: (data.comments || []).map((c: any) => ({
+          id: c.id,
+          author_role: c.author_role,
+          message: c.message,
+          created_at: c.created_at,
+          support_attachments: c.attachments || c.support_attachments || [],
+        })),
+      });
     } catch (err) {
       console.error("Failed to load ticket:", err);
       setError(t("adminSupport.detail.notFound"));
@@ -127,12 +128,13 @@ export default function AdminTicketDetailPage() {
       const response = await fetch(`/api/v1/admin/support/tickets/${ticketId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: commentText }),
+        body: JSON.stringify({ message: commentText }),
       });
 
       if (!response.ok) throw new Error("Failed to send comment");
 
-      const { data: comment } = await response.json();
+      const responseBody = await response.json();
+      const comment = responseBody.data?.comment || responseBody.comment;
 
       // Upload attachments if any
       if (selectedFiles.length > 0 && comment?.id) {
@@ -189,8 +191,9 @@ export default function AdminTicketDetailPage() {
     try {
       const response = await fetch(`/api/v1/support/attachments/${attachmentId}/signed-url`);
       if (!response.ok) throw new Error("Failed to get signed URL");
-      const { data } = await response.json();
-      return data.signedUrl;
+      const body = await response.json();
+      // The ok() wrapper nests data under body.data
+      return body.data?.signedUrl || body.signedUrl || "";
     } catch (err) {
       console.error("Failed to get signed URL:", err);
       return "";
@@ -320,7 +323,7 @@ export default function AdminTicketDetailPage() {
                       </span>
                     </div>
                     <p className="text-sm text-gray-900 whitespace-pre-wrap">
-                      {comment.content}
+                      {comment.message}
                     </p>
 
                     {comment.support_attachments.length > 0 && (
@@ -462,11 +465,11 @@ export default function AdminTicketDetailPage() {
                   disabled={updating}
                   className="mt-1 w-full p-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
                 >
-                  <option value="none">{t("support.priority.none")}</option>
-                  <option value="low">{t("support.priority.low")}</option>
-                  <option value="normal">{t("support.priority.normal")}</option>
-                  <option value="high">{t("support.priority.high")}</option>
-                  <option value="urgent">{t("support.priority.urgent")}</option>
+                  <option value="">{t("support.priority.none", "Not specified")}</option>
+                  <option value="urgent">{t("support.priority.urgent", "Urgent – System Blocking")}</option>
+                  <option value="high">{t("support.priority.high", "High – Major Issue")}</option>
+                  <option value="normal">{t("support.priority.normal", "Normal – Standard")}</option>
+                  <option value="low">{t("support.priority.low", "Low – Minor / Suggestion")}</option>
                 </select>
               </div>
 
@@ -480,12 +483,15 @@ export default function AdminTicketDetailPage() {
                   disabled={updating}
                   className="mt-1 w-full p-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
                 >
-                  <option value="none">{t("support.category.none")}</option>
-                  <option value="technical">{t("support.category.technical")}</option>
-                  <option value="billing">{t("support.category.billing")}</option>
-                  <option value="account">{t("support.category.account")}</option>
-                  <option value="feature_request">{t("support.category.feature_request")}</option>
-                  <option value="other">{t("support.category.other")}</option>
+                  <option value="">{t("support.category.none", "Not specified")}</option>
+                  <option value="account_login">{t("support.category.account_login", "Account & Login")}</option>
+                  <option value="billing_subscription">{t("support.category.billing_subscription", "Billing & Subscription")}</option>
+                  <option value="social_connections">{t("support.category.social_connections", "Social Connections")}</option>
+                  <option value="content_generation">{t("support.category.content_generation", "Content Generation")}</option>
+                  <option value="publishing_issues">{t("support.category.publishing_issues", "Publishing Issues")}</option>
+                  <option value="technical_bug">{t("support.category.technical_bug", "Technical Bug")}</option>
+                  <option value="feature_request">{t("support.category.feature_request", "Feature Request")}</option>
+                  <option value="general_question">{t("support.category.general_question", "General Question")}</option>
                 </select>
               </div>
 
