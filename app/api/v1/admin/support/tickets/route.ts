@@ -72,9 +72,23 @@ export const GET = createApiHandler({
       throw new Error(`Failed to fetch tickets: ${error.message}`);
     }
 
+    // Map to expected frontend format
+    const mappedTickets = (tickets ?? []).map((t: any) => ({
+      id: t.id,
+      ticket_id: t.id, // Add ticket_id for backward compatibility
+      subject: t.subject,
+      status: t.status,
+      priority: t.priority,
+      category: t.category,
+      created_at: t.created_at,
+      last_activity_at: t.last_activity_at,
+      user_id: t.user_id,
+      profiles: t.profiles, // Keep nested profile object
+    }));
+
     return ok(
       {
-        tickets: tickets ?? [],
+        tickets: mappedTickets,
         pagination: {
           page,
           limit,
