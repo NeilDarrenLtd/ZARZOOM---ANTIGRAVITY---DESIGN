@@ -29,7 +29,7 @@ export interface PromptSettings {
   openrouter_api_key: string | null;
   openrouter_model: string | null;
   updated_at: string | null;
-  updated_by_user_id: string | null;
+  updated_by: string | null;
 }
 
 const DEFAULT_WEBSITE_PROMPT = `Analyze the website content and extract brand information as JSON.`;
@@ -40,7 +40,7 @@ export async function getPromptSettings(
 ): Promise<PromptSettings> {
   const { data, error } = await supabase
     .from("wizard_autofill_settings")
-    .select("website_prompt_text, file_prompt_text, openrouter_api_key, openrouter_model, updated_at, updated_by_user_id")
+    .select("website_prompt, file_prompt, openrouter_api_key, openrouter_model, updated_at, updated_by")
     .eq("id", 1)
     .single();
 
@@ -55,17 +55,17 @@ export async function getPromptSettings(
       openrouter_api_key: null,
       openrouter_model: null,
       updated_at: null,
-      updated_by_user_id: null,
+      updated_by: null,
     };
   }
 
   return {
-    website_prompt_text: data.website_prompt_text || DEFAULT_WEBSITE_PROMPT,
-    file_prompt_text: data.file_prompt_text || DEFAULT_FILE_PROMPT,
+    website_prompt_text: data.website_prompt || DEFAULT_WEBSITE_PROMPT,
+    file_prompt_text: data.file_prompt || DEFAULT_FILE_PROMPT,
     openrouter_api_key: data.openrouter_api_key,
     openrouter_model: data.openrouter_model || "openai/gpt-4o-mini",
     updated_at: data.updated_at,
-    updated_by_user_id: data.updated_by_user_id,
+    updated_by: data.updated_by,
   };
 }
 

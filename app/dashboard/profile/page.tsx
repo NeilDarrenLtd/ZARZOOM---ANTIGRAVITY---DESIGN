@@ -32,6 +32,9 @@ import {
   Award,
   BookOpen,
   Share2,
+  Sparkles,
+  FileText,
+  AlertCircle,
 } from "lucide-react";
 
 // ── Goal icons (matches Step3) ────────────────────────────
@@ -93,7 +96,9 @@ export default function ProfilePage() {
   const [data, setData] = useState<OnboardingUpdate>({});
   const [showModal, setShowModal] = useState(false);
   const [investigating, setInvestigating] = useState(false);
-  const [investigateResult, setInvestigateResult] = useState<"idle" | "success" | "error">("idle");
+  const [websiteStatus, setWebsiteStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
+  const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
   // ── Load profile ────────────────────────────────────────
@@ -145,31 +150,129 @@ export default function ProfilePage() {
     }
   }
 
-  // ── Investigate website ─────────────────────────────────
+  // ── Reload data from server ─────────────────────────────
+  async function reloadProfileData() {
+    try {
+      const res = await fetch("/api/v1/onboarding");
+      if (!res.ok) throw new Error("reload failed");
+      const body = await res.json();
+      setData(body.data ?? {});
+    } catch {
+      // silently fail
+    }
+  }
+
+  // ── Auto-fill from website (matches wizard) ────────────
   async function handleInvestigate() {
     if (!data.website_url) return;
     setInvestigating(true);
-    setInvestigateResult("idle");
+    setWebsiteStatus("loading");
+
     try {
-      const res = await fetch("/api/v1/onboarding/investigate-website", {
+      const res = await fetch("/api/v1/onboarding/autofill/website", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: data.website_url }),
       });
-      if (!res.ok) throw new Error("Failed");
+
       const body = await res.json();
-      if (body.data) {
-        const patch: Partial<OnboardingUpdate> = {};
-        if (body.data.business_description && !data.business_description)
-          patch.business_description = body.data.business_description;
-        if (body.data.suggested_styles) patch.article_styles = body.data.suggested_styles;
-        onChange(patch);
-        setInvestigateResult("success");
+
+      if (!res.ok) {
+        throw new Error(body.error || body.message || "Failed to analyze website");
+      }
+
+      if (body.status === "success" || body.status === "partial") {
+        await reloadProfileData();
+        setWebsiteStatus(body.status);
+      } else {
+        setWebsiteStatus("error");
       }
     } catch {
-      setInvestigateResult("error");
+      setWebsiteStatus("error");
     } finally {
       setInvestigating(false);
+    }
+  }
+
+  // ── File select handler (matches wizard) ───────────────
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const MAX_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      setFileStatus("error");
+      alert(`File size exceeds maximum of 10MB. Selected file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+      return;
+    }
+
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setFileStatus("error");
+      alert("Only PDF, DOC, and DOCX files are supported");
+      return;
+    }
+
+    setSelectedFile(file);
+    setFileStatus("idle");
+  }
+
+  // ── Analyse file (matches wizard) ──────────────────────
+  async function handleFileAnalyse() {
+    if (!selectedFile) return;
+    setFileStatus("loading");
+
+    try {
+      // Step 1: Upload and extract text
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        const errorBody = await uploadRes.json();
+        throw new Error(errorBody.error || "Failed to upload file");
+      }
+
+      const uploadBody = await uploadRes.json();
+
+      if (!uploadBody.success || !uploadBody.data) {
+        throw new Error("Failed to extract text from file");
+      }
+
+      // Step 2: Analyze with OpenRouter
+      const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          storageFilePath: uploadBody.data.storagePath,
+          extractedText: uploadBody.data.extractedText,
+          fileName: selectedFile.name,
+        }),
+      });
+
+      const analyzeBody = await analyzeRes.json();
+
+      if (!analyzeRes.ok) {
+        throw new Error(analyzeBody.error || analyzeBody.message || "Failed to analyze file");
+      }
+
+      if (analyzeBody.status === "success" || analyzeBody.status === "partial") {
+        await reloadProfileData();
+        setFileStatus(analyzeBody.status);
+      } else {
+        setFileStatus("error");
+      }
+    } catch {
+      setFileStatus("error");
     }
   }
 
@@ -358,16 +461,19 @@ export default function ProfilePage() {
                 </p>
               </div>
 
-              {/* Website URL + Investigate */}
+              {/* Website URL + Auto-fill (matches wizard layout) */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-2">
                   {t("onboarding.step2.websiteUrl.label")}
                 </label>
                 <div className="flex gap-2">
                   <input
                     type="url"
                     value={data.website_url ?? ""}
-                    onChange={(e) => onChange({ website_url: e.target.value || null })}
+                    onChange={(e) => {
+                      onChange({ website_url: e.target.value || null });
+                      setWebsiteStatus("idle");
+                    }}
                     className={`${inputClass} flex-1`}
                     placeholder={t("onboarding.step2.websiteUrl.placeholder")}
                   />
@@ -380,25 +486,111 @@ export default function ProfilePage() {
                     {investigating ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      <Search className="w-4 h-4" />
+                      <Sparkles className="w-4 h-4" />
                     )}
                     <span className="hidden sm:inline">
-                      {investigating
-                        ? t("onboarding.step2.investigate.loading")
-                        : t("onboarding.step2.investigate.button")}
+                      {investigating ? "Analysing..." : "Auto-fill from website"}
                     </span>
                   </button>
                 </div>
-                {investigateResult === "success" && (
-                  <p className="text-xs text-green-600 mt-1">
-                    {t("onboarding.step2.investigate.success")}
-                  </p>
+
+                {/* Website analysis status messages */}
+                {websiteStatus === "success" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-green-700">
+                      We filled what we could. Please review and adjust if needed.
+                    </p>
+                  </div>
                 )}
-                {investigateResult === "error" && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {t("onboarding.step2.investigate.error")}
-                  </p>
+                {websiteStatus === "partial" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-amber-700">
+                      {"We couldn't get everything. Please complete the remaining fields below."}
+                    </p>
+                  </div>
                 )}
+                {websiteStatus === "error" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-red-700">
+                      {"We couldn't analyse that right now. Please try again or fill in manually."}
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-400 mt-2">
+                  {t("onboarding.step2.websiteUrl.help")}
+                </p>
+              </div>
+
+              {/* Import from file (matches wizard layout) */}
+              <div className="pt-5 border-t border-gray-200">
+                <label className="block text-xs font-medium text-gray-700 mb-2">
+                  Import from file
+                </label>
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    <label className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                      <FileText className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 truncate">
+                        {selectedFile ? selectedFile.name : "Choose PDF or Word document"}
+                      </span>
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        onChange={handleFileSelect}
+                        className="sr-only"
+                      />
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleFileAnalyse}
+                    disabled={!selectedFile || fileStatus === "loading"}
+                    className="flex items-center gap-2 px-4 py-3 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 flex-shrink-0"
+                  >
+                    {fileStatus === "loading" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    <span className="hidden sm:inline">
+                      {fileStatus === "loading" ? "Analysing..." : "Analyse file"}
+                    </span>
+                  </button>
+                </div>
+
+                {/* File analysis status messages */}
+                {fileStatus === "success" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-green-700">
+                      We filled what we could. Please review and adjust if needed.
+                    </p>
+                  </div>
+                )}
+                {fileStatus === "partial" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                    <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-amber-700">
+                      {"We couldn't get everything. Please complete the remaining fields below."}
+                    </p>
+                  </div>
+                )}
+                {fileStatus === "error" && (
+                  <div className="flex items-start gap-2 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-red-700">
+                      {"We couldn't analyse that right now. Please try again or fill in manually."}
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-400 mt-2">
+                  Upload a PDF/Word document and we'll try to auto-fill your brand settings.
+                </p>
               </div>
 
               {/* Content Language */}

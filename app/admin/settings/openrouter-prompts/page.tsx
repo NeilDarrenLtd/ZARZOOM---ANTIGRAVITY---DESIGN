@@ -54,6 +54,7 @@ export default function OpenRouterPromptsPage() {
   const [websitePrompt, setWebsitePrompt] = useState("");
   const [filePrompt, setFilePrompt] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [apiKeySet, setApiKeySet] = useState(false); // tracks if a key is stored in DB
   const [model, setModel] = useState("openai/gpt-4o-mini");
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -66,7 +67,9 @@ export default function OpenRouterPromptsPage() {
     if (data?.data) {
       setWebsitePrompt(data.data.website_prompt ?? "");
       setFilePrompt(data.data.file_prompt ?? "");
-      setApiKey(data.data.openrouter_api_key ?? "");
+      // Don't populate apiKey with masked value - keep it empty so users enter fresh key
+      setApiKey("");
+      setApiKeySet(!!(data.data as any).openrouter_api_key_set);
       setModel(data.data.openrouter_model ?? "openai/gpt-4o-mini");
       setHasUnsavedChanges(false);
     }
@@ -79,7 +82,7 @@ export default function OpenRouterPromptsPage() {
     const changed =
       websitePrompt !== (data.data.website_prompt ?? "") ||
       filePrompt !== (data.data.file_prompt ?? "") ||
-      apiKey !== (data.data.openrouter_api_key ?? "") ||
+      apiKey !== "" || // any new key typed = unsaved change
       model !== (data.data.openrouter_model ?? "openai/gpt-4o-mini");
     
     setHasUnsavedChanges(changed);
@@ -90,15 +93,21 @@ export default function OpenRouterPromptsPage() {
     setSaveState({ status: "saving" });
 
     try {
+      // Only send API key if user entered a new one (non-empty)
+      const payload: Record<string, unknown> = {
+        website_prompt: websitePrompt || null,
+        file_prompt: filePrompt || null,
+        openrouter_model: model || null,
+      };
+      // Only include API key in payload if user typed a new value
+      if (apiKey.trim()) {
+        payload.openrouter_api_key = apiKey.trim();
+      }
+
       const res = await fetch("/api/v1/admin/settings/openrouter-prompts", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          website_prompt: websitePrompt || null,
-          file_prompt: filePrompt || null,
-          openrouter_api_key: apiKey || null,
-          openrouter_model: model || null,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -107,7 +116,7 @@ export default function OpenRouterPromptsPage() {
       }
 
       await mutate();
-      setSaveState({ status: "success", message: "Prompts saved successfully" });
+      setSaveState({ status: "success", message: "Settings saved successfully" });
       setHasUnsavedChanges(false);
       
       // Clear success message after 3 seconds
@@ -117,10 +126,10 @@ export default function OpenRouterPromptsPage() {
     } catch (err) {
       setSaveState({
         status: "error",
-        message: err instanceof Error ? err.message : "Failed to save prompts",
+        message: err instanceof Error ? err.message : "Failed to save settings",
       });
     }
-  }, [websitePrompt, filePrompt, mutate]);
+  }, [websitePrompt, filePrompt, apiKey, model, mutate]);
 
   /* -- Reset handler --------------------------------------------- */
   const handleReset = useCallback(async () => {
@@ -265,7 +274,7 @@ export default function OpenRouterPromptsPage() {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="sk-or-v1-..."
+                  placeholder={apiKeySet ? "Key is saved - enter new key to replace" : "sk-or-v1-..."}
                   autoComplete="off"
                 />
                 <button
@@ -276,6 +285,18 @@ export default function OpenRouterPromptsPage() {
                   {showApiKey ? "Hide" : "Show"}
                 </button>
               </div>
+              {apiKeySet && !apiKey && (
+                <div className="flex items-center gap-1.5 mt-1.5 text-xs text-green-600">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>API key is saved and active. Leave blank to keep current key.</span>
+                </div>
+              )}
+              {!apiKeySet && !apiKey && (
+                <div className="flex items-center gap-1.5 mt-1.5 text-xs text-amber-600">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>No API key configured. Auto-fill features will not work until a key is saved.</span>
+                </div>
+              )}
               <p className="text-xs text-zinc-500 mt-1.5">
                 Your OpenRouter API key. Get one at{" "}
                 <a
