@@ -252,7 +252,7 @@ export async function POST(request: Request) {
       analysisData = analysis.data as Record<string, unknown>;
       analysisMissing = analysis.missingFields || [];
       analysisConfidence = analysis.confidence;
-      analysisMessage = analysis.message;
+      analysisMessage = analysis.message || "";
       // Store debug data for audit logging
       analysisDebug = analysis.debug;
     }
