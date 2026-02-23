@@ -86,14 +86,14 @@ export default function FeaturesPage() {
     },
     {
       icon: Plug,
-      title: "Integrations & API",
+      title: "API & OpenClaw Integrations",
       description:
-        "Connect ZARZOOM with your existing tools and workflows. Our robust API and pre-built integrations ensure seamless data flow across your tech stack.",
+        "Supercharge your workflow with ZARZOOM's powerful OpenClaw integration for on-demand automated social media creation and scheduling across 13+ platforms. Trigger AI-powered content generation directly from your existing systems via our REST API, or let OpenClaw agents handle everything autonomously. Perfect for agencies, developers, and businesses wanting seamless automation.",
       features: [
-        "Zapier integration",
-        "Webhook support",
-        "REST API access",
-        "Custom integrations",
+        "OpenClaw agent automation (13+ platforms)",
+        "On-demand AI content creation via API",
+        "Instant scheduling triggers",
+        "Custom workflow automation",
       ],
       image: "/images/features/integrations.jpg",
     },
