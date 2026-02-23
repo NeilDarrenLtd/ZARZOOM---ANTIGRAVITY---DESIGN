@@ -2,11 +2,17 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { CurrencyToggle } from "./currency-toggle";
-import { IntervalToggle } from "./interval-toggle";
+import { DiscountToggle } from "./discount-toggle";
 import { PlanCard } from "./plan-card";
-import type { Currency, BillingInterval } from "@/lib/billing/types";
+import type { Currency } from "@/lib/billing/types";
 import type { DisplayablePlan } from "@/lib/billing/displayable-plans";
 import { CURRENCIES } from "@/lib/billing/types";
+import {
+  detectUserCurrency,
+  saveCurrencyPreference,
+  saveDiscountPreference,
+  getDiscountPreference,
+} from "@/lib/pricing/geolocation";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -18,21 +24,16 @@ interface PricingShellProps {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Helpers                                                            */
+/*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 
-const STORAGE_KEY = "zarzoom_currency";
+// Advertising partnership discount settings
+const DISCOUNT_PERCENT = 15; // 15% discount
+const MAX_ADS_PER_WEEK = 7; // Once per day
 
-function getSavedCurrency(available: Currency[]): Currency {
-  if (typeof window === "undefined") return "GBP";
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY) as Currency | null;
-    if (saved && available.includes(saved)) return saved;
-  } catch {
-    /* localStorage unavailable */
-  }
-  return "GBP";
-}
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
 
 function deriveAvailableCurrencies(plans: DisplayablePlan[]): Currency[] {
   const seen = new Set<Currency>();
@@ -55,23 +56,42 @@ export function PricingShell({
   // Derive available currencies from plan prices
   const availableCurrencies = deriveAvailableCurrencies(plans);
   
-  const [currency, setCurrency] = useState<Currency>("GBP");
-  const [interval, setInterval] = useState<BillingInterval>("monthly");
+  const [currency, setCurrency] = useState<Currency>("USD");
+  const [discountEnabled, setDiscountEnabled] = useState<boolean>(false);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  /* Hydrate from localStorage after mount */
+  /* Initialize currency with geolocation detection */
   useEffect(() => {
-    setCurrency(getSavedCurrency(availableCurrencies));
+    async function initializeCurrency() {
+      const detectedCurrency = await detectUserCurrency(availableCurrencies);
+      setCurrency(detectedCurrency);
+      
+      // Load discount preference
+      const savedDiscount = getDiscountPreference();
+      setDiscountEnabled(savedDiscount);
+      
+      setIsInitialized(true);
+      console.log("[v0] Initialized pricing with currency:", detectedCurrency, "discount:", savedDiscount);
+    }
+    
+    if (availableCurrencies.length > 0) {
+      initializeCurrency();
+    }
   }, [availableCurrencies]);
 
   const handleCurrencyChange = useCallback(
     (c: Currency) => {
       setCurrency(c);
-      try {
-        localStorage.setItem(STORAGE_KEY, c);
-      } catch {
-        /* noop */
-      }
+      saveCurrencyPreference(c);
+    },
+    []
+  );
+  
+  const handleDiscountChange = useCallback(
+    (enabled: boolean) => {
+      setDiscountEnabled(enabled);
+      saveDiscountPreference(enabled);
     },
     []
   );
@@ -119,9 +139,18 @@ export function PricingShell({
         </p>
       </div>
 
-      {/* Controls */}
-      <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-        <IntervalToggle value={interval} onChange={setInterval} />
+      {/* Discount Toggle */}
+      <div className="mb-8 max-w-3xl mx-auto">
+        <DiscountToggle
+          value={discountEnabled}
+          onChange={handleDiscountChange}
+          discountPercent={DISCOUNT_PERCENT}
+          maxAdsPerWeek={MAX_ADS_PER_WEEK}
+        />
+      </div>
+
+      {/* Currency Selector */}
+      <div className="mb-12 flex items-center justify-center">
         <CurrencyToggle
           value={currency}
           onChange={handleCurrencyChange}
@@ -129,28 +158,47 @@ export function PricingShell({
         />
       </div>
 
-      {/* Plan Cards */}
+      {/* Plan Cards - filter out plans without prices for selected currency */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        {plans.map((plan) => (
-          <PlanCard
-            key={plan.planKey}
-            name={plan.copy.displayName}
-            slug={plan.planKey}
-            description={plan.copy.description}
-            tagline={plan.copy.shortTagline}
-            features={plan.copy.bullets}
-            prices={plan.prices}
-            highlight={plan.sortOrder === 2} // Middle plan
-            currency={currency}
-            interval={interval}
-            isLoggedIn={isLoggedIn}
-            cta={plan.copy.cta}
-            onChoosePlan={(priceId) => {
-              if (checkoutLoading) return;
-              handleChoosePlan(priceId);
-            }}
-          />
-        ))}
+        {plans
+          .filter((plan) => {
+            // Only show plan if it has a price for selected currency
+            const hasPrice = plan.prices.some(
+              (p) => p.currency === currency && p.interval === "monthly" && p.isActive
+            );
+            if (!hasPrice) {
+              console.log(`[v0] Hiding plan ${plan.planKey} - no ${currency} monthly price available`);
+            }
+            return hasPrice;
+          })
+          .map((plan) => {
+            // Calculate discounted price if enabled
+            const basePrice = plan.prices.find(
+              (p) => p.currency === currency && p.interval === "monthly" && p.isActive
+            );
+            
+            return (
+              <PlanCard
+                key={plan.planKey}
+                name={plan.copy.displayName}
+                slug={plan.planKey}
+                description={plan.copy.description}
+                tagline={plan.copy.shortTagline}
+                features={plan.copy.bullets}
+                prices={plan.prices}
+                highlight={plan.sortOrder === 2} // Middle plan
+                currency={currency}
+                interval="monthly"
+                isLoggedIn={isLoggedIn}
+                cta={plan.copy.cta}
+                discountPercent={discountEnabled ? DISCOUNT_PERCENT : 0}
+                onChoosePlan={(priceId) => {
+                  if (checkoutLoading) return;
+                  handleChoosePlan(priceId);
+                }}
+              />
+            );
+          })}
       </div>
 
       {/* Trust footnote */}

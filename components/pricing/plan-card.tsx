@@ -51,6 +51,7 @@ interface PlanCardProps {
   interval: BillingInterval;
   isLoggedIn: boolean;
   cta?: string;
+  discountPercent?: number;
   onChoosePlan: (priceId: string) => void;
 }
 
@@ -69,6 +70,7 @@ export function PlanCard({
   interval,
   isLoggedIn,
   cta,
+  discountPercent = 0,
   onChoosePlan,
 }: PlanCardProps) {
   const matchedPrice = prices.find(
@@ -83,7 +85,12 @@ export function PlanCard({
 
   const price = matchedPrice ?? fallbackPrice;
   const isFallback = !matchedPrice && !!fallbackPrice;
-  const displayAmount = price?.amountMinor ?? 0;
+  
+  // Calculate discounted price
+  const baseAmount = price?.amountMinor ?? 0;
+  const discountAmount = discountPercent > 0 ? Math.round(baseAmount * (discountPercent / 100)) : 0;
+  const displayAmount = baseAmount - discountAmount;
+  const hasDiscount = discountPercent > 0 && baseAmount > 0;
 
   return (
     <div
@@ -125,12 +132,25 @@ export function PlanCard({
       <div className="mb-6">
         {price ? (
           <>
+            {hasDiscount && (
+              <div className="mb-1">
+                <span className="text-sm text-[hsl(var(--muted-foreground))] line-through">
+                  {formatPrice(baseAmount, isFallback ? "GBP" : currency)}
+                </span>
+                <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                  Save {discountPercent}%
+                </span>
+              </div>
+            )}
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold tracking-tight text-[hsl(var(--foreground))]">
+              <span className={cn(
+                "text-4xl font-bold tracking-tight",
+                hasDiscount ? "text-green-600" : "text-[hsl(var(--foreground))]"
+              )}>
                 {formatPrice(displayAmount, isFallback ? "GBP" : currency)}
               </span>
               <span className="text-sm text-[hsl(var(--muted-foreground))]">
-                /{interval === "monthly" ? "month" : "year"}
+                /month
               </span>
             </div>
             {isFallback && (
@@ -138,13 +158,9 @@ export function PlanCard({
                 Shown in GBP. {currency} pricing coming soon.
               </p>
             )}
-            {interval === "annual" && displayAmount > 0 && (
-              <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
-                {formatPrice(
-                  Math.round(displayAmount / 12),
-                  isFallback ? "GBP" : currency
-                )}
-                /month billed annually
+            {hasDiscount && (
+              <p className="mt-1 text-xs text-green-600 font-medium">
+                Advertising partnership discount applied
               </p>
             )}
           </>
