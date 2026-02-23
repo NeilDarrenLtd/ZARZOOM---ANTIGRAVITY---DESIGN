@@ -267,7 +267,20 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
         </h2>
         <PriceMatrixEditor
           planId={plan.id}
-          prices={plan.prices}
+          prices={plan.prices.map((p) => ({
+            id: p.id,
+            plan_id: p.plan_id,
+            currency: p.currency,
+            interval: p.interval,
+            unit_amount: p.amount_minor,
+            billing_provider_price_id: p.billing_provider_price_id,
+            is_active: p.is_active,
+            effective_from: p.effective_from,
+            effective_to: p.effective_to,
+            created_by: p.created_by,
+            created_at: p.created_at,
+            updated_at: p.updated_at,
+          }))}
           onAddPrice={handleAddPrice}
           onDeactivatePrice={handleDeactivatePrice}
         />
