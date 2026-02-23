@@ -45,13 +45,13 @@ export default function Navbar() {
     ? [
         { labelKey: "nav.pricing", href: "#pricing" },
         { labelKey: "nav.support", href: "/dashboard/support" },
-        { labelKey: "nav.contact", href: "#contact" },
+        { labelKey: "nav.contact", href: "/dashboard/contact" },
       ]
     : [
         { labelKey: "nav.about", href: "#about" },
         { labelKey: "nav.features", href: "#features" },
         { labelKey: "nav.pricing", href: "#pricing" },
-        { labelKey: "nav.contact", href: "#contact" },
+        { labelKey: "nav.contact", href: "/contact" },
       ];
 
   const subMenuLinks = [
@@ -141,13 +141,13 @@ export default function Navbar() {
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.labelKey}
                 href={link.href}
                 className="text-sm font-semibold tracking-wide uppercase transition-colors duration-200 text-green-600 hover:text-green-700"
               >
                 {t(link.labelKey)}
-              </a>
+              </Link>
             ))}
           </div>
 
