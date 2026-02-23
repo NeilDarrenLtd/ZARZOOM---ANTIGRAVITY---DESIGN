@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate:i18n": "tsx scripts/validate-i18n.ts"
   },
   "dependencies": {
     "@jest/globals": "^30.2.0",

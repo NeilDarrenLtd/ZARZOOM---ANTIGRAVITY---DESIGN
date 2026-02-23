@@ -49,12 +49,9 @@ const GOAL_ICONS: Record<Goal, React.ReactNode> = {
   generate_social_content: <Share2 className="w-5 h-5" />,
 };
 
-// ── Plan pricing (matches Step4) ──────────────────────────
-const PLAN_PRICES: Record<Plan, { monthly: number; annual: number }> = {
-  basic: { monthly: 29, annual: 290 },
-  pro: { monthly: 79, annual: 790 },
-  scale: { monthly: 199, annual: 1990 },
-};
+// ── Plan pricing - fetched from API (no hardcoded values) ───
+// Pricing is now fetched from GET /api/v1/billing/plans
+// This ensures a single source of truth from the database
 
 const PLAN_FEATURES: Record<Plan, string[]> = {
   basic: [
@@ -100,16 +97,41 @@ export default function ProfilePage() {
   const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [planPrices, setPlanPrices] = useState<Record<string, { monthly: number; annual: number }>>({});
 
-  // ── Load profile ────────────────────────────────────────
+  // ── Load profile and pricing ───────────────────────────
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/v1/onboarding");
-        if (!res.ok) throw new Error("load failed");
-        const body = await res.json();
-        setData(body.data ?? {});
-      } catch {
+        // Load profile data
+        const profileRes = await fetch("/api/v1/onboarding");
+        if (!profileRes.ok) throw new Error("load failed");
+        const profileBody = await profileRes.json();
+        setData(profileBody.data ?? {});
+
+        // Load pricing from canonical API
+        const plansRes = await fetch("/api/v1/billing/plans");
+        if (plansRes.ok) {
+          const plansBody = await plansRes.json();
+          const pricesMap: Record<string, { monthly: number; annual: number }> = {};
+          
+          plansBody.plans?.forEach((plan: any) => {
+            const monthlyPrice = plan.prices.find((p: any) => p.currency === "GBP" && p.interval === "monthly");
+            const annualPrice = plan.prices.find((p: any) => p.currency === "GBP" && p.interval === "annual");
+            
+            if (monthlyPrice && annualPrice) {
+              pricesMap[plan.planKey] = {
+                monthly: Math.round(monthlyPrice.amountMinor / 100),
+                annual: Math.round(annualPrice.amountMinor / 100),
+              };
+            }
+          });
+          
+          setPlanPrices(pricesMap);
+          console.log("[v0] Loaded plan prices from API:", pricesMap);
+        }
+      } catch (err) {
+        console.error("[v0] Profile load error:", err);
         showToast("error", t("profile.loadFailed"));
       } finally {
         setLoading(false);
@@ -979,9 +1001,13 @@ export default function ProfilePage() {
                   <div className="text-right">
                     <p className="text-2xl font-bold text-green-800">
                       {t("onboarding.a11y.currency")}
-                      {isAnnual
-                        ? Math.round(PLAN_PRICES[selectedPlan].annual / 12)
-                        : PLAN_PRICES[selectedPlan].monthly}
+                      {planPrices[selectedPlan] ? (
+                        isAnnual
+                          ? Math.round(planPrices[selectedPlan].annual / 12)
+                          : planPrices[selectedPlan].monthly
+                      ) : (
+                        "—"
+                      )}
                     </p>
                     <p className="text-xs text-green-600">
                       {t("onboarding.step4.perMonth")}
@@ -1021,9 +1047,11 @@ export default function ProfilePage() {
               {PLAN_OPTIONS.map((plan) => {
                 const isSelected = selectedPlan === plan;
                 const isPopular = plan === "pro";
-                const displayPrice = isAnnual
-                  ? Math.round(PLAN_PRICES[plan].annual / 12)
-                  : PLAN_PRICES[plan].monthly;
+                const displayPrice = planPrices[plan]
+                  ? (isAnnual
+                      ? Math.round(planPrices[plan].annual / 12)
+                      : planPrices[plan].monthly)
+                  : 0;
 
                 return (
                   <div

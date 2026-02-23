@@ -10,6 +10,7 @@ import {
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
 import enTranslations from "@/locales/en.json";
+import { devCheckPricing } from "./validate-no-pricing";
 
 type Translations = typeof enTranslations;
 type NestedKeyOf<T, Prefix extends string = ""> = T extends object
@@ -36,6 +37,11 @@ const translationCache: Record<string, Translations> = {
   en: enTranslations,
 };
 
+// Dev-only: Validate English translations on load
+if (process.env.NODE_ENV === "development") {
+  devCheckPricing(enTranslations, "en");
+}
+
 async function loadTranslation(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
     return translationCache[locale];
@@ -43,8 +49,13 @@ async function loadTranslation(locale: string): Promise<Translations> {
 
   try {
     const mod = await import(`@/locales/${locale}.json`);
-    translationCache[locale] = mod.default;
-    return mod.default;
+    const translations = mod.default;
+    translationCache[locale] = translations;
+    
+    // Dev-only: Validate no pricing in translations
+    devCheckPricing(translations, locale);
+    
+    return translations;
   } catch {
     // Fallback to English if translation file not found
     return enTranslations;
