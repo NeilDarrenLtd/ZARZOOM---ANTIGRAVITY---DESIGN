@@ -32,22 +32,25 @@ function formatPrice(amountMinor: number, currency: Currency): string {
 
 interface PlanPrice {
   id: string;
-  currency: Currency;
-  interval: BillingInterval;
-  unit_amount: number;
-  billing_provider_price_id: string | null;
+  currency: Currency | string;
+  interval: BillingInterval | string;
+  amountMinor: number;
+  isActive: boolean;
+  billingProviderId: string | null;
 }
 
 interface PlanCardProps {
   name: string;
   slug: string;
-  description: string | null;
+  description: string;
+  tagline?: string;
   features: string[];
   prices: PlanPrice[];
   highlight: boolean;
   currency: Currency;
   interval: BillingInterval;
   isLoggedIn: boolean;
+  cta?: string;
   onChoosePlan: (priceId: string) => void;
 }
 
@@ -58,26 +61,29 @@ interface PlanCardProps {
 export function PlanCard({
   name,
   description,
+  tagline,
   features,
   prices,
   highlight,
   currency,
   interval,
   isLoggedIn,
+  cta,
   onChoosePlan,
 }: PlanCardProps) {
   const matchedPrice = prices.find(
-    (p) => p.currency === currency && p.interval === interval
+    (p) => p.currency === currency && p.interval === interval && p.isActive
   );
 
   /* Fallback: try GBP for same interval, else show Contact us */
   const fallbackPrice =
     !matchedPrice && currency !== "GBP"
-      ? prices.find((p) => p.currency === "GBP" && p.interval === interval)
+      ? prices.find((p) => p.currency === "GBP" && p.interval === interval && p.isActive)
       : null;
 
   const price = matchedPrice ?? fallbackPrice;
   const isFallback = !matchedPrice && !!fallbackPrice;
+  const displayAmount = price?.amountMinor ?? 0;
 
   return (
     <div
@@ -103,8 +109,13 @@ export function PlanCard({
         <h3 className="text-lg font-semibold text-[hsl(var(--foreground))]">
           {name}
         </h3>
+        {tagline && (
+          <p className="mt-1 text-xs font-medium text-[hsl(var(--primary))]">
+            {tagline}
+          </p>
+        )}
         {description && (
-          <p className="mt-1 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
             {description}
           </p>
         )}
@@ -116,7 +127,7 @@ export function PlanCard({
           <>
             <div className="flex items-baseline gap-1">
               <span className="text-4xl font-bold tracking-tight text-[hsl(var(--foreground))]">
-                {formatPrice(price.unit_amount, isFallback ? "GBP" : currency)}
+                {formatPrice(displayAmount, isFallback ? "GBP" : currency)}
               </span>
               <span className="text-sm text-[hsl(var(--muted-foreground))]">
                 /{interval === "monthly" ? "month" : "year"}
@@ -127,10 +138,10 @@ export function PlanCard({
                 Shown in GBP. {currency} pricing coming soon.
               </p>
             )}
-            {interval === "annual" && price.unit_amount > 0 && (
+            {interval === "annual" && displayAmount > 0 && (
               <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
                 {formatPrice(
-                  Math.round(price.unit_amount / 12),
+                  Math.round(displayAmount / 12),
                   isFallback ? "GBP" : currency
                 )}
                 /month billed annually
@@ -159,7 +170,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              Choose plan
+              {cta || "Choose plan"}
             </button>
           ) : (
             <a
@@ -171,7 +182,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              Sign up
+              {cta || "Sign up"}
             </a>
           )
         ) : (

@@ -5,32 +5,15 @@ import { CurrencyToggle } from "./currency-toggle";
 import { IntervalToggle } from "./interval-toggle";
 import { PlanCard } from "./plan-card";
 import type { Currency, BillingInterval } from "@/lib/billing/types";
+import type { DisplayablePlan } from "@/lib/billing/displayable-plans";
+import { CURRENCIES } from "@/lib/billing/types";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
-interface PlanPrice {
-  id: string;
-  currency: Currency;
-  interval: BillingInterval;
-  unit_amount: number;
-  billing_provider_price_id: string | null;
-}
-
-interface Plan {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  features: string[];
-  highlight: boolean;
-  prices: PlanPrice[];
-}
-
 interface PricingShellProps {
-  plans: Plan[];
-  availableCurrencies: Currency[];
+  plans: DisplayablePlan[];
   isLoggedIn: boolean;
 }
 
@@ -51,15 +34,27 @@ function getSavedCurrency(available: Currency[]): Currency {
   return "GBP";
 }
 
+function deriveAvailableCurrencies(plans: DisplayablePlan[]): Currency[] {
+  const seen = new Set<Currency>();
+  for (const plan of plans) {
+    for (const price of plan.prices) {
+      seen.add(price.currency as Currency);
+    }
+  }
+  return CURRENCIES.filter((c) => seen.has(c));
+}
+
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export function PricingShell({
   plans,
-  availableCurrencies,
   isLoggedIn,
 }: PricingShellProps) {
+  // Derive available currencies from plan prices
+  const availableCurrencies = deriveAvailableCurrencies(plans);
+  
   const [currency, setCurrency] = useState<Currency>("GBP");
   const [interval, setInterval] = useState<BillingInterval>("monthly");
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
@@ -138,16 +133,18 @@ export function PricingShell({
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {plans.map((plan) => (
           <PlanCard
-            key={plan.id}
-            name={plan.name}
-            slug={plan.slug}
-            description={plan.description}
-            features={plan.features}
+            key={plan.planKey}
+            name={plan.copy.displayName}
+            slug={plan.planKey}
+            description={plan.copy.description}
+            tagline={plan.copy.shortTagline}
+            features={plan.copy.bullets}
             prices={plan.prices}
-            highlight={plan.highlight}
+            highlight={plan.sortOrder === 2} // Middle plan
             currency={currency}
             interval={interval}
             isLoggedIn={isLoggedIn}
+            cta={plan.copy.cta}
             onChoosePlan={(priceId) => {
               if (checkoutLoading) return;
               handleChoosePlan(priceId);

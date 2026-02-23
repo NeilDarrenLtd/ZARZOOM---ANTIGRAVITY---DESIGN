@@ -1040,33 +1040,22 @@
     }
   },
   "billing": {
-    "admin": {
-      "title": "Billing",
-      "subtitle": "Manage subscription plans, pricing, and billing.",
-      "totalSubscriptions": "Total Subscriptions",
-      "activeSubs": "Active",
-      "pastDueSubs": "Past Due",
-      "totalPlans": "Active Plans",
-      "plansTitle": "Subscription Plans",
-      "newPlan": "New Plan",
-      "newPlanDesc": "Create a new subscription plan with pricing.",
-      "editPlan": "Edit Plan",
-      "editPlanDesc": "Update plan details and pricing.",
-      "planDetails": "Plan Details",
-      "planName": "Name",
-      "planSlug": "Slug",
-      "planDescription": "Description",
-      "planStatus": "Status",
-      "planPriceGBP": "Price (GBP)",
-      "planTrialDays": "Trial Days",
-      "planDisplayOrder": "Display Order",
-      "planActions": "Actions",
-      "planPrices": "Pricing",
-      "addPrice": "Add Price",
-      "cancel": "Cancel",
-      "saving": "Saving...",
-      "updatePlan": "Update Plan",
-      "createPlan": "Create Plan"
+    "nav": {
+      "billingHistory": "Billing History"
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your growth. Start with a free trial, upgrade anytime.",
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "popular": "Most Popular",
+      "getStarted": "Get Started",
+      "savePercent": "Save {percent}% with annual billing",
+      "trialDays": "{days}-day free trial",
+      "fallback": {
+        "title": "Pricing Temporarily Unavailable",
+        "message": "We're currently updating our pricing plans. Please check back shortly or contact support for assistance."
+      }
     },
     "pricing": {
       "title": "Simple, Transparent Pricing",
