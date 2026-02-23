@@ -5,7 +5,6 @@ import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import type { DisplayablePlan } from "@/lib/pricing";
 import { getPriceForSelection } from "@/lib/pricing";
 import { formatPrice } from "@/lib/billing/format";
-import { Button } from "@/components/ui/button";
 
 interface PlanCardProps {
   plan: DisplayablePlan;
@@ -72,20 +71,19 @@ export function PlanCard({
         </div>
       </div>
 
-      <Button
+      <button
         onClick={() => onChoosePlan?.(plan.planKey, price.id)}
-        className={`mb-6 w-full ${
+        className={`mb-6 w-full rounded-lg px-6 py-3 text-base font-semibold text-white transition-colors ${
           isSelected
-            ? "bg-green-600 hover:bg-green-700"
+            ? "bg-green-600 hover:bg-green-700 cursor-not-allowed opacity-75"
             : isPopular
             ? "bg-green-600 hover:bg-green-700"
             : "bg-zinc-900 hover:bg-zinc-800"
         }`}
-        size="lg"
         disabled={isSelected}
       >
         {isSelected ? "Selected" : "Choose Plan"}
-      </Button>
+      </button>
 
       <div className="flex-1">
         <ul className="space-y-3">
