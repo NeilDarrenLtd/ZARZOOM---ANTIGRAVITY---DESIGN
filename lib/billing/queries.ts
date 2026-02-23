@@ -494,7 +494,7 @@ export async function listSubscriptions(opts: {
   limit?: number;
   offset?: number;
 } = {}): Promise<{
-  subscriptions: Record<string, unknown>[];
+  subscriptions: TenantSubscriptionRow[];
   count: number;
 }> {
   const { createAdminClient } = await import("@/lib/supabase/server");
@@ -524,7 +524,7 @@ export async function listSubscriptions(opts: {
   }
 
   return {
-    subscriptions: data || [],
+    subscriptions: (data || []) as TenantSubscriptionRow[],
     count: count || 0,
   };
 }
