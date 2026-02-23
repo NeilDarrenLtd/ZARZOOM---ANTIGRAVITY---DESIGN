@@ -31,6 +31,15 @@ export function PricingClient({
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
   const [interval, setInterval] = useState<BillingInterval>(defaultInterval);
 
+  // Development-only logging
+  if (process.env.NODE_ENV === "development") {
+    console.log("[v0] 🎨 PricingClient - Render state:");
+    console.log(`[v0]   - Plans received: ${plans.length}`);
+    console.log(`[v0]   - Selected currency: ${currency}`);
+    console.log(`[v0]   - Selected interval: ${interval}`);
+    console.log(`[v0]   - Selected plan key: ${selectedPlanKey || 'none'}`);
+  }
+
   return (
     <div className="space-y-8">
       {/* Custom Header (optional) */}

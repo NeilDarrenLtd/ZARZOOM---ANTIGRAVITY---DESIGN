@@ -23,6 +23,21 @@ export function getPriceForSelection(
       p.isActive === true
   );
 
+  // Development-only logging
+  if (process.env.NODE_ENV === "development") {
+    console.log(`[v0] 💰 getPriceForSelection() - Plan "${plan.planKey}":`);
+    console.log(`[v0]   - Looking for: ${currency} / ${interval}`);
+    console.log(`[v0]   - Available prices (${plan.prices.length}):`);
+    plan.prices.forEach(p => {
+      console.log(`[v0]     - ${p.currency} / ${p.interval} / ${p.isActive ? 'ACTIVE' : 'INACTIVE'} / ${p.amountMinor} minor`);
+    });
+    console.log(`[v0]   - Match found: ${matchingPrice ? 'YES' : 'NO'}`);
+    if (matchingPrice) {
+      console.log(`[v0]   - Price ID: ${matchingPrice.id}`);
+      console.log(`[v0]   - Amount: ${matchingPrice.amountMinor} (${matchingPrice.currency})`);
+    }
+  }
+
   return matchingPrice || null;
 }
 

@@ -40,6 +40,13 @@ export function getDisplayablePlans(
   plans: ApiPlan[],
   t: TranslateFn
 ): DisplayablePlan[] {
+  // Development-only logging
+  if (process.env.NODE_ENV === "development") {
+    console.log("[v0] 🎯 getDisplayablePlans() - Processing plans:");
+    console.log(`[v0]   - Input plans count: ${plans.length}`);
+    console.log(`[v0]   - Plan keys: [${plans.map(p => p.planKey).join(", ")}]`);
+  }
+
   const displayable: DisplayablePlan[] = [];
 
   for (const plan of plans) {
@@ -91,7 +98,22 @@ export function getDisplayablePlans(
   }
 
   // Sort by sortOrder ascending
-  return displayable.sort((a, b) => a.sortOrder - b.sortOrder);
+  const sorted = displayable.sort((a, b) => a.sortOrder - b.sortOrder);
+
+  // Development-only logging
+  if (process.env.NODE_ENV === "development") {
+    console.log("[v0] ✅ getDisplayablePlans() - Result:");
+    console.log(`[v0]   - Displayable plans count: ${sorted.length}`);
+    console.log(`[v0]   - Displayable plan keys: [${sorted.map(p => p.planKey).join(", ")}]`);
+    sorted.forEach(plan => {
+      console.log(`[v0]   - Plan "${plan.planKey}":`);
+      console.log(`[v0]     - Display Name: "${plan.displayName}"`);
+      console.log(`[v0]     - Active Prices: ${plan.prices.filter(p => p.isActive).length}`);
+      console.log(`[v0]     - Features: ${plan.displayFeatures.length}`);
+    });
+  }
+
+  return sorted;
 }
 
 /**

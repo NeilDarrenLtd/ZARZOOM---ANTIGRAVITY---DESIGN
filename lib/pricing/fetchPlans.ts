@@ -23,6 +23,13 @@ export async function fetchPlans(): Promise<GetPlansResponse> {
 
     const data = await response.json();
     
+    // Development-only logging
+    if (process.env.NODE_ENV === "development") {
+      console.log("[v0] 📦 Raw API Response from /api/v1/billing/plans:");
+      console.log(`[v0]   - Total plans: ${data?.plans?.length || 0}`);
+      console.log("[v0]   - Plans data:", JSON.stringify(data, null, 2));
+    }
+    
     // Validate response shape
     if (!data || typeof data !== "object" || !Array.isArray(data.plans)) {
       throw new Error("Invalid API response format");
@@ -56,6 +63,13 @@ export async function fetchPlansServer(baseUrl: string): Promise<GetPlansRespons
     }
 
     const data = await response.json();
+    
+    // Development-only logging
+    if (process.env.NODE_ENV === "development") {
+      console.log("[v0] 🖥️  Raw API Response from /api/v1/billing/plans (server):");
+      console.log(`[v0]   - Total plans: ${data?.plans?.length || 0}`);
+      console.log("[v0]   - Plans data:", JSON.stringify(data, null, 2));
+    }
     
     if (!data || typeof data !== "object" || !Array.isArray(data.plans)) {
       throw new Error("Invalid API response format");
