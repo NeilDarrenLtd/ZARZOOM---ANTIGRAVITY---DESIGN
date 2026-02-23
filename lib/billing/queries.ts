@@ -528,3 +528,48 @@ export async function listSubscriptions(opts: {
     count: count || 0,
   };
 }
+
+/**
+ * LEGACY: Version a price
+ * @deprecated Implement proper price versioning
+ */
+export async function versionPrice(
+  priceId: string,
+  updates: Record<string, unknown>
+): Promise<Record<string, unknown>> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { data, error } = await supabase
+    .from("plan_prices")
+    .update(updates)
+    .eq("id", priceId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[v0] Error versioning price:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+/**
+ * LEGACY: Deactivate a price
+ * @deprecated Use direct database updates
+ */
+export async function deactivatePrice(priceId: string): Promise<void> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("plan_prices")
+    .update({ is_active: false })
+    .eq("id", priceId);
+
+  if (error) {
+    console.error("[v0] Error deactivating price:", error);
+    throw error;
+  }
+}
