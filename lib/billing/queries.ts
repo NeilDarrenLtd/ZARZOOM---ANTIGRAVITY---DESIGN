@@ -6,7 +6,7 @@
  */
 
 import { createClient } from "@/lib/supabase/server";
-import type { Plan, PlanPrice, PlanWithPrices } from "./types";
+import type { Plan, PlanPrice, PlanWithPrices, TenantSubscriptionRow } from "./types";
 
 /**
  * Fetch all active plans with their prices.
