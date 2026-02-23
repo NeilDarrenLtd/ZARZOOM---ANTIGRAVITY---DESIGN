@@ -91,7 +91,7 @@ export const POST = createApiHandler({
           is_active: plan.is_active,
           quota_policy: plan.quota_policy,
           features: plan.features,
-          prices: plan.plan_prices.map((p) => ({
+          prices: (plan.plan_prices as Array<{ currency: string; interval: string; unit_amount: number }>).map((p) => ({
             currency: p.currency,
             interval: p.interval,
             unit_amount: p.unit_amount,
