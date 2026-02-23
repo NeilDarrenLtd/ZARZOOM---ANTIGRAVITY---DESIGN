@@ -1,39 +1,37 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
 import SiteNavbar from "@/components/SiteNavbar";
 import { Target, Users, Lightbulb, Shield, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function AboutPage() {
-  const { t } = useI18n();
 
   const values = [
     {
       icon: Lightbulb,
-      title: t("about.values.innovation.title"),
-      description: t("about.values.innovation.description"),
+      title: "Innovation First",
+      description: "We push the boundaries of AI and automation to deliver solutions that were impossible just yesterday. Our commitment to innovation means you always have access to the latest advancements in social media technology.",
       color: "from-amber-500 to-orange-500",
       bgColor: "bg-amber-50",
     },
     {
       icon: Users,
-      title: t("about.values.authenticity.title"),
-      description: t("about.values.authenticity.description"),
+      title: "Authentic Engagement",
+      description: "Automation should enhance, not replace, genuine human connection. Our tools are designed to help you maintain your unique voice and build real relationships with your audience at scale.",
       color: "from-blue-500 to-cyan-500",
       bgColor: "bg-blue-50",
     },
     {
       icon: Target,
-      title: t("about.values.simplicity.title"),
-      description: t("about.values.simplicity.description"),
+      title: "Simplicity & Power",
+      description: "Sophisticated technology doesn't have to be complicated. We believe in making powerful tools accessible to everyone, regardless of technical expertise.",
       color: "from-green-500 to-emerald-500",
       bgColor: "bg-green-50",
     },
     {
       icon: Shield,
-      title: t("about.values.trust.title"),
-      description: t("about.values.trust.description"),
+      title: "Trust & Privacy",
+      description: "Your data, your content, your community—we treat everything with the utmost respect and security. We never sell your data and maintain the highest standards of privacy protection.",
       color: "from-purple-500 to-pink-500",
       bgColor: "bg-purple-50",
     },

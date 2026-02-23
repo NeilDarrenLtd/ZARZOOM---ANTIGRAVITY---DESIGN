@@ -1,6 +1,5 @@
 "use client";
 
-import { useI18n } from "@/lib/i18n";
 import SiteNavbar from "@/components/SiteNavbar";
 import {
   Sparkles,
@@ -17,7 +16,6 @@ import {
 import Link from "next/link";
 
 export default function FeaturesPage() {
-  const { t } = useI18n();
 
   const features = [
     {
