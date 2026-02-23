@@ -10,7 +10,7 @@ interface PlanCardProps {
   plan: DisplayablePlan;
   currency: Currency;
   interval: BillingInterval;
-  onChoose?: (planKey: string, priceId: string) => void;
+  onChoosePlan?: (planKey: string, priceId: string) => void;
   isPopular?: boolean;
   isSelected?: boolean;
 }
@@ -19,7 +19,7 @@ export function PlanCard({
   plan,
   currency,
   interval,
-  onChoose,
+  onChoosePlan,
   isPopular = false,
   isSelected = false,
 }: PlanCardProps) {
@@ -77,7 +77,7 @@ export function PlanCard({
       )}
 
       <h3 className="text-2xl font-bold text-zinc-900">{plan.displayName}</h3>
-      <p className="mt-2 text-sm text-zinc-600">{plan.displayTagline}</p>
+      <p className="mt-2 text-sm text-zinc-600">{plan.displayDescription}</p>
 
       <div className="mt-6 flex items-baseline gap-2">
         <span className="text-4xl font-bold text-zinc-900">
@@ -87,7 +87,7 @@ export function PlanCard({
       </div>
 
       <button
-        onClick={() => onChoose?.(plan.planKey, price.id)}
+        onClick={() => onChoosePlan?.(plan.planKey, price.id)}
         className={`mt-6 mb-6 w-full rounded-lg px-6 py-3 text-base font-semibold text-white transition-colors ${
           isSelected
             ? "bg-green-600 hover:bg-green-700 cursor-not-allowed opacity-75"
