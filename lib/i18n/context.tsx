@@ -116,40 +116,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     </I18nContext.Provider>
   );
 }
-    }
-  }, []);
-
-  // Update HTML lang and dir attributes
-  useEffect(() => {
-    document.documentElement.lang = locale;
-  }, [locale]);
-
-  const setLocale = useCallback((newLocale: string) => {
-    setLocaleState(newLocale);
-    localStorage.setItem("zarzoom-locale", newLocale);
-    loadTranslation(newLocale).then(setTranslations);
-  }, []);
-
-  const t = useCallback(
-    (key: string, fallback?: string): string => {
-      const value = getNestedValue(
-        translations as unknown as Record<string, unknown>,
-        key
-      );
-      // If the key wasn't found (getNestedValue returns the key), use fallback if provided
-      if (value === key && fallback) return fallback;
-      // If no fallback and key wasn't found, return the key (for debugging)
-      return value;
-    },
-    [translations]
-  );
-
-  return (
-    <I18nContext.Provider value={{ locale, setLocale, t, translations }}>
-      {children}
-    </I18nContext.Provider>
-  );
-}
 
 export function useI18n() {
   const context = useContext(I18nContext);
