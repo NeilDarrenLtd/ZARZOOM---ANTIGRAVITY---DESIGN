@@ -7,6 +7,9 @@
 
 import type { Currency, BillingInterval } from "./types";
 
+// Re-export types for convenience
+export type { Currency, BillingInterval } from "./types";
+
 /**
  * Price object returned by the API
  */
