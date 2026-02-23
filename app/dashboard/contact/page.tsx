@@ -79,10 +79,10 @@ export default function ContactPage() {
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              {t("contact.title") || "Get in Touch"}
+              Get in Touch
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t("contact.subtitle") || "Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible."}
+              Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible.
             </p>
           </div>
 
@@ -92,7 +92,7 @@ export default function ContactPage() {
               {/* Company Info Card */}
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  {t("contact.info.title") || "Contact Information"}
+                  Contact Information
                 </h2>
                 
                 <div className="space-y-6">
@@ -103,7 +103,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-1">
-                        {t("contact.info.email.label") || "Email"}
+                        Email
                       </p>
                       <a
                         href="mailto:support@zarzoom.com"
@@ -121,7 +121,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-1">
-                        {t("contact.info.phone.label") || "Phone"}
+                        Phone
                       </p>
                       <a
                         href="tel:+441234567890"
@@ -139,7 +139,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-1">
-                        {t("contact.info.address.label") || "Office"}
+                        Office
                       </p>
                       <p className="text-gray-600 leading-relaxed">
                         ZARZOOM Ltd<br />
@@ -155,7 +155,7 @@ export default function ContactPage() {
               {/* Business Hours */}
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl border border-green-200 p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">
-                  {t("contact.hours.title") || "Business Hours"}
+                  Business Hours
                 </h3>
                 <div className="space-y-2 text-sm text-gray-700">
                   <div className="flex justify-between">
@@ -172,7 +172,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-4">
-                  {t("contact.hours.note") || "We typically respond to all inquiries within 24 hours during business days."}
+                  We typically respond to all inquiries within 24 hours during business days.
                 </p>
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function ContactPage() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  {t("contact.form.title") || "Send us a Message"}
+                  Send us a Message
                 </h2>
 
                 {/* Success Message */}
@@ -190,10 +190,10 @@ export default function ContactPage() {
                     <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-green-900">
-                        {t("contact.form.success.title") || "Message Sent Successfully!"}
+                        Message Sent Successfully!
                       </p>
                       <p className="text-sm text-green-700 mt-1">
-                        {t("contact.form.success.message") || "Thank you for contacting us. We'll get back to you as soon as possible."}
+                        Thank you for contacting us. We'll get back to you as soon as possible.
                       </p>
                     </div>
                   </div>
@@ -205,7 +205,7 @@ export default function ContactPage() {
                     <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-red-900">
-                        {t("contact.form.error.title") || "Error"}
+                        Error
                       </p>
                       <p className="text-sm text-red-700 mt-1">{error}</p>
                     </div>
@@ -217,7 +217,7 @@ export default function ContactPage() {
                     {/* Name */}
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t("contact.form.name") || "Your Name"} <span className="text-red-500">*</span>
+                        Your Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         id="name"
@@ -226,7 +226,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder={t("contact.form.namePlaceholder") || "John Doe"}
+                        placeholder="John Doe"
                         required
                       />
                     </div>
@@ -234,7 +234,7 @@ export default function ContactPage() {
                     {/* Email */}
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t("contact.form.email") || "Your Email"} <span className="text-red-500">*</span>
+                        Your Email <span className="text-red-500">*</span>
                       </label>
                       <input
                         id="email"
@@ -243,7 +243,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder={t("contact.form.emailPlaceholder") || "john@example.com"}
+                        placeholder="john@example.com"
                         required
                       />
                     </div>
@@ -252,7 +252,7 @@ export default function ContactPage() {
                   {/* Subject */}
                   <div>
                     <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t("contact.form.subject") || "Subject"} <span className="text-red-500">*</span>
+                      Subject <span className="text-red-500">*</span>
                     </label>
                     <input
                       id="subject"
@@ -261,7 +261,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder={t("contact.form.subjectPlaceholder") || "How can we help you?"}
+                      placeholder="How can we help you?"
                       required
                     />
                   </div>
@@ -269,7 +269,7 @@ export default function ContactPage() {
                   {/* Message */}
                   <div>
                     <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                      {t("contact.form.message") || "Message"} <span className="text-red-500">*</span>
+                      Message <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -278,11 +278,11 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                      placeholder={t("contact.form.messagePlaceholder") || "Tell us more about your inquiry..."}
+                      placeholder="Tell us more about your inquiry..."
                       required
                     />
                     <p className="text-xs text-gray-500 mt-1.5">
-                      {t("contact.form.messageHint") || "Minimum 10 characters"}
+                      Minimum 10 characters
                     </p>
                   </div>
 
@@ -295,12 +295,12 @@ export default function ContactPage() {
                     {submitting ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        {t("contact.form.sending") || "Sending..."}
+                        Sending...
                       </>
                     ) : (
                       <>
                         <Send className="w-5 h-5" />
-                        {t("contact.form.submit") || "Send Message"}
+                        Send Message
                       </>
                     )}
                   </button>
