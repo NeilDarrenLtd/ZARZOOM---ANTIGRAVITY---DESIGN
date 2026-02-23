@@ -160,8 +160,9 @@ export function validatePlanCopy(
 
 /**
  * Validate plan has prices for at least one currency
+ * Accepts PlanWithPrices (which includes the prices array)
  */
-export function validatePlanPricing(plan: Plan): boolean {
+export function validatePlanPricing(plan: Plan & { prices?: { is_active: boolean }[] }): boolean {
   if (!plan.prices || plan.prices.length === 0) {
     if (process.env.NODE_ENV === "development") {
       console.warn(

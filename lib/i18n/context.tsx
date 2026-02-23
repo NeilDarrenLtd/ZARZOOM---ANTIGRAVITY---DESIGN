@@ -12,6 +12,8 @@ import { defaultLanguage, getSupportedLanguageCode } from "./languages";
 import enTranslations from "@/locales/en.json";
 import { devCheckPricing } from "./validate-no-pricing";
 
+// Force webpack cache invalidation after stale syntax error
+
 type Translations = typeof enTranslations;
 type NestedKeyOf<T, Prefix extends string = ""> = T extends object
   ? {

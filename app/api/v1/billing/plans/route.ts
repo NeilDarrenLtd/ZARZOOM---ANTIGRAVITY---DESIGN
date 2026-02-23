@@ -21,8 +21,8 @@
  *       quotaPolicy: { ... },
  *       features: [ ... ],
  *       prices: [
- *         { currency: "GBP", interval: "month", amountMinor: 999 },
- *         { currency: "GBP", interval: "year", amountMinor: 9990 },
+ *         { currency: "GBP", interval: "monthly", amountMinor: 999 },
+ *         { currency: "GBP", interval: "annual", amountMinor: 9990 },
  *         ...
  *       ]
  *     }
@@ -36,6 +36,20 @@ import { getActivePlansWithPrices } from "@/lib/billing/queries";
 // Cache for 120 seconds (2 minutes)
 export const revalidate = 120;
 
+/**
+ * Normalize database interval values to canonical BillingInterval format.
+ * Database stores "month"/"year" but frontend uses "monthly"/"annual".
+ */
+function normalizeInterval(dbInterval: string): string {
+  const map: Record<string, string> = {
+    month: "monthly",
+    year: "annual",
+    monthly: "monthly",
+    annual: "annual",
+  };
+  return map[dbInterval] || dbInterval;
+}
+
 export async function GET() {
   const requestId = crypto.randomUUID();
 
@@ -44,7 +58,7 @@ export async function GET() {
     
     const plansWithPrices = await getActivePlansWithPrices();
 
-    // Transform to canonical API shape
+    // Transform to canonical API shape with normalized intervals
     const response = {
       plans: plansWithPrices.map((plan) => ({
         planKey: plan.plan_key,
@@ -58,7 +72,7 @@ export async function GET() {
         prices: plan.prices.map((price) => ({
           id: price.id,
           currency: price.currency,
-          interval: price.interval,
+          interval: normalizeInterval(price.interval),
           amountMinor: price.amount_minor,
           isActive: price.is_active,
           billingProviderId: price.billing_provider_price_id,
