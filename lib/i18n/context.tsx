@@ -102,7 +102,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         translations as unknown as Record<string, unknown>,
         key
       );
+      // If the key wasn't found (getNestedValue returns the key), use fallback if provided
       if (value === key && fallback) return fallback;
+      // If no fallback and key wasn't found, return the key (for debugging)
       return value;
     },
     [translations]

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { PricingShell } from "@/components/pricing/pricing-shell";
+import SiteNavbar from "@/components/SiteNavbar";
 import type { Currency, BillingInterval } from "@/lib/billing/types";
 import { CURRENCIES } from "@/lib/billing/types";
 
@@ -118,14 +119,17 @@ export default async function PricingPage() {
   const availableCurrencies = deriveAvailableCurrencies(plans);
 
   return (
-    <main className="min-h-screen bg-[hsl(var(--background))]">
-      <PricingShell
-        plans={plans}
-        availableCurrencies={
-          availableCurrencies.length > 0 ? availableCurrencies : ["GBP"]
-        }
-        isLoggedIn={isLoggedIn}
-      />
-    </main>
+    <>
+      <SiteNavbar />
+      <main className="min-h-screen bg-[hsl(var(--background))] pt-8">
+        <PricingShell
+          plans={plans}
+          availableCurrencies={
+            availableCurrencies.length > 0 ? availableCurrencies : ["GBP"]
+          }
+          isLoggedIn={isLoggedIn}
+        />
+      </main>
+    </>
   );
 }
