@@ -1,94 +1,52 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { PricingShell } from "@/components/pricing/pricing-shell";
-import SiteNavbar from "@/components/SiteNavbar";
-import { getServerTranslations } from "@/lib/i18n/server";
-import { getDisplayablePlans } from "@/lib/billing/displayable-plans";
-import { AlertCircle } from "lucide-react";
-
-/* ------------------------------------------------------------------ */
-/*  Dynamic rendering required (uses cookies for locale detection)      */
-/* ------------------------------------------------------------------ */
-
-export const dynamic = "force-dynamic";
-
-/* ------------------------------------------------------------------ */
-/*  Metadata                                                           */
-/* ------------------------------------------------------------------ */
+import { PricingProvider } from "@/components/pricing/PricingProvider";
+import { CurrencyToggle } from "@/components/pricing/CurrencyToggle";
+import { IntervalToggle } from "@/components/pricing/IntervalToggle";
+import { PricingGrid } from "@/components/pricing/PricingGrid";
 
 export const metadata: Metadata = {
   title: "Pricing - ZARZOOM",
-  description:
-    "Explore ZARZOOM pricing plans. Choose Basic, Pro, or Advanced to automate your social media growth with AI-powered content generation.",
-  openGraph: {
-    title: "Pricing - ZARZOOM",
-    description:
-      "Explore ZARZOOM pricing plans for social media automation.",
-  },
+  description: "Choose the perfect plan for your social media automation needs. Transparent pricing with no hidden fees.",
 };
 
-/* ------------------------------------------------------------------ */
-/*  Helper: Check if user is logged in                                 */
-/* ------------------------------------------------------------------ */
-
-async function getIsLoggedIn(): Promise<boolean> {
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    return !!user;
-  } catch {
-    return false;
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                               */
-/* ------------------------------------------------------------------ */
-
-export default async function PricingPage() {
-  const [t, isLoggedIn] = await Promise.all([
-    getServerTranslations(),
-    getIsLoggedIn(),
-  ]);
-
-  // Apply strict gating: only show plans that pass BOTH checks
-  let displayablePlans;
-  try {
-    displayablePlans = await getDisplayablePlans(t);
-    console.log("[v0] Pricing page: displaying", displayablePlans.length, "plans");
-  } catch (error) {
-    console.error("[v0] Failed to load displayable plans:", error);
-    displayablePlans = [];
-  }
-
+export default function PricingPage() {
   return (
-    <>
-      <SiteNavbar />
-      <main className="min-h-screen bg-[hsl(var(--background))] pt-8">
-        {displayablePlans.length > 0 ? (
-          <PricingShell
-            plans={displayablePlans}
-            isLoggedIn={isLoggedIn}
-          />
-        ) : (
-          <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8">
-              <AlertCircle className="w-12 h-12 text-amber-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {t("pricing.fallback.title", "Pricing Temporarily Unavailable")}
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                {t(
-                  "pricing.fallback.message",
-                  "We're currently updating our pricing plans. Please check back shortly or contact support for assistance."
-                )}
-              </p>
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-white to-zinc-50">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+            Simple, Transparent Pricing
+          </h1>
+          <p className="mt-4 text-lg text-zinc-600">
+            Choose the plan that's right for you. All plans include a 14-day free trial.
+          </p>
+        </div>
+
+        {/* Pricing System */}
+        <PricingProvider defaultCurrency="GBP" defaultInterval="monthly">
+          {/* Controls */}
+          <div className="mb-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <CurrencyToggle />
+            <IntervalToggle />
           </div>
-        )}
-      </main>
-    </>
+
+          {/* Plans Grid */}
+          <PricingGrid
+            onChoosePlan={(planKey, priceId) => {
+              console.log("[v0] Selected plan:", { planKey, priceId });
+              // TODO: Navigate to checkout or signup
+            }}
+          />
+        </PricingProvider>
+
+        {/* FAQ Section */}
+        <div className="mt-16 text-center">
+          <p className="text-sm text-zinc-600">
+            Questions? <a href="/contact" className="text-green-600 hover:text-green-700 underline">Contact us</a> and we'll help you find the right plan.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

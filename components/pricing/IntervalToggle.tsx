@@ -1,0 +1,34 @@
+"use client";
+
+import type { BillingInterval } from "@/lib/billing/api-types";
+import { usePricing } from "./PricingProvider";
+
+export function IntervalToggle() {
+  const { interval, setInterval } = usePricing();
+
+  return (
+    <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-1">
+      <button
+        onClick={() => setInterval("monthly")}
+        className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
+          interval === "monthly"
+            ? "bg-green-600 text-white"
+            : "text-zinc-700 hover:bg-zinc-100"
+        }`}
+      >
+        Monthly
+      </button>
+      <button
+        onClick={() => setInterval("annual")}
+        className={`rounded-md px-6 py-2 text-sm font-medium transition-colors ${
+          interval === "annual"
+            ? "bg-green-600 text-white"
+            : "text-zinc-700 hover:bg-zinc-100"
+        }`}
+      >
+        <span>Annual</span>
+        <span className="ml-2 text-xs">(Save 20%)</span>
+      </button>
+    </div>
+  );
+}
