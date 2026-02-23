@@ -64,7 +64,7 @@ export default function AdminBillingPage() {
     },
     {
       label: t("billing.admin.totalPlans"),
-      value: plans.filter((p) => p.status === "active").length,
+      value: plans.filter((p) => p.is_active).length,
       icon: CreditCard,
       color: "bg-indigo-50 text-indigo-600",
     },
