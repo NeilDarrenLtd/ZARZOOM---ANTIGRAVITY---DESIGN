@@ -160,6 +160,163 @@ export async function getPlanById(planId: string): Promise<PlanWithPrices | null
   };
 }
 
+/* ------------------------------------------------------------------ */
+/*  ADMIN FUNCTIONS                                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Get all plans (admin only) - includes inactive
+ */
+export async function getAllPlansWithPrices(): Promise<PlanWithPrices[]> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { data: plans, error: plansError } = await supabase
+    .from("plans")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (plansError) {
+    console.error("[v0] Error fetching all plans:", plansError);
+    throw new Error(`Failed to fetch plans: ${plansError.message}`);
+  }
+
+  if (!plans || plans.length === 0) {
+    return [];
+  }
+
+  const planIds = plans.map((p) => p.id);
+
+  const { data: prices, error: pricesError } = await supabase
+    .from("plan_prices")
+    .select("*")
+    .in("plan_id", planIds);
+
+  if (pricesError) {
+    console.error("[v0] Error fetching prices:", pricesError);
+    throw new Error(`Failed to fetch prices: ${pricesError.message}`);
+  }
+
+  const pricesByPlanId = new Map<string, PlanPrice[]>();
+  (prices || []).forEach((price) => {
+    const existing = pricesByPlanId.get(price.plan_id) || [];
+    pricesByPlanId.set(price.plan_id, [...existing, price as PlanPrice]);
+  });
+
+  return plans.map((plan) => ({
+    ...(plan as Plan),
+    prices: pricesByPlanId.get(plan.id) || [],
+  }));
+}
+
+/**
+ * Create a new plan with prices (admin only)
+ */
+export async function createPlanWithPrices(
+  planData: {
+    plan_key: string;
+    name: string;
+    description: string | null;
+    is_active: boolean;
+    sort_order: number;
+    entitlements: Record<string, boolean>;
+    quota_policy: Record<string, number>;
+    features: string[];
+  },
+  prices: {
+    currency: string;
+    interval: string;
+    amount_minor: number;
+  }[]
+): Promise<PlanWithPrices> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { data: plan, error: planError } = await supabase
+    .from("plans")
+    .insert(planData)
+    .select()
+    .single();
+
+  if (planError) {
+    console.error("[v0] Error creating plan:", planError);
+    throw planError;
+  }
+
+  const priceRows = prices.map((p) => ({
+    plan_id: plan.id,
+    currency: p.currency,
+    interval: p.interval,
+    amount_minor: p.amount_minor,
+    is_active: true,
+  }));
+
+  const { data: insertedPrices, error: pricesError } = await supabase
+    .from("plan_prices")
+    .insert(priceRows)
+    .select();
+
+  if (pricesError) {
+    console.error("[v0] Error creating prices:", pricesError);
+    throw pricesError;
+  }
+
+  return {
+    ...plan,
+    prices: insertedPrices as PlanPrice[],
+  };
+}
+
+/**
+ * Update plan data (admin only)
+ */
+export async function updatePlanData(
+  planId: string,
+  updates: Partial<{
+    name: string;
+    description: string | null;
+    is_active: boolean;
+    sort_order: number;
+    entitlements: Record<string, boolean>;
+    quota_policy: Record<string, number>;
+    features: string[];
+  }>
+): Promise<void> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("plans")
+    .update(updates)
+    .eq("id", planId);
+
+  if (error) {
+    console.error("[v0] Error updating plan:", error);
+    throw error;
+  }
+}
+
+/**
+ * Toggle plan active status (admin only)
+ */
+export async function togglePlanStatus(
+  planId: string,
+  isActive: boolean
+): Promise<void> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("plans")
+    .update({ is_active: isActive })
+    .eq("id", planId);
+
+  if (error) {
+    console.error("[v0] Error toggling plan status:", error);
+    throw error;
+  }
+}
+
 /**
  * LEGACY: Get plans using old schema (subscription_plans).
  * @deprecated Use getActivePlansWithPrices() instead
