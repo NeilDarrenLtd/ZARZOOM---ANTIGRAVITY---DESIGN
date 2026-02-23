@@ -1,23 +1,17 @@
 "use client";
 
+import type { Currency, BillingInterval } from "@/lib/billing/api-types";
+import type { DisplayablePlan } from "@/lib/pricing";
 import { PlanCard } from "./PlanCard";
-import { usePricing } from "./PricingProvider";
 
 interface PricingGridProps {
+  plans: DisplayablePlan[];
+  currency: Currency;
+  interval: BillingInterval;
   onChoosePlan?: (planKey: string, priceId: string) => void;
 }
 
-export function PricingGrid({ onChoosePlan }: PricingGridProps) {
-  const { plans, currency, interval, isLoading } = usePricing();
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
-      </div>
-    );
-  }
-
+export function PricingGrid({ plans, currency, interval, onChoosePlan }: PricingGridProps) {
   if (plans.length === 0) {
     return (
       <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center">

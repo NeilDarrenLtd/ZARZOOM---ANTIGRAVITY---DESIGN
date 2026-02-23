@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
-import { PricingProvider } from "@/components/pricing/PricingProvider";
-import { CurrencyToggle } from "@/components/pricing/CurrencyToggle";
-import { IntervalToggle } from "@/components/pricing/IntervalToggle";
-import { PricingGrid } from "@/components/pricing/PricingGrid";
+import { headers } from "next/headers";
+import { fetchPlansServer, getDisplayablePlans } from "@/lib/pricing";
+import { getServerTranslations } from "@/lib/i18n/server";
+import { PricingClient } from "@/components/pricing/PricingClient";
 
 export const metadata: Metadata = {
   title: "Pricing - ZARZOOM",
   description: "Choose the perfect plan for your social media automation needs. Transparent pricing with no hidden fees.",
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  // Server-side: Fetch plans and enrich with translations
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
+
+  const t = await getServerTranslations();
+  const response = await fetchPlansServer(baseUrl);
+  const displayablePlans = getDisplayablePlans(response.plans, t);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-zinc-50">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -23,22 +33,15 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Pricing System */}
-        <PricingProvider defaultCurrency="GBP" defaultInterval="monthly">
-          {/* Controls */}
-          <div className="mb-12 flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <CurrencyToggle />
-            <IntervalToggle />
-          </div>
-
-          {/* Plans Grid */}
-          <PricingGrid
-            onChoosePlan={(planKey, priceId) => {
-              console.log("[v0] Selected plan:", { planKey, priceId });
-              // TODO: Navigate to checkout or signup
-            }}
-          />
-        </PricingProvider>
+        {/* Client Component with Server Data */}
+        <PricingClient
+          plans={displayablePlans}
+          defaultCurrency="GBP"
+          defaultInterval="monthly"
+          onChoosePlan={(planKey, priceId) => {
+            console.log("[v0] Selected plan:", { planKey, priceId });
+          }}
+        />
 
         {/* FAQ Section */}
         <div className="mt-16 text-center">

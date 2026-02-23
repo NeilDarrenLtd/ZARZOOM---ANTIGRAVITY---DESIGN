@@ -3,63 +3,68 @@
 import { useState, useCallback, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
-import { Check, AlertCircle } from "lucide-react";
-import { PricingProvider, usePricing } from "@/components/pricing/PricingProvider";
-import { CurrencyToggle } from "@/components/pricing/CurrencyToggle";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
-import { getPriceForSelection } from "@/lib/pricing";
+import type { DisplayablePlan } from "@/lib/pricing";
+import { fetchPlans, getDisplayablePlans, getPriceForSelection } from "@/lib/pricing";
 import { formatPrice } from "@/lib/billing/format";
-import { DiscountToggle } from "@/components/pricing/discount-toggle";
-import {
-  detectUserCurrency,
-  saveCurrencyPreference,
-  saveDiscountPreference,
-} from "@/lib/pricing/geolocation";
+import { Check, AlertCircle, Loader2 } from "lucide-react";
 
 interface Step4Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
-  aiFilledFields?: string[];
 }
 
 // Discount settings
 const DISCOUNT_PERCENT = 15;
 const MAX_ADS_PER_WEEK = 7;
 
-function Step4PlanContent({ data, onChange }: Step4Props) {
+export default function Step4Plan({ data, onChange }: Step4Props) {
   const { t } = useI18n();
-  const { plans, isLoading, currency, setCurrency } = usePricing();
+  const [plans, setPlans] = useState<DisplayablePlan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currency, setCurrency] = useState<Currency>(
+    (data.selected_currency as Currency) || "GBP"
+  );
   const [discountEnabled, setDiscountEnabled] = useState(data.discount_opt_in ?? false);
   const interval: BillingInterval = "monthly"; // Always monthly in wizard
   const selectedPlan = data.selected_plan ?? null;
 
-  // Initialize currency from saved preference or geolocation
+  // Load plans on mount
   useEffect(() => {
-    async function initCurrency() {
-      if (data.selected_currency) {
-        setCurrency(data.selected_currency as Currency);
-      } else {
-        const detected = await detectUserCurrency(["GBP", "USD", "EUR"]);
-        setCurrency(detected);
-        onChange({ selected_currency: detected });
+    let mounted = true;
+
+    async function loadPlans() {
+      try {
+        const response = await fetchPlans();
+        if (!mounted) return;
+
+        const displayable = getDisplayablePlans(response.plans, t);
+        setPlans(displayable);
+      } catch (error) {
+        console.error("[v0] Failed to load plans:", error);
+        if (mounted) setPlans([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     }
-    initCurrency();
-  }, [data.selected_currency, setCurrency, onChange]);
+
+    loadPlans();
+    return () => {
+      mounted = false;
+    };
+  }, [t]);
 
   const handleCurrencyChange = useCallback(
     (newCurrency: Currency) => {
       setCurrency(newCurrency);
-      saveCurrencyPreference(newCurrency);
       onChange({ selected_currency: newCurrency });
     },
-    [setCurrency, onChange]
+    [onChange]
   );
 
   const handleDiscountChange = useCallback(
     (enabled: boolean) => {
       setDiscountEnabled(enabled);
-      saveDiscountPreference(enabled);
       onChange({ discount_opt_in: enabled });
     },
     [onChange]
@@ -88,7 +93,7 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
           </p>
         </div>
         <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-t-transparent" />
+          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
         </div>
       </div>
     );
@@ -108,9 +113,11 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
           <AlertCircle className="w-10 h-10 text-amber-600 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            {t("pricing.fallback.title")}
+            No plans available
           </h3>
-          <p className="text-sm text-gray-600">{t("pricing.fallback.message")}</p>
+          <p className="text-sm text-gray-600">
+            Please contact support for assistance.
+          </p>
         </div>
       </div>
     );
@@ -128,18 +135,42 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
       </div>
 
       {/* Discount Toggle */}
-      <div className="max-w-3xl mx-auto">
-        <DiscountToggle
-          value={discountEnabled}
-          onChange={handleDiscountChange}
-          discountPercent={DISCOUNT_PERCENT}
-          maxAdsPerWeek={MAX_ADS_PER_WEEK}
-        />
+      <div className="rounded-lg bg-green-50 border border-green-200 p-4">
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={discountEnabled}
+            onChange={(e) => handleDiscountChange(e.target.checked)}
+            className="mt-1 h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-green-900">
+              🎉 Launch Special: {DISCOUNT_PERCENT}% off first 3 months
+            </p>
+            <p className="mt-1 text-xs text-green-700">
+              In exchange, we'll add up to {MAX_ADS_PER_WEEK} non-intrusive ads to your queue per week.
+            </p>
+          </div>
+        </label>
       </div>
 
       {/* Currency Toggle */}
       <div className="flex items-center justify-center">
-        <CurrencyToggle />
+        <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-1">
+          {(["GBP", "USD", "EUR"] as Currency[]).map((c) => (
+            <button
+              key={c}
+              onClick={() => handleCurrencyChange(c)}
+              className={`rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                currency === c
+                  ? "bg-green-600 text-white"
+                  : "text-zinc-700 hover:bg-zinc-100"
+              }`}
+            >
+              {c === "GBP" ? "£" : c === "USD" ? "$" : "€"} {c}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Plan Cards */}
@@ -175,7 +206,7 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
               {isPopular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
-                    {t("onboarding.step4.popular")}
+                    Popular
                   </span>
                 </div>
               )}
@@ -206,9 +237,7 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
                   >
                     {formatPrice(finalAmount, currency)}
                   </span>
-                  <span className="text-sm text-gray-400">
-                    {t("onboarding.step4.perMonth")}
-                  </span>
+                  <span className="text-sm text-gray-400">/mo</span>
                 </div>
               </div>
 
@@ -220,9 +249,7 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                {isSelected
-                  ? t("onboarding.step4.selected")
-                  : t("onboarding.step4.selectPlan")}
+                {isSelected ? "Selected" : "Select Plan"}
               </button>
 
               <ul className="mt-5 flex flex-col gap-2.5 flex-1">
@@ -242,13 +269,5 @@ function Step4PlanContent({ data, onChange }: Step4Props) {
         })}
       </div>
     </div>
-  );
-}
-
-export default function Step4Plan(props: Step4Props) {
-  return (
-    <PricingProvider defaultCurrency="GBP" defaultInterval="monthly">
-      <Step4PlanContent {...props} />
-    </PricingProvider>
   );
 }
