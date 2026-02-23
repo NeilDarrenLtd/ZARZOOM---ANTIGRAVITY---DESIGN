@@ -510,6 +510,147 @@
       "contactText": "Our support team typically responds within 24 hours on business days.",
       "contactEmail": "support@zarzoom.com"
     },
+    "about": {
+      "seo": {
+        "title": "About ZARZOOM - AI-Powered Social Media Automation",
+        "description": "Learn about ZARZOOM's mission to revolutionize social media management through intelligent automation and AI-driven content creation."
+      },
+      "hero": {
+        "title": "About ZARZOOM",
+        "subtitle": "Revolutionizing social media management through intelligent automation and AI-powered content creation."
+      },
+      "mission": {
+        "title": "Our Mission",
+        "content": "At ZARZOOM, we believe that managing social media should be effortless, not exhausting. Our mission is to empower businesses and creators to build authentic connections with their audiences while reclaiming their time. We combine cutting-edge AI technology with deep social media expertise to deliver a platform that doesn't just schedule posts—it transforms how you engage with your community."
+      },
+      "story": {
+        "title": "Our Story",
+        "content": "Founded in 2024, ZARZOOM was born from a simple observation: talented creators and businesses were spending countless hours on repetitive social media tasks instead of focusing on what they do best. We set out to build a solution that would automate the mundane while preserving the authentic voice that makes each brand unique. Today, we serve thousands of users worldwide, helping them achieve consistent social media presence without the constant manual effort."
+      },
+      "values": {
+        "title": "Our Core Values",
+        "innovation": {
+          "title": "Innovation First",
+          "description": "We push the boundaries of AI and automation to deliver solutions that were impossible just yesterday. Our commitment to innovation means you always have access to the latest advancements in social media technology."
+        },
+        "authenticity": {
+          "title": "Authentic Engagement",
+          "description": "Automation should enhance, not replace, genuine human connection. Our tools are designed to help you maintain your unique voice and build real relationships with your audience at scale."
+        },
+        "simplicity": {
+          "title": "Simplicity & Power",
+          "description": "Sophisticated technology doesn't have to be complicated. We believe in making powerful tools accessible to everyone, regardless of technical expertise."
+        },
+        "trust": {
+          "title": "Trust & Privacy",
+          "description": "Your data, your content, your community—we treat everything with the utmost respect and security. We never sell your data and maintain the highest standards of privacy protection."
+        }
+      },
+      "team": {
+        "title": "Built by Experts",
+        "description": "Our team combines decades of experience in AI, social media marketing, and user experience design. We're passionate about creating tools that truly make a difference in how businesses connect with their audiences."
+      },
+      "cta": {
+        "title": "Join Thousands of Growing Brands",
+        "description": "Experience the future of social media management.",
+        "button": "Start Your Free Trial"
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Features - ZARZOOM Social Media Automation",
+        "description": "Discover powerful features that automate your social media: AI content generation, smart scheduling, multi-platform posting, analytics, and more."
+      },
+      "hero": {
+        "title": "Powerful Features",
+        "subtitle": "Everything you need to automate, optimize, and scale your social media presence—all in one intelligent platform."
+      },
+      "aiContent": {
+        "title": "AI-Powered Content Generation",
+        "description": "Create engaging posts in seconds with our advanced AI that understands your brand voice, audience preferences, and trending topics. Generate captions, hashtags, and full post ideas that resonate with your community.",
+        "features": [
+          "Brand voice learning and adaptation",
+          "Trending topic integration",
+          "Multi-format content (text, captions, hashtags)",
+          "A/B testing suggestions"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Smart Scheduling & Autopilot",
+        "description": "Let our AI determine the optimal posting times for maximum engagement. Set your preferences once, and watch your social presence grow on autopilot while you focus on your business.",
+        "features": [
+          "Audience activity analysis",
+          "Time zone optimization",
+          "Content calendar automation",
+          "Engagement-based scheduling"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Multi-Platform Management",
+        "description": "Manage all your social media accounts from one unified dashboard. Post to Twitter, LinkedIn, Facebook, Instagram, and more with a single click.",
+        "features": [
+          "Cross-platform posting",
+          "Platform-specific optimization",
+          "Unified inbox",
+          "Centralized analytics"
+        ]
+      },
+      "analytics": {
+        "title": "Advanced Analytics & Insights",
+        "description": "Track what matters with comprehensive analytics that go beyond vanity metrics. Understand your audience, measure ROI, and make data-driven decisions to improve your strategy.",
+        "features": [
+          "Real-time performance tracking",
+          "Audience demographics & behavior",
+          "Engagement rate analysis",
+          "Competitor benchmarking"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Content Library & Assets",
+        "description": "Build and organize your content repository with our intelligent media library. Store images, videos, templates, and copy snippets for quick access and reuse.",
+        "features": [
+          "Unlimited media storage",
+          "Smart tagging and search",
+          "Template library",
+          "Asset performance tracking"
+        ]
+      },
+      "collaboration": {
+        "title": "Team Collaboration",
+        "description": "Work seamlessly with your team, clients, or agencies. Assign roles, manage permissions, and streamline approval workflows all within the platform.",
+        "features": [
+          "Role-based access control",
+          "Approval workflows",
+          "Team activity logs",
+          "Client management"
+        ]
+      },
+      "integration": {
+        "title": "Integrations & API",
+        "description": "Connect ZARZOOM with your existing tools and workflows. Our robust API and pre-built integrations ensure seamless data flow across your tech stack.",
+        "features": [
+          "Zapier integration",
+          "Webhook support",
+          "REST API access",
+          "Custom integrations"
+        ]
+      },
+      "support": {
+        "title": "World-Class Support",
+        "description": "Get help when you need it with our dedicated support team. Access comprehensive documentation, video tutorials, and responsive customer service.",
+        "features": [
+          "24/7 email support",
+          "Live chat (Pro+)",
+          "Video tutorials",
+          "Knowledge base"
+        ]
+      },
+      "cta": {
+        "title": "Ready to Transform Your Social Media?",
+        "description": "Start your free trial and experience the power of intelligent automation.",
+        "button": "Get Started Free"
+      }
+    },
     "contact": {
       "seo": {
         "title": "Contact Us - ZARZOOM",

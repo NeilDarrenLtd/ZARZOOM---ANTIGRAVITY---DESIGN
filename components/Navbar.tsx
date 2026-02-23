@@ -48,8 +48,8 @@ export default function Navbar() {
         { labelKey: "nav.contact", href: "/dashboard/contact" },
       ]
     : [
-        { labelKey: "nav.about", href: "#about" },
-        { labelKey: "nav.features", href: "#features" },
+        { labelKey: "nav.about", href: "/about" },
+        { labelKey: "nav.features", href: "/features" },
         { labelKey: "nav.pricing", href: "#pricing" },
         { labelKey: "nav.contact", href: "/contact" },
       ];
