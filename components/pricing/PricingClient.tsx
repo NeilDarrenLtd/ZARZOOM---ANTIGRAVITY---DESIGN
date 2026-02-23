@@ -6,6 +6,7 @@ import type { DisplayablePlan } from "@/lib/pricing";
 import { CurrencyToggle } from "./CurrencyToggle";
 import { IntervalToggle } from "./IntervalToggle";
 import { PricingGrid } from "./PricingGrid";
+import { PricingDiagnostics } from "./PricingDiagnostics";
 
 interface PricingClientProps {
   plans: DisplayablePlan[];
@@ -41,30 +42,40 @@ export function PricingClient({
   }
 
   return (
-    <div className="space-y-8">
-      {/* Custom Header (optional) */}
-      {customHeader}
+    <>
+      <div className="space-y-8">
+        {/* Custom Header (optional) */}
+        {customHeader}
 
-      {/* Controls */}
-      {(showCurrencyToggle || showIntervalToggle) && (
-        <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-          {showCurrencyToggle && (
-            <CurrencyToggle currency={currency} onChange={setCurrency} />
-          )}
-          {showIntervalToggle && (
-            <IntervalToggle interval={interval} onChange={setInterval} />
-          )}
-        </div>
-      )}
+        {/* Controls */}
+        {(showCurrencyToggle || showIntervalToggle) && (
+          <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+            {showCurrencyToggle && (
+              <CurrencyToggle currency={currency} onChange={setCurrency} />
+            )}
+            {showIntervalToggle && (
+              <IntervalToggle interval={interval} onChange={setInterval} />
+            )}
+          </div>
+        )}
 
-      {/* Plans Grid */}
-      <PricingGrid
+        {/* Plans Grid */}
+        <PricingGrid
+          plans={plans}
+          currency={currency}
+          interval={interval}
+          onChoosePlan={onChoosePlan}
+          selectedPlanKey={selectedPlanKey}
+        />
+      </div>
+
+      {/* Development Diagnostics */}
+      <PricingDiagnostics
         plans={plans}
         currency={currency}
         interval={interval}
-        onChoosePlan={onChoosePlan}
         selectedPlanKey={selectedPlanKey}
       />
-    </div>
+    </>
   );
 }
