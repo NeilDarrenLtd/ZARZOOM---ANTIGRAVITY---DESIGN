@@ -113,7 +113,7 @@ export default function ContactPage() {
           </div>
         ) : (
           <div className={`grid gap-8 mb-12 ${
-            isLoggedIn ? 'md:grid-cols-3' : 'md:grid-cols-1 max-w-md mx-auto'
+            isLoggedIn ? 'md:grid-cols-3' : 'md:grid-cols-1 max-w-md'
           }`}>
             {/* Email Card - Always visible */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
