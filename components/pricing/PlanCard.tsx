@@ -13,6 +13,7 @@ interface PlanCardProps {
   interval: BillingInterval;
   onChoosePlan?: (planKey: string, priceId: string) => void;
   isPopular?: boolean;
+  isSelected?: boolean;
 }
 
 export function PlanCard({
@@ -21,6 +22,7 @@ export function PlanCard({
   interval,
   onChoosePlan,
   isPopular = false,
+  isSelected = false,
 }: PlanCardProps) {
   const price = getPriceForSelection(plan, currency, interval);
 
@@ -35,13 +37,25 @@ export function PlanCard({
   return (
     <div
       className={`relative flex flex-col rounded-2xl border bg-white p-8 shadow-sm transition-all hover:shadow-md ${
-        isPopular ? "border-green-500 ring-2 ring-green-500" : "border-zinc-200"
+        isSelected
+          ? "border-green-600 ring-2 ring-green-600 bg-green-50/50"
+          : isPopular
+          ? "border-green-500 ring-2 ring-green-500"
+          : "border-zinc-200"
       }`}
     >
-      {isPopular && (
+      {isPopular && !isSelected && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
           <span className="inline-flex items-center rounded-full bg-green-500 px-4 py-1 text-sm font-medium text-white">
             Most Popular
+          </span>
+        </div>
+      )}
+      {isSelected && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+          <span className="inline-flex items-center rounded-full bg-green-600 px-4 py-1 text-sm font-medium text-white">
+            <Check className="mr-1 h-4 w-4" />
+            Selected
           </span>
         </div>
       )}
@@ -61,13 +75,16 @@ export function PlanCard({
       <Button
         onClick={() => onChoosePlan?.(plan.planKey, price.id)}
         className={`mb-6 w-full ${
-          isPopular
+          isSelected
+            ? "bg-green-600 hover:bg-green-700"
+            : isPopular
             ? "bg-green-600 hover:bg-green-700"
             : "bg-zinc-900 hover:bg-zinc-800"
         }`}
         size="lg"
+        disabled={isSelected}
       >
-        Choose Plan
+        {isSelected ? "Selected" : "Choose Plan"}
       </Button>
 
       <div className="flex-1">

@@ -11,25 +11,42 @@ interface PricingClientProps {
   plans: DisplayablePlan[];
   defaultCurrency?: Currency;
   defaultInterval?: BillingInterval;
+  showCurrencyToggle?: boolean;
+  showIntervalToggle?: boolean;
   onChoosePlan?: (planKey: string, priceId: string) => void;
+  selectedPlanKey?: string;
+  customHeader?: ReactNode;
 }
 
 export function PricingClient({
   plans,
   defaultCurrency = "GBP",
   defaultInterval = "monthly",
+  showCurrencyToggle = true,
+  showIntervalToggle = true,
   onChoosePlan,
+  selectedPlanKey,
+  customHeader,
 }: PricingClientProps) {
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
   const [interval, setInterval] = useState<BillingInterval>(defaultInterval);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
+      {/* Custom Header (optional) */}
+      {customHeader}
+
       {/* Controls */}
-      <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-        <CurrencyToggle currency={currency} onChange={setCurrency} />
-        <IntervalToggle interval={interval} onChange={setInterval} />
-      </div>
+      {(showCurrencyToggle || showIntervalToggle) && (
+        <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+          {showCurrencyToggle && (
+            <CurrencyToggle currency={currency} onChange={setCurrency} />
+          )}
+          {showIntervalToggle && (
+            <IntervalToggle interval={interval} onChange={setInterval} />
+          )}
+        </div>
+      )}
 
       {/* Plans Grid */}
       <PricingGrid
@@ -37,6 +54,7 @@ export function PricingClient({
         currency={currency}
         interval={interval}
         onChoosePlan={onChoosePlan}
+        selectedPlanKey={selectedPlanKey}
       />
     </div>
   );

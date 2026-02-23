@@ -9,9 +9,10 @@ interface PricingGridProps {
   currency: Currency;
   interval: BillingInterval;
   onChoosePlan?: (planKey: string, priceId: string) => void;
+  selectedPlanKey?: string;
 }
 
-export function PricingGrid({ plans, currency, interval, onChoosePlan }: PricingGridProps) {
+export function PricingGrid({ plans, currency, interval, onChoosePlan, selectedPlanKey }: PricingGridProps) {
   if (plans.length === 0) {
     return (
       <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center">
@@ -37,6 +38,7 @@ export function PricingGrid({ plans, currency, interval, onChoosePlan }: Pricing
           interval={interval}
           onChoosePlan={onChoosePlan}
           isPopular={index === 1} // Middle plan is popular
+          isSelected={selectedPlanKey === plan.planKey}
         />
       ))}
     </div>
