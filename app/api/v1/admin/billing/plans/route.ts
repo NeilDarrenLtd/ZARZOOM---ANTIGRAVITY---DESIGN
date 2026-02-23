@@ -45,28 +45,28 @@ export const POST = createApiHandler({
 
     const d = parsed.data;
 
-    // Check slug uniqueness
+    // Check plan_key uniqueness (maps to legacy slug column)
     const supabase = await createAdminClient();
     const { data: existing } = await supabase
       .from("subscription_plans")
       .select("id")
-      .eq("slug", d.slug)
+      .eq("slug", d.plan_key)  // Map canonical plan_key to legacy slug column
       .maybeSingle();
 
     if (existing) {
-      return badRequest(ctx.requestId, `A plan with slug "${d.slug}" already exists.`);
+      return badRequest(ctx.requestId, `A plan with plan_key "${d.plan_key}" already exists.`);
     }
 
     const plan = await createPlan(
       {
         name: d.name,
-        slug: d.slug,
+        slug: d.plan_key,  // Map canonical plan_key to legacy slug
         description: d.description || null,
         is_active: d.is_active,
         scope: null,
         tenant_id: null,
-        display_order: d.display_order,
-        highlight: d.highlight,
+        display_order: d.sort_order,  // Map canonical sort_order to legacy display_order
+        highlight: false,  // Default (not in canonical schema)
         quota_policy: d.quota_policy,
         features: d.features,
         entitlements: d.entitlements,
@@ -87,7 +87,7 @@ export const POST = createApiHandler({
       changes: {
         after: {
           name: plan.name,
-          slug: plan.slug,
+          plan_key: plan.slug,  // Use canonical name in audit logs
           is_active: plan.is_active,
           quota_policy: plan.quota_policy,
           features: plan.features,
