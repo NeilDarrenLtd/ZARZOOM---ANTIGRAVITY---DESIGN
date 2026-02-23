@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { Check, Loader2 } from "lucide-react";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
-import { fetchPlansClient } from "@/lib/pricing/fetchPlans";
+import { fetchPlans } from "@/lib/pricing/fetchPlans";
 import { getDisplayablePlans } from "@/lib/pricing/getDisplayablePlans";
 import { getPriceForSelection } from "@/lib/pricing/getPriceForSelection";
 import { formatPrice } from "@/lib/billing/format";
@@ -39,7 +39,7 @@ export function ProfilePricingClient({
           console.log("[v0] Loading pricing data for profile page...");
         }
 
-        const response = await fetchPlansClient();
+        const response = await fetchPlans();
         
         if (process.env.NODE_ENV === "development") {
           console.log("[v0] API Response:", {

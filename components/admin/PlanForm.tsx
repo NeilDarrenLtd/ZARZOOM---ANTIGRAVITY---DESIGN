@@ -23,11 +23,11 @@ interface PriceEntry {
 }
 
 function buildInitialPrices(plan?: PlanWithPrices): PriceEntry[] {
-  if (plan?.plan_prices?.length) {
-    return plan.plan_prices.map((p) => ({
+  if (plan?.prices?.length) {
+    return plan.prices.map((p) => ({
       currency: p.currency.toUpperCase() as Currency,
       interval: p.interval,
-      unitAmount: p.unit_amount,
+      unitAmount: p.amount_minor,
     }));
   }
   // Default: one price per currency per interval
@@ -50,11 +50,10 @@ export default function PlanForm({
   const isEditing = !!existingPlan;
 
   const [name, setName] = useState(existingPlan?.name ?? "");
-  const [slug, setSlug] = useState(existingPlan?.slug ?? "");
+  const [slug, setSlug] = useState(existingPlan?.plan_key ?? "");
   const [description, setDescription] = useState(existingPlan?.description ?? "");
-  const [status, setStatus] = useState(existingPlan?.status ?? "draft");
-  const [displayOrder, setDisplayOrder] = useState(existingPlan?.display_order ?? 0);
-  const [trialDays, setTrialDays] = useState(existingPlan?.trial_days ?? 0);
+  const [isActive, setIsActive] = useState(existingPlan?.is_active ?? true);
+  const [displayOrder, setDisplayOrder] = useState(existingPlan?.sort_order ?? 0);
   const [prices, setPrices] = useState<PriceEntry[]>(buildInitialPrices(existingPlan));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,11 +95,10 @@ export default function PlanForm({
     const formData = new FormData();
     if (isEditing) formData.set("id", existingPlan!.id);
     formData.set("name", name);
-    formData.set("slug", slug);
+    formData.set("plan_key", slug);
     formData.set("description", description);
-    formData.set("status", status);
-    formData.set("displayOrder", String(displayOrder));
-    formData.set("trialDays", String(trialDays));
+    formData.set("is_active", String(isActive));
+    formData.set("sort_order", String(displayOrder));
     formData.set("prices", JSON.stringify(prices));
 
     const result = isEditing
@@ -199,28 +197,18 @@ export default function PlanForm({
             </div>
             <div>
               <label className={labelClass}>{t("billing.admin.planStatus")}</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value as typeof status)}
-                className={inputClass}
-              >
-                {PLAN_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {s.charAt(0).toUpperCase() + s.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className={labelClass}>{t("billing.admin.planTrialDays")}</label>
-              <input
-                type="number"
-                value={trialDays}
-                onChange={(e) => setTrialDays(parseInt(e.target.value) || 0)}
-                className={inputClass}
-                min={0}
-                max={365}
-              />
+              <div className="flex items-center gap-3 h-[42px]">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isActive}
+                    onChange={(e) => setIsActive(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600" />
+                </label>
+                <span className="text-sm text-gray-700">{isActive ? "Active" : "Inactive"}</span>
+              </div>
             </div>
             <div>
               <label className={labelClass}>{t("billing.admin.planDisplayOrder")}</label>

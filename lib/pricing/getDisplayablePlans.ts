@@ -17,9 +17,11 @@ export interface DisplayablePlan extends ApiPlan {
 /**
  * Check if a plan has i18n translations defined.
  * Both DB data AND i18n translations must exist for a plan to be displayable.
+ * 
+ * Translations must exist at: billing.plans.<planKey>.displayName
  */
 function hasPlanCopy(planKey: string, t: TranslateFn): boolean {
-  const nameKey = `plans.${planKey}.name`;
+  const nameKey = `billing.plans.${planKey}.displayName`;
   const translation = t(nameKey);
   
   // If translation returns the key itself, it means no translation exists
@@ -72,14 +74,15 @@ export function getDisplayablePlans(
     }
 
     // Enrich plan with i18n translations
-    const displayName = t(`plans.${plan.planKey}.name`);
-    const displayDescription = t(`plans.${plan.planKey}.description`);
+    // Translations live at billing.plans.<planKey>.displayName / description / bullets
+    const displayName = t(`billing.plans.${plan.planKey}.displayName`);
+    const displayDescription = t(`billing.plans.${plan.planKey}.description`);
     
-    // Get feature translations
+    // Get feature bullet translations (billing.plans.<planKey>.bullets is an array)
     const displayFeatures: string[] = [];
     let featureIndex = 0;
     while (true) {
-      const featureKey = `plans.${plan.planKey}.features.${featureIndex}`;
+      const featureKey = `billing.plans.${plan.planKey}.bullets.${featureIndex}`;
       const feature = t(featureKey);
       
       // Stop when we hit a missing translation

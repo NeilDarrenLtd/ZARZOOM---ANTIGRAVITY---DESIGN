@@ -38,9 +38,6 @@ export default async function PricingPage() {
           plans={displayablePlans}
           defaultCurrency="GBP"
           defaultInterval="monthly"
-          onChoosePlan={(planKey, priceId) => {
-            console.log("[v0] Selected plan:", { planKey, priceId });
-          }}
         />
 
         {/* FAQ Section */}
