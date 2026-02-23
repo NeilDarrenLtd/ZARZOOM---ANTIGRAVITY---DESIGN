@@ -113,42 +113,6 @@ export default function ContactPage() {
                       </a>
                     </div>
                   </div>
-
-                  {/* Phone */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Phone className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-1">
-                        Phone
-                      </p>
-                      <a
-                        href="tel:+441234567890"
-                        className="text-blue-600 hover:text-blue-700 font-medium"
-                      >
-                        +44 (0) 123 456 7890
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-6 h-6 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-700 mb-1">
-                        Office
-                      </p>
-                      <p className="text-gray-600 leading-relaxed">
-                        ZARZOOM Ltd<br />
-                        123 Innovation Street<br />
-                        London, UK<br />
-                        EC1A 1BB
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
 
