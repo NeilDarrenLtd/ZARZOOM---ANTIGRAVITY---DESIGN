@@ -11,6 +11,8 @@
 
 import { hasPlanCopy, type PlanCopy } from "@/lib/i18n/plan-copy";
 import type { ApiPlanResponse, ApiPlan, ApiPlanPrice } from "@/lib/billing/api-types";
+import { validatePlanSync } from "./validate-plan-sync";
+import type { Plan } from "./types";
 
 /**
  * Displayable plan combines database data with i18n copy
@@ -67,6 +69,45 @@ export async function getDisplayablePlans(
     // 1. Fetch from database
     const apiPlans = await fetchPlansFromApi();
     console.log("[v0] Checking", apiPlans.length, "plans for i18n completeness");
+    
+    // DEV: Validate DB/i18n sync
+    if (process.env.NODE_ENV === "development") {
+      // Convert API plans to Plan type for validation
+      const dbPlans: Plan[] = apiPlans.map((p) => ({
+        id: p.planKey,
+        plan_key: p.planKey,
+        name: p.name,
+        description: p.description,
+        is_active: p.isActive,
+        sort_order: p.sortOrder,
+        entitlements: p.entitlements,
+        quota_policy: p.quotaPolicy,
+        features: p.features,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }));
+      
+      // Get i18n translations
+      const translations = {
+        plans: {} as Record<string, any>,
+      };
+      
+      // Extract plan keys from translation function
+      apiPlans.forEach((plan) => {
+        const testKey = `plans.${plan.planKey}.displayName`;
+        const result = t(testKey, "__MISSING__");
+        if (result !== "__MISSING__") {
+          translations.plans[plan.planKey] = {
+            displayName: t(`plans.${plan.planKey}.displayName`),
+            shortTagline: t(`plans.${plan.planKey}.shortTagline`),
+            description: t(`plans.${plan.planKey}.description`),
+            bullets: [],
+          };
+        }
+      });
+      
+      validatePlanSync(dbPlans, translations);
+    }
     
     // 2. Filter by i18n availability
     const displayable: DisplayablePlan[] = [];
