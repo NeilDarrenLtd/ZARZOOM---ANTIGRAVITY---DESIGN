@@ -157,12 +157,9 @@ export default function AdminBillingPlansPage() {
                             <span className="font-medium text-zinc-900">
                               {plan.name}
                             </span>
-                            {plan.highlight && (
-                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            )}
                           </div>
                           <span className="font-mono text-xs text-zinc-400">
-                            {plan.slug}
+                            {plan.plan_key}
                           </span>
                         </div>
                       </div>
