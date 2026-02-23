@@ -181,10 +181,10 @@ export default function AdminBillingPlansPage() {
                       {getActivePriceDisplay(plan)}
                     </td>
                     <td className="px-4 py-3 text-zinc-500">
-                      {plan.display_order}
+                      {plan.sort_order}
                     </td>
                     <td className="px-4 py-3 text-zinc-500">
-                      {plan.plan_prices.filter((p) => p.is_active).length} active
+                      {plan.prices.filter((p) => p.is_active).length} active
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
