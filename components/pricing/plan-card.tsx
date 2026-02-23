@@ -32,22 +32,26 @@ function formatPrice(amountMinor: number, currency: Currency): string {
 
 interface PlanPrice {
   id: string;
-  currency: Currency;
-  interval: BillingInterval;
-  unit_amount: number;
-  billing_provider_price_id: string | null;
+  currency: Currency | string;
+  interval: BillingInterval | string;
+  amountMinor: number;
+  isActive: boolean;
+  billingProviderId: string | null;
 }
 
 interface PlanCardProps {
   name: string;
   slug: string;
-  description: string | null;
+  description: string;
+  tagline?: string;
   features: string[];
   prices: PlanPrice[];
   highlight: boolean;
   currency: Currency;
   interval: BillingInterval;
   isLoggedIn: boolean;
+  cta?: string;
+  discountPercent?: number;
   onChoosePlan: (priceId: string) => void;
 }
 
@@ -58,26 +62,35 @@ interface PlanCardProps {
 export function PlanCard({
   name,
   description,
+  tagline,
   features,
   prices,
   highlight,
   currency,
   interval,
   isLoggedIn,
+  cta,
+  discountPercent = 0,
   onChoosePlan,
 }: PlanCardProps) {
   const matchedPrice = prices.find(
-    (p) => p.currency === currency && p.interval === interval
+    (p) => p.currency === currency && p.interval === interval && p.isActive
   );
 
   /* Fallback: try GBP for same interval, else show Contact us */
   const fallbackPrice =
     !matchedPrice && currency !== "GBP"
-      ? prices.find((p) => p.currency === "GBP" && p.interval === interval)
+      ? prices.find((p) => p.currency === "GBP" && p.interval === interval && p.isActive)
       : null;
 
   const price = matchedPrice ?? fallbackPrice;
   const isFallback = !matchedPrice && !!fallbackPrice;
+  
+  // Calculate discounted price
+  const baseAmount = price?.amountMinor ?? 0;
+  const discountAmount = discountPercent > 0 ? Math.round(baseAmount * (discountPercent / 100)) : 0;
+  const displayAmount = baseAmount - discountAmount;
+  const hasDiscount = discountPercent > 0 && baseAmount > 0;
 
   return (
     <div
@@ -103,8 +116,13 @@ export function PlanCard({
         <h3 className="text-lg font-semibold text-[hsl(var(--foreground))]">
           {name}
         </h3>
+        {tagline && (
+          <p className="mt-1 text-xs font-medium text-[hsl(var(--primary))]">
+            {tagline}
+          </p>
+        )}
         {description && (
-          <p className="mt-1 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
             {description}
           </p>
         )}
@@ -114,12 +132,25 @@ export function PlanCard({
       <div className="mb-6">
         {price ? (
           <>
+            {hasDiscount && (
+              <div className="mb-1">
+                <span className="text-sm text-[hsl(var(--muted-foreground))] line-through">
+                  {formatPrice(baseAmount, isFallback ? "GBP" : currency)}
+                </span>
+                <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                  Save {discountPercent}%
+                </span>
+              </div>
+            )}
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold tracking-tight text-[hsl(var(--foreground))]">
-                {formatPrice(price.unit_amount, isFallback ? "GBP" : currency)}
+              <span className={cn(
+                "text-4xl font-bold tracking-tight",
+                hasDiscount ? "text-green-600" : "text-[hsl(var(--foreground))]"
+              )}>
+                {formatPrice(displayAmount, isFallback ? "GBP" : currency)}
               </span>
               <span className="text-sm text-[hsl(var(--muted-foreground))]">
-                /{interval === "monthly" ? "month" : "year"}
+                /month
               </span>
             </div>
             {isFallback && (
@@ -127,13 +158,9 @@ export function PlanCard({
                 Shown in GBP. {currency} pricing coming soon.
               </p>
             )}
-            {interval === "annual" && price.unit_amount > 0 && (
-              <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
-                {formatPrice(
-                  Math.round(price.unit_amount / 12),
-                  isFallback ? "GBP" : currency
-                )}
-                /month billed annually
+            {hasDiscount && (
+              <p className="mt-1 text-xs text-green-600 font-medium">
+                Advertising partnership discount applied
               </p>
             )}
           </>
@@ -159,7 +186,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              Choose plan
+              {cta || "Choose plan"}
             </button>
           ) : (
             <a
@@ -171,7 +198,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              Sign up
+              {cta || "Sign up"}
             </a>
           )
         ) : (

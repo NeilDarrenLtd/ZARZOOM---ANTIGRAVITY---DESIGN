@@ -85,28 +85,15 @@ export default function FeaturesPage() {
       image: "/images/features/content-library.jpg",
     },
     {
-      icon: Users,
-      title: "Team Collaboration",
-      description:
-        "Work seamlessly with your team, clients, or agencies. Assign roles, manage permissions, and streamline approval workflows all within the platform.",
-      features: [
-        "Role-based access control",
-        "Approval workflows",
-        "Team activity logs",
-        "Client management",
-      ],
-      image: "/images/features/collaboration.jpg",
-    },
-    {
       icon: Plug,
-      title: "Integrations & API",
+      title: "API & OpenClaw Integrations",
       description:
-        "Connect ZARZOOM with your existing tools and workflows. Our robust API and pre-built integrations ensure seamless data flow across your tech stack.",
+        "Supercharge your workflow with ZARZOOM's powerful OpenClaw integration for on-demand automated social media creation and scheduling across 10 platforms. Trigger AI-powered content generation directly from your existing systems via our REST API, or let OpenClaw agents handle everything autonomously. Perfect for agencies, developers, and businesses wanting seamless automation.",
       features: [
-        "Zapier integration",
-        "Webhook support",
-        "REST API access",
-        "Custom integrations",
+        "OpenClaw agent automation (10+ platforms)",
+        "On-demand AI content creation via API",
+        "Instant scheduling triggers",
+        "Custom workflow automation",
       ],
       image: "/images/features/integrations.jpg",
     },
@@ -182,15 +169,16 @@ export default function FeaturesPage() {
                     </div>
                   </div>
 
-                  {/* Visual Side */}
-                  <div className="flex-1 bg-green-50 flex items-center justify-center p-6 md:p-10 min-h-[280px] md:min-h-0">
-                    <div className="relative w-full h-full min-h-[240px] md:min-h-[360px] rounded-2xl overflow-hidden shadow-md border border-green-100">
+                  {/* Visual Side - Logo-style square image container */}
+                  <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-12">
+                    <div className="relative aspect-square w-full max-w-md rounded-2xl overflow-hidden border border-gray-200 shadow-sm bg-white">
                       <Image
                         src={feature.image}
                         alt={feature.title}
                         fill
-                        className="object-cover"
+                        className="object-contain p-10"
                         sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={index < 2}
                       />
                     </div>
                   </div>

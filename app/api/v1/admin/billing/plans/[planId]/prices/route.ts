@@ -34,7 +34,7 @@ export const POST = createApiHandler({
     }
 
     // Find the old active price for before snapshot
-    const oldPrice = plan.plan_prices.find(
+    const oldPrice = plan.prices.find(
       (p) =>
         p.currency === parsed.data.currency &&
         p.interval === parsed.data.interval &&
@@ -44,7 +44,7 @@ export const POST = createApiHandler({
     const newPrice = await versionPrice(planId, {
       currency: parsed.data.currency,
       interval: parsed.data.interval,
-      unit_amount: parsed.data.unitAmount,
+      amount_minor: parsed.data.unitAmount,
       billing_provider_price_id: parsed.data.billingProviderPriceId ?? null,
       created_by: ctx.user!.id,
     });
@@ -53,23 +53,23 @@ export const POST = createApiHandler({
       userId: ctx.user!.id,
       tenantId: ctx.membership!.tenantId,
       tableName: "plan_prices",
-      recordId: newPrice.id,
+      recordId: newPrice.id as string,
       action: "price_version_created",
       changes: {
         plan_id: planId,
         before: oldPrice
           ? {
               id: oldPrice.id,
-              unit_amount: oldPrice.unit_amount,
+              amount_minor: oldPrice.amount_minor,
               currency: oldPrice.currency,
               interval: oldPrice.interval,
             }
           : null,
         after: {
-          id: newPrice.id,
-          unit_amount: newPrice.unit_amount,
-          currency: newPrice.currency,
-          interval: newPrice.interval,
+          id: newPrice.id as string,
+          amount_minor: newPrice.amount_minor as number,
+          currency: newPrice.currency as string,
+          interval: newPrice.interval as string,
         },
       },
     });
@@ -103,7 +103,7 @@ export const PUT = createApiHandler({
       throw new ValidationError(parsed.error.flatten().fieldErrors);
     }
 
-    const target = plan.plan_prices.find((p) => p.id === parsed.data.priceId);
+    const target = plan.prices.find((p) => p.id === parsed.data.priceId);
     if (!target) throw new NotFoundError("Price");
 
     await deactivatePrice(parsed.data.priceId);
@@ -118,7 +118,7 @@ export const PUT = createApiHandler({
         plan_id: planId,
         before: {
           is_active: true,
-          unit_amount: target.unit_amount,
+          amount_minor: target.amount_minor,
           currency: target.currency,
           interval: target.interval,
         },

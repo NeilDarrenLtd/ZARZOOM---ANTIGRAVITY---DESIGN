@@ -10,6 +10,9 @@ import {
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
 import enTranslations from "@/locales/en.json";
+import { devCheckPricing } from "./validate-no-pricing";
+
+/* ---------- Types ---------- */
 
 type Translations = typeof enTranslations;
 type NestedKeyOf<T, Prefix extends string = ""> = T extends object
@@ -29,12 +32,19 @@ interface I18nContextType {
   translations: Translations;
 }
 
+/* ---------- Context ---------- */
+
 const I18nContext = createContext<I18nContextType | null>(null);
 
-// Cache loaded translations to avoid re-fetching
+/* ---------- Translation cache ---------- */
+
 const translationCache: Record<string, Translations> = {
   en: enTranslations,
 };
+
+if (process.env.NODE_ENV === "development") {
+  devCheckPricing(enTranslations, "en");
+}
 
 async function loadTranslation(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -43,13 +53,16 @@ async function loadTranslation(locale: string): Promise<Translations> {
 
   try {
     const mod = await import(`@/locales/${locale}.json`);
-    translationCache[locale] = mod.default;
-    return mod.default;
+    const translations = mod.default;
+    translationCache[locale] = translations;
+    devCheckPricing(translations, locale);
+    return translations;
   } catch {
-    // Fallback to English if translation file not found
     return enTranslations;
   }
 }
+
+/* ---------- Nested value accessor ---------- */
 
 function getNestedValue(obj: Record<string, unknown>, path: string): string {
   const keys = path.split(".");
@@ -58,18 +71,19 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
     if (current && typeof current === "object" && key in current) {
       current = (current as Record<string, unknown>)[key];
     } else {
-      return path; // Return the key itself as fallback
+      return path;
     }
   }
   return typeof current === "string" ? current : path;
 }
+
+/* ---------- Provider ---------- */
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
   const [translations, setTranslations] =
     useState<Translations>(enTranslations);
 
-  // Detect browser language on mount
   useEffect(() => {
     const stored = localStorage.getItem("zarzoom-locale");
     if (stored) {
@@ -85,7 +99,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Update HTML lang and dir attributes
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
@@ -102,9 +115,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         translations as unknown as Record<string, unknown>,
         key
       );
-      // If the key wasn't found (getNestedValue returns the key), use fallback if provided
       if (value === key && fallback) return fallback;
-      // If no fallback and key wasn't found, return the key (for debugging)
       return value;
     },
     [translations]
@@ -116,6 +127,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     </I18nContext.Provider>
   );
 }
+
+/* ---------- Hook ---------- */
 
 export function useI18n() {
   const context = useContext(I18nContext);

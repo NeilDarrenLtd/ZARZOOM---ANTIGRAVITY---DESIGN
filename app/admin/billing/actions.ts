@@ -99,13 +99,13 @@ export async function createNewPlan(
     await createPlanQuery(
       {
         name: planFields.name,
-        slug: planFields.slug,
+        plan_key: planFields.plan_key,
         description: planFields.description || null,
         is_active: planFields.is_active,
         scope: null,
         tenant_id: null,
-        display_order: planFields.display_order,
-        highlight: planFields.highlight,
+        display_order: planFields.sort_order,
+        highlight: false,
         quota_policy: planFields.quota_policy,
         features: planFields.features,
         entitlements: planFields.entitlements,

@@ -36,7 +36,32 @@ export const planPriceSchema = z.object({
     .min(0, "Price must be 0 or greater"),
 });
 
+/**
+ * CANONICAL: Schema for creating new plans
+ * Uses plan_key instead of slug
+ */
 export const createPlanSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100),
+  plan_key: z
+    .string()
+    .min(1, "Plan key is required")
+    .max(50)
+    .regex(/^[a-z0-9_-]+$/, "Plan key must be lowercase alphanumeric with dashes or underscores")
+    .transform(s => s.toLowerCase()),
+  description: z.string().max(500).optional().default(""),
+  is_active: z.boolean().default(true),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  quota_policy: z.record(z.number()).optional().default({}),
+  features: z.array(z.string()).optional().default([]),
+  entitlements: z.record(z.boolean()).optional().default({}),
+  prices: z.array(planPriceSchema).min(1, "At least one price is required"),
+});
+
+/**
+ * DEPRECATED: Legacy schema using slug/display_order
+ * Only for backward compatibility
+ */
+export const createPlanSchemaLegacy = z.object({
   name: z.string().min(1, "Name is required").max(100),
   slug: z
     .string()
@@ -53,7 +78,23 @@ export const createPlanSchema = z.object({
   prices: z.array(planPriceSchema).min(1, "At least one price is required"),
 });
 
+/**
+ * CANONICAL: Schema for updating plans
+ */
 export const updatePlanSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  description: z.string().max(500).optional(),
+  is_active: z.boolean().optional(),
+  sort_order: z.coerce.number().int().min(0).optional(),
+  quota_policy: z.record(z.number()).optional(),
+  features: z.array(z.string()).optional(),
+  entitlements: z.record(z.boolean()).optional(),
+});
+
+/**
+ * DEPRECATED: Legacy update schema
+ */
+export const updatePlanSchemaLegacy = z.object({
   name: z.string().min(1).max(100).optional(),
   description: z.string().max(500).optional(),
   is_active: z.boolean().optional(),
@@ -81,6 +122,55 @@ export type QuotaKey = (typeof QUOTA_KEYS)[number];
 /*  Row Types (matching Supabase table shapes)                         */
 /* ------------------------------------------------------------------ */
 
+/**
+ * CANONICAL: New plans table structure (migration 005)
+ * Use this for all new code. Supports unlimited plans with simplified schema.
+ */
+export interface Plan {
+  id: string;
+  plan_key: string;  // lowercase slug (e.g. 'basic', 'pro', 'advanced')
+  name: string;
+  description: string | null;
+  is_active: boolean;
+  sort_order: number;
+  entitlements: Record<string, boolean>;  // feature flags
+  quota_policy: Record<string, number>;   // usage limits
+  features: string[];  // feature list for UI display
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * CANONICAL: New plan_prices table structure (migration 005)
+ * Supports unlimited currencies per plan with proper naming (amount_minor).
+ */
+export interface PlanPrice {
+  id: string;
+  plan_id: string;
+  currency: Currency;
+  interval: BillingInterval;
+  amount_minor: number;  // price in minor units (pence/cents)
+  is_active: boolean;
+  billing_provider_price_id: string | null;
+  effective_from: string;
+  effective_to: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * CANONICAL: Plan with all associated prices
+ */
+export interface PlanWithPrices extends Plan {
+  prices: PlanPrice[];
+}
+
+/**
+ * DEPRECATED: Legacy subscription_plans table structure.
+ * Only use for backward compatibility during migration phase.
+ * Will be removed after all code is migrated to use Plan type.
+ */
 export interface PlanRow {
   id: string;
   name: string;
@@ -104,12 +194,16 @@ export interface PlanRow {
   feature_flags?: Record<string, boolean>;
 }
 
+/**
+ * DEPRECATED: Legacy plan_prices structure with unit_amount.
+ * Use PlanPrice (with amount_minor) instead.
+ */
 export interface PlanPriceRow {
   id: string;
   plan_id: string;
   currency: Currency;
   interval: BillingInterval;
-  unit_amount: number;
+  unit_amount: number;  // deprecated - use amount_minor
   billing_provider_price_id: string | null;
   is_active: boolean;
   effective_from: string | null;
@@ -140,10 +234,14 @@ export interface TenantSubscriptionRow {
 /*  Composite Types (for UI)                                           */
 /* ------------------------------------------------------------------ */
 
-export interface PlanWithPrices extends PlanRow {
+/**
+ * DEPRECATED: Legacy composite using PlanRow.
+ * Use PlanWithPrices (extends Plan) instead.
+ */
+export interface LegacyPlanWithPrices extends PlanRow {
   plan_prices: PlanPriceRow[];
 }
 
 export interface SubscriptionWithPlan extends TenantSubscriptionRow {
-  plan: PlanRow;
+  plan: Plan | PlanRow;  // Support both during migration
 }

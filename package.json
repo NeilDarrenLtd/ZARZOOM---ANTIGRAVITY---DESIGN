@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate:i18n": "tsx scripts/validate-i18n.ts",
+    "validate:plans": "tsx scripts/validate-plans.ts",
+    "validate:all": "npm run validate:i18n && npm run validate:plans"
   },
   "dependencies": {
     "@jest/globals": "^30.2.0",

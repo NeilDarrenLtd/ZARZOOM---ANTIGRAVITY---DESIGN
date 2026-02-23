@@ -1040,33 +1040,8 @@
     }
   },
   "billing": {
-    "admin": {
-      "title": "Billing",
-      "subtitle": "Manage subscription plans, pricing, and billing.",
-      "totalSubscriptions": "Total Subscriptions",
-      "activeSubs": "Active",
-      "pastDueSubs": "Past Due",
-      "totalPlans": "Active Plans",
-      "plansTitle": "Subscription Plans",
-      "newPlan": "New Plan",
-      "newPlanDesc": "Create a new subscription plan with pricing.",
-      "editPlan": "Edit Plan",
-      "editPlanDesc": "Update plan details and pricing.",
-      "planDetails": "Plan Details",
-      "planName": "Name",
-      "planSlug": "Slug",
-      "planDescription": "Description",
-      "planStatus": "Status",
-      "planPriceGBP": "Price (GBP)",
-      "planTrialDays": "Trial Days",
-      "planDisplayOrder": "Display Order",
-      "planActions": "Actions",
-      "planPrices": "Pricing",
-      "addPrice": "Add Price",
-      "cancel": "Cancel",
-      "saving": "Saving...",
-      "updatePlan": "Update Plan",
-      "createPlan": "Create Plan"
+    "nav": {
+      "billingHistory": "Billing History"
     },
     "pricing": {
       "title": "Simple, Transparent Pricing",
@@ -1076,7 +1051,61 @@
       "popular": "Most Popular",
       "getStarted": "Get Started",
       "savePercent": "Save {percent}% with annual billing",
-      "trialDays": "{days}-day free trial"
+      "trialDays": "{days}-day free trial",
+      "page": {
+        "title": "Plans and Pricing",
+        "subtitle": "Choose the plan that fits your social media workflow. Upgrade or downgrade at any time.",
+        "footer": "All prices exclude VAT where applicable. Cancel or change your plan at any time."
+      },
+      "fallback": {
+        "title": "Pricing Temporarily Unavailable",
+        "message": "We're currently updating our pricing plans. Please check back shortly or contact support for assistance."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfect for getting started",
+        "description": "Essential features to launch your social media presence with AI-powered content creation and scheduling.",
+        "bullets": [
+          "Up to 3 social profiles",
+          "30 posts per month",
+          "Basic AI content generation",
+          "Post scheduling",
+          "Email support"
+        ],
+        "cta": "Start Free Trial"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Best for growing businesses",
+        "description": "Advanced features and analytics to scale your social media strategy with intelligent automation.",
+        "bullets": [
+          "Up to 10 social profiles",
+          "150 posts per month",
+          "Advanced AI content generation",
+          "Smart scheduling with optimal times",
+          "Analytics dashboard",
+          "Priority support"
+        ],
+        "cta": "Start Free Trial"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "For teams and agencies",
+        "description": "Enterprise-grade features with unlimited content, custom branding, and dedicated support for maximum impact.",
+        "bullets": [
+          "Unlimited social profiles",
+          "Unlimited posts",
+          "Premium AI with custom brand voice",
+          "AI-powered auto-scheduling",
+          "Advanced analytics and reporting",
+          "Custom branding and white-label",
+          "Dedicated account manager",
+          "Full API access"
+        ],
+        "cta": "Contact Sales"
+      }
     },
     "features": {
       "basic": {

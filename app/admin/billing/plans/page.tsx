@@ -43,15 +43,15 @@ export default function AdminBillingPlansPage() {
 
   const getActivePriceDisplay = useCallback(
     (plan: PlanWithPrices, currency: Currency = "GBP") => {
-      const monthly = plan.plan_prices.find(
+      const monthly = plan.prices.find(
         (p) => p.currency === currency && p.interval === "monthly" && p.is_active
       );
-      if (monthly) return `${formatPrice(monthly.unit_amount, currency)}/mo`;
+      if (monthly) return `${formatPrice(monthly.amount_minor, currency)}/mo`;
 
-      const annual = plan.plan_prices.find(
+      const annual = plan.prices.find(
         (p) => p.currency === currency && p.interval === "annual" && p.is_active
       );
-      if (annual) return `${formatPrice(annual.unit_amount, currency)}/yr`;
+      if (annual) return `${formatPrice(annual.amount_minor, currency)}/yr`;
 
       return "No price set";
     },
@@ -157,12 +157,9 @@ export default function AdminBillingPlansPage() {
                             <span className="font-medium text-zinc-900">
                               {plan.name}
                             </span>
-                            {plan.highlight && (
-                              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            )}
                           </div>
                           <span className="font-mono text-xs text-zinc-400">
-                            {plan.slug}
+                            {plan.plan_key}
                           </span>
                         </div>
                       </div>
@@ -184,10 +181,10 @@ export default function AdminBillingPlansPage() {
                       {getActivePriceDisplay(plan)}
                     </td>
                     <td className="px-4 py-3 text-zinc-500">
-                      {plan.display_order}
+                      {plan.sort_order}
                     </td>
                     <td className="px-4 py-3 text-zinc-500">
-                      {plan.plan_prices.filter((p) => p.is_active).length} active
+                      {plan.prices.filter((p) => p.is_active).length} active
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
