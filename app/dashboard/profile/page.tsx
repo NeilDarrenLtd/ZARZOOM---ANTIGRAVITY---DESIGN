@@ -80,6 +80,16 @@ const PLAN_FEATURES: Record<Plan, string[]> = {
     "onboarding.step4.features.scale.dedicatedSupport",
     "onboarding.step4.features.scale.apiAccess",
   ],
+  advanced: [
+    "onboarding.step4.features.scale.socialProfiles",
+    "onboarding.step4.features.scale.postsPerMonth",
+    "onboarding.step4.features.scale.aiGeneration",
+    "onboarding.step4.features.scale.scheduling",
+    "onboarding.step4.features.scale.analytics",
+    "onboarding.step4.features.scale.customBranding",
+    "onboarding.step4.features.scale.dedicatedSupport",
+    "onboarding.step4.features.scale.apiAccess",
+  ],
 };
 
 // ── Shared input class ────────────────────────────────────
