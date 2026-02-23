@@ -1,0 +1,317 @@
+"use client";
+
+import { useState, FormEvent, ChangeEvent } from "react";
+import { useI18n } from "@/lib/i18n";
+import SiteNavbar from "@/components/SiteNavbar";
+import Footer from "@/components/Footer";
+import DynamicSEO from "@/components/DynamicSEO";
+import { Mail, Phone, MapPin, Send, Check, AlertCircle } from "lucide-react";
+
+export default function ContactPage() {
+  const { t } = useI18n();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      setError(t("contact.form.errors.required") || "Please fill in all fields");
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      console.log("[v0] Submitting contact form");
+      
+      const res = await fetch("/api/v1/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log("[v0] Contact form error:", data);
+        throw new Error(data.error?.message || data.message || "Failed to send message");
+      }
+
+      console.log("[v0] Contact form success");
+      setSuccess(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (err: any) {
+      console.error("[v0] Contact form submission failed:", err);
+      setError(err.message || t("contact.form.errors.failed") || "Failed to send message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <DynamicSEO
+        title={t("contact.seo.title") || "Contact Us - ZARZOOM"}
+        description={t("contact.seo.description") || "Get in touch with the ZARZOOM team. We're here to help with any questions or concerns."}
+      />
+      <SiteNavbar />
+      
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-24 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              {t("contact.title") || "Get in Touch"}
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t("contact.subtitle") || "Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible."}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Contact Information */}
+            <div className="lg:col-span-1 space-y-8">
+              {/* Company Info Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {t("contact.info.title") || "Contact Information"}
+                </h2>
+                
+                <div className="space-y-6">
+                  {/* Email */}
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-1">
+                        {t("contact.info.email.label") || "Email"}
+                      </p>
+                      <a
+                        href="mailto:support@zarzoom.com"
+                        className="text-green-600 hover:text-green-700 font-medium"
+                      >
+                        support@zarzoom.com
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-1">
+                        {t("contact.info.phone.label") || "Phone"}
+                      </p>
+                      <a
+                        href="tel:+441234567890"
+                        className="text-blue-600 hover:text-blue-700 font-medium"
+                      >
+                        +44 (0) 123 456 7890
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-1">
+                        {t("contact.info.address.label") || "Office"}
+                      </p>
+                      <p className="text-gray-600 leading-relaxed">
+                        ZARZOOM Ltd<br />
+                        123 Innovation Street<br />
+                        London, UK<br />
+                        EC1A 1BB
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Business Hours */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl border border-green-200 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">
+                  {t("contact.hours.title") || "Business Hours"}
+                </h3>
+                <div className="space-y-2 text-sm text-gray-700">
+                  <div className="flex justify-between">
+                    <span className="font-medium">Monday - Friday</span>
+                    <span>9:00 AM - 6:00 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Saturday</span>
+                    <span>10:00 AM - 4:00 PM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium">Sunday</span>
+                    <span>Closed</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-4">
+                  {t("contact.hours.note") || "We typically respond to all inquiries within 24 hours during business days."}
+                </p>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  {t("contact.form.title") || "Send us a Message"}
+                </h2>
+
+                {/* Success Message */}
+                {success && (
+                  <div className="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-green-900">
+                        {t("contact.form.success.title") || "Message Sent Successfully!"}
+                      </p>
+                      <p className="text-sm text-green-700 mt-1">
+                        {t("contact.form.success.message") || "Thank you for contacting us. We'll get back to you as soon as possible."}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {error && (
+                  <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-red-900">
+                        {t("contact.form.error.title") || "Error"}
+                      </p>
+                      <p className="text-sm text-red-700 mt-1">{error}</p>
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Name */}
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
+                        {t("contact.form.name") || "Your Name"} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder={t("contact.form.namePlaceholder") || "John Doe"}
+                        required
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                        {t("contact.form.email") || "Your Email"} <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        placeholder={t("contact.form.emailPlaceholder") || "john@example.com"}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Subject */}
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
+                      {t("contact.form.subject") || "Subject"} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="subject"
+                      name="subject"
+                      type="text"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder={t("contact.form.subjectPlaceholder") || "How can we help you?"}
+                      required
+                    />
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
+                      {t("contact.form.message") || "Message"} <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={6}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+                      placeholder={t("contact.form.messagePlaceholder") || "Tell us more about your inquiry..."}
+                      required
+                    />
+                    <p className="text-xs text-gray-500 mt-1.5">
+                      {t("contact.form.messageHint") || "Minimum 10 characters"}
+                    </p>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-green-600 text-white px-6 py-4 rounded-xl font-bold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg"
+                  >
+                    {submitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        {t("contact.form.sending") || "Sending..."}
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        {t("contact.form.submit") || "Send Message"}
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </>
+  );
+}

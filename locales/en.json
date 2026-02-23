@@ -510,6 +510,55 @@
       "contactText": "Our support team typically responds within 24 hours on business days.",
       "contactEmail": "support@zarzoom.com"
     },
+    "contact": {
+      "seo": {
+        "title": "Contact Us - ZARZOOM",
+        "description": "Get in touch with the ZARZOOM team. We're here to help with any questions or concerns."
+      },
+      "title": "Get in Touch",
+      "subtitle": "Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible.",
+      "info": {
+        "title": "Contact Information",
+        "email": {
+          "label": "Email"
+        },
+        "phone": {
+          "label": "Phone"
+        },
+        "address": {
+          "label": "Office"
+        }
+      },
+      "hours": {
+        "title": "Business Hours",
+        "note": "We typically respond to all inquiries within 24 hours during business days."
+      },
+      "form": {
+        "title": "Send us a Message",
+        "name": "Your Name",
+        "namePlaceholder": "John Doe",
+        "email": "Your Email",
+        "emailPlaceholder": "john@example.com",
+        "subject": "Subject",
+        "subjectPlaceholder": "How can we help you?",
+        "message": "Message",
+        "messagePlaceholder": "Tell us more about your inquiry...",
+        "messageHint": "Minimum 10 characters",
+        "submit": "Send Message",
+        "sending": "Sending...",
+        "success": {
+          "title": "Message Sent Successfully!",
+          "message": "Thank you for contacting us. We'll get back to you as soon as possible."
+        },
+        "error": {
+          "title": "Error"
+        },
+        "errors": {
+          "required": "Please fill in all fields",
+          "failed": "Failed to send message. Please try again."
+        }
+      }
+    },
     "termsUser": {
       "title": "User Terms & Conditions",
       "subtitle": "Please read these terms carefully before using ZARZOOM.",
