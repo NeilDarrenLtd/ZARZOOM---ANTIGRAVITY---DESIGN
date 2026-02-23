@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, Mail, Phone, MapPin, Loader } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import SiteNavbar from "@/components/SiteNavbar";
 
 export default function ContactPage() {
   const { t } = useI18n();
@@ -65,18 +66,12 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-24 pb-12">
+    <>
+      <SiteNavbar />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-24 pb-12">
       <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back
-          </Link>
-          
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 text-balance">
             Get in Touch
           </h1>
@@ -257,6 +252,7 @@ export default function ContactPage() {
           </form>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -1,12 +1,15 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n";
+import SiteNavbar from "@/components/SiteNavbar";
 
 export default function CookiesPage() {
   const { t } = useI18n();
 
   return (
-    <article className="max-w-3xl mx-auto px-6 py-16 md:py-24">
+    <>
+      <SiteNavbar />
+      <article className="max-w-3xl mx-auto px-6 py-16 md:py-24 mt-16">
       <header className="mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight text-balance">
           {t("pages.cookies.title")}
@@ -94,5 +97,6 @@ export default function CookiesPage() {
         </section>
       </div>
     </article>
+    </>
   );
 }
