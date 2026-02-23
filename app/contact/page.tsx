@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Mail, Phone, MapPin, Loader } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import SiteNavbar from "@/components/SiteNavbar";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ContactPage() {
   const { t } = useI18n();
@@ -17,6 +18,26 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Check authentication status
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsLoggedIn(!!user);
+        console.log("[v0] Contact page: User logged in:", !!user);
+      } catch (err) {
+        console.error("[v0] Contact page: Auth check failed:", err);
+        setIsLoggedIn(false);
+      } finally {
+        setAuthLoading(false);
+      }
+    }
+    checkAuth();
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -80,63 +101,83 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {/* Contact Info Cards */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <Mail className="w-6 h-6 text-green-600" />
+        {/* Contact Info Cards - Conditionally render based on auth status */}
+        {authLoading ? (
+          // Loading skeleton
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 animate-pulse">
+                <div className="h-24 bg-gray-100 rounded"></div>
               </div>
-              <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Email
-            </h3>
-                <a
-                  href="mailto:support@zarzoom.com"
-                  className="text-green-600 hover:text-green-700 font-medium transition-colors"
-                >
-                  support@zarzoom.com
-                </a>
+            ))}
+          </div>
+        ) : (
+          <div className={`grid gap-8 mb-12 ${
+            isLoggedIn ? 'md:grid-cols-3' : 'md:grid-cols-1 max-w-md mx-auto'
+          }`}>
+            {/* Email Card - Always visible */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <Mail className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Email
+                  </h3>
+                  <a
+                    href="mailto:support@zarzoom.com"
+                    className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                  >
+                    support@zarzoom.com
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <Phone className="w-6 h-6 text-green-600" />
+            {/* Phone Card - Only visible when logged in */}
+            {isLoggedIn && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <Phone className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Phone
+                    </h3>
+                    <a
+                      href="tel:+441234567890"
+                      className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                    >
+                      +44 (0) 123 456 7890
+                    </a>
+                  </div>
+                </div>
               </div>
-              <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Phone
-            </h3>
-                <a
-                  href="tel:+441234567890"
-                  className="text-green-600 hover:text-green-700 font-medium transition-colors"
-                >
-                  +44 (0) 123 456 7890
-                </a>
-              </div>
-            </div>
-          </div>
+            )}
 
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-            <div className="flex items-start gap-4">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <MapPin className="w-6 h-6 text-green-600" />
+            {/* Office Card - Only visible when logged in */}
+            {isLoggedIn && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <MapPin className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Office
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      123 Business Street<br />
+                      London, UK EC1A 1AA
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
-              Office
-            </h3>
-                <p className="text-gray-600 text-sm">
-                  123 Business Street<br />
-                  London, UK EC1A 1AA
-                </p>
-              </div>
-            </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Contact Form */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 md:p-12">

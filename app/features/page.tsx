@@ -182,15 +182,16 @@ export default function FeaturesPage() {
                     </div>
                   </div>
 
-                  {/* Visual Side */}
-                  <div className="flex-1 bg-green-50 flex items-center justify-center p-6 md:p-10 min-h-[280px] md:min-h-0">
-                    <div className="relative w-full h-full min-h-[240px] md:min-h-[360px] rounded-2xl overflow-hidden shadow-md border border-green-100">
+                  {/* Visual Side - Logo-style square image container */}
+                  <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-12">
+                    <div className="relative aspect-square w-full max-w-md rounded-2xl overflow-hidden border border-gray-200 shadow-sm bg-white">
                       <Image
                         src={feature.image}
                         alt={feature.title}
                         fill
-                        className="object-cover"
+                        className="object-contain p-10"
                         sizes="(max-width: 768px) 100vw, 50vw"
+                        priority={index < 2}
                       />
                     </div>
                   </div>
