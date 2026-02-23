@@ -1052,20 +1052,15 @@
       "getStarted": "Get Started",
       "savePercent": "Save {percent}% with annual billing",
       "trialDays": "{days}-day free trial",
+      "page": {
+        "title": "Plans and Pricing",
+        "subtitle": "Choose the plan that fits your social media workflow. Upgrade or downgrade at any time.",
+        "footer": "All prices exclude VAT where applicable. Cancel or change your plan at any time."
+      },
       "fallback": {
         "title": "Pricing Temporarily Unavailable",
         "message": "We're currently updating our pricing plans. Please check back shortly or contact support for assistance."
       }
-    },
-    "pricing": {
-      "title": "Simple, Transparent Pricing",
-      "subtitle": "Choose the plan that fits your growth. Start with a free trial, upgrade anytime.",
-      "monthly": "Monthly",
-      "annual": "Annual",
-      "popular": "Most Popular",
-      "getStarted": "Get Started",
-      "savePercent": "Save {percent}% with annual billing",
-      "trialDays": "{days}-day free trial"
     },
     "plans": {
       "basic": {

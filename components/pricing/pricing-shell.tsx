@@ -13,6 +13,7 @@ import {
   saveDiscountPreference,
   getDiscountPreference,
 } from "@/lib/pricing/geolocation";
+import { useI18n } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -53,6 +54,8 @@ export function PricingShell({
   plans,
   isLoggedIn,
 }: PricingShellProps) {
+  const { t } = useI18n();
+  
   // Derive available currencies from plan prices
   const availableCurrencies = deriveAvailableCurrencies(plans);
   
@@ -131,11 +134,13 @@ export function PricingShell({
       {/* Header */}
       <div className="mb-12 text-center">
         <h1 className="text-balance text-4xl font-bold tracking-tight text-[hsl(var(--foreground))] sm:text-5xl">
-          Plans and Pricing
+          {t("pricing.page.title", "Plans and Pricing")}
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-pretty text-lg leading-relaxed text-[hsl(var(--muted-foreground))]">
-          Choose the plan that fits your social media workflow. Upgrade or
-          downgrade at any time.
+          {t(
+            "pricing.page.subtitle",
+            "Choose the plan that fits your social media workflow. Upgrade or downgrade at any time."
+          )}
         </p>
       </div>
 
@@ -203,8 +208,10 @@ export function PricingShell({
 
       {/* Trust footnote */}
       <p className="mt-12 text-center text-sm text-[hsl(var(--muted-foreground))]">
-        All prices exclude VAT where applicable. Cancel or change your plan at
-        any time.
+        {t(
+          "pricing.page.footer",
+          "All prices exclude VAT where applicable. Cancel or change your plan at any time."
+        )}
       </p>
     </section>
   );
