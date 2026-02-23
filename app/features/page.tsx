@@ -85,19 +85,6 @@ export default function FeaturesPage() {
       image: "/images/features/content-library.jpg",
     },
     {
-      icon: Users,
-      title: "Team Collaboration",
-      description:
-        "Work seamlessly with your team, clients, or agencies. Assign roles, manage permissions, and streamline approval workflows all within the platform.",
-      features: [
-        "Role-based access control",
-        "Approval workflows",
-        "Team activity logs",
-        "Client management",
-      ],
-      image: "/images/features/collaboration.jpg",
-    },
-    {
       icon: Plug,
       title: "Integrations & API",
       description:
