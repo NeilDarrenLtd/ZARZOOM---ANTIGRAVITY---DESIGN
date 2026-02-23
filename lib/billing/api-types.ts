@@ -64,7 +64,7 @@ export function getMonthlyPrice(
   plan: ApiPlan,
   currency: Currency
 ): ApiPlanPrice | null {
-  return getPlanPrice(plan, currency, "month");
+  return getPlanPrice(plan, currency, "monthly");
 }
 
 /**
@@ -74,7 +74,7 @@ export function getAnnualPrice(
   plan: ApiPlan,
   currency: Currency
 ): ApiPlanPrice | null {
-  return getPlanPrice(plan, currency, "year");
+  return getPlanPrice(plan, currency, "annual");
 }
 
 /**
