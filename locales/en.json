@@ -1058,7 +1058,19 @@
       "planStatus": "Status",
       "planPriceGBP": "Price (GBP)",
       "planTrialDays": "Trial",
-      "planActions": "Actions"
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
     },
     "pricing": {
       "title": "Simple, Transparent Pricing",
