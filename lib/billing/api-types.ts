@@ -7,6 +7,9 @@
 
 import type { Currency, BillingInterval } from "./types";
 
+// Re-export types for convenience - these MUST be exported
+export type { Currency, BillingInterval };
+
 /**
  * Price object returned by the API
  */
@@ -61,7 +64,7 @@ export function getMonthlyPrice(
   plan: ApiPlan,
   currency: Currency
 ): ApiPlanPrice | null {
-  return getPlanPrice(plan, currency, "month");
+  return getPlanPrice(plan, currency, "monthly");
 }
 
 /**
@@ -71,7 +74,7 @@ export function getAnnualPrice(
   plan: ApiPlan,
   currency: Currency
 ): ApiPlanPrice | null {
-  return getPlanPrice(plan, currency, "year");
+  return getPlanPrice(plan, currency, "annual");
 }
 
 /**
