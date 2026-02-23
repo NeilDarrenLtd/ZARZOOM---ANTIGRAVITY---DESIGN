@@ -53,7 +53,7 @@ export const POST = createApiHandler({
       userId: ctx.user!.id,
       tenantId: ctx.membership!.tenantId,
       tableName: "plan_prices",
-      recordId: newPrice.id,
+      recordId: newPrice.id as string,
       action: "price_version_created",
       changes: {
         plan_id: planId,
@@ -66,10 +66,10 @@ export const POST = createApiHandler({
             }
           : null,
         after: {
-          id: newPrice.id,
-          amount_minor: newPrice.amount_minor,
-          currency: newPrice.currency,
-          interval: newPrice.interval,
+          id: newPrice.id as string,
+          amount_minor: newPrice.amount_minor as number,
+          currency: newPrice.currency as string,
+          interval: newPrice.interval as string,
         },
       },
     });
