@@ -146,7 +146,7 @@ export default function AdminBillingPage() {
               </thead>
               <tbody>
                 {plans.map((plan) => {
-                  const gbpMonthly = plan.plan_prices.find(
+                  const gbpMonthly = plan.prices.find(
                     (p) => p.currency.toUpperCase() === "GBP" && p.interval === "monthly"
                   );
                   return (
@@ -155,25 +155,23 @@ export default function AdminBillingPage() {
                       className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
                     >
                       <td className="px-6 py-4 font-medium text-gray-900">{plan.name}</td>
-                      <td className="px-6 py-4 text-gray-500 font-mono text-xs">{plan.slug}</td>
+                      <td className="px-6 py-4 text-gray-500 font-mono text-xs">{plan.plan_key}</td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            plan.status === "active"
+                            plan.is_active
                               ? "bg-green-50 text-green-700"
-                              : plan.status === "draft"
-                              ? "bg-gray-100 text-gray-600"
                               : "bg-red-50 text-red-600"
                           }`}
                         >
-                          {plan.status}
+                          {plan.is_active ? "active" : "archived"}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-gray-700">
-                        {gbpMonthly ? formatPrice(gbpMonthly.unit_amount, "GBP") : "N/A"}
+                        {gbpMonthly ? formatPrice(gbpMonthly.amount_minor, "GBP") : "N/A"}
                         <span className="text-gray-400 text-xs ml-1">/ mo</span>
                       </td>
-                      <td className="px-6 py-4 text-gray-500">{plan.trial_days}d</td>
+                      <td className="px-6 py-4 text-gray-500">0d</td>
                       <td className="px-6 py-4 text-right">
                         <div className="inline-flex items-center gap-2">
                           <Link
@@ -183,7 +181,7 @@ export default function AdminBillingPage() {
                           >
                             <Pencil className="w-4 h-4" />
                           </Link>
-                          {plan.status !== "archived" && (
+                          {plan.is_active && (
                             <button
                               onClick={() => handleArchive(plan.id, plan.name)}
                               className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
