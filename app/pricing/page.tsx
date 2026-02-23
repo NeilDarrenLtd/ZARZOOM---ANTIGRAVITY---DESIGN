@@ -7,11 +7,10 @@ import { getDisplayablePlans } from "@/lib/billing/displayable-plans";
 import { AlertCircle } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
-/*  ISR Configuration - Cache for 5 minutes                            */
+/*  Dynamic rendering required (uses cookies for locale detection)      */
 /* ------------------------------------------------------------------ */
 
-export const revalidate = 300; // 5 minutes
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 /* ------------------------------------------------------------------ */
 /*  Metadata                                                           */

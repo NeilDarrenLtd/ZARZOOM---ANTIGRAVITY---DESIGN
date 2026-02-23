@@ -9,8 +9,8 @@
  * show translations for plans that don't exist in the database.
  */
 
-import { hasPlanCopy, type PlanCopy } from "@/lib/i18n/plan-copy";
-import type { ApiPlanResponse, ApiPlan, ApiPlanPrice } from "@/lib/billing/api-types";
+import { hasPlanCopy, getPlanCopy, type PlanCopy } from "@/lib/i18n/plan-copy";
+import type { GetPlansResponse, ApiPlan, ApiPlanPrice } from "@/lib/billing/api-types";
 import { validatePlanSync } from "./validate-plan-sync";
 import type { Plan } from "./types";
 
@@ -50,7 +50,7 @@ async function fetchPlansFromApi(): Promise<ApiPlan[]> {
     throw new Error(`Failed to fetch plans: ${response.status}`);
   }
   
-  const data: ApiPlanResponse = await response.json();
+  const data: GetPlansResponse = await response.json();
   console.log("[v0] Fetched", data.plans.length, "plans from API");
   
   return data.plans;
@@ -113,25 +113,29 @@ export async function getDisplayablePlans(
     const displayable: DisplayablePlan[] = [];
     
     for (const plan of apiPlans) {
-      const copyCheck = hasPlanCopy(plan.planKey, t);
+      const hasCompleteCopy = hasPlanCopy(plan.planKey, t);
       
-      if (copyCheck.isComplete) {
-        displayable.push({
-          planKey: plan.planKey,
-          name: plan.name,
-          description: plan.description,
-          sortOrder: plan.sortOrder,
-          entitlements: plan.entitlements,
-          quotaPolicy: plan.quotaPolicy,
-          features: plan.features,
-          prices: plan.prices,
-          copy: copyCheck.copy!,
-        });
-        console.log("[v0] ✓ Plan displayable:", plan.planKey);
+      if (hasCompleteCopy) {
+        try {
+          const copy = getPlanCopy(plan.planKey, t);
+          displayable.push({
+            planKey: plan.planKey,
+            name: plan.name,
+            description: plan.description,
+            sortOrder: plan.sortOrder,
+            entitlements: plan.entitlements,
+            quotaPolicy: plan.quotaPolicy,
+            features: plan.features,
+            prices: plan.prices,
+            copy,
+          });
+          console.log("[v0] Plan displayable:", plan.planKey);
+        } catch (err) {
+          console.warn(`[v0] Plan NOT displayable: ${plan.planKey} - error getting copy:`, err);
+        }
       } else {
         console.warn(
-          `[v0] ✗ Plan NOT displayable: ${plan.planKey} - missing i18n keys:`,
-          copyCheck.missingKeys
+          `[v0] Plan NOT displayable: ${plan.planKey} - missing i18n keys`
         );
       }
     }
@@ -163,30 +167,34 @@ export async function getDisplayablePlansClient(
       throw new Error(`Failed to fetch plans: ${response.status}`);
     }
     
-    const data: ApiPlanResponse = await response.json();
+    const data: GetPlansResponse = await response.json();
     console.log("[v0] [CLIENT] Fetched", data.plans.length, "plans");
     
     const displayable: DisplayablePlan[] = [];
     
     for (const plan of data.plans) {
-      const copyCheck = hasPlanCopy(plan.planKey, t);
+      const hasCompleteCopy = hasPlanCopy(plan.planKey, t);
       
-      if (copyCheck.isComplete) {
-        displayable.push({
-          planKey: plan.planKey,
-          name: plan.name,
-          description: plan.description,
-          sortOrder: plan.sortOrder,
-          entitlements: plan.entitlements,
-          quotaPolicy: plan.quotaPolicy,
-          features: plan.features,
-          prices: plan.prices,
-          copy: copyCheck.copy!,
-        });
+      if (hasCompleteCopy) {
+        try {
+          const copy = getPlanCopy(plan.planKey, t);
+          displayable.push({
+            planKey: plan.planKey,
+            name: plan.name,
+            description: plan.description,
+            sortOrder: plan.sortOrder,
+            entitlements: plan.entitlements,
+            quotaPolicy: plan.quotaPolicy,
+            features: plan.features,
+            prices: plan.prices,
+            copy,
+          });
+        } catch (err) {
+          console.warn(`[v0] [CLIENT] Plan NOT displayable: ${plan.planKey}`, err);
+        }
       } else {
         console.warn(
-          `[v0] [CLIENT] Plan NOT displayable: ${plan.planKey}`,
-          copyCheck.missingKeys
+          `[v0] [CLIENT] Plan NOT displayable: ${plan.planKey} - missing i18n keys`
         );
       }
     }
