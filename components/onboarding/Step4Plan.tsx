@@ -13,13 +13,14 @@ import { Loader2, AlertCircle } from "lucide-react";
 interface Step4Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
+  aiFilledFields?: Set<string>;
 }
 
 // Discount settings
 const DISCOUNT_PERCENT = 15;
 const MAX_ADS_PER_WEEK = 7;
 
-export default function Step4Plan({ data, onChange }: Step4Props) {
+export default function Step4Plan({ data, onChange, aiFilledFields }: Step4Props) {
   const { t } = useI18n();
   const [plans, setPlans] = useState<DisplayablePlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
