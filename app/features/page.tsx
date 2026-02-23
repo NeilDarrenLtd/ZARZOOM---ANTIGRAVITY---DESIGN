@@ -1,6 +1,7 @@
 "use client";
 
 import SiteNavbar from "@/components/SiteNavbar";
+import Image from "next/image";
 import {
   Sparkles,
   Calendar,
@@ -29,8 +30,7 @@ export default function FeaturesPage() {
         "Multi-format content (text, captions, hashtags)",
         "A/B testing suggestions",
       ],
-      gradient: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-50",
+      image: "/images/features/ai-content.jpg",
     },
     {
       icon: Calendar,
@@ -43,8 +43,7 @@ export default function FeaturesPage() {
         "Content calendar automation",
         "Engagement-based scheduling",
       ],
-      gradient: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-50",
+      image: "/images/features/smart-scheduling.jpg",
     },
     {
       icon: Network,
@@ -57,8 +56,7 @@ export default function FeaturesPage() {
         "Unified inbox",
         "Centralized analytics",
       ],
-      gradient: "from-green-500 to-emerald-500",
-      bgColor: "bg-green-50",
+      image: "/images/features/multi-platform.jpg",
     },
     {
       icon: BarChart3,
@@ -71,8 +69,7 @@ export default function FeaturesPage() {
         "Engagement rate analysis",
         "Competitor benchmarking",
       ],
-      gradient: "from-orange-500 to-red-500",
-      bgColor: "bg-orange-50",
+      image: "/images/features/analytics.jpg",
     },
     {
       icon: FolderOpen,
@@ -85,8 +82,7 @@ export default function FeaturesPage() {
         "Template library",
         "Asset performance tracking",
       ],
-      gradient: "from-indigo-500 to-purple-500",
-      bgColor: "bg-indigo-50",
+      image: "/images/features/content-library.jpg",
     },
     {
       icon: Users,
@@ -99,8 +95,7 @@ export default function FeaturesPage() {
         "Team activity logs",
         "Client management",
       ],
-      gradient: "from-teal-500 to-green-500",
-      bgColor: "bg-teal-50",
+      image: "/images/features/collaboration.jpg",
     },
     {
       icon: Plug,
@@ -113,8 +108,7 @@ export default function FeaturesPage() {
         "REST API access",
         "Custom integrations",
       ],
-      gradient: "from-yellow-500 to-orange-500",
-      bgColor: "bg-yellow-50",
+      image: "/images/features/integrations.jpg",
     },
     {
       icon: HeadphonesIcon,
@@ -127,8 +121,7 @@ export default function FeaturesPage() {
         "Video tutorials",
         "Knowledge base",
       ],
-      gradient: "from-rose-500 to-pink-500",
-      bgColor: "bg-rose-50",
+      image: "/images/features/support.jpg",
     },
   ];
 
@@ -149,7 +142,7 @@ export default function FeaturesPage() {
           </div>
 
           {/* Features Grid */}
-          <div className="space-y-12 mb-20">
+          <div className="space-y-16 mb-20">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const isEven = index % 2 === 0;
@@ -157,52 +150,49 @@ export default function FeaturesPage() {
               return (
                 <div
                   key={index}
-                  className={`bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200 ${
+                  className={`bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 ${
                     isEven ? "md:flex-row" : "md:flex-row-reverse"
                   } flex flex-col md:flex`}
                 >
                   {/* Content Side */}
-                  <div className="flex-1 p-8 md:p-12">
-                    <div className="flex items-start gap-4 mb-6">
-                      <div
-                        className={`w-14 h-14 ${feature.bgColor} rounded-xl flex items-center justify-center flex-shrink-0`}
-                      >
-                        <div
-                          className={`w-10 h-10 bg-gradient-to-br ${feature.gradient} rounded-lg flex items-center justify-center`}
-                        >
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
+                  <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-6 h-6 text-green-700" />
                       </div>
-                      <div>
-                        <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                          {feature.title}
-                        </h2>
-                        <p className="text-lg text-gray-600 leading-relaxed">
-                          {feature.description}
-                        </p>
-                      </div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
+                        {feature.title}
+                      </h2>
                     </div>
 
+                    <p className="text-lg text-gray-600 leading-relaxed mb-6">
+                      {feature.description}
+                    </p>
+
                     {/* Feature List */}
-                    <div className="grid gap-3 mt-6">
+                    <div className="grid gap-3">
                       {feature.features.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-3">
                           <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                             <Check className="w-4 h-4 text-green-600" />
                           </div>
-                          <span className="text-gray-700">{item}</span>
+                          <span className="text-gray-700 font-medium">{item}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Visual Side */}
-                  <div
-                    className={`flex-1 ${feature.bgColor} flex items-center justify-center p-8 md:p-12`}
-                  >
-                    <div
-                      className={`w-full h-64 md:h-full rounded-2xl bg-gradient-to-br ${feature.gradient} opacity-20`}
-                    />
+                  <div className="flex-1 bg-green-50 flex items-center justify-center p-6 md:p-10 min-h-[280px] md:min-h-0">
+                    <div className="relative w-full h-full min-h-[240px] md:min-h-[360px] rounded-2xl overflow-hidden shadow-md border border-green-100">
+                      <Image
+                        src={feature.image}
+                        alt={feature.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
                   </div>
                 </div>
               );
