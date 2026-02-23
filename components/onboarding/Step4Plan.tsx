@@ -13,7 +13,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 interface Step4Props {
   data: OnboardingUpdate;
   onChange: (patch: Partial<OnboardingUpdate>) => void;
-  aiFilledFields?: Set<string>;
+  aiFilledFields?: string[];
 }
 
 // Discount settings
