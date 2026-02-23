@@ -321,7 +321,7 @@ export async function togglePlanStatus(
  * LEGACY: Get plans using old schema (subscription_plans).
  * @deprecated Use getActivePlansWithPrices() instead
  */
-export async function getPlans(opts?: { status?: "active" | "all" }) {
+export async function getPlans(opts?: { status?: "active" | "all" | "archived" }) {
   const supabase = await createClient();
   
   let query = supabase
@@ -334,6 +334,8 @@ export async function getPlans(opts?: { status?: "active" | "all" }) {
 
   if (opts?.status === "active") {
     query = query.eq("is_active", true);
+  } else if (opts?.status === "archived") {
+    query = query.eq("is_active", false);
   }
 
   const { data, error } = await query;
@@ -344,4 +346,185 @@ export async function getPlans(opts?: { status?: "active" | "all" }) {
   }
 
   return data || [];
+}
+
+/**
+ * LEGACY: Create plan using old schema
+ * @deprecated Use createPlanWithPrices() instead
+ */
+export async function createPlan(
+  planData: Record<string, unknown>,
+  prices: Array<{ currency: string; interval: string; unit_amount: number }>
+): Promise<{ id: string; plan_prices: unknown[] } & Record<string, unknown>> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { data: plan, error: planError } = await supabase
+    .from("subscription_plans")
+    .insert(planData)
+    .select()
+    .single();
+
+  if (planError) {
+    console.error("[v0] Error creating legacy plan:", planError);
+    throw planError;
+  }
+
+  const priceRows = prices.map((p) => ({
+    plan_id: plan.id,
+    currency: p.currency,
+    interval: p.interval,
+    unit_amount: p.unit_amount,
+  }));
+
+  const { data: insertedPrices, error: pricesError } = await supabase
+    .from("plan_prices")
+    .insert(priceRows)
+    .select();
+
+  if (pricesError) {
+    console.error("[v0] Error creating legacy prices:", pricesError);
+    throw pricesError;
+  }
+
+  return {
+    ...plan,
+    plan_prices: insertedPrices || [],
+  };
+}
+
+/**
+ * LEGACY: Update plan using old schema
+ * @deprecated Use updatePlanData() instead
+ */
+export async function updatePlan(
+  planId: string,
+  updates: Record<string, unknown>
+): Promise<Record<string, unknown>> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { data, error } = await supabase
+    .from("subscription_plans")
+    .update(updates)
+    .eq("id", planId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[v0] Error updating legacy plan:", error);
+    throw error;
+  }
+
+  return data;
+}
+
+/**
+ * LEGACY: Archive plan using old schema
+ * @deprecated Use togglePlanStatus() instead
+ */
+export async function archivePlan(planId: string): Promise<void> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("subscription_plans")
+    .update({ is_active: false })
+    .eq("id", planId);
+
+  if (error) {
+    console.error("[v0] Error archiving legacy plan:", error);
+    throw error;
+  }
+}
+
+/**
+ * LEGACY: Get tenant subscription
+ * @deprecated Implement proper subscription queries
+ */
+export async function getTenantSubscription(
+  tenantId: string
+): Promise<Record<string, unknown> | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("tenant_subscriptions")
+    .select("*")
+    .eq("tenant_id", tenantId)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (error) {
+    console.error("[v0] Error fetching tenant subscription:", error);
+    return null;
+  }
+
+  return data;
+}
+
+/**
+ * LEGACY: Get subscription stats
+ * @deprecated Implement proper analytics queries
+ */
+export async function getSubscriptionStats(): Promise<Record<string, number>> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  const { count: activeCount } = await supabase
+    .from("tenant_subscriptions")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "active");
+
+  const { count: totalCount } = await supabase
+    .from("tenant_subscriptions")
+    .select("*", { count: "exact", head: true });
+
+  return {
+    active: activeCount || 0,
+    total: totalCount || 0,
+  };
+}
+
+/**
+ * LEGACY: List subscriptions
+ * @deprecated Implement proper subscription queries
+ */
+export async function listSubscriptions(opts: {
+  status?: string;
+  limit?: number;
+  offset?: number;
+} = {}): Promise<{
+  subscriptions: Record<string, unknown>[];
+  count: number;
+}> {
+  const { createAdminClient } = await import("@/lib/supabase/server");
+  const supabase = await createAdminClient();
+
+  let query = supabase
+    .from("tenant_subscriptions")
+    .select("*", { count: "exact" });
+
+  if (opts.status) {
+    query = query.eq("status", opts.status);
+  }
+
+  if (opts.limit) {
+    query = query.limit(opts.limit);
+  }
+
+  if (opts.offset) {
+    query = query.range(opts.offset, opts.offset + (opts.limit || 10) - 1);
+  }
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    console.error("[v0] Error listing subscriptions:", error);
+    throw error;
+  }
+
+  return {
+    subscriptions: data || [],
+    count: count || 0,
+  };
 }
