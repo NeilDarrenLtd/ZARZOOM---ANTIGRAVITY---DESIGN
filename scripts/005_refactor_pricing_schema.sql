@@ -36,11 +36,13 @@ CREATE UNIQUE INDEX IF NOT EXISTS plans_plan_key_lower_idx ON public.plans (LOWE
 -- Enable RLS
 ALTER TABLE public.plans ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies
+-- RLS Policies (drop if exists to make idempotent)
+DROP POLICY IF EXISTS "Anyone can read active plans" ON public.plans;
 CREATE POLICY "Anyone can read active plans"
   ON public.plans FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Service role full access on plans" ON public.plans;
 CREATE POLICY "Service role full access on plans"
   ON public.plans FOR ALL
   USING (true)
@@ -144,11 +146,13 @@ END $$;
 -- Enable RLS
 ALTER TABLE public.plan_prices ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies
+-- RLS Policies (drop if exists to make idempotent)
+DROP POLICY IF EXISTS "Anyone can read active prices" ON public.plan_prices;
 CREATE POLICY "Anyone can read active prices"
   ON public.plan_prices FOR SELECT
   USING (is_active = true);
 
+DROP POLICY IF EXISTS "Service role full access on plan_prices" ON public.plan_prices;
 CREATE POLICY "Service role full access on plan_prices"
   ON public.plan_prices FOR ALL
   USING (true)
@@ -383,7 +387,7 @@ DO UPDATE SET
   updated_at = now();
 
 -- Advanced prices
-INSERT INTO public.plan_prices (plan_id, currency, interval, amount_minor, is_active, billing_provider_id)
+INSERT INTO public.plan_prices (plan_id, currency, interval, amount_minor, is_active, billing_provider_price_id)
 SELECT p.id, v.currency, v.interval, v.amount_minor, true, v.provider_id
 FROM public.plans p
 CROSS JOIN (VALUES
