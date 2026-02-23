@@ -11,7 +11,8 @@ export const ONBOARDING_STATUSES = [
   "completed",
 ] as const;
 
-export const PLAN_OPTIONS = ["basic", "pro", "scale"] as const;
+// DEPRECATED: Use dynamic plan_key from database instead
+export const PLAN_OPTIONS = ["basic", "pro", "scale", "advanced"] as const;
 
 export const APPROVAL_OPTIONS = ["auto", "manual"] as const;
 
@@ -98,8 +99,10 @@ export const onboardingUpdateSchema = z
     product_or_sales_url: urlField.nullable().optional(),
 
     // step 5: plan & settings
-    selected_plan: z.enum(PLAN_OPTIONS).nullable().optional(),
-    discount_opt_in: z.boolean().optional(),
+    selected_plan: z.string().nullable().optional(), // Changed from enum to string for dynamic plans
+    selected_currency: z.string().nullable().optional(), // e.g. "GBP", "USD", "EUR"
+    selected_interval: z.enum(["monthly", "annual"]).nullable().optional(),
+    discount_opt_in: z.boolean().optional(), // Advertising partnership discount
     approval_preference: z.enum(APPROVAL_OPTIONS).optional(),
 
     // social

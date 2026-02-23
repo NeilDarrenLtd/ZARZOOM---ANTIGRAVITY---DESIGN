@@ -1,12 +1,21 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n";
-import { PLAN_OPTIONS } from "@/lib/validation/onboarding";
-import type { OnboardingUpdate, Plan } from "@/lib/validation/onboarding";
+import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 import { Check, AlertCircle, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getDisplayablePlansClient } from "@/lib/billing/displayable-plans";
 import type { DisplayablePlan } from "@/lib/billing/displayable-plans";
+import { CurrencyToggle } from "@/components/pricing/currency-toggle";
+import { DiscountToggle } from "@/components/pricing/discount-toggle";
+import type { Currency } from "@/lib/billing/types";
+import { CURRENCIES } from "@/lib/billing/types";
+import {
+  detectUserCurrency,
+  saveCurrencyPreference,
+  saveDiscountPreference,
+  getDiscountPreference,
+} from "@/lib/pricing/geolocation";
 
 interface Step4Props {
   data: OnboardingUpdate;
@@ -14,11 +23,23 @@ interface Step4Props {
   aiFilledFields?: string[];
 }
 
+// Advertising partnership discount settings
+const DISCOUNT_PERCENT = 15; // 15% discount
+const MAX_ADS_PER_WEEK = 7; // Once per day max
+
 export default function Step4Plan({ data, onChange }: Step4Props) {
   const { t } = useI18n();
   const [plans, setPlans] = useState<DisplayablePlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [currency, setCurrency] = useState<Currency>("USD");
+  const [availableCurrencies, setAvailableCurrencies] = useState<Currency[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Get current values from onboarding state with defaults
+  const selectedPlan = data.selected_plan ?? null;
+  const discountEnabled = data.discount_opt_in ?? false;
+  const interval = "monthly"; // Always monthly in wizard
 
   // Fetch displayable plans on mount
   useEffect(() => {
@@ -28,6 +49,26 @@ export default function Step4Plan({ data, onChange }: Step4Props) {
         const displayablePlans = await getDisplayablePlansClient(t);
         setPlans(displayablePlans);
         console.log("[v0] Step4Plan: Loaded", displayablePlans.length, "plans");
+
+        // Derive available currencies from plans
+        const currencies = new Set<Currency>();
+        displayablePlans.forEach((plan) => {
+          plan.prices.forEach((price) => {
+            if (price.interval === "monthly" && price.isActive) {
+              currencies.add(price.currency as Currency);
+            }
+          });
+        });
+        const available = CURRENCIES.filter((c) => currencies.has(c));
+        setAvailableCurrencies(available);
+
+        // Initialize currency with geolocation or saved preference
+        const detectedCurrency = await detectUserCurrency(available);
+        const savedCurrency = data.selected_currency;
+        setCurrency((savedCurrency as Currency) || detectedCurrency);
+        setIsInitialized(true);
+
+        console.log("[v0] Step4Plan: Currency initialized to", savedCurrency || detectedCurrency);
       } catch (err) {
         console.error("[v0] Step4Plan: Failed to load plans:", err);
         setError(true);
@@ -36,14 +77,42 @@ export default function Step4Plan({ data, onChange }: Step4Props) {
       }
     }
     loadPlans();
-  }, [t]);
+  }, [t, data.selected_currency]);
 
-  const isAnnual = data.discount_opt_in !== false; // default ON
-  const selectedPlan = data.selected_plan ?? null;
+  const handleCurrencyChange = useCallback(
+    (newCurrency: Currency) => {
+      setCurrency(newCurrency);
+      saveCurrencyPreference(newCurrency);
+      onChange({
+        selected_currency: newCurrency,
+      });
+      console.log("[v0] Step4Plan: Currency changed to", newCurrency);
+    },
+    [onChange]
+  );
 
-  function selectPlan(planKey: string) {
-    onChange({ selected_plan: planKey as Plan });
-  }
+  const handleDiscountChange = useCallback(
+    (enabled: boolean) => {
+      saveDiscountPreference(enabled);
+      onChange({
+        discount_opt_in: enabled,
+      });
+      console.log("[v0] Step4Plan: Discount", enabled ? "enabled" : "disabled");
+    },
+    [onChange]
+  );
+
+  const selectPlan = useCallback(
+    (planKey: string) => {
+      onChange({
+        selected_plan: planKey,
+        selected_currency: currency,
+        selected_interval: interval,
+      });
+      console.log("[v0] Step4Plan: Selected plan", planKey, currency, interval);
+    },
+    [onChange, currency, interval]
+  );
 
   // Loading state
   if (loading) {
@@ -100,114 +169,161 @@ export default function Step4Plan({ data, onChange }: Step4Props) {
         </p>
       </div>
 
-      {/* Discount toggle */}
-      <div className="flex items-center justify-center gap-3">
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isAnnual}
-            onChange={(e) => onChange({ discount_opt_in: e.target.checked })}
-            className="sr-only peer"
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600" />
-        </label>
-        <span className="text-sm font-medium text-gray-700">
-          {t("onboarding.step4.discount.label")}
-        </span>
-        {isAnnual && (
-          <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-            {t("onboarding.step4.discount.save").replace("{percent}", "17")}
-          </span>
-        )}
+      {/* Discount Toggle */}
+      <div className="max-w-3xl mx-auto">
+        <DiscountToggle
+          value={discountEnabled}
+          onChange={handleDiscountChange}
+          discountPercent={DISCOUNT_PERCENT}
+          maxAdsPerWeek={MAX_ADS_PER_WEEK}
+        />
       </div>
 
-      {/* Plan cards */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        {plans.map((plan, index) => {
-          const isSelected = selectedPlan === plan.planKey;
-          const isPopular = index === 1; // Middle plan
-          
-          // Find price for current interval and GBP currency
-          const priceObj = plan.prices.find(
-            (p) => p.currency === "GBP" && p.interval === (isAnnual ? "annual" : "monthly")
-          );
-          const priceAmount = priceObj?.amountMinor || 0;
-          const displayPrice = isAnnual
-            ? Math.round(priceAmount / 100 / 12)
-            : Math.round(priceAmount / 100);
+      {/* Currency Selector */}
+      {isInitialized && availableCurrencies.length > 1 && (
+        <div className="flex items-center justify-center">
+          <CurrencyToggle
+            value={currency}
+            onChange={handleCurrencyChange}
+            availableCurrencies={availableCurrencies}
+          />
+        </div>
+      )}
 
-          return (
-            <div
-              key={plan.planKey}
-              className={`relative flex flex-col rounded-2xl border p-6 transition-all cursor-pointer ${
-                isSelected
-                  ? "border-green-500 bg-white shadow-lg ring-1 ring-green-500/20"
-                  : isPopular
-                    ? "border-green-300 bg-white shadow-md"
-                    : "border-gray-200 bg-white hover:border-green-300"
-              }`}
-              onClick={() => selectPlan(plan.planKey)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && selectPlan(plan.planKey)}
-            >
-              {/* Popular badge */}
-              {isPopular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    {t("onboarding.step4.popular")}
-                  </span>
-                </div>
-              )}
+      {/* Plan cards - filter by selected currency availability */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {plans
+          .filter((plan) => {
+            // Only show plans with prices for selected currency
+            const hasPrice = plan.prices.some(
+              (p) => p.currency === currency && p.interval === interval && p.isActive
+            );
+            if (!hasPrice) {
+              console.log(`[v0] Step4Plan: Hiding ${plan.planKey} - no ${currency} ${interval} price`);
+            }
+            return hasPrice;
+          })
+          .map((plan, index) => {
+            const isSelected = selectedPlan === plan.planKey;
+            const isPopular = index === 1; // Middle plan (if 3 plans) or second plan
 
-              <h3 className="text-lg font-bold text-gray-900">
-                {plan.copy.displayName}
-              </h3>
-              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
-                {plan.copy.shortTagline}
-              </p>
+            // Find price for selected currency and interval
+            const priceObj = plan.prices.find(
+              (p) => p.currency === currency && p.interval === interval && p.isActive
+            );
 
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-3xl font-bold text-gray-900">
-                  £{displayPrice}
-                </span>
-                <span className="text-sm text-gray-400">
-                  {t("onboarding.step4.perMonth")}
-                </span>
-              </div>
+            if (!priceObj) return null;
 
-              <button
-                type="button"
-                className={`mt-4 w-full py-2.5 rounded-lg text-sm font-bold transition-colors ${
+            // Calculate pricing with discount
+            const baseAmount = priceObj.amountMinor;
+            const discountAmount = discountEnabled
+              ? Math.round(baseAmount * (DISCOUNT_PERCENT / 100))
+              : 0;
+            const finalAmount = baseAmount - discountAmount;
+            const displayPrice = Math.round(finalAmount / 100);
+            const originalPrice = Math.round(baseAmount / 100);
+
+            // Get currency symbol
+            const currencySymbols: Record<string, string> = {
+              GBP: "£",
+              USD: "$",
+              EUR: "€",
+              CAD: "C$",
+              AUD: "A$",
+            };
+            const symbol = currencySymbols[currency] || currency;
+
+            return (
+              <div
+                key={plan.planKey}
+                className={`relative flex flex-col rounded-2xl border p-6 transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "border-green-500 bg-white shadow-lg ring-1 ring-green-500/20"
+                    : isPopular
+                      ? "border-green-300 bg-white shadow-md"
+                      : "border-gray-200 bg-white hover:border-green-300"
                 }`}
+                onClick={() => selectPlan(plan.planKey)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && selectPlan(plan.planKey)}
               >
-                {isSelected
-                  ? t("onboarding.step4.selected")
-                  : t("onboarding.step4.selectPlan")}
-              </button>
-
-              <ul className="mt-5 flex flex-col gap-2.5 flex-1">
-                {plan.copy.bullets.map((feature, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <Check
-                      className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
-                        isSelected || isPopular
-                          ? "text-green-600"
-                          : "text-gray-400"
-                      }`}
-                    />
-                    <span className="text-xs text-gray-600 leading-relaxed">
-                      {feature}
+                {/* Popular badge */}
+                {isPopular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                      {t("onboarding.step4.popular")}
                     </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+                  </div>
+                )}
+
+                <h3 className="text-lg font-bold text-gray-900">
+                  {plan.copy.displayName}
+                </h3>
+                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                  {plan.copy.shortTagline}
+                </p>
+
+                {/* Pricing with discount */}
+                <div className="mt-4">
+                  {discountEnabled && (
+                    <div className="mb-1">
+                      <span className="text-sm text-gray-400 line-through">
+                        {symbol}
+                        {originalPrice}
+                      </span>
+                      <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                        Save {DISCOUNT_PERCENT}%
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-baseline gap-1">
+                    <span
+                      className={`text-3xl font-bold ${
+                        discountEnabled ? "text-green-600" : "text-gray-900"
+                      }`}
+                    >
+                      {symbol}
+                      {displayPrice}
+                    </span>
+                    <span className="text-sm text-gray-400">
+                      {t("onboarding.step4.perMonth")}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className={`mt-4 w-full py-2.5 rounded-lg text-sm font-bold transition-colors ${
+                    isSelected
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {isSelected
+                    ? t("onboarding.step4.selected")
+                    : t("onboarding.step4.selectPlan")}
+                </button>
+
+                <ul className="mt-5 flex flex-col gap-2.5 flex-1">
+                  {plan.copy.bullets.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <Check
+                        className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+                          isSelected || isPopular
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      />
+                      <span className="text-xs text-gray-600 leading-relaxed">
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
