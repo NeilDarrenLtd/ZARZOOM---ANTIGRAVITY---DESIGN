@@ -13,6 +13,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import UploadPostConnectModal from "@/components/social/UploadPostConnectModal";
+import { ProfilePricingClient } from "@/components/profile/ProfilePricingClient";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -97,9 +98,7 @@ export default function ProfilePage() {
   const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [planPrices, setPlanPrices] = useState<Record<string, { monthly: number; annual: number }>>({});
-
-  // ── Load profile and pricing ───────────────────────────
+  // ── Load profile ───────────────────────────────────────
   useEffect(() => {
     async function load() {
       try {
@@ -108,28 +107,6 @@ export default function ProfilePage() {
         if (!profileRes.ok) throw new Error("load failed");
         const profileBody = await profileRes.json();
         setData(profileBody.data ?? {});
-
-        // Load pricing from canonical API
-        const plansRes = await fetch("/api/v1/billing/plans");
-        if (plansRes.ok) {
-          const plansBody = await plansRes.json();
-          const pricesMap: Record<string, { monthly: number; annual: number }> = {};
-          
-          plansBody.plans?.forEach((plan: any) => {
-            const monthlyPrice = plan.prices.find((p: any) => p.currency === "GBP" && p.interval === "monthly");
-            const annualPrice = plan.prices.find((p: any) => p.currency === "GBP" && p.interval === "annual");
-            
-            if (monthlyPrice && annualPrice) {
-              pricesMap[plan.planKey] = {
-                monthly: Math.round(monthlyPrice.amountMinor / 100),
-                annual: Math.round(annualPrice.amountMinor / 100),
-              };
-            }
-          });
-          
-          setPlanPrices(pricesMap);
-          console.log("[v0] Loaded plan prices from API:", pricesMap);
-        }
       } catch (err) {
         console.error("[v0] Profile load error:", err);
         showToast("error", t("profile.loadFailed"));
@@ -986,141 +963,12 @@ export default function ProfilePage() {
             </h2>
             <p className="text-xs text-gray-400 mb-6">{t("profile.sections.planDesc")}</p>
 
-            {/* Current plan summary */}
-            {selectedPlan && (
-              <div className="mb-5 p-4 rounded-xl border border-green-200 bg-green-50">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-green-600 font-medium">
-                      {t("profile.plan.current")}
-                    </p>
-                    <p className="text-lg font-bold text-green-800 mt-0.5">
-                      {t(`onboarding.step4.planNames.${selectedPlan}`)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-green-800">
-                      {t("onboarding.a11y.currency")}
-                      {planPrices[selectedPlan] ? (
-                        isAnnual
-                          ? Math.round(planPrices[selectedPlan].annual / 12)
-                          : planPrices[selectedPlan].monthly
-                      ) : (
-                        "—"
-                      )}
-                    </p>
-                    <p className="text-xs text-green-600">
-                      {t("onboarding.step4.perMonth")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {!selectedPlan && (
-              <p className="text-sm text-gray-500 mb-5">{t("profile.plan.noPlan")}</p>
-            )}
-
-            {/* Annual toggle */}
-            <div className="flex items-center gap-3 mb-5">
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isAnnual}
-                  onChange={(e) => onChange({ discount_opt_in: e.target.checked })}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600" />
-              </label>
-              <span className="text-sm font-medium text-gray-700">
-                {t("profile.plan.annualBilling")}
-              </span>
-              {isAnnual && (
-                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                  {t("onboarding.step4.discount.save").replace("{percent}", "17")}
-                </span>
-              )}
-            </div>
-
-            {/* Plan cards */}
-            <div className="grid gap-4 lg:grid-cols-3">
-              {PLAN_OPTIONS.map((plan) => {
-                const isSelected = selectedPlan === plan;
-                const isPopular = plan === "pro";
-                const displayPrice = planPrices[plan]
-                  ? (isAnnual
-                      ? Math.round(planPrices[plan].annual / 12)
-                      : planPrices[plan].monthly)
-                  : 0;
-
-                return (
-                  <div
-                    key={plan}
-                    className={`relative flex flex-col rounded-2xl border p-5 transition-all cursor-pointer ${
-                      isSelected
-                        ? "border-green-500 bg-white shadow-lg ring-1 ring-green-500/20"
-                        : isPopular
-                          ? "border-green-300 bg-white shadow-md"
-                          : "border-gray-200 bg-white hover:border-green-300"
-                    }`}
-                    onClick={() => onChange({ selected_plan: plan })}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && onChange({ selected_plan: plan })}
-                  >
-                    {isPopular && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="bg-green-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                          {t("onboarding.step4.popular")}
-                        </span>
-                      </div>
-                    )}
-
-                    <h3 className="text-base font-bold text-gray-900">
-                      {t(`onboarding.step4.planNames.${plan}`)}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {t(`onboarding.step4.planDescriptions.${plan}`)}
-                    </p>
-
-                    <div className="mt-3 flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-gray-900">
-                        {t("onboarding.a11y.currency")}{displayPrice}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {t("onboarding.step4.perMonth")}
-                      </span>
-                    </div>
-
-                    <button
-                      type="button"
-                      className={`mt-3 w-full py-2 rounded-lg text-xs font-bold transition-colors ${
-                        isSelected
-                          ? "bg-green-600 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {isSelected
-                        ? t("onboarding.step4.selected")
-                        : t("onboarding.step4.selectPlan")}
-                    </button>
-
-                    <ul className="mt-4 flex flex-col gap-2 flex-1">
-                      {PLAN_FEATURES[plan].map((fKey) => (
-                        <li key={fKey} className="flex items-start gap-2">
-                          <Check
-                            className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${
-                              isSelected || isPopular ? "text-green-600" : "text-gray-400"
-                            }`}
-                          />
-                          <span className="text-xs text-gray-600 leading-relaxed">{t(fKey)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
-            </div>
+            <ProfilePricingClient
+              selectedPlan={selectedPlan}
+              onPlanSelect={(planKey) => onChange({ selected_plan: planKey })}
+              isAnnual={isAnnual}
+              onAnnualToggle={(annual) => onChange({ discount_opt_in: annual })}
+            />
           </section>
 
           {/* ───────── SECTION 5: Social Connections ───────── */}
