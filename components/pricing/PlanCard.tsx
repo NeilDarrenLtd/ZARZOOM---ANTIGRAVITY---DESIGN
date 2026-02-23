@@ -10,7 +10,7 @@ interface PlanCardProps {
   plan: DisplayablePlan;
   currency: Currency;
   interval: BillingInterval;
-  onChoosePlan?: (planKey: string, priceId: string) => void;
+  onChoose?: (planKey: string, priceId: string) => void;
   isPopular?: boolean;
   isSelected?: boolean;
 }
@@ -19,19 +19,36 @@ export function PlanCard({
   plan,
   currency,
   interval,
-  onChoosePlan,
+  onChoose,
   isPopular = false,
   isSelected = false,
 }: PlanCardProps) {
-  const price = getPriceForSelection(plan, currency, interval);
+  const price = getPriceForSelection(
+    {
+      planKey: plan.planKey,
+      name: plan.name,
+      description: plan.description,
+      isActive: plan.isActive,
+      sortOrder: plan.sortOrder,
+      prices: plan.prices,
+      features: [],
+      entitlements: {},
+      quotaPolicy: {},
+    },
+    currency,
+    interval
+  );
 
   if (!price) {
-    // Plan exists but has no price for this currency/interval combination
-    return null;
+    return (
+      <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8">
+        <h3 className="text-lg font-bold text-zinc-900">{plan.displayName}</h3>
+        <p className="mt-2 text-sm text-zinc-500">
+          Price not available for {currency} / {interval}
+        </p>
+      </div>
+    );
   }
-
-  const displayPrice = formatPrice(price.amountMinor, currency);
-  const intervalLabel = interval === "monthly" ? "month" : "year";
 
   return (
     <div
@@ -59,21 +76,19 @@ export function PlanCard({
         </div>
       )}
 
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-zinc-900">{plan.displayName}</h3>
-        <p className="mt-2 text-sm text-zinc-600">{plan.displayDescription}</p>
-      </div>
+      <h3 className="text-2xl font-bold text-zinc-900">{plan.displayName}</h3>
+      <p className="mt-2 text-sm text-zinc-600">{plan.displayTagline}</p>
 
-      <div className="mb-6">
-        <div className="flex items-baseline gap-1">
-          <span className="text-4xl font-bold text-zinc-900">{displayPrice}</span>
-          <span className="text-zinc-600">/{intervalLabel}</span>
-        </div>
+      <div className="mt-6 flex items-baseline gap-2">
+        <span className="text-4xl font-bold text-zinc-900">
+          {formatPrice(price.amountMinor, currency)}
+        </span>
+        <span className="text-sm text-zinc-500">/ {interval === "monthly" ? "month" : "year"}</span>
       </div>
 
       <button
-        onClick={() => onChoosePlan?.(plan.planKey, price.id)}
-        className={`mb-6 w-full rounded-lg px-6 py-3 text-base font-semibold text-white transition-colors ${
+        onClick={() => onChoose?.(plan.planKey, price.id)}
+        className={`mt-6 mb-6 w-full rounded-lg px-6 py-3 text-base font-semibold text-white transition-colors ${
           isSelected
             ? "bg-green-600 hover:bg-green-700 cursor-not-allowed opacity-75"
             : isPopular
@@ -85,16 +100,14 @@ export function PlanCard({
         {isSelected ? "Selected" : "Choose Plan"}
       </button>
 
-      <div className="flex-1">
-        <ul className="space-y-3">
-          {plan.displayFeatures.map((feature, index) => (
-            <li key={index} className="flex items-start gap-3">
-              <Check className="h-5 w-5 shrink-0 text-green-600" />
-              <span className="text-sm text-zinc-700">{feature}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="space-y-3 flex-1">
+        {plan.displayFeatures.map((feature, idx) => (
+          <li key={idx} className="flex items-start gap-3">
+            <Check className="h-5 w-5 flex-shrink-0 text-green-600 mt-0.5" />
+            <span className="text-sm text-zinc-700">{feature}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import {
-  getPlans,
+  getActivePlansWithPrices,
   getPlanById,
   createPlan as createPlanQuery,
   updatePlan as updatePlanQuery,
@@ -49,7 +49,7 @@ export async function fetchPlans(): Promise<{
 }> {
   try {
     await requireAdmin();
-    const plans = await getPlans();
+    const plans = await getActivePlansWithPrices();
     return { plans };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch plans";

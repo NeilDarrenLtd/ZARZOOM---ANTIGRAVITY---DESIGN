@@ -1043,6 +1043,17 @@
     "nav": {
       "billingHistory": "Billing History"
     },
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available"
+    },
     "pricing": {
       "title": "Simple, Transparent Pricing",
       "subtitle": "Choose the plan that fits your growth. Start with a free trial, upgrade anytime.",
