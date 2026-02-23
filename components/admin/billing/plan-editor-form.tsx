@@ -27,8 +27,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
 
   const [name, setName] = useState(plan.name);
   const [description, setDescription] = useState(plan.description ?? "");
-  const [displayOrder, setDisplayOrder] = useState(plan.display_order);
-  const [highlight, setHighlight] = useState(plan.highlight);
+  const [displayOrder, setDisplayOrder] = useState(plan.sort_order);
   const [isActive, setIsActive] = useState(plan.is_active);
   const [features, setFeatures] = useState<string[]>(
     Array.isArray(plan.features) ? (plan.features as string[]) : []
@@ -53,8 +52,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
         body: JSON.stringify({
           name,
           description: description || null,
-          display_order: displayOrder,
-          highlight,
+          sort_order: displayOrder,
           is_active: isActive,
           features,
           quota_policy: quotaPolicy,
@@ -137,7 +135,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
               Edit Plan: {plan.name}
             </h1>
             <p className="text-sm text-zinc-500">
-              Slug: <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs text-zinc-600">{plan.slug}</code>
+              Slug: <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs text-zinc-600">{plan.plan_key}</code>
             </p>
           </div>
         </div>
@@ -242,15 +240,6 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
               />
               Active
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-700">
-              <input
-                type="checkbox"
-                checked={highlight}
-                onChange={(e) => setHighlight(e.target.checked)}
-                className="h-4 w-4 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
-              />
-              Highlight (Most Popular)
-            </label>
           </div>
         </div>
       </section>
@@ -278,7 +267,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
         </h2>
         <PriceMatrixEditor
           planId={plan.id}
-          prices={plan.plan_prices}
+          prices={plan.prices}
           onAddPrice={handleAddPrice}
           onDeactivatePrice={handleDeactivatePrice}
         />
