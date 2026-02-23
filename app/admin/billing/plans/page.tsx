@@ -43,15 +43,15 @@ export default function AdminBillingPlansPage() {
 
   const getActivePriceDisplay = useCallback(
     (plan: PlanWithPrices, currency: Currency = "GBP") => {
-      const monthly = plan.plan_prices.find(
+      const monthly = plan.prices.find(
         (p) => p.currency === currency && p.interval === "monthly" && p.is_active
       );
-      if (monthly) return `${formatPrice(monthly.unit_amount, currency)}/mo`;
+      if (monthly) return `${formatPrice(monthly.amount_minor, currency)}/mo`;
 
-      const annual = plan.plan_prices.find(
+      const annual = plan.prices.find(
         (p) => p.currency === currency && p.interval === "annual" && p.is_active
       );
-      if (annual) return `${formatPrice(annual.unit_amount, currency)}/yr`;
+      if (annual) return `${formatPrice(annual.amount_minor, currency)}/yr`;
 
       return "No price set";
     },
