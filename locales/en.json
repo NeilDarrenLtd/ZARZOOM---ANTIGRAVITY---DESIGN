@@ -1078,6 +1078,51 @@
       "savePercent": "Save {percent}% with annual billing",
       "trialDays": "{days}-day free trial"
     },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfect for getting started",
+        "description": "Essential features to launch your social media presence with AI-powered content creation and scheduling.",
+        "bullets": [
+          "Up to 3 social profiles",
+          "30 posts per month",
+          "Basic AI content generation",
+          "Post scheduling",
+          "Email support"
+        ],
+        "cta": "Start Free Trial"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Best for growing businesses",
+        "description": "Advanced features and analytics to scale your social media strategy with intelligent automation.",
+        "bullets": [
+          "Up to 10 social profiles",
+          "150 posts per month",
+          "Advanced AI content generation",
+          "Smart scheduling with optimal times",
+          "Analytics dashboard",
+          "Priority support"
+        ],
+        "cta": "Start Free Trial"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "For teams and agencies",
+        "description": "Enterprise-grade features with unlimited content, custom branding, and dedicated support for maximum impact.",
+        "bullets": [
+          "Unlimited social profiles",
+          "Unlimited posts",
+          "Premium AI with custom brand voice",
+          "AI-powered auto-scheduling",
+          "Advanced analytics and reporting",
+          "Custom branding and white-label",
+          "Dedicated account manager",
+          "Full API access"
+        ],
+        "cta": "Contact Sales"
+      }
+    },
     "features": {
       "basic": {
         "socialProfiles": "Up to 3 social profiles",
