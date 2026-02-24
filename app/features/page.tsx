@@ -174,14 +174,16 @@ export default function FeaturesPage() {
                     <div className={`relative aspect-square w-full max-w-md rounded-3xl overflow-hidden shadow-lg ${
                       index === 0 ? "ring-2 ring-green-500 shadow-green-500/30" : "border border-gray-200 shadow-sm"
                     }`}>
-                      <Image
-                        src={feature.image}
-                        alt={feature.title}
-                        fill
-                        className={index === 0 ? "object-cover" : "object-contain p-10"}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index < 2}
-                      />
+                      <div className={index === 0 ? "" : "p-10"}>
+                        <Image
+                          src={feature.image}
+                          alt={feature.title}
+                          fill
+                          className={index === 0 ? "object-cover" : "object-contain"}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          priority={index < 2}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
