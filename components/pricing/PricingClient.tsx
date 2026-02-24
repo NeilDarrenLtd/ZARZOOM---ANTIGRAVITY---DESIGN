@@ -69,13 +69,15 @@ export function PricingClient({
         />
       </div>
 
-      {/* Development Diagnostics */}
-      <PricingDiagnostics
-        plans={plans}
-        currency={currency}
-        interval={interval}
-        selectedPlanKey={selectedPlanKey}
-      />
+      {/* Development Diagnostics - Only render with explicit query param */}
+      {typeof window !== "undefined" && new URLSearchParams(window.location.search).get("debugPricing") === "1" && (
+        <PricingDiagnostics
+          plans={plans}
+          currency={currency}
+          interval={interval}
+          selectedPlanKey={selectedPlanKey}
+        />
+      )}
     </>
   );
 }
