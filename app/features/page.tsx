@@ -172,13 +172,13 @@ export default function FeaturesPage() {
                   {/* Visual Side - Logo-style square image container */}
                   <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-8 md:p-12">
                     <div className={`relative aspect-square w-full max-w-md rounded-3xl overflow-hidden shadow-lg ${
-                      index === 0 || index === 1 || index === 2 || index === 3 || index === 4 ? "ring-2 ring-green-500 shadow-green-500/30" : "border border-gray-200 shadow-sm"
+                      index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 ? "ring-2 ring-green-500 shadow-green-500/30" : "border border-gray-200 shadow-sm"
                     }`}>
                       <Image
                         src={feature.image}
                         alt={feature.title}
                         fill
-                        className={`${index === 0 || index === 1 || index === 2 || index === 3 || index === 4 ? "object-cover" : "object-contain p-10"}`}
+                        className={`${index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 ? "object-cover" : "object-contain p-10"}`}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority={index < 2}
                       />
