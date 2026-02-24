@@ -30,7 +30,7 @@ export default function FeaturesPage() {
         "Multi-format content (text, captions, hashtags)",
         "A/B testing suggestions",
       ],
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/zarzoom_feature_a1-2MCCXDaMzJN2jMaxxmCsx5IAgxaqRe.png",
+      image: "/images/features/ai-content.jpg",
     },
     {
       icon: Calendar,
