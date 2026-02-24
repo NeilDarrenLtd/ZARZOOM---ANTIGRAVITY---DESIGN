@@ -8,12 +8,16 @@ import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
 import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle } from "lucide-react";
+import { PricingClient } from "@/components/pricing/PricingClient";
+import { fetchPlans, getDisplayablePlans } from "@/lib/pricing";
+import type { DisplayablePlan } from "@/lib/pricing";
 
 export default function DashboardPage() {
   const { t } = useI18n();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [restarting, setRestarting] = useState(false);
+  const [plans, setPlans] = useState<DisplayablePlan[]>([]);
 
   useEffect(() => {
     async function getUser() {
@@ -28,6 +32,19 @@ export default function DashboardPage() {
     }
     getUser();
   }, []);
+
+  useEffect(() => {
+    async function loadPlans() {
+      try {
+        const response = await fetchPlans();
+        const displayable = getDisplayablePlans(response.plans, t);
+        setPlans(displayable);
+      } catch {
+        setPlans([]);
+      }
+    }
+    loadPlans();
+  }, [t]);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -169,6 +186,27 @@ export default function DashboardPage() {
             </p>
           </Link>
         </div>
+
+        {/* Pricing section */}
+        {plans.length > 0 && (
+          <div className="mt-10">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {t("billing.pricing.title")}
+              </h2>
+              <p className="text-gray-500 mt-1 text-sm">
+                {t("billing.pricing.subtitle")}
+              </p>
+            </div>
+            <PricingClient
+              plans={plans}
+              defaultCurrency="GBP"
+              defaultInterval="monthly"
+              showCurrencyToggle={true}
+              showIntervalToggle={true}
+            />
+          </div>
+        )}
 
         {/* Quick links */}
         <div className="mt-8 flex flex-wrap gap-3">

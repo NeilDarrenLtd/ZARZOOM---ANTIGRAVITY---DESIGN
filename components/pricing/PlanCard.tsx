@@ -52,7 +52,7 @@ export function PlanCard({
 
   return (
     <div
-      className={`relative flex flex-col rounded-2xl border bg-white p-8 shadow-sm transition-all hover:shadow-md ${
+      className={`relative flex flex-col rounded-2xl border bg-white p-5 sm:p-8 shadow-sm transition-all hover:shadow-md ${
         isSelected
           ? "border-green-600 ring-2 ring-green-600 bg-green-50/50"
           : isPopular

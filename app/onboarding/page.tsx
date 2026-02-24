@@ -283,12 +283,12 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-8">
+      <div className={`mx-auto px-4 py-8 flex flex-col gap-8 w-full ${step === 4 ? "max-w-6xl" : "max-w-3xl"}`}>
         {/* Stepper */}
         <Stepper currentStep={step} totalSteps={TOTAL_STEPS} />
 
         {/* Step content card */}
-        <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+        <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 lg:p-8">
           {step === 1 && <Step1Account userEmail={userEmail} />}
           {step === 2 && (
             <Step2Brand 

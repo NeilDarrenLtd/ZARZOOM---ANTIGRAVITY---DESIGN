@@ -24,12 +24,7 @@ export function PricingGrid({ plans, currency, interval, onChoosePlan, selectedP
   }
 
   return (
-    <div
-      className="grid gap-8"
-      style={{
-        gridTemplateColumns: `repeat(${Math.min(plans.length, 3)}, minmax(0, 1fr))`,
-      }}
-    >
+    <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
       {plans.map((plan, index) => (
         <PlanCard
           key={plan.planKey}
@@ -37,7 +32,7 @@ export function PricingGrid({ plans, currency, interval, onChoosePlan, selectedP
           currency={currency}
           interval={interval}
           onChoosePlan={onChoosePlan}
-          isPopular={index === 1} // Middle plan is popular
+          isPopular={index === 1}
           isSelected={selectedPlanKey === plan.planKey}
         />
       ))}
