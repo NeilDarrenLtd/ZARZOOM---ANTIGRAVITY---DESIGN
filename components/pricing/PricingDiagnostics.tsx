@@ -50,6 +50,10 @@ export function PricingDiagnostics({
   interval = "monthly",
   selectedPlanKey,
 }: PricingDiagnosticsProps) {
+  // Only show diagnostics in development mode
+  if (process.env.NODE_ENV !== "development") {
+    return null;
+  }
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const debugParam = searchParams?.get("debugPricing");
