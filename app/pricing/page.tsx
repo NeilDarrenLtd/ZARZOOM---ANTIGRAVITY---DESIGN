@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { fetchPlansServer, getDisplayablePlans } from "@/lib/pricing";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { PricingClient } from "@/components/pricing/PricingClient";
+import SiteNavbar from "@/components/SiteNavbar";
 
 export const metadata: Metadata = {
   title: "Pricing - ZARZOOM",
@@ -22,6 +23,9 @@ export default async function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-zinc-50">
+      {/* Sticky Navigation Header */}
+      <SiteNavbar />
+
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">

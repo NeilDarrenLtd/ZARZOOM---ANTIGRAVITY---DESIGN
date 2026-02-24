@@ -119,10 +119,10 @@ export default function FeaturesPage() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
           {/* Hero Section */}
           <div className="text-center mb-20">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 text-balance">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-6 text-balance">
               Powerful Features
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto text-balance leading-relaxed">
+            <p className="mt-4 text-lg text-gray-600 max-w-4xl mx-auto text-balance">
               Everything you need to automate, optimize, and scale your social
               media presence—all in one intelligent platform.
             </p>
@@ -147,7 +147,7 @@ export default function FeaturesPage() {
                       <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Icon className="w-6 h-6 text-green-700" />
                       </div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
+                      <h2 className="text-xl font-bold text-gray-900 text-balance">
                         {feature.title}
                       </h2>
                     </div>
@@ -170,13 +170,15 @@ export default function FeaturesPage() {
                   </div>
 
                   {/* Visual Side - Logo-style square image container */}
-                  <div className="flex-1 bg-white flex items-center justify-center p-8 md:p-12">
-                    <div className="relative aspect-square w-full max-w-md rounded-2xl overflow-hidden border border-gray-200 shadow-sm bg-white">
+                  <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-8 md:p-12">
+                    <div className={`relative aspect-square w-full max-w-md rounded-3xl overflow-hidden shadow-lg ${
+                      index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 ? "ring-2 ring-green-500 shadow-green-500/30" : "border border-gray-200 shadow-sm"
+                    }`}>
                       <Image
                         src={feature.image}
                         alt={feature.title}
                         fill
-                        className="object-contain p-10"
+                        className={`${index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 ? "object-cover" : "object-contain p-10"}`}
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority={index < 2}
                       />
@@ -190,10 +192,10 @@ export default function FeaturesPage() {
           {/* CTA Section */}
           <section>
             <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-8 md:p-12 text-center shadow-2xl">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-2xl font-bold text-white mb-4">
                 Ready to Transform Your Social Media?
               </h2>
-              <p className="text-xl text-green-50 mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-green-50 mb-8 max-w-2xl mx-auto">
                 Start your free trial and experience the power of intelligent
                 automation.
               </p>

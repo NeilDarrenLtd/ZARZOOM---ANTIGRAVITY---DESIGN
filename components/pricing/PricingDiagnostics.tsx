@@ -59,9 +59,8 @@ export function PricingDiagnostics({
   const [diagnostics, setDiagnostics] = useState<DiagnosticData | null>(null);
 
   useEffect(() => {
-    // Only show in development or with debug param
-    const shouldShow =
-      process.env.NODE_ENV === "development" || debugParam === "1";
+    // Only show when explicitly requested with ?debugPricing=1 query param
+    const shouldShow = debugParam === "1";
     setIsVisible(shouldShow);
 
     if (!shouldShow) return;

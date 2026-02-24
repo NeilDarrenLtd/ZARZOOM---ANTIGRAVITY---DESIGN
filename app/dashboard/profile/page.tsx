@@ -6,14 +6,16 @@ import { createClient } from "@/lib/supabase/client";
 import {
   ARTICLE_STYLE_OPTIONS,
   GOAL_OPTIONS,
-  PLAN_OPTIONS,
 } from "@/lib/validation/onboarding";
-import type { OnboardingUpdate, Goal, Plan } from "@/lib/validation/onboarding";
+import type { OnboardingUpdate, Goal } from "@/lib/validation/onboarding";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import UploadPostConnectModal from "@/components/social/UploadPostConnectModal";
-import { ProfilePricingClient } from "@/components/profile/ProfilePricingClient";
+import { PricingClient } from "@/components/pricing/PricingClient";
+import { fetchPlans, getDisplayablePlans } from "@/lib/pricing";
+import type { DisplayablePlan } from "@/lib/pricing";
+import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -51,46 +53,7 @@ const GOAL_ICONS: Record<Goal, React.ReactNode> = {
 };
 
 // ── Plan pricing - fetched from API (no hardcoded values) ───
-// Pricing is now fetched from GET /api/v1/billing/plans
-// This ensures a single source of truth from the database
 
-const PLAN_FEATURES: Record<Plan, string[]> = {
-  basic: [
-    "onboarding.step4.features.basic.socialProfiles",
-    "onboarding.step4.features.basic.postsPerMonth",
-    "onboarding.step4.features.basic.aiGeneration",
-    "onboarding.step4.features.basic.scheduling",
-    "onboarding.step4.features.basic.emailSupport",
-  ],
-  pro: [
-    "onboarding.step4.features.pro.socialProfiles",
-    "onboarding.step4.features.pro.postsPerMonth",
-    "onboarding.step4.features.pro.aiGeneration",
-    "onboarding.step4.features.pro.scheduling",
-    "onboarding.step4.features.pro.analytics",
-    "onboarding.step4.features.pro.prioritySupport",
-  ],
-  scale: [
-    "onboarding.step4.features.scale.socialProfiles",
-    "onboarding.step4.features.scale.postsPerMonth",
-    "onboarding.step4.features.scale.aiGeneration",
-    "onboarding.step4.features.scale.scheduling",
-    "onboarding.step4.features.scale.analytics",
-    "onboarding.step4.features.scale.customBranding",
-    "onboarding.step4.features.scale.dedicatedSupport",
-    "onboarding.step4.features.scale.apiAccess",
-  ],
-  advanced: [
-    "onboarding.step4.features.scale.socialProfiles",
-    "onboarding.step4.features.scale.postsPerMonth",
-    "onboarding.step4.features.scale.aiGeneration",
-    "onboarding.step4.features.scale.scheduling",
-    "onboarding.step4.features.scale.analytics",
-    "onboarding.step4.features.scale.customBranding",
-    "onboarding.step4.features.scale.dedicatedSupport",
-    "onboarding.step4.features.scale.apiAccess",
-  ],
-};
 
 // ── Shared input class ────────────────────────────────────
 const inputClass =
@@ -108,6 +71,25 @@ export default function ProfilePage() {
   const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [plans, setPlans] = useState<DisplayablePlan[]>([]);
+
+  // ── Load plans from DB + i18n ─────────────────────────
+  useEffect(() => {
+    let mounted = true;
+    async function loadPlans() {
+      try {
+        const response = await fetchPlans();
+        if (!mounted) return;
+        const displayable = getDisplayablePlans(response.plans, t);
+        setPlans(displayable);
+      } catch {
+        if (mounted) setPlans([]);
+      }
+    }
+    loadPlans();
+    return () => { mounted = false; };
+  }, [t]);
+
   // ── Load profile ───────────────────────────────────────
   useEffect(() => {
     async function load() {
@@ -973,11 +955,14 @@ export default function ProfilePage() {
             </h2>
             <p className="text-xs text-gray-400 mb-6">{t("profile.sections.planDesc")}</p>
 
-            <ProfilePricingClient
-              selectedPlan={selectedPlan}
-              onPlanSelect={(planKey) => onChange({ selected_plan: planKey })}
-              isAnnual={isAnnual}
-              onAnnualToggle={(annual) => onChange({ discount_opt_in: annual })}
+            <PricingClient
+              plans={plans}
+              defaultCurrency={(data.selected_currency as Currency) || "GBP"}
+              defaultInterval={isAnnual ? "annual" : "monthly"}
+              showCurrencyToggle={true}
+              showIntervalToggle={true}
+              selectedPlanKey={selectedPlan || undefined}
+              onChoosePlan={(planKey) => onChange({ selected_plan: planKey })}
             />
           </section>
 

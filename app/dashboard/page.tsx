@@ -9,11 +9,13 @@ import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
 import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle } from "lucide-react";
 
+
 export default function DashboardPage() {
   const { t } = useI18n();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [restarting, setRestarting] = useState(false);
+
 
   useEffect(() => {
     async function getUser() {
@@ -28,6 +30,8 @@ export default function DashboardPage() {
     }
     getUser();
   }, []);
+
+
 
   async function handleSignOut() {
     const supabase = createClient();

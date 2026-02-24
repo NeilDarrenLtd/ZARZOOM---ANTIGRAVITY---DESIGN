@@ -43,14 +43,14 @@ export default function Navbar() {
 
   const navLinks = isLoggedIn
     ? [
-        { labelKey: "nav.pricing", href: "#pricing" },
+        { labelKey: "nav.pricing", href: "/pricing" },
         { labelKey: "nav.support", href: "/dashboard/support" },
         { labelKey: "nav.contact", href: "/dashboard/contact" },
       ]
     : [
         { labelKey: "nav.about", href: "/about" },
         { labelKey: "nav.features", href: "/features" },
-        { labelKey: "nav.pricing", href: "#pricing" },
+        { labelKey: "nav.pricing", href: "/pricing" },
         { labelKey: "nav.contact", href: "/contact" },
       ];
 
