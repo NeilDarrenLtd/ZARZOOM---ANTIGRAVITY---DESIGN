@@ -8,7 +8,6 @@ import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import DynamicSEO from "@/components/DynamicSEO";
-import Link from "next/link";
 
 export default function Home() {
   const { t, isLoading } = useI18n();
@@ -111,15 +110,14 @@ export default function Home() {
             <h2 className="text-4xl md:text-6xl font-bold text-black text-center max-w-3xl drop-shadow-lg mb-8 text-balance">
               {t("cta.heading")}
             </h2>
-            <Link href="/auth">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-green-600 text-white text-lg px-10 py-4 rounded-full font-bold hover:bg-green-700 transition-colors shadow-2xl"
-              >
-                {t("cta.button")}
-              </motion.button>
-            </Link>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-green-600 text-white text-lg px-10 py-4 rounded-full font-bold hover:bg-green-700 transition-colors shadow-2xl cursor-not-allowed opacity-75"
+              disabled
+            >
+              {t("cta.button")}
+            </motion.button>
           </motion.div>
         </div>
       </div>
