@@ -15,7 +15,6 @@ import type {
 } from "@/lib/billing/types";
 import { CURRENCIES } from "@/lib/billing/types";
 import { Check } from "lucide-react";
-import Link from "next/link";
 
 const CURRENCY_LABELS: Record<Currency, string> = {
   GBP: "\u00A3 GBP",
@@ -193,16 +192,16 @@ export default function PricingSection({
                 )}
 
                 {/* CTA */}
-                <Link
-                  href="/auth"
-                  className={`w-full py-3 rounded-lg text-sm font-bold text-center transition-colors ${
+                <button
+                  disabled
+                  className={`w-full py-3 rounded-lg text-sm font-bold text-center transition-colors cursor-not-allowed opacity-75 ${
                     isHighlight
-                      ? "bg-green-600 text-white hover:bg-green-700"
-                      : "bg-gray-900 text-white hover:bg-gray-800"
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-900 text-white"
                   }`}
                 >
-                  {t("billing.pricing.getStarted")}
-                </Link>
+                  Coming Soon
+                </button>
 
                 {/* Features */}
                 <ul className="mt-8 flex flex-col gap-3 flex-1">

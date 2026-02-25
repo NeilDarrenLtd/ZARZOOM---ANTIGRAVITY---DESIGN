@@ -26,6 +26,7 @@ interface I18nContextType {
   setLocale: (locale: string) => void;
   t: (key: string, fallback?: string) => string;
   translations: Translations;
+  isLoading: boolean;
 }
 
 const I18nContext = createContext<I18nContextType | null>(null);
@@ -121,7 +122,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t, translations }}>
+    <I18nContext.Provider value={{ locale, setLocale, t, translations, isLoading }}>
       {children}
     </I18nContext.Provider>
   );

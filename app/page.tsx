@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import RocketCanvas from "@/components/RocketCanvas";
 import TestimonialGrid from "@/components/TestimonialGrid";
 import FinalCTA from "@/components/FinalCTA";
@@ -9,10 +8,9 @@ import { useRef } from "react";
 import { ArrowDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import DynamicSEO from "@/components/DynamicSEO";
-import Link from "next/link";
 
 export default function Home() {
-  const { t } = useI18n();
+  const { t, isLoading } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
 
 
@@ -33,10 +31,20 @@ export default function Home() {
   const ctaOpacity = useTransform(scrollYProgress, [0.55, 0.65, 0.75], [0, 1, 0]);
   const ctaY = useTransform(scrollYProgress, [0.55, 0.65], [40, 0]);
 
+  if (isLoading) {
+    return (
+      <main className="bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <p className="mt-4 text-lg text-gray-600">{t("loading.text")}</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="bg-white min-h-screen">
       <DynamicSEO />
-      <Navbar />
 
       <div ref={containerRef} className="relative" style={{ height: "500vh" }}>
         <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -102,15 +110,14 @@ export default function Home() {
             <h2 className="text-4xl md:text-6xl font-bold text-black text-center max-w-3xl drop-shadow-lg mb-8 text-balance">
               {t("cta.heading")}
             </h2>
-            <Link href="/auth">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-green-600 text-white text-lg px-10 py-4 rounded-full font-bold hover:bg-green-700 transition-colors shadow-2xl"
-              >
-                {t("cta.button")}
-              </motion.button>
-            </Link>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-green-600 text-white text-lg px-10 py-4 rounded-full font-bold hover:bg-green-700 transition-colors shadow-2xl cursor-not-allowed opacity-75"
+              disabled
+            >
+              {t("cta.button")}
+            </motion.button>
           </motion.div>
         </div>
       </div>
