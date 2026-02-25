@@ -11,7 +11,7 @@ import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
 
 export default function Home() {
-  const { t } = useI18n();
+  const { t, isLoading } = useI18n();
   const containerRef = useRef<HTMLDivElement>(null);
 
 
@@ -31,6 +31,17 @@ export default function Home() {
 
   const ctaOpacity = useTransform(scrollYProgress, [0.55, 0.65, 0.75], [0, 1, 0]);
   const ctaY = useTransform(scrollYProgress, [0.55, 0.65], [40, 0]);
+
+  if (isLoading) {
+    return (
+      <main className="bg-white min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          <p className="mt-4 text-lg text-gray-600">{t("loading.text")}</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-white min-h-screen">
