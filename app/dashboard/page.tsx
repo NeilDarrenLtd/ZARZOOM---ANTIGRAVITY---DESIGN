@@ -141,7 +141,10 @@ export default function DashboardPage() {
           </Link>
 
           {/* Connected accounts card */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <Link
+            href="/dashboard/connect-accounts?returnTo=/dashboard"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-purple-300 hover:shadow-md transition-all block"
+          >
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                 <Link2 className="w-5 h-5 text-purple-600" />
@@ -153,7 +156,7 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-500 leading-relaxed">
               {t("dashboard.comingSoon")}
             </p>
-          </div>
+          </Link>
 
           {/* Support card */}
           <Link
