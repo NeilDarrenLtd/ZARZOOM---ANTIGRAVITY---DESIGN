@@ -120,8 +120,38 @@ Columns:
 
 ---
 
-## 10. Known Issues / Notes
+## 10. Environment Variable Configuration
 
-- **`console.log("[v0]")` debug statements** are still present in `UploadPostConnectFrame.tsx` and `app/api/upload-post/connect-url/route.ts`. These should be removed once the integration is confirmed working end-to-end.
-- **`getUploadPostUiConfig()`** in `lib/upload-post/config.ts` currently reads branding values from env vars only, not from `public.app_settings`. The connect-url route injects `uiConfig` from env vars while the admin form saves branding to the DB. These two sources need to be unified — the route should read branding from `app_settings` alongside the API key.
+### Required for Upload-Post to function:
+
+| Variable | Purpose | Example Values |
+|---|---|---|
+| `UPLOAD_POST_API_KEY` | Upload-Post API key (fallback source) | Your API key from Upload-Post dashboard |
+| `UPLOAD_POST_STATE_SECRET` | HMAC key for signing OAuth state tokens | Generated via `openssl rand -hex 32` |
+| `APP_BASE_URL` | **CRITICAL for Vercel:** base URL for redirect_url | **Production:** `https://zarzoom.com` |
+| | | **Staging:** `https://staging.zarzoom.com` |
+| | | **Local dev:** `http://localhost:3000` (or unset) |
+
+### How APP_BASE_URL resolution works:
+
+1. If `APP_BASE_URL` is set, use it (trim trailing slash)
+2. Else if `VERCEL_URL` is set, use `https://${VERCEL_URL}` (automatically set by Vercel on each deployment)
+3. Else (local dev only) use `http://localhost:3000`
+
+**SAFETY:** On Vercel deployments (when `VERCEL=1` or `VERCEL_URL` is set), if the resolved base URL contains "localhost", the `/api/upload-post/connect-url` route will throw an error at runtime. This prevents misconfiguration from embedding localhost URLs in OAuth callbacks sent to Upload-Post.
+
+### Recommended setup:
+
+- **Production (zarzoom.com):** `APP_BASE_URL=https://zarzoom.com`
+- **Staging:** `APP_BASE_URL=https://staging.zarzoom.com`
+- **Local development:** Leave `APP_BASE_URL` unset (defaults to http://localhost:3000)
+
+---
+
+## 11. Known Issues / Notes
+
+## 11. Known Issues / Notes
+
+- **APP_BASE_URL is critical for production** — without it set, the `redirect_url` passed to Upload-Post will contain `localhost`, causing users to be redirected to localhost after connecting accounts. Always set `APP_BASE_URL` to your production domain on Vercel.
 - **`UPLOAD_POST_STATE_SECRET`** must be set as an env var for `createState()` / `verifyState()` to work. If unset, the connect-url route will throw at the state-creation step.
+- **`getUploadPostUiConfig()`** currently reads branding values from env vars only, not from `public.app_settings`. The connect-url route injects UI config from env vars while the admin form saves branding to the DB. These two sources should be unified — the route should read branding from `app_settings` alongside the API key.

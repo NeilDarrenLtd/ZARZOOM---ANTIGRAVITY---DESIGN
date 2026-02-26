@@ -37,20 +37,42 @@ export function requireEnv(name: string): string {
  *   3. http://localhost:3000  – local fallback
  *
  * The returned value always has no trailing slash.
+ *
+ * SAFETY: On Vercel deployments (VERCEL=1 or VERCEL_URL set), if the resolved
+ * baseUrl contains "localhost", throws an error to prevent localhost URLs from
+ * being embedded in OAuth callbacks or redirect URLs sent to external services.
  */
 export function getBaseUrl(): string {
   const explicit = process.env.APP_BASE_URL;
   if (explicit) {
-    return explicit.replace(/\/+$/, "");
+    const trimmed = explicit.replace(/\/+$/, "");
+    validateBaseUrl(trimmed);
+    return trimmed;
   }
 
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl) {
     // VERCEL_URL does not include the protocol
-    return `https://${vercelUrl}`.replace(/\/+$/, "");
+    const baseUrl = `https://${vercelUrl}`.replace(/\/+$/, "");
+    validateBaseUrl(baseUrl);
+    return baseUrl;
   }
 
   return "http://localhost:3000";
+}
+
+/**
+ * Safety check: on Vercel, baseUrl must never be localhost.
+ * Throws if misconfigured.
+ */
+function validateBaseUrl(baseUrl: string): void {
+  const isVercel = process.env.VERCEL === "1" || !!process.env.VERCEL_URL;
+  if (isVercel && baseUrl.includes("localhost")) {
+    throw new Error(
+      `Misconfigured APP_BASE_URL: cannot be localhost on Vercel. ` +
+      `Set APP_BASE_URL to your production domain (e.g., https://zarzoom.com).`
+    );
+  }
 }
 
 /* ------------------------------------------------------------------ */

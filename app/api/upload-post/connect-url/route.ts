@@ -125,6 +125,8 @@ export async function GET(req: NextRequest) {
     // ── 5. Build redirect URL ────────────────────────────────────────────
     const baseUrl = getBaseUrl();
     const redirectUrl = `${baseUrl}/integrations/upload-post/return?state=${encodeURIComponent(state)}`;
+    
+    upLog(`redirect_url built: baseUrl=${baseUrl} redirectUrl=${redirectUrl.substring(0, 100)}...`);
 
     // ── 6. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
     const uiConfig = getUploadPostUiConfig();
