@@ -45,7 +45,7 @@ export async function POST() {
     const res = await fetch(`${baseUrl}/api/health`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `ApiKey ${apiKey}`,
         "Content-Type": "application/json",
       },
       signal: AbortSignal.timeout(10_000),

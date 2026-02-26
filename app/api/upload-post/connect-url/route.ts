@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `ApiKey ${apiKey}`,
       },
       body: JSON.stringify({ username: user.id }),
     });
@@ -136,7 +136,7 @@ export async function GET(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `ApiKey ${apiKey}`,
       },
       body: JSON.stringify(jwtPayload),
     });

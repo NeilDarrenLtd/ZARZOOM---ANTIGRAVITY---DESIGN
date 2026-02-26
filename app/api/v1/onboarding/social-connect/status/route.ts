@@ -65,7 +65,7 @@ export async function GET() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `ApiKey ${apiKey}`,
           },
         }
       );
