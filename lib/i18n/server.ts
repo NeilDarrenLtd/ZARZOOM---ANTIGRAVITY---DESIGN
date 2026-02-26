@@ -1,53 +1,51 @@
 /**
  * Server-side i18n utilities
- * 
- * For use in Server Components and API routes
+ *
+ * For use in Server Components and API routes.
+ * English is imported statically so there is no async delay on first render.
+ * The webpack asset/resource rule in next.config.mjs stores locale JSON as
+ * Buffers, eliminating the PackFileCacheStrategy serialization warning.
  */
 
 import { cookies } from "next/headers";
+import enTranslations from "@/locales/en.json";
 
-type Translations = Record<string, any>;
+type Translations = typeof enTranslations;
 type TranslationKey = string;
 
-const translationCache: Record<string, Translations> = {};
+const translationCache: Record<string, Translations> = {
+  en: enTranslations,
+};
 
-/**
- * Load translations dynamically to prevent webpack serialization issues
- */
 async function loadServerTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
     return translationCache[locale];
   }
 
   try {
-    // Use dynamic import with locale variable to avoid static imports
-    const module = await import(`@/locales/${locale}.json`, { with: { type: "json" } });
-    const translations = module.default;
+    const module = await import(`@/locales/${locale}.json`);
+    const translations: Translations = module.default;
     translationCache[locale] = translations;
     return translations;
   } catch {
-    // Fallback to empty object
-    return {};
+    return enTranslations;
   }
 }
 
 /**
- * Get translation function for server components
- * Uses cookies to determine locale, falls back to 'en'
+ * Get translation function for server components.
+ * Uses the "locale" cookie to determine language, falls back to 'en'.
  */
 export async function getServerTranslations() {
   const cookieStore = await cookies();
   const locale = cookieStore.get("locale")?.value || "en";
-  
+
   const translations = await loadServerTranslations(locale);
-  
-  /**
-   * Translation function
-   */
+
   function t(key: TranslationKey, fallback?: string): string {
     const keys = key.split(".");
     let current: any = translations;
-    
+
     for (const k of keys) {
       if (current && typeof current === "object" && k in current) {
         current = current[k];
@@ -55,17 +53,11 @@ export async function getServerTranslations() {
         return fallback || key;
       }
     }
-    
-    if (typeof current === "string") {
-      return current;
-    }
-    
-    if (Array.isArray(current)) {
-      return current.join(", ");
-    }
-    
+
+    if (typeof current === "string") return current;
+    if (Array.isArray(current)) return current.join(", ");
     return fallback || key;
   }
-  
+
   return t;
 }

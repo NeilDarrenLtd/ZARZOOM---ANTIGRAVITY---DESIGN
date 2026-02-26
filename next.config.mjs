@@ -1,21 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    // Optimize cache performance for large JSON imports (like translations)
-    // Use file caching instead of pack caching for better serialization
-    if (config.cache && typeof config.cache === 'object') {
-      config.cache.type = 'filesystem';
-      config.cache.cacheDirectory = '.next/cache';
-      config.cache.buildDependencies = {
-        config: [__filename],
-      };
-    }
-
-    // Suppress serialization performance hints (large translation files trigger this)
-    config.performance = {
-      ...config.performance,
-      hints: false,
-    };
+  webpack: (config) => {
+    // Tell webpack to handle locale JSON files as Buffer-backed asset/resource modules.
+    // This is the exact remedy recommended by the PackFileCacheStrategy warning:
+    // "Serializing big strings impacts deserialization performance
+    //  (consider using Buffer instead and decode when needed)"
+    config.module.rules.push({
+      test: /\/locales\/[^/]+\.json$/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/locales/[name][ext]",
+      },
+    });
 
     return config;
   },
