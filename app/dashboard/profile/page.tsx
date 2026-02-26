@@ -974,18 +974,6 @@ export default function ProfilePage() {
             <p className="text-xs text-gray-400 mb-6">{t("profile.sections.socialDesc")}</p>
 
             <div className="flex flex-col gap-4">
-              {/* Username */}
-              {data.uploadpost_profile_username && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="font-medium text-gray-700">
-                    {t("profile.social.username")}:
-                  </span>
-                  <code className="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono">
-                    {data.uploadpost_profile_username}
-                  </code>
-                </div>
-              )}
-
               {/* Connection status */}
               <div className="flex items-center gap-3">
                 {data.socials_connected ? (
