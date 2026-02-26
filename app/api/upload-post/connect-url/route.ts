@@ -3,23 +3,16 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { getBaseUrl, getUploadPostUiConfig } from "@/lib/upload-post/config";
 import { createState } from "@/lib/upload-post/state";
 import { sanitizeReturnTo } from "@/lib/upload-post/returnTo";
-
-const UPLOAD_POST_API_BASE =
-  (process.env.UPLOAD_POST_BASE_URL || "https://api.upload-post.com") +
-  "/api/uploadposts";
+import {
+  createUploadPostUser,
+  generateUploadPostJwt,
+  UPLOAD_POST_BASE,
+} from "@/lib/upload-post/http";
 
 const upDebug = process.env.UPLOAD_POST_DEBUG === "true";
-
-function upLog(...args: unknown[]) {
-  if (upDebug) console.log("[upload-post]", ...args);
-}
-function upWarn(...args: unknown[]) {
-  if (upDebug) console.warn("[upload-post]", ...args);
-}
-function upError(...args: unknown[]) {
-  // errors always surface regardless of flag
-  console.error("[upload-post]", ...args);
-}
+function upLog(...args: unknown[]) { if (upDebug) console.log("[upload-post]", ...args); }
+function upWarn(...args: unknown[]) { if (upDebug) console.warn("[upload-post]", ...args); }
+function upError(...args: unknown[]) { console.error("[upload-post]", ...args); }
 
 function jsonError(status: number, message: string, requestId: string) {
   return NextResponse.json(
@@ -38,7 +31,7 @@ export async function GET(req: NextRequest) {
   const requestId =
     req.headers.get("x-request-id") ?? crypto.randomUUID();
 
-  upLog(`base_url=${UPLOAD_POST_API_BASE} requestId=${requestId}`);
+  upLog(`base_url=${UPLOAD_POST_BASE} requestId=${requestId}`);
 
   try {
     // ── 1. Authenticate ──────────────────────────────────────────────────
@@ -84,35 +77,16 @@ export async function GET(req: NextRequest) {
     }
 
     // ── 3. Ensure Upload-Post user exists ────────────────────────────────
-    const ensureUrl = `${UPLOAD_POST_API_BASE}/users`;
-    upLog(`request op=create-user method=POST url=${ensureUrl}`);
+    const ensureRes = await createUploadPostUser(apiKey, { username: user.id });
 
-    const ensureRes = await fetch(ensureUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `ApiKey ${apiKey}`,
-      },
-      body: JSON.stringify({ username: user.id }),
-    });
-
-    upLog(
-      `response op=create-user status=${ensureRes.status} content-type=${ensureRes.headers.get("content-type") ?? "unknown"}`
-    );
-
+    // 409 = already exists → success
     if (!ensureRes.ok && ensureRes.status !== 409) {
-      const body = await ensureRes.text().catch(() => "");
-      upError(
-        `non-2xx op=create-user status=${ensureRes.status} body=${body.slice(0, 200)}`
-      );
+      upError(`non-2xx op=create-user status=${ensureRes.status} body=${ensureRes.errorSnippet}`);
       return jsonError(
         502,
-        `Social provider returned ${ensureRes.status}: ${body.slice(0, 200)}`,
+        `Social provider returned ${ensureRes.status}: ${ensureRes.errorSnippet}`,
         requestId
       );
-    } else {
-      // consume body to free connection
-      await ensureRes.text().catch(() => "");
     }
 
     // ── 4. Build signed state token ──────────────────────────────────────
@@ -135,59 +109,27 @@ export async function GET(req: NextRequest) {
     // ── 6. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
     const uiConfig = getUploadPostUiConfig();
 
-    const jwtPayload: Record<string, unknown> = {
+    const jwtBody: Parameters<typeof generateUploadPostJwt>[1] = {
       username: user.id,
       redirect_url: redirectUrl,
       show_calendar: true,
+      ...(uiConfig.logoUrl            && { logo_image:            uiConfig.logoUrl }),
+      ...(uiConfig.connectTitle        && { connect_title:         uiConfig.connectTitle }),
+      ...(uiConfig.connectDescription  && { connect_description:   uiConfig.connectDescription }),
+      ...(uiConfig.redirectButtonText  && { redirect_button_text:  uiConfig.redirectButtonText }),
+      ...(uiConfig.defaultPlatforms?.length && { platforms: uiConfig.defaultPlatforms }),
     };
 
-    if (uiConfig.logoUrl) jwtPayload.logo_image = uiConfig.logoUrl;
-    if (uiConfig.connectTitle) jwtPayload.connect_title = uiConfig.connectTitle;
-    if (uiConfig.connectDescription)
-      jwtPayload.connect_description = uiConfig.connectDescription;
-    if (uiConfig.redirectButtonText)
-      jwtPayload.redirect_button_text = uiConfig.redirectButtonText;
-    if (uiConfig.defaultPlatforms?.length)
-      jwtPayload.platforms = uiConfig.defaultPlatforms;
+    const jwtRes = await generateUploadPostJwt(apiKey, jwtBody);
 
-    const jwtUrl = `${UPLOAD_POST_API_BASE}/users/generate-jwt`;
-    upLog(`request op=generate-jwt method=POST url=${jwtUrl} payload_keys=${Object.keys(jwtPayload).join(",")}`);
-
-    const jwtRes = await fetch(jwtUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `ApiKey ${apiKey}`,
-      },
-      body: JSON.stringify(jwtPayload),
-    });
-
-    upLog(
-      `response op=generate-jwt status=${jwtRes.status} content-type=${jwtRes.headers.get("content-type") ?? "unknown"}`
-    );
-
-    const jwtText = await jwtRes.text().catch(() => "");
-
-    if (!jwtRes.ok) {
-      upError(
-        `non-2xx op=generate-jwt status=${jwtRes.status} body=${jwtText.slice(0, 200)}`
-      );
-      return jsonError(502, `JWT generation failed (${jwtRes.status}): ${jwtText.slice(0, 200)}`, requestId);
+    if (!jwtRes.ok || !jwtRes.data) {
+      return jsonError(502, `JWT generation failed (${jwtRes.status}): ${jwtRes.errorSnippet}`, requestId);
     }
 
-    let jwtData: Record<string, unknown>;
-    try {
-      jwtData = JSON.parse(jwtText);
-    } catch {
-      upError("generate-jwt response is not valid JSON");
-      return jsonError(502, "Invalid JSON from social provider", requestId);
-    }
-
-    const accessUrl =
-      (jwtData.accessUrl as string) ?? (jwtData.access_url as string);
+    const accessUrl = jwtRes.data.accessUrl ?? jwtRes.data.access_url;
 
     if (!accessUrl) {
-      upError("generate-jwt response missing accessUrl field. Keys:", Object.keys(jwtData).join(","));
+      upError("generate-jwt response missing accessUrl field. Keys:", Object.keys(jwtRes.data).join(","));
       return jsonError(502, "No accessUrl in provider response", requestId);
     }
 
