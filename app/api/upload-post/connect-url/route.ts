@@ -5,8 +5,21 @@ import { createState } from "@/lib/upload-post/state";
 import { sanitizeReturnTo } from "@/lib/upload-post/returnTo";
 
 const UPLOAD_POST_API_BASE =
-  (process.env.UPLOAD_POST_BASE_URL || "https://app.upload-post.com") +
+  (process.env.UPLOAD_POST_BASE_URL || "https://api.upload-post.com") +
   "/api/uploadposts";
+
+const upDebug = process.env.UPLOAD_POST_DEBUG === "true";
+
+function upLog(...args: unknown[]) {
+  if (upDebug) console.log("[upload-post]", ...args);
+}
+function upWarn(...args: unknown[]) {
+  if (upDebug) console.warn("[upload-post]", ...args);
+}
+function upError(...args: unknown[]) {
+  // errors always surface regardless of flag
+  console.error("[upload-post]", ...args);
+}
 
 function jsonError(status: number, message: string, requestId: string) {
   return NextResponse.json(
@@ -25,7 +38,7 @@ export async function GET(req: NextRequest) {
   const requestId =
     req.headers.get("x-request-id") ?? crypto.randomUUID();
 
-  console.log("[v0] [connect-url] ROUTE HIT", requestId);
+  upLog(`base_url=${UPLOAD_POST_API_BASE} requestId=${requestId}`);
 
   try {
     // ── 1. Authenticate ──────────────────────────────────────────────────
@@ -34,8 +47,6 @@ export async function GET(req: NextRequest) {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
-
-    console.log("[v0] [connect-url] auth result:", user?.id ?? "NO USER", userError?.message ?? "ok");
 
     if (userError || !user) {
       return jsonError(401, "Authentication required", requestId);
@@ -55,14 +66,14 @@ export async function GET(req: NextRequest) {
       .eq("id", 1)
       .maybeSingle();
 
-    console.log("[v0] [connect-url] settings:", settings ? "found" : "null", "err:", settingsErr?.message ?? "none");
+    if (settingsErr) upWarn("settings query error:", settingsErr.message);
 
     const apiKey =
       settings?.upload_post_api_key?.trim() ||
       process.env.UPLOAD_POST_API_KEY?.trim() ||
       null;
 
-    console.log("[v0] [connect-url] apiKey:", apiKey ? `yes (${apiKey.length} chars)` : "MISSING");
+    upLog(`api_key_source=${settings?.upload_post_api_key?.trim() ? "db" : "env"} present=${!!apiKey}`);
 
     if (!apiKey) {
       return jsonError(
@@ -74,7 +85,7 @@ export async function GET(req: NextRequest) {
 
     // ── 3. Ensure Upload-Post user exists ────────────────────────────────
     const ensureUrl = `${UPLOAD_POST_API_BASE}/users`;
-    console.log("[v0] [connect-url] POST", ensureUrl, "username:", user.id);
+    upLog(`request op=create-user method=POST url=${ensureUrl}`);
 
     const ensureRes = await fetch(ensureUrl, {
       method: "POST",
@@ -85,16 +96,23 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify({ username: user.id }),
     });
 
-    const ensureText = await ensureRes.text().catch(() => "");
-    console.log("[v0] [connect-url] ensure-user:", ensureRes.status, ensureText.slice(0, 300));
+    upLog(
+      `response op=create-user status=${ensureRes.status} content-type=${ensureRes.headers.get("content-type") ?? "unknown"}`
+    );
 
-    // 409 = already exists → success
     if (!ensureRes.ok && ensureRes.status !== 409) {
+      const body = await ensureRes.text().catch(() => "");
+      upError(
+        `non-2xx op=create-user status=${ensureRes.status} body=${body.slice(0, 200)}`
+      );
       return jsonError(
         502,
-        `Social provider returned ${ensureRes.status}: ${ensureText.slice(0, 200)}`,
+        `Social provider returned ${ensureRes.status}: ${body.slice(0, 200)}`,
         requestId
       );
+    } else {
+      // consume body to free connection
+      await ensureRes.text().catch(() => "");
     }
 
     // ── 4. Build signed state token ──────────────────────────────────────
@@ -106,7 +124,7 @@ export async function GET(req: NextRequest) {
       state = await createState({ returnTo, userId: user.id });
     } catch (stateErr) {
       const msg = stateErr instanceof Error ? stateErr.message : String(stateErr);
-      console.error("[v0] [connect-url] createState failed:", msg);
+      upError("createState failed:", msg);
       return jsonError(500, `State token error: ${msg}`, requestId);
     }
 
@@ -132,9 +150,10 @@ export async function GET(req: NextRequest) {
     if (uiConfig.defaultPlatforms?.length)
       jwtPayload.platforms = uiConfig.defaultPlatforms;
 
-    console.log("[v0] [connect-url] POST generate-jwt, payload keys:", Object.keys(jwtPayload));
+    const jwtUrl = `${UPLOAD_POST_API_BASE}/users/generate-jwt`;
+    upLog(`request op=generate-jwt method=POST url=${jwtUrl} payload_keys=${Object.keys(jwtPayload).join(",")}`);
 
-    const jwtRes = await fetch(`${UPLOAD_POST_API_BASE}/users/generate-jwt`, {
+    const jwtRes = await fetch(jwtUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -143,10 +162,16 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify(jwtPayload),
     });
 
+    upLog(
+      `response op=generate-jwt status=${jwtRes.status} content-type=${jwtRes.headers.get("content-type") ?? "unknown"}`
+    );
+
     const jwtText = await jwtRes.text().catch(() => "");
-    console.log("[v0] [connect-url] generate-jwt:", jwtRes.status, jwtText.slice(0, 300));
 
     if (!jwtRes.ok) {
+      upError(
+        `non-2xx op=generate-jwt status=${jwtRes.status} body=${jwtText.slice(0, 200)}`
+      );
       return jsonError(502, `JWT generation failed (${jwtRes.status}): ${jwtText.slice(0, 200)}`, requestId);
     }
 
@@ -154,6 +179,7 @@ export async function GET(req: NextRequest) {
     try {
       jwtData = JSON.parse(jwtText);
     } catch {
+      upError("generate-jwt response is not valid JSON");
       return jsonError(502, "Invalid JSON from social provider", requestId);
     }
 
@@ -161,6 +187,7 @@ export async function GET(req: NextRequest) {
       (jwtData.accessUrl as string) ?? (jwtData.access_url as string);
 
     if (!accessUrl) {
+      upError("generate-jwt response missing accessUrl field. Keys:", Object.keys(jwtData).join(","));
       return jsonError(502, "No accessUrl in provider response", requestId);
     }
 
@@ -176,11 +203,11 @@ export async function GET(req: NextRequest) {
         { onConflict: "user_id" }
       )
       .then(({ error: e }) => {
-        if (e) console.warn("[v0] [connect-url] mapping upsert failed:", e.message);
+        if (e) upWarn("mapping upsert failed:", e.message);
       });
 
     // ── 8. Return ────────────────────────────────────────────────────────
-    console.log("[v0] [connect-url] SUCCESS — returning accessUrl");
+    upLog("success — accessUrl obtained");
     return NextResponse.json(
       { accessUrl },
       { status: 200, headers: { "X-Request-Id": requestId } }
@@ -188,7 +215,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     const stack = err instanceof Error ? err.stack : "";
-    console.error("[v0] [connect-url] UNCAUGHT:", msg, stack);
+    upError("UNCAUGHT:", msg, stack);
     return jsonError(500, `Unexpected: ${msg}`, requestId);
   }
 }
