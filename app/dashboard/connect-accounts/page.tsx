@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import UploadPostConnectFrame from "@/components/connect/UploadPostConnectFrame";
+import HybridUploadPostConnect from "@/components/connect/HybridUploadPostConnect";
 import { sanitizeReturnTo } from "@/lib/upload-post/returnTo";
 
 interface PageProps {
@@ -41,11 +42,7 @@ export default async function ConnectAccountsPage({ searchParams }: PageProps) {
             <UploadPostConnectFrame returnTo={returnTo} />
           </Suspense>
         ) : (
-          <div className="flex flex-1 items-center justify-center p-8">
-            <p className="text-sm text-muted-foreground">
-              Hybrid connect mode placeholder — coming next prompts.
-            </p>
-          </div>
+          <HybridUploadPostConnect returnTo={returnTo} />
         )}
       </main>
       <Footer />
