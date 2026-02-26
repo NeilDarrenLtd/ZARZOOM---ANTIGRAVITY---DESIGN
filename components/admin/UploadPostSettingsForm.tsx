@@ -144,23 +144,27 @@ export default function UploadPostSettingsForm() {
   const handleTest = useCallback(async () => {
     setTestState({ status: "testing" });
     try {
-      const res = await fetch("/api/admin/settings/upload-post/test", {
+      const res = await fetch("/api/admin/upload-post/smoke", {
         method: "POST",
       });
-      const body = await res.json();
+      const body = await res.json().catch(() => ({}));
 
-      if (body.success) {
-        setTestState({ status: "success", message: body.message });
+      if (body.ok) {
+        setTestState({ status: "success", message: body.message ?? "Connection successful." });
       } else {
-        setTestState({ status: "error", message: body.message });
+        const detail = body.hint ? ` (${body.hint})` : "";
+        setTestState({
+          status: "error",
+          message: (body.message ?? `HTTP ${res.status}`) + detail,
+        });
       }
-      setTimeout(() => setTestState({ status: "idle" }), 5000);
+      setTimeout(() => setTestState({ status: "idle" }), 6000);
     } catch (err) {
       setTestState({
         status: "error",
         message: err instanceof Error ? err.message : "Test failed",
       });
-      setTimeout(() => setTestState({ status: "idle" }), 5000);
+      setTimeout(() => setTestState({ status: "idle" }), 6000);
     }
   }, []);
 
