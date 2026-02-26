@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
+// Mark as dynamic since this page requires the 'state' query parameter from OAuth redirects
+export const dynamic = "force-dynamic";
+
 type Status = "verifying" | "success_popup" | "success_redirect" | "error";
 
 export default function UploadPostReturnPage() {
