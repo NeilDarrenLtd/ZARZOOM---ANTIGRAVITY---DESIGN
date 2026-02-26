@@ -175,8 +175,7 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
           <div className="flex flex-col items-center gap-3 w-full max-w-sm mt-2">
             <button
               onClick={handleConnect}
-              className="w-full rounded-xl px-8 py-4 text-base font-bold text-white transition-all hover:brightness-110 active:scale-[0.98]"
-              style={{ backgroundColor: "hsl(142 71% 45%)" }}
+              className="w-full rounded-xl px-8 py-4 text-base font-bold text-white bg-green-600 hover:bg-green-700 transition-colors active:scale-[0.98]"
             >
               Connect Accounts
             </button>
