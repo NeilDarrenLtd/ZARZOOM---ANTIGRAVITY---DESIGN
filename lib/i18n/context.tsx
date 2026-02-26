@@ -29,7 +29,6 @@ interface I18nContextType {
   locale: string;
   setLocale: (locale: string) => void;
   t: (key: string, fallback?: string) => string;
-  translations: Translations;
 }
 
 /* ---------- Context ---------- */
@@ -121,8 +120,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [translations]
   );
 
+  // Exclude translations from context value to prevent webpack serialization issues
+  // Translations are only used in the t() callback which maintains its reference
+  const contextValue = {
+    locale,
+    setLocale,
+    t,
+  };
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t, translations }}>
+    <I18nContext.Provider value={contextValue}>
       {children}
     </I18nContext.Provider>
   );
