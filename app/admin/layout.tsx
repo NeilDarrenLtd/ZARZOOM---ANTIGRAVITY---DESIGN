@@ -18,6 +18,7 @@ import {
   Webhook,
   HelpCircle,
   Sparkles,
+  Link2,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -146,6 +147,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/settings/openrouter-prompts",
       label: "OpenRouter Prompts",
       icon: Sparkles,
+    },
+    {
+      href: "/admin/integrations/upload-post",
+      label: "Social Connector",
+      icon: Link2,
     },
   ];
 

@@ -11,12 +11,13 @@ import type { OnboardingUpdate, Goal } from "@/lib/validation/onboarding";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
-import UploadPostConnectModal from "@/components/social/UploadPostConnectModal";
 import { PricingClient } from "@/components/pricing/PricingClient";
 import { fetchPlans, getDisplayablePlans } from "@/lib/pricing";
 import type { DisplayablePlan } from "@/lib/pricing";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import Link from "next/link";
+import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
+import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import {
   ArrowLeft,
   Search,
@@ -61,11 +62,11 @@ const inputClass =
 
 export default function ProfilePage() {
   const { t } = useI18n();
+  const showSuccessBanner = useUploadPostSuccess();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [data, setData] = useState<OnboardingUpdate>({});
-  const [showModal, setShowModal] = useState(false);
   const [investigating, setInvestigating] = useState(false);
   const [websiteStatus, setWebsiteStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
   const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
@@ -338,27 +339,6 @@ export default function ProfilePage() {
   const isAnnual = data.discount_opt_in !== false;
   const selectedPlan = data.selected_plan ?? null;
 
-  // ── Social modal ────────────────────────────────────────
-  const handleModalClose = useCallback(
-    async (connected: boolean) => {
-      setShowModal(false);
-      if (connected) {
-        onChange({ socials_connected: true });
-        return;
-      }
-      try {
-        const res = await fetch("/api/v1/onboarding/social-connect/status");
-        if (res.ok) {
-          const body = await res.json();
-          if (body.data?.connected) onChange({ socials_connected: true });
-        }
-      } catch {
-        // silently ignore
-      }
-    },
-    [onChange]
-  );
-
   // ── Loading state ───────────────────────────────────────
   if (loading) {
     return (
@@ -373,6 +353,7 @@ export default function ProfilePage() {
 
   return (
     <main className="bg-gray-50 min-h-screen flex flex-col">
+      <UploadPostSuccessBanner show={showSuccessBanner} />
       <DynamicSEO />
       <SiteNavbar />
 
@@ -974,18 +955,6 @@ export default function ProfilePage() {
             <p className="text-xs text-gray-400 mb-6">{t("profile.sections.socialDesc")}</p>
 
             <div className="flex flex-col gap-4">
-              {/* Username */}
-              {data.uploadpost_profile_username && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <span className="font-medium text-gray-700">
-                    {t("profile.social.username")}:
-                  </span>
-                  <code className="px-2 py-0.5 rounded bg-gray-100 text-xs font-mono">
-                    {data.uploadpost_profile_username}
-                  </code>
-                </div>
-              )}
-
               {/* Connection status */}
               <div className="flex items-center gap-3">
                 {data.socials_connected ? (
@@ -1005,16 +974,15 @@ export default function ProfilePage() {
               </div>
 
               {/* Connect / Manage button */}
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
+              <Link
+                href="/dashboard/connect-accounts?returnTo=/dashboard/profile"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors w-fit"
               >
                 <ExternalLink className="w-4 h-4" />
                 {data.socials_connected
                   ? t("profile.social.manage")
                   : t("profile.social.connect")}
-              </button>
+              </Link>
             </div>
           </section>
 
@@ -1039,9 +1007,6 @@ export default function ProfilePage() {
       </div>
 
       <Footer />
-
-      {/* Upload-Post connect modal */}
-      <UploadPostConnectModal open={showModal} onClose={handleModalClose} />
 
       {/* Investigate overlay */}
       {investigating && (

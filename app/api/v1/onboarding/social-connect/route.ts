@@ -70,7 +70,7 @@ export async function POST() {
 
     const cleanBase = baseUrl.replace(/\/+$/, "");
     const headers = {
-      Authorization: `Bearer ${apiKey}`,
+      Authorization: `ApiKey ${apiKey}`,
       "Content-Type": "application/json",
     };
 

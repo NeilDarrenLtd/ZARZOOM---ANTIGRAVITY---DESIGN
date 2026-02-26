@@ -14,6 +14,8 @@ import Step4Plan from "@/components/onboarding/Step4Plan";
 import Step5Connect from "@/components/onboarding/Step5Connect";
 
 import { ArrowLeft, ArrowRight, Rocket, LogOut, Loader2 } from "lucide-react";
+import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
+import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 
 const TOTAL_STEPS = 5;
 
@@ -23,6 +25,7 @@ export default function OnboardingPage() {
   const supabase = createClient();
 
   const [step, setStep] = useState(1);
+  const showSuccessBanner = useUploadPostSuccess();
   const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -253,6 +256,7 @@ export default function OnboardingPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
+      <UploadPostSuccessBanner show={showSuccessBanner} />
       {/* Header */}
       <header className="border-b border-gray-200 bg-white">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">

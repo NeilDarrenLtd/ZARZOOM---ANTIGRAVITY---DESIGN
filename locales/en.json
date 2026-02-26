@@ -343,7 +343,7 @@
       "changePlan": "Change Plan"
     },
     "social": {
-      "username": "Upload-Post Username",
+      "username": "Social Username",
       "noUsername": "Not configured yet",
       "connected": "Social accounts connected",
       "notConnected": "No accounts connected yet",
@@ -982,8 +982,8 @@
       "subtitle": "Connect your social accounts and set your preferences.",
       "connectSocials": {
         "label": "Connect Social Accounts",
-        "help": "Link your social media accounts via Upload-Post.",
-        "button": "Open Upload-Post",
+        "help": "Link your social media accounts",
+        "button": "Connect Accounts",
         "manage": "Manage Connections",
         "connected": "Social accounts connected",
         "notConnected": "No accounts connected yet"
@@ -1012,7 +1012,7 @@
       "errorGeneric": "Could not load the social connector. Please try again later.",
       "errorNoUrl": "No connect URL was returned. Please try again.",
       "demoTitle": "Social Connector Coming Soon",
-      "demoDescription": "Upload-Post is not yet configured for this environment. Your social account connections will be available once the provider is set up by an administrator."
+      "demoDescription": "The social connector is not yet configured for this environment. Your social account connections will be available once the provider is set up by an administrator."
     },
     "errors": {
       "loadFailed": "Failed to load your onboarding data. Please try again.",
@@ -1031,7 +1031,7 @@
     },
     "a11y": {
       "brandLogoAlt": "Brand logo",
-      "socialConnectorTitle": "Upload-Post Social Connector",
+      "socialConnectorTitle": "Social Connector",
       "dismissBanner": "Dismiss banner",
       "currency": "£"
     },
