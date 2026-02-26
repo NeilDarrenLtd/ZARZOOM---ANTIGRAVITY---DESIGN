@@ -3,7 +3,9 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { getBaseUrl, getUploadPostUiConfig } from "@/lib/upload-post/config";
 import { createState } from "@/lib/upload-post/state";
 
-const UPLOAD_POST_API_BASE = "https://api.upload-post.com/api/uploadposts";
+const UPLOAD_POST_API_BASE =
+  (process.env.UPLOAD_POST_BASE_URL || "https://app.upload-post.com") +
+  "/api/uploadposts";
 
 function jsonError(status: number, message: string, requestId: string) {
   return NextResponse.json(
