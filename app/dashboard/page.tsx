@@ -8,6 +8,8 @@ import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
 import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle } from "lucide-react";
+import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
+import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 
 
 export default function DashboardPage() {
@@ -15,6 +17,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [restarting, setRestarting] = useState(false);
+  const showSuccessBanner = useUploadPostSuccess();
 
 
   useEffect(() => {
@@ -66,6 +69,7 @@ export default function DashboardPage() {
 
   return (
     <main className="bg-gray-50 min-h-screen flex flex-col">
+      <UploadPostSuccessBanner show={showSuccessBanner} />
       <DynamicSEO />
       <SiteNavbar />
 

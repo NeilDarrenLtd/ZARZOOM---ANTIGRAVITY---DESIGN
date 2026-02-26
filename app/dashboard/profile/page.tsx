@@ -16,6 +16,8 @@ import { fetchPlans, getDisplayablePlans } from "@/lib/pricing";
 import type { DisplayablePlan } from "@/lib/pricing";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import Link from "next/link";
+import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
+import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import {
   ArrowLeft,
   Search,
@@ -60,6 +62,7 @@ const inputClass =
 
 export default function ProfilePage() {
   const { t } = useI18n();
+  const showSuccessBanner = useUploadPostSuccess();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -350,6 +353,7 @@ export default function ProfilePage() {
 
   return (
     <main className="bg-gray-50 min-h-screen flex flex-col">
+      <UploadPostSuccessBanner show={showSuccessBanner} />
       <DynamicSEO />
       <SiteNavbar />
 
