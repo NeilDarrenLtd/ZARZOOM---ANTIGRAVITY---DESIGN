@@ -132,13 +132,15 @@ export async function GET(req: NextRequest) {
     const jwtBody: Parameters<typeof generateUploadPostJwt>[1] = {
       username: user.id,
       redirect_url: redirectUrl,
-      show_calendar: true,
+      show_calendar: false,
       ...(uiConfig.logoUrl            && { logo_image:            uiConfig.logoUrl }),
       ...(uiConfig.connectTitle        && { connect_title:         uiConfig.connectTitle }),
       ...(uiConfig.connectDescription  && { connect_description:   uiConfig.connectDescription }),
       ...(uiConfig.redirectButtonText  && { redirect_button_text:  uiConfig.redirectButtonText }),
       ...(uiConfig.defaultPlatforms?.length && { platforms: uiConfig.defaultPlatforms }),
     };
+
+    upLog(`generate-jwt request body keys: ${Object.keys(jwtBody).join(", ")} (show_calendar=false)`);
 
     const jwtRes = await generateUploadPostJwt(apiKey, jwtBody);
 
