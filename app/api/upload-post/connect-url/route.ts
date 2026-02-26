@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { getBaseUrl, getUploadPostUiConfig } from "@/lib/upload-post/config";
 import { createState } from "@/lib/upload-post/state";
+import { sanitizeReturnTo } from "@/lib/upload-post/returnTo";
 
 const UPLOAD_POST_API_BASE =
   (process.env.UPLOAD_POST_BASE_URL || "https://app.upload-post.com") +
@@ -97,7 +98,8 @@ export async function GET(req: NextRequest) {
     }
 
     // ── 4. Build signed state token ──────────────────────────────────────
-    const returnTo = req.nextUrl.searchParams.get("returnTo") ?? "/dashboard";
+    const rawReturnTo = req.nextUrl.searchParams.get("returnTo") ?? "/dashboard";
+    const returnTo = sanitizeReturnTo(rawReturnTo);
 
     let state: string;
     try {
@@ -110,7 +112,7 @@ export async function GET(req: NextRequest) {
 
     // ── 5. Build redirect URL ────────────────────────────────────────────
     const baseUrl = getBaseUrl();
-    const redirectUrl = `${baseUrl}/dashboard/connect-accounts/callback?state=${encodeURIComponent(state)}`;
+    const redirectUrl = `${baseUrl}/integrations/upload-post/return?state=${encodeURIComponent(state)}`;
 
     // ── 6. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
     const uiConfig = getUploadPostUiConfig();
