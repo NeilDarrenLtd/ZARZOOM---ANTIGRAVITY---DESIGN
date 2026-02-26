@@ -27,6 +27,7 @@ const UPLOAD_POST_API_BASE = "https://api.upload-post.com/api/uploadposts";
  */
 export async function GET(req: NextRequest) {
   const requestId = getRequestId(req);
+  console.log(`[v0] [connect-url] === ROUTE ENTERED === requestId=${requestId}`);
 
   try {
     // ── 1. Authenticate the Supabase user ────────────────────────────────
@@ -193,7 +194,13 @@ export async function GET(req: NextRequest) {
       { status: 200, headers: { "X-Request-Id": requestId } }
     );
   } catch (err) {
-    console.error(`[connect-url] Unexpected error (${requestId}):`, err);
-    return serverError(requestId);
+    const errMsg = err instanceof Error ? err.message : String(err);
+    const errStack = err instanceof Error ? err.stack : "";
+    console.error(`[v0] [connect-url] CATCH error (${requestId}): ${errMsg}`);
+    console.error(`[v0] [connect-url] Stack: ${errStack}`);
+    return NextResponse.json(
+      { error: { code: "INTERNAL", message: `Unexpected error: ${errMsg}`, requestId } },
+      { status: 500, headers: { "X-Request-Id": requestId } }
+    );
   }
 }

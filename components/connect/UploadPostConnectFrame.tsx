@@ -39,10 +39,14 @@ export default function UploadPostConnectFrame({
 
     try {
       const params = new URLSearchParams({ returnTo });
+      console.log("[v0] [connect-frame] Fetching /api/upload-post/connect-url?" + params.toString());
       const res = await fetch(`/api/upload-post/connect-url?${params}`);
+
+      console.log("[v0] [connect-frame] Response status:", res.status);
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
+        console.log("[v0] [connect-frame] Error body:", JSON.stringify(body));
         setErrorMessage(
           body?.error?.message ?? "Failed to load the connect page."
         );
@@ -50,7 +54,9 @@ export default function UploadPostConnectFrame({
         return;
       }
 
-      const { accessUrl: url } = await res.json();
+      const json = await res.json();
+      console.log("[v0] [connect-frame] Success response keys:", Object.keys(json));
+      const url = json.accessUrl;
 
       if (!url) {
         setErrorMessage("No connect URL returned. Please try again.");
