@@ -162,7 +162,25 @@ export async function GET(req: NextRequest) {
       return serverError(requestId, "Invalid response from social connect provider");
     }
 
-    // ── 7. Return to client ──────────────────────────────────────────────
+    // ── 7. Upsert audit trail ───────────────────────────────────────────
+    await admin
+      .from("upload_post_mapping")
+      .upsert(
+        {
+          user_id: user.id,
+          upload_post_username: user.id,
+          last_connect_url_generated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" }
+      )
+      .then(({ error: upsertErr }) => {
+        if (upsertErr) {
+          // Non-fatal — log but don't block the user
+          console.warn(`[connect-url] Mapping upsert failed (${requestId}):`, upsertErr.message);
+        }
+      });
+
+    // ── 8. Return to client ──────────────────────────────────────────────
     return NextResponse.json(
       { accessUrl },
       { status: 200, headers: { "X-Request-Id": requestId } }
