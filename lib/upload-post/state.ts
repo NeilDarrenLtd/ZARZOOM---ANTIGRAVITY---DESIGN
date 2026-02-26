@@ -45,7 +45,9 @@ async function getHmacKey(secret: string): Promise<CryptoKey> {
 }
 
 function base64UrlEncode(buffer: ArrayBuffer | Uint8Array): string {
-  return Buffer.from(buffer)
+  // Convert ArrayBuffer to Uint8Array if needed (Buffer.from requires this)
+  const bytes = buffer instanceof ArrayBuffer ? new Uint8Array(buffer) : buffer;
+  return Buffer.from(bytes)
     .toString("base64")
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
