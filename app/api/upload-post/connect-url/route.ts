@@ -69,21 +69,29 @@ export async function GET(req: NextRequest) {
       { auth: { autoRefreshToken: false, persistSession: false } }
     );
 
-    const { data: settings } = await admin
+    // Ensure the singleton row exists before reading
+    await admin
+      .from("app_settings")
+      .upsert({ id: 1 }, { onConflict: "id", ignoreDuplicates: true });
+
+    const { data: settings, error: settingsErr } = await admin
       .from("app_settings")
       .select("upload_post_api_key")
       .eq("id", 1)
-      .single();
+      .maybeSingle();
+
+    console.log(`[v0] [connect-url] settings query: data=${JSON.stringify(settings)}, error=${settingsErr?.message ?? "none"}`);
 
     const apiKey =
       settings?.upload_post_api_key?.trim() ||
       process.env.UPLOAD_POST_API_KEY?.trim() ||
       null;
 
+    console.log(`[v0] [connect-url] apiKey resolved: ${apiKey ? "yes (length=" + apiKey.length + ")" : "NO"}`);
+
     if (!apiKey) {
-      console.error("[connect-url] Upload-Post API key not configured");
       return NextResponse.json(
-        { error: { code: "NOT_CONFIGURED", message: "Upload-Post not configured", requestId } },
+        { error: { code: "NOT_CONFIGURED", message: "Social connector is not configured. Please ask an administrator to add the API key in Admin > Social Connector.", requestId } },
         { status: 500, headers: { "X-Request-Id": requestId } }
       );
     }
@@ -104,11 +112,7 @@ export async function GET(req: NextRequest) {
 
     // 409 Conflict = user already exists — treat as success
     if (!ensureRes.ok && ensureRes.status !== 409) {
-      console.error(
-        `[connect-url] Failed to ensure Upload-Post user (${ensureRes.status}):`,
-        ensureBody
-      );
-      return serverError(requestId, "Failed to initialise social account");
+      return serverError(requestId, `Failed to initialise social account (status: ${ensureRes.status})`);
     }
 
     // ── 4. Build the signed state token ─────────────────────────────────
