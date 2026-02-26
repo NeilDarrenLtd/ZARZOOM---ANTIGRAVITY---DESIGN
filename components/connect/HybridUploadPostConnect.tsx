@@ -70,14 +70,26 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
     try {
       const params = new URLSearchParams({ returnTo });
       const res = await fetch(`/api/upload-post/connect-url?${params}`);
+      const body = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
+        const err = body?.error ?? {};
+        let msg: string;
+
+        if (err.code === "NOT_CONFIGURED") {
+          msg = err.message ?? "Social connector is not configured. Please contact your administrator.";
+        } else if (err.code === "PROVIDER_ERROR") {
+          msg = `${err.message ?? "The social provider returned an error."}${err.hint ? ` (${err.hint})` : ""}`;
+        } else {
+          msg = err.message ?? `Something went wrong (HTTP ${res.status}).`;
+        }
+
+        throw new Error(msg);
       }
-      const json = await res.json();
-      if (!json.accessUrl) throw new Error("No access URL returned.");
-      setAccessUrl(json.accessUrl);
-      return json.accessUrl;
+
+      if (!body.accessUrl) throw new Error("No access URL returned.");
+      setAccessUrl(body.accessUrl);
+      return body.accessUrl;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMsg(msg);

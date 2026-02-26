@@ -14,10 +14,38 @@ function upLog(...args: unknown[]) { if (upDebug) console.log("[upload-post]", .
 function upWarn(...args: unknown[]) { if (upDebug) console.warn("[upload-post]", ...args); }
 function upError(...args: unknown[]) { console.error("[upload-post]", ...args); }
 
-function jsonError(status: number, message: string, requestId: string) {
+function jsonError(status: number, message: string, requestId: string, extra?: Record<string, unknown>) {
   return NextResponse.json(
-    { error: { code: "ERROR", message, requestId } },
+    { error: { code: "ERROR", message, requestId, ...extra } },
     { status, headers: { "X-Request-Id": requestId } }
+  );
+}
+
+function notConfigured(requestId: string) {
+  return NextResponse.json(
+    {
+      error: {
+        code: "NOT_CONFIGURED",
+        message: "Social connector is not set up. Ask an admin to add the API key under Admin > Social Connector.",
+        requestId,
+      },
+    },
+    { status: 500, headers: { "X-Request-Id": requestId } }
+  );
+}
+
+function providerError(status: number, hint: string, snippet: string, requestId: string) {
+  return NextResponse.json(
+    {
+      error: {
+        code: "PROVIDER_ERROR",
+        message: `Upload-Post request failed (${status}).`,
+        hint,
+        detail: snippet,
+        requestId,
+      },
+    },
+    { status: 502, headers: { "X-Request-Id": requestId } }
   );
 }
 
@@ -69,11 +97,7 @@ export async function GET(req: NextRequest) {
     upLog(`api_key_source=${settings?.upload_post_api_key?.trim() ? "db" : "env"} present=${!!apiKey}`);
 
     if (!apiKey) {
-      return jsonError(
-        500,
-        "Social connector is not configured. Ask an admin to add the API key in Admin > Social Connector.",
-        requestId
-      );
+      return notConfigured(requestId);
     }
 
     // ── 3. Ensure Upload-Post user exists ────────────────────────────────
@@ -82,11 +106,7 @@ export async function GET(req: NextRequest) {
     // 409 = already exists → success
     if (!ensureRes.ok && ensureRes.status !== 409) {
       upError(`non-2xx op=create-user status=${ensureRes.status} body=${ensureRes.errorSnippet}`);
-      return jsonError(
-        502,
-        `Social provider returned ${ensureRes.status}: ${ensureRes.errorSnippet}`,
-        requestId
-      );
+      return providerError(ensureRes.status, "create-user", ensureRes.errorSnippet ?? "", requestId);
     }
 
     // ── 4. Build signed state token ──────────────────────────────────────
@@ -123,7 +143,7 @@ export async function GET(req: NextRequest) {
     const jwtRes = await generateUploadPostJwt(apiKey, jwtBody);
 
     if (!jwtRes.ok || !jwtRes.data) {
-      return jsonError(502, `JWT generation failed (${jwtRes.status}): ${jwtRes.errorSnippet}`, requestId);
+      return providerError(jwtRes.status, "generate-jwt", jwtRes.errorSnippet ?? "", requestId);
     }
 
     const accessUrl = jwtRes.data.accessUrl ?? jwtRes.data.access_url;

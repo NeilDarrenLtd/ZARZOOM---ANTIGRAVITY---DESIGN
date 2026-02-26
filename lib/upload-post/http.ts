@@ -55,8 +55,13 @@ async function upPost<T>(
   upLog(`response op=${op} status=${res.status} content-type=${contentType}`);
 
   if (!res.ok) {
-    const snippet = (await res.text().catch(() => "")).slice(0, 200);
-    upError(`non-2xx op=${op} status=${res.status} body=${snippet}`);
+    const rawSnippet = (await res.text().catch(() => "")).slice(0, 200);
+    // Strip HTML tags so nginx 405 pages don't bleed into UI error messages
+    const isHtml = contentType.includes("text/html") || rawSnippet.trimStart().startsWith("<");
+    const snippet = isHtml
+      ? `Unexpected HTML response (HTTP ${res.status}) — check Upload-Post API host and credentials.`
+      : rawSnippet;
+    upError(`non-2xx op=${op} status=${res.status} body=${rawSnippet.slice(0, 200)}`);
     return { ok: false, status: res.status, contentType, data: null, errorSnippet: snippet };
   }
 
