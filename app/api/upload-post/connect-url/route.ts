@@ -1,76 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { env } from "@/lib/api/env";
-import { getRequestId } from "@/lib/api/request-id";
-import {
-  unauthorized,
-  serverError,
-} from "@/lib/api/http-responses";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { getBaseUrl, getUploadPostUiConfig } from "@/lib/upload-post/config";
 import { createState } from "@/lib/upload-post/state";
 
 const UPLOAD_POST_API_BASE = "https://api.upload-post.com/api/uploadposts";
 
+function jsonError(status: number, message: string, requestId: string) {
+  return NextResponse.json(
+    { error: { code: "ERROR", message, requestId } },
+    { status, headers: { "X-Request-Id": requestId } }
+  );
+}
+
 /**
  * GET /api/upload-post/connect-url
  *
  * Returns an Upload-Post accessUrl for the authenticated user.
- *
- * Query params:
- *   returnTo  – internal path to redirect after connecting (optional, defaults to /dashboard)
- *   state     – pre-built state token (optional; if absent one is generated)
- *
- * Response: { accessUrl: string }
- *
  * SECURITY: Never exposes the API key to the browser.
  */
 export async function GET(req: NextRequest) {
-  const requestId = getRequestId(req);
-  console.log(`[v0] [connect-url] === ROUTE ENTERED === requestId=${requestId}`);
+  const requestId =
+    req.headers.get("x-request-id") ?? crypto.randomUUID();
+
+  console.log("[v0] [connect-url] ROUTE HIT", requestId);
 
   try {
-    // ── 1. Authenticate the Supabase user ────────────────────────────────
-    const cookieStore = await cookies();
-    const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } = env();
-
-    const supabase = createServerClient(
-      NEXT_PUBLIC_SUPABASE_URL,
-      NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      {
-        cookies: {
-          getAll: () => cookieStore.getAll(),
-          setAll(cookiesToSet) {
-            try {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value, options)
-              );
-            } catch {
-              // Read-only in Route Handler context — safe to ignore
-            }
-          },
-        },
-      }
-    );
-
+    // ── 1. Authenticate ──────────────────────────────────────────────────
+    const supabase = await createClient();
     const {
       data: { user },
       error: userError,
     } = await supabase.auth.getUser();
 
+    console.log("[v0] [connect-url] auth result:", user?.id ?? "NO USER", userError?.message ?? "ok");
+
     if (userError || !user) {
-      return unauthorized(requestId, "Authentication required");
+      return jsonError(401, "Authentication required", requestId);
     }
 
-    // ── 2. Resolve the API key: DB row → env fallback ────────────────────
-    const { createClient: createSupabaseRaw } = await import("@supabase/supabase-js");
-    const admin = createSupabaseRaw(
-      NEXT_PUBLIC_SUPABASE_URL,
-      env().SUPABASE_SERVICE_ROLE_KEY,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
+    // ── 2. Resolve API key (DB → env fallback) ──────────────────────────
+    const admin = await createAdminClient();
 
-    // Ensure the singleton row exists before reading
+    // Ensure singleton row
     await admin
       .from("app_settings")
       .upsert({ id: 1 }, { onConflict: "id", ignoreDuplicates: true });
@@ -81,25 +52,28 @@ export async function GET(req: NextRequest) {
       .eq("id", 1)
       .maybeSingle();
 
-    console.log(`[v0] [connect-url] settings query: data=${JSON.stringify(settings)}, error=${settingsErr?.message ?? "none"}`);
+    console.log("[v0] [connect-url] settings:", settings ? "found" : "null", "err:", settingsErr?.message ?? "none");
 
     const apiKey =
       settings?.upload_post_api_key?.trim() ||
       process.env.UPLOAD_POST_API_KEY?.trim() ||
       null;
 
-    console.log(`[v0] [connect-url] apiKey resolved: ${apiKey ? "yes (length=" + apiKey.length + ")" : "NO"}`);
+    console.log("[v0] [connect-url] apiKey:", apiKey ? `yes (${apiKey.length} chars)` : "MISSING");
 
     if (!apiKey) {
-      return NextResponse.json(
-        { error: { code: "NOT_CONFIGURED", message: "Social connector is not configured. Please ask an administrator to add the API key in Admin > Social Connector.", requestId } },
-        { status: 500, headers: { "X-Request-Id": requestId } }
+      return jsonError(
+        500,
+        "Social connector is not configured. Ask an admin to add the API key in Admin > Social Connector.",
+        requestId
       );
     }
 
-    // ── 3. Ensure the Upload-Post user exists (idempotent) ───────────────
-    console.log(`[v0] [connect-url] Calling ensure-user: POST ${UPLOAD_POST_API_BASE}/users with username=${user.id}`);
-    const ensureRes = await fetch(`${UPLOAD_POST_API_BASE}/users`, {
+    // ── 3. Ensure Upload-Post user exists ────────────────────────────────
+    const ensureUrl = `${UPLOAD_POST_API_BASE}/users`;
+    console.log("[v0] [connect-url] POST", ensureUrl, "username:", user.id);
+
+    const ensureRes = await fetch(ensureUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -108,25 +82,35 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify({ username: user.id }),
     });
 
-    const ensureBody = await ensureRes.text().catch(() => "");
-    console.log(`[v0] [connect-url] ensure-user response: status=${ensureRes.status} body=${ensureBody}`);
+    const ensureText = await ensureRes.text().catch(() => "");
+    console.log("[v0] [connect-url] ensure-user:", ensureRes.status, ensureText.slice(0, 300));
 
-    // 409 Conflict = user already exists — treat as success
+    // 409 = already exists → success
     if (!ensureRes.ok && ensureRes.status !== 409) {
-      return serverError(requestId, `Failed to initialise social account (status: ${ensureRes.status})`);
+      return jsonError(
+        502,
+        `Social provider returned ${ensureRes.status}: ${ensureText.slice(0, 200)}`,
+        requestId
+      );
     }
 
-    // ── 4. Build the signed state token ─────────────────────────────────
-    const returnTo =
-      req.nextUrl.searchParams.get("returnTo") ?? "/dashboard";
+    // ── 4. Build signed state token ──────────────────────────────────────
+    const returnTo = req.nextUrl.searchParams.get("returnTo") ?? "/dashboard";
 
-    const state = await createState({ returnTo, userId: user.id });
+    let state: string;
+    try {
+      state = await createState({ returnTo, userId: user.id });
+    } catch (stateErr) {
+      const msg = stateErr instanceof Error ? stateErr.message : String(stateErr);
+      console.error("[v0] [connect-url] createState failed:", msg);
+      return jsonError(500, `State token error: ${msg}`, requestId);
+    }
 
-    // ── 5. Build redirect_url ────────────────────────────────────────────
+    // ── 5. Build redirect URL ────────────────────────────────────────────
     const baseUrl = getBaseUrl();
     const redirectUrl = `${baseUrl}/dashboard/connect-accounts/callback?state=${encodeURIComponent(state)}`;
 
-    // ── 6. Fetch the Upload-Post JWT / accessUrl ─────────────────────────
+    // ── 6. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
     const uiConfig = getUploadPostUiConfig();
 
     const jwtPayload: Record<string, unknown> = {
@@ -137,41 +121,47 @@ export async function GET(req: NextRequest) {
 
     if (uiConfig.logoUrl) jwtPayload.logo_image = uiConfig.logoUrl;
     if (uiConfig.connectTitle) jwtPayload.connect_title = uiConfig.connectTitle;
-    if (uiConfig.connectDescription) jwtPayload.connect_description = uiConfig.connectDescription;
-    if (uiConfig.redirectButtonText) jwtPayload.redirect_button_text = uiConfig.redirectButtonText;
-    if (uiConfig.defaultPlatforms?.length) jwtPayload.platforms = uiConfig.defaultPlatforms;
+    if (uiConfig.connectDescription)
+      jwtPayload.connect_description = uiConfig.connectDescription;
+    if (uiConfig.redirectButtonText)
+      jwtPayload.redirect_button_text = uiConfig.redirectButtonText;
+    if (uiConfig.defaultPlatforms?.length)
+      jwtPayload.platforms = uiConfig.defaultPlatforms;
 
-    const jwtRes = await fetch(
-      `${UPLOAD_POST_API_BASE}/users/generate-jwt`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify(jwtPayload),
-      }
-    );
+    console.log("[v0] [connect-url] POST generate-jwt, payload keys:", Object.keys(jwtPayload));
+
+    const jwtRes = await fetch(`${UPLOAD_POST_API_BASE}/users/generate-jwt`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(jwtPayload),
+    });
+
+    const jwtText = await jwtRes.text().catch(() => "");
+    console.log("[v0] [connect-url] generate-jwt:", jwtRes.status, jwtText.slice(0, 300));
 
     if (!jwtRes.ok) {
-      const body = await jwtRes.text().catch(() => "");
-      console.error(
-        `[connect-url] generate-jwt failed (${jwtRes.status}):`,
-        body
-      );
-      return serverError(requestId, "Failed to generate social connect URL");
+      return jsonError(502, `JWT generation failed (${jwtRes.status}): ${jwtText.slice(0, 200)}`, requestId);
     }
 
-    const jwtData = (await jwtRes.json()) as { accessUrl?: string; access_url?: string };
-    const accessUrl = jwtData.accessUrl ?? jwtData.access_url;
+    let jwtData: Record<string, unknown>;
+    try {
+      jwtData = JSON.parse(jwtText);
+    } catch {
+      return jsonError(502, "Invalid JSON from social provider", requestId);
+    }
+
+    const accessUrl =
+      (jwtData.accessUrl as string) ?? (jwtData.access_url as string);
 
     if (!accessUrl) {
-      console.error("[connect-url] No accessUrl in generate-jwt response:", jwtData);
-      return serverError(requestId, "Invalid response from social connect provider");
+      return jsonError(502, "No accessUrl in provider response", requestId);
     }
 
-    // ── 7. Upsert audit trail ───────────────────────────────────────────
-    await admin
+    // ── 7. Upsert audit trail (non-fatal) ────────────────────────────────
+    admin
       .from("upload_post_mapping")
       .upsert(
         {
@@ -181,26 +171,20 @@ export async function GET(req: NextRequest) {
         },
         { onConflict: "user_id" }
       )
-      .then(({ error: upsertErr }) => {
-        if (upsertErr) {
-          // Non-fatal — log but don't block the user
-          console.warn(`[connect-url] Mapping upsert failed (${requestId}):`, upsertErr.message);
-        }
+      .then(({ error: e }) => {
+        if (e) console.warn("[v0] [connect-url] mapping upsert failed:", e.message);
       });
 
-    // ── 8. Return to client ──────────────────────────────────────────────
+    // ── 8. Return ────────────────────────────────────────────────────────
+    console.log("[v0] [connect-url] SUCCESS — returning accessUrl");
     return NextResponse.json(
       { accessUrl },
       { status: 200, headers: { "X-Request-Id": requestId } }
     );
   } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
-    const errStack = err instanceof Error ? err.stack : "";
-    console.error(`[v0] [connect-url] CATCH error (${requestId}): ${errMsg}`);
-    console.error(`[v0] [connect-url] Stack: ${errStack}`);
-    return NextResponse.json(
-      { error: { code: "INTERNAL", message: `Unexpected error: ${errMsg}`, requestId } },
-      { status: 500, headers: { "X-Request-Id": requestId } }
-    );
+    const msg = err instanceof Error ? err.message : String(err);
+    const stack = err instanceof Error ? err.stack : "";
+    console.error("[v0] [connect-url] UNCAUGHT:", msg, stack);
+    return jsonError(500, `Unexpected: ${msg}`, requestId);
   }
 }
