@@ -166,22 +166,23 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       {/* ── IDLE ── */}
       {uiState === "idle" && (
         <>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight text-balance">
             Connect your accounts
           </h1>
-          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-            Link your social media accounts to start posting automatically.
+          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed text-pretty">
+            Link your social media accounts to start posting automatically with ZARZOOM.
           </p>
-          <div className="flex flex-col items-center gap-3 w-full max-w-xs">
+          <div className="flex flex-col items-center gap-3 w-full max-w-sm mt-2">
             <button
               onClick={handleConnect}
-              className="w-full rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
+              className="w-full rounded-xl px-8 py-4 text-base font-bold text-white transition-all hover:brightness-110 active:scale-[0.98]"
+              style={{ backgroundColor: "hsl(142 71% 45%)" }}
             >
               Connect Accounts
             </button>
             <button
               onClick={() => router.push(returnTo)}
-              className="w-full rounded-lg border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+              className="w-full rounded-xl border border-border px-8 py-4 text-sm font-medium text-foreground hover:bg-accent transition-colors"
             >
               Back
             </button>
