@@ -62,11 +62,11 @@ export async function GET(req: NextRequest) {
     }
 
     // ── 2. Resolve the API key: DB row → env fallback ────────────────────
-    const { SUPABASE_SERVICE_ROLE_KEY } = env();
-    const admin = createServerClient(
+    const { createClient: createSupabaseRaw } = await import("@supabase/supabase-js");
+    const admin = createSupabaseRaw(
       NEXT_PUBLIC_SUPABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY,
-      { cookies: { getAll: () => [], setAll() {} } }
+      env().SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { autoRefreshToken: false, persistSession: false } }
     );
 
     const { data: settings } = await admin
@@ -89,6 +89,7 @@ export async function GET(req: NextRequest) {
     }
 
     // ── 3. Ensure the Upload-Post user exists (idempotent) ───────────────
+    console.log(`[v0] [connect-url] Calling ensure-user: POST ${UPLOAD_POST_API_BASE}/users with username=${user.id}`);
     const ensureRes = await fetch(`${UPLOAD_POST_API_BASE}/users`, {
       method: "POST",
       headers: {
@@ -98,12 +99,14 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify({ username: user.id }),
     });
 
+    const ensureBody = await ensureRes.text().catch(() => "");
+    console.log(`[v0] [connect-url] ensure-user response: status=${ensureRes.status} body=${ensureBody}`);
+
     // 409 Conflict = user already exists — treat as success
     if (!ensureRes.ok && ensureRes.status !== 409) {
-      const body = await ensureRes.text().catch(() => "");
       console.error(
         `[connect-url] Failed to ensure Upload-Post user (${ensureRes.status}):`,
-        body
+        ensureBody
       );
       return serverError(requestId, "Failed to initialise social account");
     }
