@@ -81,6 +81,7 @@ async function upPost<T>(
 
 export interface CreateUserBody {
   username: string;
+  [key: string]: unknown;
 }
 
 export interface CreateUserResult {
@@ -107,6 +108,7 @@ export interface GenerateJwtBody {
   connect_description?: string;
   redirect_button_text?: string;
   platforms?: string[];
+  [key: string]: unknown;
 }
 
 export interface GenerateJwtResult {
