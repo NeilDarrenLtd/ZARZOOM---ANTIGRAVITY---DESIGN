@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { Mail, KeyRound, Users, CreditCard, HelpCircle, Sparkles } from "lucide-react";
+import { Mail, KeyRound, Users, CreditCard, HelpCircle, Sparkles, Link2 } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -42,6 +42,20 @@ export default function AdminDashboardPage() {
       title: "OpenRouter Prompts",
       description: "Configure AI prompts, API key, and model for wizard auto-fill.",
       color: "bg-pink-50 text-pink-600",
+    },
+    {
+      href: "/admin/integrations/upload-post",
+      icon: Link2,
+      title: "Social Connector",
+      description: "Configure Upload-Post API credentials and branding for social account connections.",
+      color: "bg-purple-50 text-purple-600",
+    },
+    {
+      href: "/admin/integrations/upload-post",
+      icon: Link2,
+      title: "Social Connector",
+      description: "Configure Upload-Post API credentials and branding for social account connections.",
+      color: "bg-purple-50 text-purple-600",
     },
     {
       href: "/admin/billing",
