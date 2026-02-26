@@ -134,7 +134,10 @@ export async function verifyState(token: string): Promise<StatePayload | null> {
     // Verify signature
     const encoder = new TextEncoder();
     const key = await getHmacKey(secret);
-    const signatureBytes = base64UrlDecode(signatureB64);
+    const signatureBuffer = base64UrlDecode(signatureB64);
+    
+    // Convert Buffer to Uint8Array for crypto.subtle.verify compatibility
+    const signatureBytes = new Uint8Array(signatureBuffer);
 
     const valid = await crypto.subtle.verify(
       "HMAC",
