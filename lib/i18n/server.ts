@@ -5,10 +5,31 @@
  */
 
 import { cookies } from "next/headers";
-import enTranslations from "@/locales/en.json";
 
-type Translations = typeof enTranslations;
+type Translations = Record<string, any>;
 type TranslationKey = string;
+
+const translationCache: Record<string, Translations> = {};
+
+/**
+ * Load translations dynamically to prevent webpack serialization issues
+ */
+async function loadServerTranslations(locale: string): Promise<Translations> {
+  if (translationCache[locale]) {
+    return translationCache[locale];
+  }
+
+  try {
+    // Use dynamic import with locale variable to avoid static imports
+    const module = await import(`@/locales/${locale}.json`, { with: { type: "json" } });
+    const translations = module.default;
+    translationCache[locale] = translations;
+    return translations;
+  } catch {
+    // Fallback to empty object
+    return {};
+  }
+}
 
 /**
  * Get translation function for server components
@@ -18,9 +39,7 @@ export async function getServerTranslations() {
   const cookieStore = await cookies();
   const locale = cookieStore.get("locale")?.value || "en";
   
-  // For now, only English is supported
-  // When adding more languages, dynamically import based on locale
-  const translations = enTranslations;
+  const translations = await loadServerTranslations(locale);
   
   /**
    * Translation function

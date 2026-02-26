@@ -9,12 +9,11 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-import enTranslations from "@/locales/en.json";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
 
-type Translations = typeof enTranslations;
+type Translations = Record<string, any>;
 type NestedKeyOf<T, Prefix extends string = ""> = T extends object
   ? {
       [K in keyof T & string]: T[K] extends object
@@ -23,7 +22,7 @@ type NestedKeyOf<T, Prefix extends string = ""> = T extends object
     }[keyof T & string]
   : never;
 
-export type TranslationKey = NestedKeyOf<Translations>;
+export type TranslationKey = string;
 
 interface I18nContextType {
   locale: string;
@@ -37,27 +36,58 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
-const translationCache: Record<string, Translations> = {
-  en: enTranslations,
-};
+const translationCache: Record<string, Translations | Promise<Translations>> = {};
+let enTranslationsPromise: Promise<Translations> | null = null;
 
-if (process.env.NODE_ENV === "development") {
-  devCheckPricing(enTranslations, "en");
+/**
+ * Load English translations dynamically to prevent webpack serialization
+ */
+async function getEnglishTranslations(): Promise<Translations> {
+  if (enTranslationsPromise) {
+    return enTranslationsPromise;
+  }
+
+  enTranslationsPromise = (async () => {
+    try {
+      const response = await fetch(new URL("../../locales/en.json", import.meta.url));
+      const translations = await response.json();
+      translationCache["en"] = translations;
+      if (process.env.NODE_ENV === "development") {
+        devCheckPricing(translations, "en");
+      }
+      return translations;
+    } catch (error) {
+      console.error("Failed to load English translations:", error);
+      // Return empty object as fallback
+      return {};
+    }
+  })();
+
+  return enTranslationsPromise;
 }
 
 async function loadTranslation(locale: string): Promise<Translations> {
+  if (translationCache[locale] instanceof Promise) {
+    return translationCache[locale] as Promise<Translations>;
+  }
+
   if (translationCache[locale]) {
-    return translationCache[locale];
+    return translationCache[locale] as Translations;
   }
 
   try {
-    const mod = await import(`@/locales/${locale}.json`);
-    const translations = mod.default;
+    const response = await fetch(new URL(`../../locales/${locale}.json`, import.meta.url));
+    if (!response.ok) {
+      return getEnglishTranslations();
+    }
+    const translations = await response.json();
     translationCache[locale] = translations;
-    devCheckPricing(translations, locale);
+    if (process.env.NODE_ENV === "development") {
+      devCheckPricing(translations, locale);
+    }
     return translations;
   } catch {
-    return enTranslations;
+    return getEnglishTranslations();
   }
 }
 
@@ -80,22 +110,26 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
-  const [translations, setTranslations] =
-    useState<Translations>(enTranslations);
+  const [translations, setTranslations] = useState<Translations>({});
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("zarzoom-locale");
-    if (stored) {
-      setLocaleState(stored);
-      loadTranslation(stored).then(setTranslations);
-    } else {
-      const browserLang = navigator.language || defaultLanguage;
-      const detected = getSupportedLanguageCode(browserLang);
-      setLocaleState(detected);
-      if (detected !== defaultLanguage) {
-        loadTranslation(detected).then(setTranslations);
+    // Load initial translations
+    (async () => {
+      const stored = localStorage.getItem("zarzoom-locale");
+      if (stored) {
+        setLocaleState(stored);
+        const trans = await loadTranslation(stored);
+        setTranslations(trans);
+      } else {
+        const browserLang = navigator.language || defaultLanguage;
+        const detected = getSupportedLanguageCode(browserLang);
+        setLocaleState(detected);
+        const trans = await loadTranslation(detected);
+        setTranslations(trans);
       }
-    }
+      setIsReady(true);
+    })();
   }, []);
 
   useEffect(() => {
@@ -120,8 +154,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     [translations]
   );
 
-  // Exclude translations from context value to prevent webpack serialization issues
-  // Translations are only used in the t() callback which maintains its reference
   const contextValue = {
     locale,
     setLocale,
