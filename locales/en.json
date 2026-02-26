@@ -982,8 +982,8 @@
       "subtitle": "Connect your social accounts and set your preferences.",
       "connectSocials": {
         "label": "Connect Social Accounts",
-        "help": "Link your social media accounts via Upload-Post.",
-        "button": "Open Upload-Post",
+        "help": "Link your social media accounts",
+        "button": "Connect Accounts",
         "manage": "Manage Connections",
         "connected": "Social accounts connected",
         "notConnected": "No accounts connected yet"
