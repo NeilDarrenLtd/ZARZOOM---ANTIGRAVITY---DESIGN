@@ -9,13 +9,18 @@ export async function GET() {
   try {
     const { admin } = await requireAdminApi();
 
+    // Ensure the singleton row always exists before reading
+    await admin
+      .from("app_settings")
+      .upsert({ id: 1 }, { onConflict: "id", ignoreDuplicates: true });
+
     const { data, error } = await admin
       .from("app_settings")
       .select(
         "upload_post_api_key, upload_post_logo_url, upload_post_connect_title, upload_post_connect_description, upload_post_redirect_button_text, upload_post_default_platforms, updated_at"
       )
       .eq("id", 1)
-      .single();
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json(
@@ -67,8 +72,7 @@ export async function POST(req: NextRequest) {
 
     const { error } = await admin
       .from("app_settings")
-      .update(update)
-      .eq("id", 1);
+      .upsert({ id: 1, ...update }, { onConflict: "id" });
 
     if (error) {
       return NextResponse.json(
