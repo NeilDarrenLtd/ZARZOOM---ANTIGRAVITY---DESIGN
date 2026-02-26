@@ -11,12 +11,16 @@ export async function POST() {
   try {
     const { admin } = await requireAdminApi();
 
-    // 1. Read the stored API key
+    // 1. Ensure row exists and read the stored API key
+    await admin
+      .from("app_settings")
+      .upsert({ id: 1 }, { onConflict: "id", ignoreDuplicates: true });
+
     const { data, error } = await admin
       .from("app_settings")
       .select("upload_post_api_key")
       .eq("id", 1)
-      .single();
+      .maybeSingle();
 
     if (error) {
       return NextResponse.json(
