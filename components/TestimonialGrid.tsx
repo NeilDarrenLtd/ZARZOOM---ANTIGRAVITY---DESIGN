@@ -5,12 +5,26 @@ import { Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 export default function TestimonialGrid() {
-  const { translations } = useI18n();
   const { t } = useI18n();
 
   const testimonials =
-    (translations as Record<string, Record<string, unknown>>)?.testimonials
-      ?.items as Array<{ name: string; role: string; content: string }> ?? [];
+    [
+      {
+        name: "Alex Chen",
+        role: "Social Media Manager",
+        content: "ZARZOOM has transformed how we manage our social presence. The automation saves us hours every week."
+      },
+      {
+        name: "Sarah Johnson",
+        role: "Content Creator",
+        content: "Finally, a tool that understands creators. Scheduling, analytics, and insights all in one place."
+      },
+      {
+        name: "Marcus Williams",
+        role: "Marketing Director",
+        content: "The ROI has been incredible. Our engagement rates are up 150% since we switched to ZARZOOM."
+      }
+    ] as Array<{ name: string; role: string; content: string }>;
 
   return (
     <section className="py-24 bg-white relative z-10">
