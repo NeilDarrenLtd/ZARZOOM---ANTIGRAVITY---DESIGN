@@ -35,7 +35,10 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       if (event.origin !== window.location.origin) return;
       if (event.data?.type !== "UPLOADPOST_CONNECTED") return;
       setUiState("success");
-      router.refresh();
+      // Sync status to DB then refresh RSC cache so panels reflect new state
+      fetch("/api/v1/onboarding/social-connect/status", { method: "GET" })
+        .catch(() => {/* non-fatal */})
+        .finally(() => router.refresh());
     }
 
     window.addEventListener("message", handleMessage);

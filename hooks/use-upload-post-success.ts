@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 /**
- * Detects `?uploadpost=success` in the URL, returns a visible flag for 4 s,
- * then cleans the param from history so it doesn't persist on refresh.
+ * Detects `?uploadpost=success` in the URL, triggers a router refresh + status
+ * sync, returns a visible flag for 4 s, then cleans the param from history.
  */
 export function useUploadPostSuccess(): boolean {
   const [show, setShow] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -25,10 +27,15 @@ export function useUploadPostSuccess(): boolean {
 
     setShow(true);
 
+    // Sync status to DB, then refresh RSC cache so panels reflect new state
+    fetch("/api/v1/onboarding/social-connect/status", { method: "GET" })
+      .catch(() => {/* non-fatal */})
+      .finally(() => router.refresh());
+
     // Auto-dismiss after 4 s
     const timer = setTimeout(() => setShow(false), 4000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return show;
 }
