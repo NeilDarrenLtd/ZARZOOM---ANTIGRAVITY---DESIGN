@@ -8,6 +8,7 @@ import { fetchPlans } from "@/lib/pricing/fetchPlans";
 import { getDisplayablePlans } from "@/lib/pricing/getDisplayablePlans";
 import { getPriceForSelection } from "@/lib/pricing/getPriceForSelection";
 import { formatPrice } from "@/lib/billing/format";
+import { PartnerDiscountToggle } from "@/components/pricing/PartnerDiscountToggle";
 import type { DisplayablePlan } from "@/lib/pricing";
 
 interface ProfilePricingClientProps {
@@ -159,25 +160,12 @@ export function ProfilePricingClient({
         <p className="text-sm text-gray-500 mb-5">{t("profile.plan.noPlan")}</p>
       )}
 
-      {/* Annual Toggle */}
-      <div className="flex items-center gap-3 mb-5">
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isAnnual}
-            onChange={(e) => onAnnualToggle(e.target.checked)}
-            className="sr-only peer"
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-green-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600" />
-        </label>
-        <span className="text-sm font-medium text-gray-700">
-          {t("profile.plan.annualBilling")}
-        </span>
-        {isAnnual && (
-          <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-            {t("onboarding.step4.discount.save").replace("{percent}", "17")}
-          </span>
-        )}
+      {/* Partner Discount Toggle */}
+      <div className="mb-5 rounded-lg bg-green-50 border border-green-200 p-4">
+        <PartnerDiscountToggle 
+          enabled={isAnnual}
+          onChange={onAnnualToggle}
+        />
       </div>
 
       {/* Plan Cards */}

@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import type { DisplayablePlan } from "@/lib/pricing";
 import { CurrencyToggle } from "./CurrencyToggle";
-import { IntervalToggle } from "./IntervalToggle";
+import { PartnerDiscountToggle } from "./PartnerDiscountToggle";
 import { PricingGrid } from "./PricingGrid";
 import { PricingDiagnostics } from "./PricingDiagnostics";
 
@@ -30,7 +30,8 @@ export function PricingClient({
   customHeader,
 }: PricingClientProps) {
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
-  const [interval, setInterval] = useState<BillingInterval>(defaultInterval);
+  const [discountEnabled, setDiscountEnabled] = useState(false);
+  const interval: BillingInterval = discountEnabled ? "annual" : "monthly";
 
   // Development-only logging
   if (process.env.NODE_ENV === "development") {
@@ -54,7 +55,12 @@ export function PricingClient({
               <CurrencyToggle currency={currency} onChange={setCurrency} />
             )}
             {showIntervalToggle && (
-              <IntervalToggle interval={interval} onChange={setInterval} />
+              <div className="w-full sm:w-auto">
+                <PartnerDiscountToggle 
+                  enabled={discountEnabled} 
+                  onChange={setDiscountEnabled} 
+                />
+              </div>
             )}
           </div>
         )}

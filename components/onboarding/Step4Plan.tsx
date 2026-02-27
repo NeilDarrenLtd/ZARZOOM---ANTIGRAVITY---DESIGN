@@ -8,6 +8,7 @@ import type { DisplayablePlan } from "@/lib/pricing";
 import { fetchPlans, getDisplayablePlans } from "@/lib/pricing";
 import { formatPrice } from "@/lib/billing/format";
 import { PricingClient } from "@/components/pricing/PricingClient";
+import { PartnerDiscountToggle } from "@/components/pricing/PartnerDiscountToggle";
 import { Loader2, AlertCircle } from "lucide-react";
 
 interface Step4Props {
@@ -136,22 +137,10 @@ export default function Step4Plan({ data, onChange, aiFilledFields }: Step4Props
 
       {/* Discount Toggle */}
       <div className="rounded-lg bg-green-50 border border-green-200 p-4">
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={discountEnabled}
-            onChange={(e) => handleDiscountChange(e.target.checked)}
-            className="mt-1 h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
-          />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-green-900">
-              Launch Special: {DISCOUNT_PERCENT}% off first 3 months
-            </p>
-            <p className="mt-1 text-xs text-green-700">
-              In exchange, we'll add up to {MAX_ADS_PER_WEEK} non-intrusive ads to your queue per week.
-            </p>
-          </div>
-        </label>
+        <PartnerDiscountToggle 
+          enabled={discountEnabled}
+          onChange={handleDiscountChange}
+        />
       </div>
 
       {/* Unified Pricing Client */}
