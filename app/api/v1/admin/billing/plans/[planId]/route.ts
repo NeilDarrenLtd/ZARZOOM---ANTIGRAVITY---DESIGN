@@ -2,11 +2,15 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, badRequest } from "@/lib/api/http-responses";
 import { NotFoundError, ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { updatePlan, archivePlan } from "@/lib/billing/queries";
 import { updatePlanSchema } from "@/lib/billing/types";
 import { createAdminClient } from "@/lib/supabase/server";
 
-type RouteParams = { params: Promise<{ planId: string }> };
+/** Extract planId from the request URL pathname */
+function extractPlanId(req: Request): string {
+  const parts = new URL(req.url).pathname.split("/");
+  // pathname: /api/v1/admin/billing/plans/[planId]
+  return parts[parts.length - 1];
+}
 
 /** Fetch a single plan from subscription_plans and map to canonical shape */
 async function fetchSubscriptionPlan(planId: string) {
@@ -46,7 +50,7 @@ export const GET = createApiHandler({
   tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
     const plan = await fetchSubscriptionPlan(planId);
     if (!plan) throw new NotFoundError("Plan");
     return ok({ plan }, ctx.requestId);
@@ -64,7 +68,7 @@ export const PUT = createApiHandler({
   tenantOptional: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
     const existing = await fetchSubscriptionPlan(planId);
     if (!existing) throw new NotFoundError("Plan");
@@ -140,7 +144,7 @@ export const DELETE = createApiHandler({
   tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
     const existing = await fetchSubscriptionPlan(planId);
     if (!existing) throw new NotFoundError("Plan");
