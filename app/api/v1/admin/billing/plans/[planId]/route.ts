@@ -2,10 +2,44 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, badRequest } from "@/lib/api/http-responses";
 import { NotFoundError, ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { getPlanById, updatePlan, archivePlan } from "@/lib/billing/queries";
 import { updatePlanSchema } from "@/lib/billing/types";
+import { createAdminClient } from "@/lib/supabase/server";
 
-type RouteParams = { params: Promise<{ planId: string }> };
+/** Extract planId from the request URL pathname */
+function extractPlanId(req: Request): string {
+  const parts = new URL(req.url).pathname.split("/");
+  // pathname: /api/v1/admin/billing/plans/[planId]
+  return parts[parts.length - 1];
+}
+
+/** Fetch a single plan from subscription_plans and map to canonical shape */
+async function fetchSubscriptionPlan(planId: string) {
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase
+    .from("subscription_plans")
+    .select("*")
+    .eq("id", planId)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    plan_key: data.slug,
+    name: data.name,
+    description: data.description ?? null,
+    is_active: data.is_active ?? true,
+    sort_order: data.display_order ?? 0,
+    entitlements: data.entitlements ?? {},
+    quota_policy: data.quota_policy ?? {},
+    features: data.features ?? [],
+    stripe_price_id: data.stripe_price_id ?? null,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    prices: [],
+    _raw: data,
+  };
+}
 
 /* ------------------------------------------------------------------ */
 /*  GET /api/v1/admin/billing/plans/[planId]                           */
@@ -13,10 +47,11 @@ type RouteParams = { params: Promise<{ planId: string }> };
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
-    const plan = await getPlanById(planId);
+    const planId = extractPlanId(ctx.req);
+    const plan = await fetchSubscriptionPlan(planId);
     if (!plan) throw new NotFoundError("Plan");
     return ok({ plan }, ctx.requestId);
   },
@@ -30,11 +65,12 @@ export const GET = createApiHandler({
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
-    const existing = await getPlanById(planId);
+    const existing = await fetchSubscriptionPlan(planId);
     if (!existing) throw new NotFoundError("Plan");
 
     const body = await ctx.req.json();
@@ -43,34 +79,59 @@ export const PUT = createApiHandler({
       throw new ValidationError(parsed.error.flatten().fieldErrors);
     }
 
-    // Build the before snapshot for audit
+    // Map canonical field names back to subscription_plans column names
+    const updateData: Record<string, unknown> = {};
     const before: Record<string, unknown> = {};
     const after: Record<string, unknown> = {};
 
-    for (const [key, value] of Object.entries(parsed.data)) {
-      const existingValue = (existing as unknown as Record<string, unknown>)[key];
-      if (JSON.stringify(existingValue) !== JSON.stringify(value)) {
-        before[key] = existingValue;
-        after[key] = value;
+    const fieldMap: Record<string, string> = {
+      plan_key: "slug",
+      sort_order: "display_order",
+      name: "name",
+      description: "description",
+      is_active: "is_active",
+      entitlements: "entitlements",
+      quota_policy: "quota_policy",
+      features: "features",
+      stripe_price_id: "stripe_price_id",
+    };
+
+    for (const [canonicalKey, dbKey] of Object.entries(fieldMap)) {
+      if (canonicalKey in parsed.data) {
+        const newVal = (parsed.data as Record<string, unknown>)[canonicalKey];
+        const oldVal = (existing._raw as Record<string, unknown>)[dbKey];
+        if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+          before[canonicalKey] = oldVal;
+          after[canonicalKey] = newVal;
+          updateData[dbKey] = newVal;
+        }
       }
     }
 
-    if (Object.keys(after).length === 0) {
+    if (Object.keys(updateData).length === 0) {
       return ok({ plan: existing, message: "No changes detected" }, ctx.requestId);
     }
 
-    const updated = await updatePlan(planId, parsed.data as Record<string, unknown>);
+    const supabase = await createAdminClient();
+    const { data: updated, error } = await supabase
+      .from("subscription_plans")
+      .update({ ...updateData, updated_at: new Date().toISOString() })
+      .eq("id", planId)
+      .select("*")
+      .single();
+
+    if (error || !updated) throw new Error("Failed to update plan");
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: planId,
       action: "plan_updated",
       changes: { before, after },
     });
 
-    return ok({ plan: updated }, ctx.requestId);
+    return ok({ plan: { ...existing, ...after, _raw: updated } }, ctx.requestId);
   },
 });
 
@@ -81,18 +142,25 @@ export const PUT = createApiHandler({
 
 export const DELETE = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
-    const existing = await getPlanById(planId);
+    const existing = await fetchSubscriptionPlan(planId);
     if (!existing) throw new NotFoundError("Plan");
 
-    await archivePlan(planId);
+    const supabase = await createAdminClient();
+    const { error } = await supabase
+      .from("subscription_plans")
+      .update({ is_active: false, updated_at: new Date().toISOString() })
+      .eq("id", planId);
+
+    if (error) throw new Error("Failed to archive plan");
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: planId,
       action: "plan_archived",

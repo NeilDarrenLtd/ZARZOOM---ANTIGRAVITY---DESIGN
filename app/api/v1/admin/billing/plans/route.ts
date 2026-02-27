@@ -2,27 +2,60 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, created, badRequest } from "@/lib/api/http-responses";
 import { ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { getPlans, createPlan } from "@/lib/billing/queries";
+import { createPlan } from "@/lib/billing/queries";
 import { createPlanSchema } from "@/lib/billing/types";
 import { createAdminClient } from "@/lib/supabase/server";
 
 /* ------------------------------------------------------------------ */
 /*  GET /api/v1/admin/billing/plans                                    */
-/*  List all plans with prices (optionally filter by is_active).       */
+/*  List all plans (optionally filter by is_active).                   */
+/*  Queries subscription_plans directly and maps to canonical shape.   */
 /* ------------------------------------------------------------------ */
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const url = new URL(ctx.req.url);
     const statusParam = url.searchParams.get("status"); // "active" | "archived" | null
 
-    const plans = await getPlans(
-      statusParam === "active" || statusParam === "archived"
-        ? { status: statusParam }
-        : {}
-    );
+    const supabase = await createAdminClient();
+
+    let query = supabase
+      .from("subscription_plans")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (statusParam === "active") {
+      query = query.eq("is_active", true);
+    } else if (statusParam === "archived") {
+      query = query.eq("is_active", false);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("[admin/billing/plans] GET error:", error);
+      return ok({ plans: [] }, ctx.requestId);
+    }
+
+    // Map legacy subscription_plans rows to the canonical PlanWithPrices shape
+    const plans = (data ?? []).map((p: any) => ({
+      id: p.id,
+      plan_key: p.slug,
+      name: p.name,
+      description: p.description ?? null,
+      is_active: p.is_active ?? true,
+      sort_order: p.display_order ?? 0,
+      entitlements: p.entitlements ?? {},
+      quota_policy: p.quota_policy ?? {},
+      features: p.features ?? [],
+      stripe_price_id: p.stripe_price_id ?? null,
+      created_at: p.created_at,
+      updated_at: p.updated_at,
+      prices: [],
+    }));
 
     return ok({ plans }, ctx.requestId);
   },
@@ -35,6 +68,7 @@ export const GET = createApiHandler({
 
 export const POST = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();
@@ -80,7 +114,7 @@ export const POST = createApiHandler({
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: plan.id,
       action: "plan_created",

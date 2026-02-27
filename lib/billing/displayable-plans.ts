@@ -38,21 +38,16 @@ export interface DisplayablePlan {
 async function fetchPlansFromApi(): Promise<ApiPlan[]> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const url = `${baseUrl}/api/v1/billing/plans`;
-  
-  console.log("[v0] Fetching plans from:", url);
-  
+
   const response = await fetch(url, {
-    next: { revalidate: 120 }, // Cache for 2 minutes
+    next: { revalidate: 120 },
   });
-  
+
   if (!response.ok) {
-    console.error("[v0] Failed to fetch plans:", response.status, response.statusText);
     throw new Error(`Failed to fetch plans: ${response.status}`);
   }
-  
+
   const data: GetPlansResponse = await response.json();
-  console.log("[v0] Fetched", data.plans.length, "plans from API");
-  
   return data.plans;
 }
 
@@ -66,10 +61,8 @@ export async function getDisplayablePlans(
   t: (key: string, fallback?: string) => string
 ): Promise<DisplayablePlan[]> {
   try {
-    // 1. Fetch from database
     const apiPlans = await fetchPlansFromApi();
-    console.log("[v0] Checking", apiPlans.length, "plans for i18n completeness");
-    
+
     // DEV: Validate DB/i18n sync
     if (process.env.NODE_ENV === "development") {
       // Convert API plans to Plan type for validation
@@ -80,6 +73,7 @@ export async function getDisplayablePlans(
         description: p.description,
         is_active: p.isActive,
         sort_order: p.sortOrder,
+        stripe_price_id: null,
         entitlements: p.entitlements,
         quota_policy: p.quotaPolicy,
         features: p.features,
@@ -109,12 +103,12 @@ export async function getDisplayablePlans(
       validatePlanSync(dbPlans, translations);
     }
     
-    // 2. Filter by i18n availability
+    // Filter by i18n availability
     const displayable: DisplayablePlan[] = [];
-    
+
     for (const plan of apiPlans) {
       const hasCompleteCopy = hasPlanCopy(plan.planKey, t);
-      
+
       if (hasCompleteCopy) {
         try {
           const copy = getPlanCopy(plan.planKey, t);
@@ -129,25 +123,17 @@ export async function getDisplayablePlans(
             prices: plan.prices,
             copy,
           });
-          console.log("[v0] Plan displayable:", plan.planKey);
-        } catch (err) {
-          console.warn(`[v0] Plan NOT displayable: ${plan.planKey} - error getting copy:`, err);
+        } catch {
+          // Plan has copy keys but getPlanCopy failed — skip silently
         }
-      } else {
-        console.warn(
-          `[v0] Plan NOT displayable: ${plan.planKey} - missing i18n keys`
-        );
       }
     }
-    
-    // 3. Sort by sortOrder
+
+    // Sort by sortOrder
     displayable.sort((a, b) => a.sortOrder - b.sortOrder);
-    
-    console.log("[v0] Final displayable plans:", displayable.length);
     return displayable;
-    
+
   } catch (error) {
-    console.error("[v0] Error in getDisplayablePlans:", error);
     throw error;
   }
 }
@@ -158,56 +144,38 @@ export async function getDisplayablePlans(
 export async function getDisplayablePlansClient(
   t: (key: string, fallback?: string) => string
 ): Promise<DisplayablePlan[]> {
-  try {
-    console.log("[v0] [CLIENT] Fetching plans from /api/v1/billing/plans");
-    
-    const response = await fetch("/api/v1/billing/plans");
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch plans: ${response.status}`);
-    }
-    
-    const data: GetPlansResponse = await response.json();
-    console.log("[v0] [CLIENT] Fetched", data.plans.length, "plans");
-    
-    const displayable: DisplayablePlan[] = [];
-    
-    for (const plan of data.plans) {
-      const hasCompleteCopy = hasPlanCopy(plan.planKey, t);
-      
-      if (hasCompleteCopy) {
-        try {
-          const copy = getPlanCopy(plan.planKey, t);
-          displayable.push({
-            planKey: plan.planKey,
-            name: plan.name,
-            description: plan.description,
-            sortOrder: plan.sortOrder,
-            entitlements: plan.entitlements,
-            quotaPolicy: plan.quotaPolicy,
-            features: plan.features,
-            prices: plan.prices,
-            copy,
-          });
-        } catch (err) {
-          console.warn(`[v0] [CLIENT] Plan NOT displayable: ${plan.planKey}`, err);
-        }
-      } else {
-        console.warn(
-          `[v0] [CLIENT] Plan NOT displayable: ${plan.planKey} - missing i18n keys`
-        );
+  const response = await fetch("/api/v1/billing/plans");
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch plans: ${response.status}`);
+  }
+
+  const data: GetPlansResponse = await response.json();
+  const displayable: DisplayablePlan[] = [];
+
+  for (const plan of data.plans) {
+    if (hasPlanCopy(plan.planKey, t)) {
+      try {
+        const copy = getPlanCopy(plan.planKey, t);
+        displayable.push({
+          planKey: plan.planKey,
+          name: plan.name,
+          description: plan.description,
+          sortOrder: plan.sortOrder,
+          entitlements: plan.entitlements,
+          quotaPolicy: plan.quotaPolicy,
+          features: plan.features,
+          prices: plan.prices,
+          copy,
+        });
+      } catch {
+        // skip
       }
     }
-    
-    displayable.sort((a, b) => a.sortOrder - b.sortOrder);
-    
-    console.log("[v0] [CLIENT] Displayable plans:", displayable.length);
-    return displayable;
-    
-  } catch (error) {
-    console.error("[v0] [CLIENT] Error fetching displayable plans:", error);
-    throw error;
   }
+
+  displayable.sort((a, b) => a.sortOrder - b.sortOrder);
+  return displayable;
 }
 
 /**

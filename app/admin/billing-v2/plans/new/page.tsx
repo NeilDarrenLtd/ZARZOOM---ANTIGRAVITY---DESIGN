@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createNewPlanV2 } from "@/app/admin/billing/actions-v2";
+import { createNewPlan } from "@/app/admin/billing/actions";
 import { useRouter } from "next/navigation";
 import {
   Plus,
@@ -113,25 +113,23 @@ export default function NewPlanPage() {
     setLoading(true);
     setError(null);
 
-    const result = await createNewPlanV2({
-      plan_key: planKey,
-      name,
-      description,
-      sort_order: sortOrder,
-      is_active: isActive,
-      features,
-      entitlements: {
-        advanced_analytics: true,
-        priority_support: true,
-      },
-      quota_policy: {
-        posts_per_month: 100,
-        social_profiles: 10,
-      },
-      prices,
-      discount_percent: discountPercent > 0 ? discountPercent : undefined,
-      max_ads_per_week: maxAdsPerWeek,
-    });
+    const fd = new FormData();
+    fd.set("name", name);
+    fd.set("slug", planKey);
+    fd.set("description", description);
+    fd.set("is_active", String(isActive));
+    fd.set("display_order", String(sortOrder));
+    fd.set("highlight", "false");
+    fd.set("quota_policy", JSON.stringify({ posts_per_month: 100, social_profiles: 10 }));
+    fd.set("features", JSON.stringify(features));
+    fd.set("entitlements", JSON.stringify({ advanced_analytics: true, priority_support: true }));
+    fd.set("prices", JSON.stringify(prices.map((p) => ({
+      currency: p.currency,
+      interval: p.interval,
+      unitAmount: p.amount_minor,
+    }))));
+
+    const result = await createNewPlan(fd);
 
     setLoading(false);
 

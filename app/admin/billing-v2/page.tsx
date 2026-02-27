@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { formatPrice } from "@/lib/billing/format";
-import { fetchAllPlans } from "../billing/actions-v2";
 import Link from "next/link";
-import {
-  Plus,
-  Check,
-  X,
-  AlertTriangle,
-  Edit,
-  DollarSign,
-  Globe,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Check, X, Globe, AlertTriangle, Edit, DollarSign } from "lucide-react";
+import { formatPrice } from "@/lib/billing/format";
+import { fetchPlans } from "../billing/actions";
 
 interface PlanWithI18n {
   id: string;
@@ -40,7 +32,7 @@ export default function AdminBillingV2Page() {
 
   async function loadPlans() {
     setLoading(true);
-    const result = await fetchAllPlans();
+    const result = await fetchPlans();
     if (result.error) {
       setError(result.error);
     } else {

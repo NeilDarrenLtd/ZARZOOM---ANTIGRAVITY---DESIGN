@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
 import {
@@ -8,12 +8,10 @@ import {
   ChevronRight,
   CheckCircle2,
   XCircle,
-  Star,
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PlanWithPrices, Currency } from "@/lib/billing/types";
-import { formatPrice } from "@/lib/billing/format";
+import type { PlanWithPrices } from "@/lib/billing/types";
 
 /* ------------------------------------------------------------------ */
 /*  Fetcher                                                            */
@@ -40,23 +38,6 @@ export default function AdminBillingPlansPage() {
   );
 
   const plans = data?.plans ?? [];
-
-  const getActivePriceDisplay = useCallback(
-    (plan: PlanWithPrices, currency: Currency = "GBP") => {
-      const monthly = plan.prices.find(
-        (p) => p.currency === currency && p.interval === "monthly" && p.is_active
-      );
-      if (monthly) return `${formatPrice(monthly.amount_minor, currency)}/mo`;
-
-      const annual = plan.prices.find(
-        (p) => p.currency === currency && p.interval === "annual" && p.is_active
-      );
-      if (annual) return `${formatPrice(annual.amount_minor, currency)}/yr`;
-
-      return "No price set";
-    },
-    []
-  );
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
@@ -131,7 +112,7 @@ export default function AdminBillingPlansPage() {
                     Status
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                    Price (GBP)
+                    Stripe Price ID
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
                     Order
@@ -177,8 +158,14 @@ export default function AdminBillingPlansPage() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-mono text-zinc-700">
-                      {getActivePriceDisplay(plan)}
+                    <td className="px-4 py-3 font-mono text-xs text-zinc-500">
+                      {plan.stripe_price_id ? (
+                        <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-700">
+                          {plan.stripe_price_id}
+                        </span>
+                      ) : (
+                        <span className="text-zinc-400">Not set</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-zinc-500">
                       {plan.sort_order}

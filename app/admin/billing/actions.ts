@@ -2,7 +2,6 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import {
-  getActivePlansWithPrices,
   getPlanById,
   createPlan as createPlanQuery,
   updatePlan as updatePlanQuery,
@@ -49,7 +48,32 @@ export async function fetchPlans(): Promise<{
 }> {
   try {
     await requireAdmin();
-    const plans = await getActivePlansWithPrices();
+    const supabase = await createAdminClient();
+
+    // Query subscription_plans directly — this is where all plan data lives.
+    const { data, error } = await supabase
+      .from("subscription_plans")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (error) throw new Error(error.message);
+
+    const plans: PlanWithPrices[] = (data ?? []).map((p: any) => ({
+      id: p.id,
+      plan_key: p.slug,
+      name: p.name,
+      description: p.description ?? null,
+      is_active: p.is_active ?? true,
+      sort_order: p.display_order ?? 0,
+      stripe_price_id: p.stripe_price_id ?? null,
+      entitlements: p.entitlements ?? {},
+      quota_policy: p.quota_policy ?? {},
+      features: p.features ?? [],
+      created_at: p.created_at,
+      updated_at: p.updated_at,
+      prices: [],
+    }));
+
     return { plans };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch plans";

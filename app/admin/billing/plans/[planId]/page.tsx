@@ -6,19 +6,11 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { PlanEditorForm } from "@/components/admin/billing/plan-editor-form";
 import type { PlanWithPrices } from "@/lib/billing/types";
 
-/* ------------------------------------------------------------------ */
-/*  Fetcher                                                            */
-/* ------------------------------------------------------------------ */
-
 const fetcher = (url: string) =>
   fetch(url).then((r) => {
     if (!r.ok) throw new Error("Failed to fetch plan");
     return r.json();
   });
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                               */
-/* ------------------------------------------------------------------ */
 
 interface PageProps {
   params: Promise<{ planId: string }>;
@@ -28,7 +20,7 @@ export default function EditPlanPage({ params }: PageProps) {
   const { planId } = use(params);
 
   const { data, error, isLoading, mutate } = useSWR<{ plan: PlanWithPrices }>(
-    `/api/v1/admin/billing/plans/${planId}`,
+    planId ? `/api/v1/admin/billing/plans/${planId}` : null,
     fetcher,
     { revalidateOnFocus: false }
   );
