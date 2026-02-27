@@ -2,17 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/billing/format";
-import { fetchAllPlans } from "../billing/actions-v2";
-import Link from "next/link";
-import {
-  Plus,
-  Check,
-  X,
-  AlertTriangle,
-  Edit,
-  DollarSign,
-  Globe,
-} from "lucide-react";
+import { fetchPlans } from "../billing/actions";
 
 interface PlanWithI18n {
   id: string;
@@ -32,6 +22,22 @@ interface PlanWithI18n {
     is_active: boolean;
   }>;
 }
+
+export default function AdminBillingV2Page() {
+  const [plans, setPlans] = useState<PlanWithI18n[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function loadPlans() {
+    setLoading(true);
+    const result = await fetchPlans();
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setPlans(result.plans as PlanWithI18n[]);
+    }
+    setLoading(false);
+  }
 
 export default function AdminBillingV2Page() {
   const [plans, setPlans] = useState<PlanWithI18n[]>([]);

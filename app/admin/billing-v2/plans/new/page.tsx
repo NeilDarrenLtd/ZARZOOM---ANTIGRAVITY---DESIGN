@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createNewPlanV2 } from "@/app/admin/billing/actions-v2";
+import { createNewPlan } from "@/app/admin/billing/actions";
 import { useRouter } from "next/navigation";
 import {
   Plus,
@@ -113,7 +113,7 @@ export default function NewPlanPage() {
     setLoading(true);
     setError(null);
 
-    const result = await createNewPlanV2({
+    const result = await createNewPlan({
       plan_key: planKey,
       name,
       description,
