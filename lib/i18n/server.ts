@@ -2,20 +2,15 @@
  * Server-side i18n utilities
  *
  * For use in Server Components and API routes.
- * English is imported statically so there is no async delay on first render.
- * The webpack asset/resource rule in next.config.mjs stores locale JSON as
- * Buffers, eliminating the PackFileCacheStrategy serialization warning.
+ * All locale files are loaded dynamically to avoid webpack serialization warnings.
  */
 
 import { cookies } from "next/headers";
-import enTranslations from "@/locales/en.json";
 
-type Translations = typeof enTranslations;
+type Translations = Record<string, unknown>;
 type TranslationKey = string;
 
-const translationCache: Record<string, Translations> = {
-  en: enTranslations,
-};
+const translationCache: Record<string, Translations> = {};
 
 async function loadServerTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -28,7 +23,9 @@ async function loadServerTranslations(locale: string): Promise<Translations> {
     translationCache[locale] = translations;
     return translations;
   } catch {
-    return enTranslations;
+    // Return empty object if locale cannot be loaded
+    // This prevents cascading failures
+    return {};
   }
 }
 

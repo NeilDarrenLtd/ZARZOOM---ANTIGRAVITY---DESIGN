@@ -77,6 +77,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   // Load translations on mount
   useEffect(() => {
     const initI18n = async () => {
+      // Determine active locale
       const stored = localStorage.getItem("zarzoom-locale");
       let activeLocale = stored || defaultLanguage;
       const browserLang = navigator.language || defaultLanguage;
@@ -89,9 +90,18 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         setLocaleState(stored);
       }
 
-      // Load translations for active locale
-      const trans = await loadTranslation(activeLocale);
-      setTranslations(trans);
+      // Load English first as base fallback
+      const enTranslations = await loadTranslation("en");
+      
+      // If active locale is not English, load it; otherwise use English
+      if (activeLocale !== "en") {
+        const activeTranslations = await loadTranslation(activeLocale);
+        // Use active locale if successfully loaded, otherwise English
+        setTranslations(Object.keys(activeTranslations).length > 0 ? activeTranslations : enTranslations);
+      } else {
+        setTranslations(enTranslations);
+      }
+      
       setIsInitialized(true);
     };
 
@@ -105,7 +115,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLocale = useCallback((newLocale: string) => {
     setLocaleState(newLocale);
     localStorage.setItem("zarzoom-locale", newLocale);
-    loadTranslation(newLocale).then(setTranslations);
+    
+    // Load new locale, fall back to English if not available
+    loadTranslation(newLocale).then((trans) => {
+      if (Object.keys(trans).length > 0) {
+        setTranslations(trans);
+      } else {
+        // Fall back to English
+        loadTranslation("en").then(setTranslations);
+      }
+    });
   }, []);
 
   const t = useCallback(
