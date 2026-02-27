@@ -80,6 +80,7 @@ export async function getDisplayablePlans(
         description: p.description,
         is_active: p.isActive,
         sort_order: p.sortOrder,
+        stripe_price_id: null,
         entitlements: p.entitlements,
         quota_policy: p.quotaPolicy,
         features: p.features,
