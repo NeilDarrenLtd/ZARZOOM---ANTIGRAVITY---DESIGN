@@ -15,14 +15,14 @@ interface CurrencyToggleProps {
 
 export function CurrencyToggle({ currency, onChange }: CurrencyToggleProps) {
   return (
-    <div className="w-full">
-      {/* Title */}
-      <h3 className="text-sm font-semibold text-gray-900 mb-3">
+    <div className="w-full grid grid-rows-[auto_auto_auto] gap-3">
+      {/* Title - Row 1 */}
+      <h3 className="text-sm font-semibold text-gray-900">
         Select Currency
       </h3>
 
-      {/* Toggle Buttons */}
-      <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-1 mb-3">
+      {/* Toggle Buttons - Row 2 */}
+      <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-1 w-fit">
         {CURRENCY_OPTIONS.map((option) => (
           <button
             key={option.value}
@@ -38,7 +38,7 @@ export function CurrencyToggle({ currency, onChange }: CurrencyToggleProps) {
         ))}
       </div>
 
-      {/* Subheading */}
+      {/* Subheading - Row 3 */}
       <p className="text-xs text-gray-600 leading-relaxed">
         Choose your preferred currency for pricing.
       </p>
