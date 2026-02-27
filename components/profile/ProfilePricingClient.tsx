@@ -136,12 +136,13 @@ export function ProfilePricingClient({
                 const price = getPriceForSelection(plan, currency, interval);
                 if (!price) return <p className="text-2xl font-bold text-green-800">—</p>;
 
-                let displayAmount = isAnnual 
-                  ? Math.round(price.amountMinor / 12 / 100)
-                  : Math.round(price.amountMinor / 100);
+                // Always show monthly price
+                let displayAmount = Math.round(price.amountMinor / 100);
                 
-                // Apply 50% discount if enabled
-                displayAmount = Math.round(displayAmount / 2);
+                // Apply 50% discount only if enabled (isAnnual toggle is on)
+                if (isAnnual) {
+                  displayAmount = Math.round(displayAmount / 2);
+                }
 
                 return (
                   <>
@@ -182,11 +183,11 @@ export function ProfilePricingClient({
           if (!price) return null;
 
           const displayAmount = isAnnual 
-            ? Math.round(price.amountMinor / 12 / 100)
+            ? Math.round(price.amountMinor / 100 / 2)
             : Math.round(price.amountMinor / 100);
           
-          // Apply 50% discount if enabled
-          const discountedAmount = Math.round(displayAmount / 2);
+          // Apply 50% discount only if enabled (isAnnual toggle is on)
+          const finalAmount = isAnnual ? Math.round(displayAmount / 2) : displayAmount;
 
           const features = Array.isArray(plan.displayFeatures) ? plan.displayFeatures : [];
 
@@ -222,7 +223,7 @@ export function ProfilePricingClient({
 
               <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-gray-900">
-                  {formatPrice(discountedAmount * 100, currency)}
+                  {formatPrice(finalAmount * 100, currency)}
                 </span>
                 <span className="text-xs text-gray-400">
                   {t("onboarding.step4.perMonth")}
