@@ -150,7 +150,7 @@ export function PlanCard({
                   {formatPrice(baseAmount, isFallback ? "GBP" : currency)}
                 </span>
                 <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                  Save {discountPercent}%
+                  Save {finalDiscountPercent}%
                 </span>
               </div>
             )}

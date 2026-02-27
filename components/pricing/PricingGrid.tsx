@@ -29,13 +29,17 @@ export function PricingGrid({ plans, currency, interval, discountEnabled = false
       {plans.map((plan, index) => (
         <PlanCard
           key={plan.planKey}
-          plan={plan}
+          name={plan.name}
+          slug={plan.planKey}
+          description={plan.displayDescription}
+          features={plan.displayFeatures}
+          prices={plan.prices}
+          highlight={index === 1}
           currency={currency}
           interval={interval}
+          isLoggedIn={false}
           discountEnabled={discountEnabled}
-          onChoosePlan={onChoosePlan}
-          isPopular={index === 1}
-          isSelected={selectedPlanKey === plan.planKey}
+          onChoosePlan={(priceId) => onChoosePlan?.(plan.planKey, priceId)}
         />
       ))}
     </div>
