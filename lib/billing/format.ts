@@ -12,7 +12,8 @@ const CURRENCY_CONFIG: Record<Currency, { symbol: string; locale: string }> = {
 
 /**
  * Format a unit_amount (integer cents/pence) into a display string.
- * e.g. 2999 GBP -> "\u00A329.99"
+ * EUR symbol appears before the amount (€29.99).
+ * GBP and USD symbols appear before the amount (£29.99, $29.99).
  */
 export function formatPrice(
   unitAmount: number,
@@ -21,12 +22,16 @@ export function formatPrice(
   const config = CURRENCY_CONFIG[currency] ?? CURRENCY_CONFIG.GBP;
   const amount = unitAmount / 100;
 
-  return new Intl.NumberFormat(config.locale, {
-    style: "currency",
-    currency,
+  // Format number without currency symbol using US locale for consistent formatting
+  const numberFormatter = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(amount);
+  });
+
+  const numberString = numberFormatter.format(amount);
+  
+  // All symbols appear before the number for consistency: €29.99, £29.99, $29.99
+  return `${config.symbol}${numberString}`;
 }
 
 /**

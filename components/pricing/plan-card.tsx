@@ -14,16 +14,25 @@ const CURRENCY_META: Record<Currency, { symbol: string; locale: string }> = {
   EUR: { symbol: "\u20AC", locale: "de-DE" },
 };
 
-/** Format minor-unit integer to display string, e.g. 2999 -> "29.99" */
+/** Format minor-unit integer to display string, e.g. 2999 -> "€29.99" or "$29.99" */
 function formatPrice(amountMinor: number, currency: Currency): string {
   const major = amountMinor / 100;
-  const { locale } = CURRENCY_META[currency];
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
+  const { locale, symbol } = CURRENCY_META[currency];
+  
+  // Format number without currency symbol using US locale for consistent number formatting
+  const formatter = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: major % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
-  }).format(major);
+  });
+  
+  const numberString = formatter.format(major);
+  
+  // For EUR, place symbol before the number; for others, after
+  if (currency === "EUR") {
+    return `${symbol}${numberString}`;
+  }
+  
+  return `${symbol}${numberString}`;
 }
 
 /* ------------------------------------------------------------------ */
