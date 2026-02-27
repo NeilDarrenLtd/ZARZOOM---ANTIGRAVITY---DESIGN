@@ -51,12 +51,10 @@ export async function fetchPlans(): Promise<{
     const supabase = await createAdminClient();
 
     // Query subscription_plans directly — this is where all plan data lives.
-    const { data, error, status, statusText } = await supabase
+    const { data, error } = await supabase
       .from("subscription_plans")
       .select("*")
       .order("display_order", { ascending: true });
-
-    console.log("[v0] fetchPlans query result - status:", status, statusText, "error:", error, "data length:", data?.length, "first row:", data?.[0] ? JSON.stringify(data[0]).substring(0, 200) : "NONE");
 
     if (error) throw new Error(error.message);
 
@@ -78,7 +76,6 @@ export async function fetchPlans(): Promise<{
     return { plans };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch plans";
-    console.log("[v0] fetchPlans ERROR:", message, err);
     return { plans: [], error: message };
   }
 }
