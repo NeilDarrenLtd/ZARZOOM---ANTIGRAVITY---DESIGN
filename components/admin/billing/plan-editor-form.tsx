@@ -2,25 +2,17 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, Loader2, Archive, ArrowLeft } from "lucide-react";
+import { Save, Loader2, Archive, ArrowLeft, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuotasEditor } from "./quotas-editor";
 import { FeaturesEditor } from "./features-editor";
 import { PriceMatrixEditor } from "./price-matrix-editor";
 import type { PlanWithPrices, Currency, BillingInterval } from "@/lib/billing/types";
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
-
 interface PlanEditorFormProps {
   plan: PlanWithPrices;
   onRefresh: () => void;
 }
-
-/* ------------------------------------------------------------------ */
-/*  Component                                                          */
-/* ------------------------------------------------------------------ */
 
 export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
   const router = useRouter();
@@ -137,7 +129,10 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
               Edit Plan: {plan.name}
             </h1>
             <p className="text-sm text-zinc-500">
-              Slug: <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs text-zinc-600">{plan.plan_key}</code>
+              Slug:{" "}
+              <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs text-zinc-600">
+                {plan.plan_key}
+              </code>
             </p>
           </div>
         </div>
@@ -149,11 +144,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
             disabled={archiving}
             className="inline-flex items-center gap-1.5 rounded-md border border-red-200 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
           >
-            {archiving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Archive className="h-4 w-4" />
-            )}
+            {archiving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Archive className="h-4 w-4" />}
             Archive
           </button>
           <button
@@ -162,16 +153,10 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
             disabled={saving}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-white transition-colors",
-              saving
-                ? "cursor-not-allowed bg-zinc-300"
-                : "bg-emerald-600 hover:bg-emerald-700"
+              saving ? "cursor-not-allowed bg-zinc-300" : "bg-emerald-600 hover:bg-emerald-700"
             )}
           >
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             Save Changes
           </button>
         </div>
@@ -189,11 +174,9 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
         </div>
       )}
 
-      {/* Plan Details Section */}
+      {/* Plan Details */}
       <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">
-          Plan Details
-        </h2>
+        <h2 className="mb-4 text-base font-semibold text-zinc-900">Plan Details</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="plan-name" className="mb-1 block text-xs font-medium text-zinc-700">
@@ -232,7 +215,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
               className="block w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
-          <div className="flex items-center gap-6">
+          <div>
             <label className="flex items-center gap-2 text-sm text-zinc-700">
               <input
                 type="checkbox"
@@ -246,31 +229,24 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Stripe Integration */}
       <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">
-          Features
-        </h2>
-        <FeaturesEditor value={features} onChange={setFeatures} />
-      </section>
-
-      {/* Quotas Section */}
-      <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">
-          Quota Policy
-        </h2>
-        <QuotasEditor value={quotaPolicy} onChange={setQuotaPolicy} />
-      </section>
-
-      {/* Stripe Integration Section */}
-      <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <div className="mb-4">
-          <h2 className="text-base font-semibold text-zinc-900">
-            Stripe Integration
-          </h2>
-          <p className="mt-1 text-xs text-zinc-500">
-            Link this plan to a Stripe Price object. Used by the checkout flow to initiate subscriptions.
-          </p>
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-base font-semibold text-zinc-900">Stripe Integration</h2>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              Link this plan to a Stripe Price object used during checkout.
+            </p>
+          </div>
+          <a
+            href="https://dashboard.stripe.com/prices"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex shrink-0 items-center gap-1 text-xs text-zinc-400 transition-colors hover:text-zinc-600"
+          >
+            Stripe Dashboard
+            <ExternalLink className="h-3 w-3" />
+          </a>
         </div>
         <div>
           <label htmlFor="stripe-price-id" className="mb-1 block text-xs font-medium text-zinc-700">
@@ -282,19 +258,30 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
             value={stripePriceId}
             onChange={(e) => setStripePriceId(e.target.value)}
             placeholder="price_xxxxxxxxxxxxxxxxxx"
-            className="block w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono text-sm text-zinc-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="block w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono text-sm text-zinc-900 placeholder-zinc-400 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
           <p className="mt-1.5 text-xs text-zinc-400">
-            Find this in your Stripe Dashboard under Products &rarr; Prices. Format: <code className="font-mono">price_xxx</code>
+            Found in Stripe Dashboard under Products &rsaquo; Prices. Format:{" "}
+            <code className="rounded bg-zinc-100 px-1 py-0.5">price_xxx</code>
           </p>
         </div>
       </section>
 
-      {/* Price Matrix Section */}
+      {/* Features */}
       <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <h2 className="mb-4 text-base font-semibold text-zinc-900">
-          Pricing
-        </h2>
+        <h2 className="mb-4 text-base font-semibold text-zinc-900">Features</h2>
+        <FeaturesEditor value={features} onChange={setFeatures} />
+      </section>
+
+      {/* Quotas */}
+      <section className="rounded-lg border border-zinc-200 bg-white p-6">
+        <h2 className="mb-4 text-base font-semibold text-zinc-900">Quota Policy</h2>
+        <QuotasEditor value={quotaPolicy} onChange={setQuotaPolicy} />
+      </section>
+
+      {/* Pricing */}
+      <section className="rounded-lg border border-zinc-200 bg-white p-6">
+        <h2 className="mb-4 text-base font-semibold text-zinc-900">Pricing</h2>
         <PriceMatrixEditor
           planId={plan.id}
           prices={plan.prices.map((p) => ({
