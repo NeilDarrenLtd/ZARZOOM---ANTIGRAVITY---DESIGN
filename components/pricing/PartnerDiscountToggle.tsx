@@ -38,7 +38,7 @@ export function PartnerDiscountToggle({ enabled, onChange }: PartnerDiscountTogg
       </div>
 
       {/* Subheading */}
-      <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+      <p className="text-xs text-gray-600 leading-relaxed">
         Save 50%. We may publish up to 1 small ZARZOOM promo per day (max 3–7 weekly) — never on your own posts.
       </p>
     </div>
