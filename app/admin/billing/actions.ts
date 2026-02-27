@@ -65,6 +65,7 @@ export async function fetchPlans(): Promise<{
       description: p.description ?? null,
       is_active: p.is_active ?? true,
       sort_order: p.display_order ?? 0,
+      stripe_price_id: p.stripe_price_id ?? null,
       entitlements: p.entitlements ?? {},
       quota_policy: p.quota_policy ?? {},
       features: p.features ?? [],
