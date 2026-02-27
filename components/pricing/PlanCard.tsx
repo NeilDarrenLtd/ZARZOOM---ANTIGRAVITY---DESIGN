@@ -10,6 +10,7 @@ interface PlanCardProps {
   plan: DisplayablePlan;
   currency: Currency;
   interval: BillingInterval;
+  discountEnabled?: boolean;
   onChoosePlan?: (planKey: string, priceId: string) => void;
   isPopular?: boolean;
   isSelected?: boolean;
@@ -19,6 +20,7 @@ export function PlanCard({
   plan,
   currency,
   interval,
+  discountEnabled = false,
   onChoosePlan,
   isPopular = false,
   isSelected = false,
@@ -81,9 +83,14 @@ export function PlanCard({
 
       <div className="mt-6 flex items-baseline gap-2">
         <span className="text-4xl font-bold text-zinc-900">
-          {formatPrice(price.amountMinor, currency)}
+          {formatPrice(discountEnabled ? Math.round(price.amountMinor / 2) : price.amountMinor, currency)}
         </span>
         <span className="text-sm text-zinc-500">/ {interval === "monthly" ? "month" : "year"}</span>
+        {discountEnabled && (
+          <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+            Save 50%
+          </span>
+        )}
       </div>
 
       <button

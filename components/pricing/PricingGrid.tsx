@@ -36,17 +36,13 @@ export function PricingGrid({ plans, currency, interval, discountEnabled = false
         return (
           <PlanCard
             key={plan.planKey}
-            name={plan.name}
-            slug={plan.planKey}
-            description={plan.displayDescription}
-            features={plan.displayFeatures}
-            prices={plan.prices}
-            highlight={index === 1}
+            plan={plan}
             currency={currency}
             interval={interval}
-            isLoggedIn={false}
             discountEnabled={discountEnabled}
-            onChoosePlan={(priceId) => onChoosePlan?.(plan.planKey, priceId)}
+            onChoosePlan={onChoosePlan}
+            isPopular={index === 1}
+            isSelected={selectedPlanKey === plan.planKey}
           />
         );
       })}
