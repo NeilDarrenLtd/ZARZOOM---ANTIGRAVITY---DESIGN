@@ -15,7 +15,7 @@ interface CurrencyToggleProps {
 
 export function CurrencyToggle({ currency, onChange }: CurrencyToggleProps) {
   return (
-    <div className="w-full grid grid-rows-[auto_auto_auto] gap-3">
+    <div className="w-64 grid grid-rows-[auto_auto_auto] gap-3">
       {/* Title - Row 1 */}
       <h3 className="text-sm font-semibold text-gray-900">
         Select Currency
