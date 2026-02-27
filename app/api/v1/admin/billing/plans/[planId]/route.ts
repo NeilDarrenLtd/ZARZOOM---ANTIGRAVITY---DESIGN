@@ -17,6 +17,8 @@ async function fetchSubscriptionPlan(planId: string) {
     .eq("id", planId)
     .single();
 
+  console.log("[v0] fetchSubscriptionPlan planId:", planId, "error:", error, "data:", data ? data.id : "NULL");
+
   if (error || !data) return null;
 
   return {
