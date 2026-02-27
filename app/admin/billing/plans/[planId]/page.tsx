@@ -60,32 +60,3 @@ export default function EditPlanPage({ params }: PageProps) {
     </div>
   );
 }
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[400px] items-center justify-center">
-        <div className="flex items-center gap-2 text-sm text-zinc-500">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          Loading plan...
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !data?.plan) {
-    return (
-      <div className="mx-auto max-w-3xl px-6 py-8">
-        <div className="flex items-center gap-2 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          {error?.message ?? "Plan not found."}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
-      <PlanEditorForm plan={data.plan} onRefresh={() => mutate()} />
-    </div>
-  );
-}
