@@ -76,6 +76,7 @@ export function PricingPageClient({ plans }: PricingPageClientProps) {
       plans={plans}
       defaultCurrency="GBP"
       defaultInterval="monthly"
+      defaultDiscount={true}
       onChoosePlan={handleChoosePlan}
       selectedPlanKey={selectedPlanKey}
     />

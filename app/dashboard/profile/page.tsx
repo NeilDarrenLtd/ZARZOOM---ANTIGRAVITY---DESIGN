@@ -940,6 +940,7 @@ export default function ProfilePage() {
               plans={plans}
               defaultCurrency={(data.selected_currency as Currency) || "GBP"}
               defaultInterval={isAnnual ? "annual" : "monthly"}
+              defaultDiscount={true}
               showCurrencyToggle={true}
               showIntervalToggle={true}
               selectedPlanKey={selectedPlan || undefined}

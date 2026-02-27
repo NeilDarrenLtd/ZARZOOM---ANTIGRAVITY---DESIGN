@@ -25,7 +25,7 @@ export default function Step4Plan({ data, onChange, aiFilledFields }: Step4Props
   const { t } = useI18n();
   const [plans, setPlans] = useState<DisplayablePlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [discountEnabled, setDiscountEnabled] = useState(data.discount_opt_in ?? false);
+  const [discountEnabled, setDiscountEnabled] = useState(data.discount_opt_in ?? true);
   
   const currency = (data.selected_currency as Currency) || "GBP";
   const interval: BillingInterval = "monthly"; // Always monthly in wizard
