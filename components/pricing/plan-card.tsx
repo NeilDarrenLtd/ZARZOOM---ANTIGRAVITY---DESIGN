@@ -61,6 +61,7 @@ interface PlanCardProps {
   isLoggedIn: boolean;
   cta?: string;
   discountPercent?: number;
+  discountEnabled?: boolean;
   onChoosePlan: (priceId: string) => void;
 }
 
@@ -80,6 +81,7 @@ export function PlanCard({
   isLoggedIn,
   cta,
   discountPercent = 0,
+  discountEnabled = false,
   onChoosePlan,
 }: PlanCardProps) {
   const matchedPrice = prices.find(
@@ -95,11 +97,12 @@ export function PlanCard({
   const price = matchedPrice ?? fallbackPrice;
   const isFallback = !matchedPrice && !!fallbackPrice;
   
-  // Calculate discounted price
+  // Calculate discount: use discountEnabled (50% partner discount) or discountPercent
+  const finalDiscountPercent = discountEnabled ? 50 : discountPercent;
   const baseAmount = price?.amountMinor ?? 0;
-  const discountAmount = discountPercent > 0 ? Math.round(baseAmount * (discountPercent / 100)) : 0;
+  const discountAmount = finalDiscountPercent > 0 ? Math.round(baseAmount * (finalDiscountPercent / 100)) : 0;
   const displayAmount = baseAmount - discountAmount;
-  const hasDiscount = discountPercent > 0 && baseAmount > 0;
+  const hasDiscount = finalDiscountPercent > 0 && baseAmount > 0;
 
   return (
     <div
@@ -169,7 +172,7 @@ export function PlanCard({
             )}
             {hasDiscount && (
               <p className="mt-1 text-xs text-green-600 font-medium">
-                Advertising partnership discount applied
+                {discountEnabled ? "Partner discount applied" : "Advertising partnership discount applied"}
               </p>
             )}
           </>

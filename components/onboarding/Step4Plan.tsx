@@ -135,21 +135,13 @@ export default function Step4Plan({ data, onChange, aiFilledFields }: Step4Props
         </p>
       </div>
 
-      {/* Discount Toggle */}
-      <div className="rounded-lg bg-green-50 border border-green-200 p-4">
-        <PartnerDiscountToggle 
-          enabled={discountEnabled}
-          onChange={handleDiscountChange}
-        />
-      </div>
-
       {/* Unified Pricing Client */}
       <PricingClient
         plans={plans}
         defaultCurrency={currency}
         defaultInterval={interval}
         showCurrencyToggle={true}
-        showIntervalToggle={false}
+        showIntervalToggle={true}
         onChoosePlan={handleSelectPlan}
         selectedPlanKey={selectedPlan || undefined}
       />

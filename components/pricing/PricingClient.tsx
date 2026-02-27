@@ -12,6 +12,7 @@ interface PricingClientProps {
   plans: DisplayablePlan[];
   defaultCurrency?: Currency;
   defaultInterval?: BillingInterval;
+  defaultDiscount?: boolean;
   showCurrencyToggle?: boolean;
   showIntervalToggle?: boolean;
   onChoosePlan?: (planKey: string, priceId: string) => void;
@@ -23,6 +24,7 @@ export function PricingClient({
   plans,
   defaultCurrency = "GBP",
   defaultInterval = "monthly",
+  defaultDiscount = false,
   showCurrencyToggle = true,
   showIntervalToggle = true,
   onChoosePlan,
@@ -30,8 +32,8 @@ export function PricingClient({
   customHeader,
 }: PricingClientProps) {
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
-  const [discountEnabled, setDiscountEnabled] = useState(false);
-  const interval: BillingInterval = discountEnabled ? "annual" : "monthly";
+  const [discountEnabled, setDiscountEnabled] = useState(defaultDiscount);
+  const interval: BillingInterval = defaultInterval;
 
   // Development-only logging
   if (process.env.NODE_ENV === "development") {
@@ -70,6 +72,7 @@ export function PricingClient({
           plans={plans}
           currency={currency}
           interval={interval}
+          discountEnabled={discountEnabled}
           onChoosePlan={onChoosePlan}
           selectedPlanKey={selectedPlanKey}
         />
