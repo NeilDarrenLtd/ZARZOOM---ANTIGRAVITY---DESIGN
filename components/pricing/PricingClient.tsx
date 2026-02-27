@@ -52,7 +52,7 @@ export function PricingClient({
 
         {/* Controls */}
         {(showCurrencyToggle || showIntervalToggle) && (
-          <div className="flex flex-col items-center justify-center gap-8 md:flex-row">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
             {showCurrencyToggle && (
               <div className="w-full md:w-auto">
                 <CurrencyToggle currency={currency} onChange={setCurrency} />
