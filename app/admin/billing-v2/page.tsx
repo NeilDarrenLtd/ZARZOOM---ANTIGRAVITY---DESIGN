@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Plus, Check, X, Globe, AlertTriangle, Edit, DollarSign } from "lucide-react";
 import { formatPrice } from "@/lib/billing/format";
 import { fetchPlans } from "../billing/actions";
 
