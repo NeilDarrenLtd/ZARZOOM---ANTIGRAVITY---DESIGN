@@ -2,11 +2,29 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, created } from "@/lib/api/http-responses";
 import { NotFoundError, ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { getPlanById, versionPrice, deactivatePrice } from "@/lib/billing/queries";
+import { versionPrice, deactivatePrice } from "@/lib/billing/queries";
 import { planPriceSchema } from "@/lib/billing/types";
+import { createAdminClient } from "@/lib/supabase/server";
 import { z } from "zod";
 
-type RouteParams = { params: Promise<{ planId: string }> };
+/** Extract planId from the request URL pathname */
+function extractPlanId(req: Request): string {
+  const parts = new URL(req.url).pathname.split("/");
+  // /api/v1/admin/billing/plans/[planId]/prices  → planId is second-to-last
+  return parts[parts.length - 2];
+}
+
+/** Fetch a plan from subscription_plans by id */
+async function fetchPlan(planId: string) {
+  const supabase = await createAdminClient();
+  const { data, error } = await supabase
+    .from("subscription_plans")
+    .select("*")
+    .eq("id", planId)
+    .single();
+  if (error || !data) return null;
+  return data;
+}
 
 /* ------------------------------------------------------------------ */
 /*  POST /api/v1/admin/billing/plans/[planId]/prices                   */
@@ -20,11 +38,12 @@ const addPriceSchema = planPriceSchema.extend({
 
 export const POST = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
-    const plan = await getPlanById(planId);
+    const plan = await fetchPlan(planId);
     if (!plan) throw new NotFoundError("Plan");
 
     const body = await ctx.req.json();
@@ -34,8 +53,8 @@ export const POST = createApiHandler({
     }
 
     // Find the old active price for before snapshot
-    const oldPrice = plan.prices.find(
-      (p) =>
+    const oldPrice = (plan.prices ?? []).find(
+      (p: any) =>
         p.currency === parsed.data.currency &&
         p.interval === parsed.data.interval &&
         p.is_active
@@ -51,7 +70,7 @@ export const POST = createApiHandler({
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "plan_prices",
       recordId: newPrice.id as string,
       action: "price_version_created",
@@ -90,11 +109,12 @@ const deactivateSchema = z.object({
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
-    const { planId } = await (ctx.req as unknown as RouteParams).params;
+    const planId = extractPlanId(ctx.req);
 
-    const plan = await getPlanById(planId);
+    const plan = await fetchPlan(planId);
     if (!plan) throw new NotFoundError("Plan");
 
     const body = await ctx.req.json();
@@ -103,14 +123,14 @@ export const PUT = createApiHandler({
       throw new ValidationError(parsed.error.flatten().fieldErrors);
     }
 
-    const target = plan.prices.find((p) => p.id === parsed.data.priceId);
+    const target = (plan.prices ?? []).find((p: any) => p.id === parsed.data.priceId);
     if (!target) throw new NotFoundError("Price");
 
     await deactivatePrice(parsed.data.priceId);
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "plan_prices",
       recordId: parsed.data.priceId,
       action: "price_deactivated",
