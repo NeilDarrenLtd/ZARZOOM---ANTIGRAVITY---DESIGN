@@ -45,8 +45,9 @@ const checkoutSchema = z.object({
  * Flow:
  *   1. Validate body against checkoutSchema
  *   2. Resolve plan by slug (must be active)
- *   3. Resolve active plan_price row matching currency + interval via the
- *      active_plan_prices view (effective_from <= now, effective_to null or > now)
+ *   3. Resolve active plan_price row matching currency + interval by filtering
+ *      plan_prices table directly: is_active=true, effective_from <= now,
+ *      effective_to is null or > now
  *   4. Ensure stripe_product_id exists on the plan
  *   5. Ensure billing_provider_price_id exists on the price
  *   6. Look up or create Stripe customer for the tenant
@@ -97,17 +98,22 @@ export const POST = createApiHandler({
       );
     }
 
-    // 3. Resolve the active price via the active_plan_prices view
-    //    This view already filters: is_active = true, effective_from <= now(),
-    //    (effective_to IS NULL OR effective_to > now()), and sp.is_active = true
+    // 3. Resolve the active price directly from plan_prices table
+    //    Filter: is_active = true, effective_from <= now(), 
+    //    effective_to IS NULL OR effective_to > now()
     const intervalDb = interval === "year" ? "annual" : "monthly";
+    const now = new Date().toISOString();
 
     const { data: priceRow, error: priceErr } = await supabase
-      .from("active_plan_prices")
-      .select("price_id, plan_id, unit_amount, billing_provider_price_id")
+      .from("plan_prices")
+      .select("id, plan_id, amount_minor, billing_provider_price_id")
       .eq("plan_id", plan.id)
       .eq("currency", currency)
       .eq("interval", intervalDb)
+      .eq("is_active", true)
+      .lte("effective_from", now)
+      .or(`effective_to.is.null,effective_to.gt.${now}`)
+      .order("effective_from", { ascending: false })
       .limit(1)
       .single();
 
@@ -178,12 +184,12 @@ export const POST = createApiHandler({
           tenant_id: tenantId,
           user_id: userId,
           plan_id: plan.id,
-          price_id: priceRow.price_id,
+          price_id: priceRow.id,
         },
       },
       metadata: {
         tenant_id: tenantId,
-        price_id: priceRow.price_id,
+        price_id: priceRow.id,
       },
     });
 
@@ -195,7 +201,7 @@ export const POST = createApiHandler({
           tenant_id: tenantId,
           user_id: userId,
           plan_id: plan.id,
-          price_id: priceRow.price_id,
+          price_id: priceRow.id,
           status: "incomplete",
           billing_provider: "stripe",
           billing_provider_customer_id: stripeCustomerId,
