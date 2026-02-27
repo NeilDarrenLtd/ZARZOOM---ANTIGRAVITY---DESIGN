@@ -13,6 +13,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const url = new URL(ctx.req.url);
@@ -35,6 +36,7 @@ export const GET = createApiHandler({
 
 export const POST = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();
@@ -80,7 +82,7 @@ export const POST = createApiHandler({
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: plan.id,
       action: "plan_created",
