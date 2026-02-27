@@ -9,15 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-// Static import of English so translations are available synchronously on first render
-// (no flash of untranslated keys). Webpack serialization warning is handled via
-// the custom asset/resource rule in next.config.mjs.
-import enTranslationsRaw from "@/locales/en.json";
+// Import from TypeScript module to guarantee a plain JS object on first render,
+// bypassing any webpack JSON-module handling.
+import enTranslationsRaw from "./en-translations";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
 
-type Translations = typeof enTranslationsRaw;
+// Use a loose type so JSON-loaded locales are compatible
+type Translations = Record<string, unknown>;
 
 export type TranslationKey = string;
 
@@ -33,7 +33,7 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
-// Pre-populate cache with English so the first render is instant
+// Pre-populate with English for synchronous first render
 const translationCache: Record<string, Translations> = {
   en: enTranslationsRaw,
 };
@@ -56,6 +56,7 @@ async function loadTranslation(locale: string): Promise<Translations> {
     }
     return translations;
   } catch {
+    // Fallback to English if locale cannot be loaded
     return enTranslationsRaw;
   }
 }
@@ -79,8 +80,8 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
-  // English is available synchronously — no empty-object flash
-  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw);
+  // Initialize with English so translations are available on first render
+  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw as Translations);
 
   useEffect(() => {
     const stored = localStorage.getItem("zarzoom-locale");
@@ -94,7 +95,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       const browserLang = navigator.language || defaultLanguage;
       const detected = getSupportedLanguageCode(browserLang);
       setLocaleState(detected);
-      if (detected !== defaultLanguage) {
+      if (detected !== defaultLanguage && detected !== "en") {
         loadTranslation(detected).then(setTranslations);
       }
     }
@@ -112,10 +113,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback(
     (key: string, fallback?: string): string => {
-      const value = getNestedValue(
-        translations as unknown as Record<string, unknown>,
-        key
-      );
+      const value = getNestedValue(translations as Record<string, unknown>, key);
       if (value === key && fallback) return fallback;
       return value;
     },
