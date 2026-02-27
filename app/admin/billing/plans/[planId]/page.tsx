@@ -12,6 +12,7 @@ import type { PlanWithPrices } from "@/lib/billing/types";
 
 const fetcher = (url: string) =>
   fetch(url).then((r) => {
+    console.log("[v0] fetcher url:", url, "status:", r.status, "ok:", r.ok);
     if (!r.ok) throw new Error("Failed to fetch plan");
     return r.json();
   });
@@ -26,6 +27,8 @@ interface PageProps {
 
 export default function EditPlanPage({ params }: PageProps) {
   const { planId } = use(params);
+
+  console.log("[v0] EditPlanPage planId:", planId);
 
   const { data, error, isLoading, mutate } = useSWR<{ plan: PlanWithPrices }>(
     `/api/v1/admin/billing/plans/${planId}`,
