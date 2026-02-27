@@ -39,22 +39,6 @@ export default function AdminBillingV2Page() {
     setLoading(false);
   }
 
-export default function AdminBillingV2Page() {
-  const [plans, setPlans] = useState<PlanWithI18n[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  async function loadPlans() {
-    setLoading(true);
-    const result = await fetchAllPlans();
-    if (result.error) {
-      setError(result.error);
-    } else {
-      setPlans(result.plans as PlanWithI18n[]);
-    }
-    setLoading(false);
-  }
-
   useEffect(() => {
     loadPlans();
   }, []);
