@@ -13,6 +13,7 @@ type RouteParams = { params: Promise<{ planId: string }> };
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const { planId } = await (ctx.req as unknown as RouteParams).params;
@@ -30,6 +31,7 @@ export const GET = createApiHandler({
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const { planId } = await (ctx.req as unknown as RouteParams).params;
@@ -63,7 +65,7 @@ export const PUT = createApiHandler({
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: planId,
       action: "plan_updated",
@@ -81,6 +83,7 @@ export const PUT = createApiHandler({
 
 export const DELETE = createApiHandler({
   requiredRole: "admin",
+  tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const { planId } = await (ctx.req as unknown as RouteParams).params;
@@ -92,7 +95,7 @@ export const DELETE = createApiHandler({
 
     await writeAuditLog({
       userId: ctx.user!.id,
-      tenantId: ctx.membership!.tenantId,
+      tenantId: ctx.membership?.tenantId ?? "system",
       tableName: "subscription_plans",
       recordId: planId,
       action: "plan_archived",
