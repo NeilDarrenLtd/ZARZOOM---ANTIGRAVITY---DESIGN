@@ -2,15 +2,18 @@
  * Server-side i18n utilities
  *
  * For use in Server Components and API routes.
- * All locale files are loaded dynamically to avoid webpack serialization warnings.
+ * English is imported statically so translations are available immediately.
  */
 
 import { cookies } from "next/headers";
+import enTranslations from "@/locales/en.json";
 
-type Translations = Record<string, unknown>;
+type Translations = typeof enTranslations;
 type TranslationKey = string;
 
-const translationCache: Record<string, Translations> = {};
+const translationCache: Record<string, Translations> = {
+  en: enTranslations,
+};
 
 async function loadServerTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -23,9 +26,7 @@ async function loadServerTranslations(locale: string): Promise<Translations> {
     translationCache[locale] = translations;
     return translations;
   } catch {
-    // Return empty object if locale cannot be loaded
-    // This prevents cascading failures
-    return {};
+    return enTranslations;
   }
 }
 

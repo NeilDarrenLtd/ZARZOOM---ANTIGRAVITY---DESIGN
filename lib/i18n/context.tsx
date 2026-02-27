@@ -9,11 +9,13 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
+// Import English statically so translations are available on first render
+import enTranslationsRaw from "@/locales/en.json";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
 
-type Translations = Record<string, unknown>;
+type Translations = typeof enTranslationsRaw;
 
 export type TranslationKey = string;
 
@@ -29,8 +31,14 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
-// Translation cache is loaded asynchronously to avoid webpack serialization warnings
-const translationCache: Record<string, Translations> = {};
+// Pre-populate with English for synchronous first render
+const translationCache: Record<string, Translations> = {
+  en: enTranslationsRaw,
+};
+
+if (process.env.NODE_ENV === "development") {
+  devCheckPricing(enTranslationsRaw, "en");
+}
 
 async function loadTranslation(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -46,8 +54,8 @@ async function loadTranslation(locale: string): Promise<Translations> {
     }
     return translations;
   } catch {
-    // Fallback to empty object if locale cannot be loaded
-    return {};
+    // Fallback to English if locale cannot be loaded
+    return enTranslationsRaw;
   }
 }
 
@@ -70,42 +78,25 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
-  // Start with empty translations; they'll be loaded asynchronously
-  const [translations, setTranslations] = useState<Translations>({});
-  const [isInitialized, setIsInitialized] = useState(false);
+  // Initialize with English so translations are available on first render
+  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw);
 
-  // Load translations on mount
   useEffect(() => {
-    const initI18n = async () => {
-      // Determine active locale
-      const stored = localStorage.getItem("zarzoom-locale");
-      let activeLocale = stored || defaultLanguage;
+    const stored = localStorage.getItem("zarzoom-locale");
+    if (stored) {
+      setLocaleState(stored);
+      // If stored locale is not English, load it asynchronously
+      if (stored !== "en") {
+        loadTranslation(stored).then(setTranslations);
+      }
+    } else {
       const browserLang = navigator.language || defaultLanguage;
       const detected = getSupportedLanguageCode(browserLang);
-      
-      if (!stored) {
-        activeLocale = detected;
-        setLocaleState(detected);
-      } else {
-        setLocaleState(stored);
+      setLocaleState(detected);
+      if (detected !== defaultLanguage && detected !== "en") {
+        loadTranslation(detected).then(setTranslations);
       }
-
-      // Load English first as base fallback
-      const enTranslations = await loadTranslation("en");
-      
-      // If active locale is not English, load it; otherwise use English
-      if (activeLocale !== "en") {
-        const activeTranslations = await loadTranslation(activeLocale);
-        // Use active locale if successfully loaded, otherwise English
-        setTranslations(Object.keys(activeTranslations).length > 0 ? activeTranslations : enTranslations);
-      } else {
-        setTranslations(enTranslations);
-      }
-      
-      setIsInitialized(true);
-    };
-
-    initI18n();
+    }
   }, []);
 
   useEffect(() => {
@@ -115,21 +106,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const setLocale = useCallback((newLocale: string) => {
     setLocaleState(newLocale);
     localStorage.setItem("zarzoom-locale", newLocale);
-    
-    // Load new locale, fall back to English if not available
-    loadTranslation(newLocale).then((trans) => {
-      if (Object.keys(trans).length > 0) {
-        setTranslations(trans);
-      } else {
-        // Fall back to English
-        loadTranslation("en").then(setTranslations);
-      }
-    });
+    loadTranslation(newLocale).then(setTranslations);
   }, []);
 
   const t = useCallback(
     (key: string, fallback?: string): string => {
-      const value = getNestedValue(translations, key);
+      const value = getNestedValue(
+        translations as unknown as Record<string, unknown>,
+        key
+      );
       if (value === key && fallback) return fallback;
       return value;
     },
