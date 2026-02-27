@@ -939,8 +939,8 @@ export default function ProfilePage() {
             <PricingClient
               plans={plans}
               defaultCurrency={(data.selected_currency as Currency) || "GBP"}
-              defaultInterval={isAnnual ? "annual" : "monthly"}
-              defaultDiscount={true}
+              defaultInterval="monthly"
+              defaultDiscount={isAnnual}
               showCurrencyToggle={true}
               showIntervalToggle={true}
               selectedPlanKey={selectedPlan || undefined}
