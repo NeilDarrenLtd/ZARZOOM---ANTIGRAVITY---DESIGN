@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { fetchPlansServer, getDisplayablePlans } from "@/lib/pricing";
 import { getServerTranslations } from "@/lib/i18n/server";
-import { PricingClient } from "@/components/pricing/PricingClient";
+import { PricingPageClient } from "@/components/pricing/PricingPageClient";
 import SiteNavbar from "@/components/SiteNavbar";
 
 export const metadata: Metadata = {
@@ -38,11 +38,7 @@ export default async function PricingPage() {
         </div>
 
         {/* Client Component with Server Data */}
-        <PricingClient
-          plans={displayablePlans}
-          defaultCurrency="GBP"
-          defaultInterval="monthly"
-        />
+        <PricingPageClient plans={displayablePlans} />
 
         {/* FAQ Section */}
         <div className="mt-16 text-center">
