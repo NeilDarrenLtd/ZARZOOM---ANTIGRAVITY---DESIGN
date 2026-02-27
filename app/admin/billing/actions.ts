@@ -2,7 +2,7 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import {
-  getAllPlansWithPrices,
+  getPlans,
   getPlanById,
   createPlan as createPlanQuery,
   updatePlan as updatePlanQuery,
@@ -49,7 +49,35 @@ export async function fetchPlans(): Promise<{
 }> {
   try {
     await requireAdmin();
-    const plans = await getAllPlansWithPrices();
+    // Use getPlans() which reads the subscription_plans table (where data lives)
+    // and map the legacy schema to the canonical PlanWithPrices shape
+    const legacyPlans = await getPlans({});
+    const plans: PlanWithPrices[] = legacyPlans.map((p: any) => ({
+      id: p.id,
+      plan_key: p.slug,
+      name: p.name,
+      description: p.description,
+      is_active: p.is_active,
+      sort_order: p.display_order ?? 0,
+      entitlements: p.entitlements ?? {},
+      quota_policy: p.quota_policy ?? {},
+      features: p.features ?? [],
+      created_at: p.created_at,
+      updated_at: p.updated_at,
+      prices: (p.plan_prices ?? []).map((pp: any) => ({
+        id: pp.id,
+        plan_id: pp.plan_id,
+        currency: pp.currency,
+        interval: pp.interval,
+        amount_minor: pp.unit_amount ?? pp.amount_minor ?? 0,
+        is_active: pp.is_active ?? true,
+        billing_provider_price_id: pp.billing_provider_price_id ?? null,
+        effective_from: pp.effective_from ?? null,
+        effective_to: pp.effective_to ?? null,
+        created_at: pp.created_at,
+        updated_at: pp.updated_at,
+      })),
+    }));
     return { plans };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch plans";
