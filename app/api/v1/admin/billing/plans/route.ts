@@ -51,6 +51,7 @@ export const GET = createApiHandler({
       entitlements: p.entitlements ?? {},
       quota_policy: p.quota_policy ?? {},
       features: p.features ?? [],
+      stripe_price_id: p.stripe_price_id ?? null,
       created_at: p.created_at,
       updated_at: p.updated_at,
       prices: [],

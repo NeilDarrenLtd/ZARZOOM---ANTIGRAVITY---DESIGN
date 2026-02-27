@@ -89,6 +89,7 @@ export const updatePlanSchema = z.object({
   quota_policy: z.record(z.number()).optional(),
   features: z.array(z.string()).optional(),
   entitlements: z.record(z.boolean()).optional(),
+  stripe_price_id: z.string().max(255).nullable().optional(),
 });
 
 /**
@@ -128,14 +129,15 @@ export type QuotaKey = (typeof QUOTA_KEYS)[number];
  */
 export interface Plan {
   id: string;
-  plan_key: string;  // lowercase slug (e.g. 'basic', 'pro', 'advanced')
+  plan_key: string;
   name: string;
   description: string | null;
   is_active: boolean;
   sort_order: number;
-  entitlements: Record<string, boolean>;  // feature flags
-  quota_policy: Record<string, number>;   // usage limits
-  features: string[];  // feature list for UI display
+  entitlements: Record<string, boolean>;
+  quota_policy: Record<string, number>;
+  features: string[];
+  stripe_price_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -184,13 +186,11 @@ export interface PlanRow {
   quota_policy: Record<string, unknown>;
   features: unknown[] | null;
   entitlements: Record<string, unknown> | null;
+  stripe_price_id: string | null;
   created_at: string;
   updated_at: string;
-  /** Legacy alias -- some query helpers pass `status` */
   status?: PlanStatus;
-  /** Legacy alias -- kept for backward compatibility */
   trial_days?: number;
-  /** Legacy alias */
   feature_flags?: Record<string, boolean>;
 }
 

@@ -29,6 +29,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
   const [description, setDescription] = useState(plan.description ?? "");
   const [displayOrder, setDisplayOrder] = useState(plan.sort_order);
   const [isActive, setIsActive] = useState(plan.is_active);
+  const [stripePriceId, setStripePriceId] = useState(plan.stripe_price_id ?? "");
   const [features, setFeatures] = useState<string[]>(
     Array.isArray(plan.features) ? (plan.features as string[]) : []
   );
@@ -56,6 +57,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
           is_active: isActive,
           features,
           quota_policy: quotaPolicy,
+          stripe_price_id: stripePriceId.trim() || null,
         }),
       });
       if (!res.ok) {
@@ -258,6 +260,34 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
           Quota Policy
         </h2>
         <QuotasEditor value={quotaPolicy} onChange={setQuotaPolicy} />
+      </section>
+
+      {/* Stripe Integration Section */}
+      <section className="rounded-lg border border-zinc-200 bg-white p-6">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-zinc-900">
+            Stripe Integration
+          </h2>
+          <p className="mt-1 text-xs text-zinc-500">
+            Link this plan to a Stripe Price object. Used by the checkout flow to initiate subscriptions.
+          </p>
+        </div>
+        <div>
+          <label htmlFor="stripe-price-id" className="mb-1 block text-xs font-medium text-zinc-700">
+            Stripe Price ID
+          </label>
+          <input
+            id="stripe-price-id"
+            type="text"
+            value={stripePriceId}
+            onChange={(e) => setStripePriceId(e.target.value)}
+            placeholder="price_xxxxxxxxxxxxxxxxxx"
+            className="block w-full rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono text-sm text-zinc-900 transition-colors focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          />
+          <p className="mt-1.5 text-xs text-zinc-400">
+            Find this in your Stripe Dashboard under Products &rarr; Prices. Format: <code className="font-mono">price_xxx</code>
+          </p>
+        </div>
       </section>
 
       {/* Price Matrix Section */}

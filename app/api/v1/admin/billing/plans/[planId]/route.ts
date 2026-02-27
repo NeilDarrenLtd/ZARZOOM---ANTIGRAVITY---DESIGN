@@ -33,10 +33,10 @@ async function fetchSubscriptionPlan(planId: string) {
     entitlements: data.entitlements ?? {},
     quota_policy: data.quota_policy ?? {},
     features: data.features ?? [],
+    stripe_price_id: data.stripe_price_id ?? null,
     created_at: data.created_at,
     updated_at: data.updated_at,
     prices: [],
-    // keep raw fields available for update/audit diffs
     _raw: data,
   };
 }
@@ -93,6 +93,7 @@ export const PUT = createApiHandler({
       entitlements: "entitlements",
       quota_policy: "quota_policy",
       features: "features",
+      stripe_price_id: "stripe_price_id",
     };
 
     for (const [canonicalKey, dbKey] of Object.entries(fieldMap)) {
