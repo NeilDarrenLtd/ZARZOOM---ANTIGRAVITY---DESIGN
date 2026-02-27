@@ -9,13 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-// Import English statically so translations are available on first render
-import enTranslationsRaw from "@/locales/en.json";
+// Import from TypeScript module to guarantee a plain JS object on first render,
+// bypassing any webpack JSON-module handling.
+import enTranslationsRaw from "./en-translations";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
 
-type Translations = typeof enTranslationsRaw;
+// Use a loose type so JSON-loaded locales are compatible
+type Translations = Record<string, unknown>;
 
 export type TranslationKey = string;
 
@@ -79,7 +81,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
   // Initialize with English so translations are available on first render
-  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw);
+  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw as Translations);
 
   useEffect(() => {
     const stored = localStorage.getItem("zarzoom-locale");
@@ -111,10 +113,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback(
     (key: string, fallback?: string): string => {
-      const value = getNestedValue(
-        translations as unknown as Record<string, unknown>,
-        key
-      );
+      const value = getNestedValue(translations as Record<string, unknown>, key);
       if (value === key && fallback) return fallback;
       return value;
     },
