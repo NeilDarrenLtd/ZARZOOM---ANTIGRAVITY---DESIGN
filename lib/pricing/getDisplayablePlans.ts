@@ -19,13 +19,27 @@ export interface DisplayablePlan extends ApiPlan {
  * Both DB data AND i18n translations must exist for a plan to be displayable.
  * 
  * Translations must exist at: billing.plans.<planKey>.displayName
+ * 
+ * FALLBACK: If i18n is broken (all keys return themselves), this will return true,
+ * allowing the plan to display with humanized plan key as fallback.
  */
 function hasPlanCopy(planKey: string, t: TranslateFn): boolean {
   const nameKey = `billing.plans.${planKey}.displayName`;
   const translation = t(nameKey);
   
-  // If translation returns the key itself, it means no translation exists
-  return translation !== nameKey && translation !== "";
+  // Translation exists if it's different from the key AND not empty
+  const hasTranslation = translation !== nameKey && translation !== "";
+  
+  // FALLBACK: If translation system is broken (all keys return themselves),
+  // allow the plan to display with fallback copy
+  if (!hasTranslation && process.env.NODE_ENV === "production") {
+    console.warn(
+      `[v0] Translation missing for "${nameKey}", but plan will display with fallback copy`
+    );
+    return true; // Allow display even if i18n is broken
+  }
+  
+  return hasTranslation;
 }
 
 /**
@@ -78,6 +92,16 @@ export function getDisplayablePlans(
     const displayName = t(`billing.plans.${plan.planKey}.displayName`);
     const displayDescription = t(`billing.plans.${plan.planKey}.description`);
     
+    // FALLBACK: If translations are missing (i18n broken in production),
+    // use humanized plan key and plan data description
+    const finalDisplayName = displayName !== `billing.plans.${plan.planKey}.displayName` 
+      ? displayName 
+      : plan.name || plan.planKey.charAt(0).toUpperCase() + plan.planKey.slice(1);
+    
+    const finalDisplayDescription = displayDescription !== `billing.plans.${plan.planKey}.description`
+      ? displayDescription
+      : plan.description || "";
+    
     // Get feature bullet translations (billing.plans.<planKey>.bullets is an array)
     const displayFeatures: string[] = [];
     let featureIndex = 0;
@@ -91,12 +115,17 @@ export function getDisplayablePlans(
       displayFeatures.push(feature);
       featureIndex++;
     }
+    
+    // FALLBACK: If no translated features, use plan features from API
+    const finalDisplayFeatures = displayFeatures.length > 0 
+      ? displayFeatures 
+      : (plan.features || []);
 
     displayable.push({
       ...plan,
-      displayName,
-      displayDescription,
-      displayFeatures,
+      displayName: finalDisplayName,
+      displayDescription: finalDisplayDescription,
+      displayFeatures: finalDisplayFeatures,
     });
   }
 
