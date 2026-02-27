@@ -14,16 +14,25 @@ const CURRENCY_META: Record<Currency, { symbol: string; locale: string }> = {
   EUR: { symbol: "\u20AC", locale: "de-DE" },
 };
 
-/** Format minor-unit integer to display string, e.g. 2999 -> "29.99" */
+/** Format minor-unit integer to display string, e.g. 2999 -> "€29.99" or "$29.99" */
 function formatPrice(amountMinor: number, currency: Currency): string {
   const major = amountMinor / 100;
-  const { locale } = CURRENCY_META[currency];
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
+  const { locale, symbol } = CURRENCY_META[currency];
+  
+  // Format number without currency symbol using US locale for consistent number formatting
+  const formatter = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: major % 1 === 0 ? 0 : 2,
     maximumFractionDigits: 2,
-  }).format(major);
+  });
+  
+  const numberString = formatter.format(major);
+  
+  // For EUR, place symbol before the number; for others, after
+  if (currency === "EUR") {
+    return `${symbol}${numberString}`;
+  }
+  
+  return `${symbol}${numberString}`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -52,6 +61,7 @@ interface PlanCardProps {
   isLoggedIn: boolean;
   cta?: string;
   discountPercent?: number;
+  discountEnabled?: boolean;
   onChoosePlan: (priceId: string) => void;
 }
 
@@ -71,6 +81,7 @@ export function PlanCard({
   isLoggedIn,
   cta,
   discountPercent = 0,
+  discountEnabled = false,
   onChoosePlan,
 }: PlanCardProps) {
   const matchedPrice = prices.find(
@@ -86,11 +97,12 @@ export function PlanCard({
   const price = matchedPrice ?? fallbackPrice;
   const isFallback = !matchedPrice && !!fallbackPrice;
   
-  // Calculate discounted price
+  // Calculate discount: use discountEnabled (50% partner discount) or discountPercent
+  const finalDiscountPercent = discountEnabled ? 50 : discountPercent;
   const baseAmount = price?.amountMinor ?? 0;
-  const discountAmount = discountPercent > 0 ? Math.round(baseAmount * (discountPercent / 100)) : 0;
+  const discountAmount = finalDiscountPercent > 0 ? Math.round(baseAmount * (finalDiscountPercent / 100)) : 0;
   const displayAmount = baseAmount - discountAmount;
-  const hasDiscount = discountPercent > 0 && baseAmount > 0;
+  const hasDiscount = finalDiscountPercent > 0 && baseAmount > 0;
 
   return (
     <div
@@ -138,7 +150,7 @@ export function PlanCard({
                   {formatPrice(baseAmount, isFallback ? "GBP" : currency)}
                 </span>
                 <span className="ml-2 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
-                  Save {discountPercent}%
+                  Save {finalDiscountPercent}%
                 </span>
               </div>
             )}
@@ -160,7 +172,7 @@ export function PlanCard({
             )}
             {hasDiscount && (
               <p className="mt-1 text-xs text-green-600 font-medium">
-                Advertising partnership discount applied
+                {discountEnabled ? "Partner discount applied" : "Advertising partnership discount applied"}
               </p>
             )}
           </>

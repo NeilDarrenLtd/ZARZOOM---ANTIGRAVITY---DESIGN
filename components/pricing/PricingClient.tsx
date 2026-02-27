@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import type { DisplayablePlan } from "@/lib/pricing";
 import { CurrencyToggle } from "./CurrencyToggle";
-import { IntervalToggle } from "./IntervalToggle";
+import { PartnerDiscountToggle } from "./PartnerDiscountToggle";
 import { PricingGrid } from "./PricingGrid";
 import { PricingDiagnostics } from "./PricingDiagnostics";
 
@@ -12,6 +12,7 @@ interface PricingClientProps {
   plans: DisplayablePlan[];
   defaultCurrency?: Currency;
   defaultInterval?: BillingInterval;
+  defaultDiscount?: boolean;
   showCurrencyToggle?: boolean;
   showIntervalToggle?: boolean;
   onChoosePlan?: (planKey: string, priceId: string) => void;
@@ -23,6 +24,7 @@ export function PricingClient({
   plans,
   defaultCurrency = "GBP",
   defaultInterval = "monthly",
+  defaultDiscount = false,
   showCurrencyToggle = true,
   showIntervalToggle = true,
   onChoosePlan,
@@ -30,7 +32,8 @@ export function PricingClient({
   customHeader,
 }: PricingClientProps) {
   const [currency, setCurrency] = useState<Currency>(defaultCurrency);
-  const [interval, setInterval] = useState<BillingInterval>(defaultInterval);
+  const [discountEnabled, setDiscountEnabled] = useState(defaultDiscount);
+  const interval: BillingInterval = defaultInterval;
 
   // Development-only logging
   if (process.env.NODE_ENV === "development") {
@@ -49,12 +52,19 @@ export function PricingClient({
 
         {/* Controls */}
         {(showCurrencyToggle || showIntervalToggle) && (
-          <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+          <div className="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
             {showCurrencyToggle && (
-              <CurrencyToggle currency={currency} onChange={setCurrency} />
+              <div className="w-full md:w-auto">
+                <CurrencyToggle currency={currency} onChange={setCurrency} />
+              </div>
             )}
             {showIntervalToggle && (
-              <IntervalToggle interval={interval} onChange={setInterval} />
+              <div className="w-full md:w-auto">
+                <PartnerDiscountToggle 
+                  enabled={discountEnabled} 
+                  onChange={setDiscountEnabled} 
+                />
+              </div>
             )}
           </div>
         )}
@@ -64,6 +74,7 @@ export function PricingClient({
           plans={plans}
           currency={currency}
           interval={interval}
+          discountEnabled={discountEnabled}
           onChoosePlan={onChoosePlan}
           selectedPlanKey={selectedPlanKey}
         />
