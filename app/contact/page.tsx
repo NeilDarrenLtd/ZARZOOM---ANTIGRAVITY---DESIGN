@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, Mail, Phone, MapPin, Loader } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, Clock, Loader } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import SiteNavbar from "@/components/SiteNavbar";
@@ -131,6 +131,24 @@ export default function ContactPage() {
                   >
                     support@zarzoom.com
                   </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Office Hours Card - Always visible */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <Clock className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Office Hours
+                  </h3>
+                  <div className="text-gray-600 text-sm space-y-1">
+                    <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                    <p>Saturday - Sunday: Closed</p>
+                  </div>
                 </div>
               </div>
             </div>
