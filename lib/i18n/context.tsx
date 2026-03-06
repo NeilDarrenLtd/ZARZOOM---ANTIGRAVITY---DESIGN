@@ -65,13 +65,15 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   const keys = path.split(".");
   let current: unknown = obj;
   for (const key of keys) {
-    if (current && typeof current === "object" && key in current) {
+    if (current !== null && typeof current === "object" && (key in current || (Array.isArray(current) && /^\d+$/.test(key)))) {
       current = (current as Record<string, unknown>)[key];
     } else {
       return path;
     }
   }
-  return typeof current === "string" ? current : path;
+  if (typeof current === "string") return current;
+  if (Array.isArray(current)) return current.join(", ");
+  return path;
 }
 
 /* ---------- Provider ---------- */
@@ -85,7 +87,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem("zarzoom-locale");
     if (stored) {
       setLocaleState(stored);
-      // If stored locale is not English, load it asynchronously
+      setLocaleCookie(stored);
       if (stored !== "en") {
         loadTranslation(stored).then(setTranslations);
       }
@@ -93,6 +95,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       const browserLang = navigator.language || defaultLanguage;
       const detected = getSupportedLanguageCode(browserLang);
       setLocaleState(detected);
+      setLocaleCookie(detected);
       if (detected !== defaultLanguage && detected !== "en") {
         loadTranslation(detected).then(setTranslations);
       }
@@ -103,9 +106,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = locale;
   }, [locale]);
 
+  function setLocaleCookie(locale: string) {
+    document.cookie = `locale=${encodeURIComponent(locale)};path=/;max-age=31536000;SameSite=Lax`;
+  }
+
   const setLocale = useCallback((newLocale: string) => {
     setLocaleState(newLocale);
     localStorage.setItem("zarzoom-locale", newLocale);
+    setLocaleCookie(newLocale);
     loadTranslation(newLocale).then(setTranslations);
   }, []);
 

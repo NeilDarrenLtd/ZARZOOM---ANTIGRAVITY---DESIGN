@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Check } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 /* ─── Animation variants ─────────────────────────────────────────── */
 const fadeUp = {
@@ -88,55 +89,34 @@ function NetworkIllustration() {
   );
 }
 
-/* ─── Story timeline data ────────────────────────────────────────── */
-const storySteps = [
-  {
-    icon: Lightbulb,
-    title: "The Idea",
-    text: "Founded to solve a problem every creator faces — staying consistent on social media without burning out.",
-  },
-  {
-    icon: Rocket,
-    title: "Building the Platform",
-    text: "We combined AI-powered content generation with smart scheduling to create a fully automated social media pipeline.",
-  },
-  {
-    icon: Zap,
-    title: "Automation at Scale",
-    text: "ZARZOOM now helps businesses and creators maintain a strong online presence — without the daily effort normally required.",
-  },
-];
-
-/* ─── How ZARZOOM Helps cards ────────────────────────────────────── */
-const helpCards = [
-  {
-    icon: Bot,
-    title: "AI Content Generation",
-    text: "Automatically generate engaging posts tailored to your brand voice and audience.",
-    bullets: ["Brand voice learning", "Trending topic integration", "Captions and hashtags"],
-  },
-  {
-    icon: CalendarCheck,
-    title: "Smart Scheduling",
-    text: "Schedule and publish content across your social platforms at the optimal time.",
-    bullets: ["Audience activity analysis", "Time zone optimisation", "Content calendar automation"],
-  },
-  {
-    icon: TrendingUp,
-    title: "Consistent Online Presence",
-    text: "Maintain visibility and grow your audience without the daily grind.",
-    bullets: ["Multi-platform posting", "Engagement-based timing", "Centralised dashboard"],
-  },
-  {
-    icon: Clock,
-    title: "Time-Saving Automation",
-    text: "Focus on your business while ZARZOOM handles your entire content pipeline.",
-    bullets: ["Zero manual effort", "Set-and-forget autopilot", "Real-time reporting"],
-  },
-];
+const STORY_ICONS = [Lightbulb, Rocket, Zap] as const;
+const HELP_ICONS = [Bot, CalendarCheck, TrendingUp, Clock] as const;
 
 /* ─── Page ───────────────────────────────────────────────────────── */
 export default function AboutPage() {
+  const { t } = useI18n();
+
+  const storySteps = [0, 1, 2].map((i) => ({
+    icon: STORY_ICONS[i],
+    title: t(`pages.about.storySteps.${i}.title`),
+    text: t(`pages.about.storySteps.${i}.text`),
+  }));
+
+  const helpCards = [0, 1, 2, 3].map((i) => {
+    const bullets: string[] = [];
+    for (let j = 0; ; j++) {
+      const v = t(`pages.about.helpCards.${i}.bullets.${j}`);
+      if (!v || v === `pages.about.helpCards.${i}.bullets.${j}`) break;
+      bullets.push(v);
+    }
+    return {
+      icon: HELP_ICONS[i],
+      title: t(`pages.about.helpCards.${i}.title`),
+      text: t(`pages.about.helpCards.${i}.text`),
+      bullets,
+    };
+  });
+
   return (
     <>
       <SiteNavbar />
@@ -157,7 +137,7 @@ export default function AboutPage() {
                   className="inline-flex items-center gap-2 bg-green-100 text-green-700 text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6"
                 >
                   <Sparkles className="w-3 h-3" />
-                  About ZARZOOM
+                  {t("pages.about.badge")}
                 </motion.div>
 
                 <motion.h1
@@ -167,8 +147,8 @@ export default function AboutPage() {
                   variants={fadeUp}
                   className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 text-balance mb-6"
                 >
-                  Autopilot your socials{" "}
-                  <span className="text-green-600">in seconds.</span>
+                  {t("pages.about.heroTitle")}{" "}
+                  <span className="text-green-600">{t("pages.about.heroTitleHighlight")}</span>
                 </motion.h1>
 
                 <motion.p
@@ -178,9 +158,7 @@ export default function AboutPage() {
                   variants={fadeUp}
                   className="text-lg text-gray-600 leading-relaxed text-pretty mb-8 max-w-lg"
                 >
-                  ZARZOOM is an AI-powered platform designed to help businesses
-                  and creators generate and publish social media content
-                  automatically — so you can focus on what you do best.
+                  {t("pages.about.heroDescription")}
                 </motion.p>
 
                 <motion.div
@@ -194,14 +172,14 @@ export default function AboutPage() {
                     href="/login-launch"
                     className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-7 py-3.5 rounded-xl transition-colors duration-200 text-base shadow-lg shadow-green-200"
                   >
-                    Get Started Free
+                    {t("pages.about.getStartedFree")}
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link
                     href="/features"
                     className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 font-semibold px-7 py-3.5 rounded-xl transition-colors duration-200 text-base border border-gray-200 shadow-sm"
                   >
-                    View Features
+                    {t("pages.about.viewFeatures")}
                     <ChevronRight className="w-4 h-4" />
                   </Link>
                 </motion.div>
@@ -222,7 +200,7 @@ export default function AboutPage() {
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600" />
                     </span>
-                    Autopilot Active
+                    {t("pages.about.autopilotActive")}
                   </div>
                 </div>
               </motion.div>
@@ -245,24 +223,19 @@ export default function AboutPage() {
                   variants={{ hidden: {}, visible: {} }}
                 >
                   <motion.p custom={0} variants={fadeUp} className="text-green-600 text-xs font-semibold uppercase tracking-widest mb-3">
-                    Our Mission
+                    {t("pages.about.mission.title")}
                   </motion.p>
                   <motion.h2 custom={1} variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance mb-5">
-                    Removing the Biggest Barrier to Social Media Growth
+                    {t("pages.about.mission.subtitle")}
                   </motion.h2>
                   <motion.p custom={2} variants={fadeUp} className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                    Our mission is to remove the biggest barrier to social media
-                    growth — the constant demand for fresh content.
+                    {t("pages.about.mission.para1")}
                   </motion.p>
                   <motion.p custom={3} variants={fadeUp} className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                    ZARZOOM uses artificial intelligence to automate content
-                    creation and publishing so entrepreneurs and businesses can
-                    focus on what they do best.
+                    {t("pages.about.mission.para2")}
                   </motion.p>
                   <motion.p custom={4} variants={fadeUp} className="text-gray-700 font-medium leading-relaxed text-pretty">
-                    Instead of spending hours planning posts, writing content, and
-                    managing multiple platforms, ZARZOOM helps you stay visible
-                    online — effortlessly.
+                    {t("pages.about.mission.para3")}
                   </motion.p>
                 </motion.div>
               </div>
@@ -277,9 +250,9 @@ export default function AboutPage() {
                   className="w-full max-w-sm space-y-3"
                 >
                   {[
-                    { label: "Content Created", value: "1,240 posts", pct: 88 },
-                    { label: "Hours Saved",     value: "620 hrs",     pct: 74 },
-                    { label: "Platforms Active", value: "6 networks", pct: 100 },
+                    { label: t("pages.about.missionStats.contentCreated"), value: "1,240 posts", pct: 88 },
+                    { label: t("pages.about.missionStats.hoursSaved"), value: "620 hrs", pct: 74 },
+                    { label: t("pages.about.missionStats.platformsActive"), value: "6 networks", pct: 100 },
                   ].map((row, i) => (
                     <motion.div
                       key={row.label}
@@ -323,10 +296,10 @@ export default function AboutPage() {
               className="text-center mb-14"
             >
               <p className="text-green-600 text-xs font-semibold uppercase tracking-widest mb-3">
-                Our Story
+                {t("pages.about.story.sectionTitle")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance max-w-2xl mx-auto">
-                Built to Solve a Real Problem
+                {t("pages.about.story.heading")}
               </h2>
             </motion.div>
 
@@ -366,18 +339,13 @@ export default function AboutPage() {
               className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 md:p-12 max-w-4xl mx-auto"
             >
               <p className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                ZARZOOM was created to solve a problem many founders and creators
-                face — staying consistent on social media.
+                {t("pages.about.story.para1")}
               </p>
               <p className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                While social media is one of the most powerful tools for building
-                an audience, maintaining a steady stream of high-quality content
-                is difficult and time-consuming.
+                {t("pages.about.story.para2")}
               </p>
               <p className="text-gray-700 font-medium leading-relaxed text-pretty">
-                By combining AI-powered content generation with automated
-                scheduling, ZARZOOM allows users to maintain a strong online
-                presence without the daily effort normally required.
+                {t("pages.about.story.para3")}
               </p>
             </motion.div>
           </div>
@@ -395,10 +363,10 @@ export default function AboutPage() {
               className="text-center mb-14"
             >
               <p className="text-green-600 text-xs font-semibold uppercase tracking-widest mb-3">
-                The Platform
+                {t("pages.about.platform.badge")}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-balance max-w-2xl mx-auto">
-                How ZARZOOM Helps You Grow
+                {t("pages.about.platform.heading")}
               </h2>
             </motion.div>
 
@@ -454,23 +422,19 @@ export default function AboutPage() {
                     variants={{ hidden: {}, visible: {} }}
                   >
                     <motion.p custom={0} variants={fadeUp} className="text-green-600 text-xs font-semibold uppercase tracking-widest mb-4">
-                      Looking Ahead
+                      {t("pages.about.lookingAhead.badge")}
                     </motion.p>
                     <motion.h2 custom={1} variants={fadeUp} className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 text-balance leading-tight mb-6">
-                      The Future of Social Media Growth
+                      {t("pages.about.lookingAhead.heading")}
                     </motion.h2>
                     <motion.p custom={2} variants={fadeUp} className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                      We believe the future of social media growth will be powered
-                      by intelligent automation.
+                      {t("pages.about.lookingAhead.para1")}
                     </motion.p>
                     <motion.p custom={3} variants={fadeUp} className="text-gray-600 leading-relaxed mb-4 text-pretty">
-                      ZARZOOM is continually evolving to help businesses and
-                      creators build their online presence faster and more
-                      effectively.
+                      {t("pages.about.lookingAhead.para2")}
                     </motion.p>
                     <motion.p custom={4} variants={fadeUp} className="text-gray-700 font-semibold leading-relaxed text-pretty">
-                      Our goal is simple: make powerful social media growth tools
-                      accessible to everyone.
+                      {t("pages.about.lookingAhead.para3")}
                     </motion.p>
                   </motion.div>
                 </div>
@@ -487,14 +451,14 @@ export default function AboutPage() {
                     <div className="w-20 h-20 bg-white rounded-3xl shadow-lg flex items-center justify-center mx-auto mb-6 border border-green-100">
                       <Sparkles className="w-9 h-9 text-green-600" />
                     </div>
-                    <p className="text-2xl font-bold text-gray-900 mb-2 text-balance">Intelligent Automation</p>
+                    <p className="text-2xl font-bold text-gray-900 mb-2 text-balance">{t("pages.about.intelligentAutomation.title")}</p>
                     <p className="text-gray-600 max-w-xs mx-auto text-sm leading-relaxed">
-                      Powered by cutting-edge AI to grow your audience while you focus on your business.
+                      {t("pages.about.intelligentAutomation.subtitle")}
                     </p>
                     <div className="mt-6 flex flex-wrap justify-center gap-2">
-                      {["AI Generation", "Auto-Schedule", "Multi-Platform", "Analytics"].map((tag) => (
-                        <span key={tag} className="bg-white text-green-700 text-xs font-semibold border border-green-200 px-3 py-1.5 rounded-full shadow-sm">
-                          {tag}
+                      {[0, 1, 2, 3].map((idx) => (
+                        <span key={idx} className="bg-white text-green-700 text-xs font-semibold border border-green-200 px-3 py-1.5 rounded-full shadow-sm">
+                          {t(`pages.about.intelligentAutomation.tags.${idx}`)}
                         </span>
                       ))}
                     </div>
@@ -517,13 +481,13 @@ export default function AboutPage() {
             >
               <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-10 md:p-16 text-center shadow-2xl">
                 <motion.p custom={0} variants={fadeUp} className="text-green-200 text-xs font-semibold uppercase tracking-widest mb-4">
-                  Get Started Today
+                  {t("pages.about.cta.badge")}
                 </motion.p>
                 <motion.h2 custom={1} variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-white text-balance mb-4">
-                  Start Autopiloting Your Socials Today
+                  {t("pages.about.cta.title")}
                 </motion.h2>
                 <motion.p custom={2} variants={fadeUp} className="text-green-50 text-lg mb-10 max-w-xl mx-auto text-pretty leading-relaxed">
-                  Join thousands of creators and businesses growing on autopilot.
+                  {t("pages.about.cta.description")}
                 </motion.p>
                 <motion.div
                   custom={3}
@@ -534,14 +498,14 @@ export default function AboutPage() {
                     href="/login-launch"
                     className="inline-flex items-center gap-2 bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg"
                   >
-                    Get Started
+                    {t("pages.about.cta.getStarted")}
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                   <Link
                     href="/features"
                     className="inline-flex items-center gap-2 border border-green-400/50 hover:border-white/60 text-white font-semibold px-8 py-4 rounded-xl transition-colors duration-200 text-lg"
                   >
-                    View Features
+                    {t("pages.about.cta.viewFeatures")}
                     <ChevronRight className="w-5 h-5" />
                   </Link>
                 </motion.div>

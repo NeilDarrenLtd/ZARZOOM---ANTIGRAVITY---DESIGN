@@ -109,32 +109,39 @@ export async function POST(req: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   /* ---------------------------------------------------------------- */
-  /*  1. Signature verification                                        */
+  /*  1. Signature verification (fail closed)                          */
   /* ---------------------------------------------------------------- */
-  let event: Stripe.Event;
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: "STRIPE_WEBHOOK_SECRET is required" },
+      { status: 400 }
+    );
+  }
+  if (!sig) {
+    return NextResponse.json(
+      { error: "Missing stripe-signature header" },
+      { status: 400 }
+    );
+  }
 
-  if (webhookSecret && sig) {
-    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2026-01-28.clover",
-      });
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-    } catch (err) {
-      console.error("[Webhooks/Billing] Signature verification failed:", err);
+  let event: Stripe.Event;
+  try {
+    const stripeSecret = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecret) {
       return NextResponse.json(
-        { error: "Webhook signature verification failed" },
-        { status: 400 }
+        { error: "Webhook misconfiguration" },
+        { status: 503 }
       );
     }
-  } else {
-    // Dev fallback -- parse without verification
-    try {
-      event = JSON.parse(body) as Stripe.Event;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-    }
-    console.warn(
-      "[Webhooks/Billing] No STRIPE_WEBHOOK_SECRET set. Skipping signature verification."
+    const stripe = new Stripe(stripeSecret, {
+      apiVersion: "2026-01-28.clover",
+    });
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+  } catch (err) {
+    console.error("[Webhooks/Billing] Signature verification failed:", err);
+    return NextResponse.json(
+      { error: "Webhook signature verification failed" },
+      { status: 400 }
     );
   }
 

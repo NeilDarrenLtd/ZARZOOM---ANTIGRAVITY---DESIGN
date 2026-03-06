@@ -8,109 +8,46 @@ import {
   Network,
   BarChart3,
   FolderOpen,
-  Users,
   Plug,
   HeadphonesIcon,
   Check,
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
+
+const FEATURE_KEYS = [
+  "aiContent",
+  "smartScheduling",
+  "multiPlatform",
+  "analytics",
+  "contentLibrary",
+  "openClawIntegration",
+  "support",
+] as const;
+
+const FEATURE_ICONS = [
+  Sparkles,
+  Calendar,
+  Network,
+  BarChart3,
+  FolderOpen,
+  Plug,
+  HeadphonesIcon,
+] as const;
+
+const FEATURE_IMAGES = [
+  "/images/features/ai-content.jpg",
+  "/images/features/smart-scheduling.jpg",
+  "/images/features/multi-platform.jpg",
+  "/images/features/analytics.jpg",
+  "/images/features/content-library.jpg",
+  "/images/features/integrations.jpg",
+  "/images/features/support.jpg",
+];
 
 export default function FeaturesPage() {
-
-  const features = [
-    {
-      icon: Sparkles,
-      title: "AI-Powered Content Generation",
-      description:
-        "Create engaging posts in seconds with our advanced AI that understands your brand voice, audience preferences, and trending topics. Generate captions, hashtags, and full post ideas that resonate with your community.",
-      features: [
-        "Brand voice learning and adaptation",
-        "Trending topic integration",
-        "Multi-format content (text, captions, hashtags)",
-        "A/B testing suggestions",
-      ],
-      image: "/images/features/ai-content.jpg",
-    },
-    {
-      icon: Calendar,
-      title: "Smart Scheduling & Autopilot",
-      description:
-        "Let our AI determine the optimal posting times for maximum engagement. Set your preferences once, and watch your social presence grow on autopilot while you focus on your business.",
-      features: [
-        "Audience activity analysis",
-        "Time zone optimization",
-        "Content calendar automation",
-        "Engagement-based scheduling",
-      ],
-      image: "/images/features/smart-scheduling.jpg",
-    },
-    {
-      icon: Network,
-      title: "Multi-Platform Management",
-      description:
-        "Manage all your social media accounts from one unified dashboard. Post to Twitter, LinkedIn, Facebook, Instagram, and more with a single click.",
-      features: [
-        "Cross-platform posting",
-        "Platform-specific optimization",
-        "Unified inbox",
-        "Centralized analytics",
-      ],
-      image: "/images/features/multi-platform.jpg",
-    },
-    {
-      icon: BarChart3,
-      title: "Advanced Analytics & Insights",
-      description:
-        "Track what matters with comprehensive analytics that go beyond vanity metrics. Understand your audience, measure ROI, and make data-driven decisions to improve your strategy.",
-      features: [
-        "Real-time performance tracking",
-        "Audience demographics & behavior",
-        "Engagement rate analysis",
-        "Competitor benchmarking",
-      ],
-      image: "/images/features/analytics.jpg",
-    },
-    {
-      icon: FolderOpen,
-      title: "Content Library & Assets",
-      description:
-        "Build and organize your content repository with our intelligent media library. Store images, videos, templates, and copy snippets for quick access and reuse.",
-      features: [
-        "Unlimited media storage",
-        "Smart tagging and search",
-        "Template library",
-        "Asset performance tracking",
-      ],
-      image: "/images/features/content-library.jpg",
-    },
-    {
-      icon: Plug,
-      title: "API & OpenClaw Integrations",
-      description:
-        "Supercharge your workflow with ZARZOOM's powerful OpenClaw integration for on-demand automated social media creation and scheduling across 10 platforms. Trigger AI-powered content generation directly from your existing systems via our REST API, or let OpenClaw agents handle everything autonomously. Perfect for agencies, developers, and businesses wanting seamless automation.",
-      features: [
-        "OpenClaw agent automation (10+ platforms)",
-        "On-demand AI content creation via API",
-        "Instant scheduling triggers",
-        "Custom workflow automation",
-      ],
-      image: "/images/features/integrations.jpg",
-    },
-    {
-      icon: HeadphonesIcon,
-      title: "World-Class Support",
-      description:
-        "Get help when you need it with our dedicated support team. Access comprehensive documentation, video tutorials, and responsive customer service.",
-      features: [
-        "24/7 email support",
-        "Live chat (Pro+)",
-        "Video tutorials",
-        "Knowledge base",
-      ],
-      image: "/images/features/support.jpg",
-    },
-  ];
+  const { t } = useI18n();
 
   return (
     <>
@@ -120,45 +57,50 @@ export default function FeaturesPage() {
           {/* Hero Section */}
           <div className="text-center mb-20">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-6 text-balance">
-              Powerful Features
+              {t("pages.features.hero.title")}
             </h1>
             <p className="mt-4 text-lg text-gray-600 max-w-4xl mx-auto text-balance">
-              Everything you need to automate, optimize, and scale your social
-              media presence—all in one intelligent platform.
+              {t("pages.features.hero.subtitle")}
             </p>
           </div>
 
           {/* Features Grid */}
           <div className="space-y-16 mb-20">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
+            {FEATURE_KEYS.map((key, index) => {
+              const Icon = FEATURE_ICONS[index];
               const isEven = index % 2 === 0;
+              const title = t(`pages.features.${key}.title`);
+              const description = t(`pages.features.${key}.description`);
+              const features: string[] = [];
+              for (let i = 0; ; i++) {
+                const v = t(`pages.features.${key}.features.${i}`);
+                if (!v || v === `pages.features.${key}.features.${i}`) break;
+                features.push(v);
+              }
 
               return (
                 <div
-                  key={index}
+                  key={key}
                   className={`bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 ${
                     isEven ? "md:flex-row" : "md:flex-row-reverse"
                   } flex flex-col md:flex`}
                 >
-                  {/* Content Side */}
                   <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
                     <div className="flex items-center gap-4 mb-5">
                       <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Icon className="w-6 h-6 text-green-700" />
                       </div>
                       <h2 className="text-xl font-bold text-gray-900 text-balance">
-                        {feature.title}
+                        {title}
                       </h2>
                     </div>
 
                     <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                      {feature.description}
+                      {description}
                     </p>
 
-                    {/* Feature List */}
                     <div className="grid gap-3">
-                      {feature.features.map((item, idx) => (
+                      {features.map((item, idx) => (
                         <div key={idx} className="flex items-center gap-3">
                           <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                             <Check className="w-4 h-4 text-green-600" />
@@ -169,16 +111,21 @@ export default function FeaturesPage() {
                     </div>
                   </div>
 
-                  {/* Visual Side - Logo-style square image container */}
                   <div className="flex-1 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-8 md:p-12">
-                    <div className={`relative aspect-square w-full max-w-md rounded-3xl overflow-hidden shadow-lg ${
-                      index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 ? "ring-2 ring-green-500 shadow-green-500/30" : "border border-gray-200 shadow-sm"
-                    }`}>
+                    <div
+                      className={`relative aspect-square w-full max-w-md rounded-3xl overflow-hidden shadow-lg ${
+                        index < 7
+                          ? "ring-2 ring-green-500 shadow-green-500/30"
+                          : "border border-gray-200 shadow-sm"
+                      }`}
+                    >
                       <Image
-                        src={feature.image}
-                        alt={feature.title}
+                        src={FEATURE_IMAGES[index]}
+                        alt={title}
                         fill
-                        className={`${index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 ? "object-cover" : "object-contain p-10"}`}
+                        className={
+                          index < 7 ? "object-cover" : "object-contain p-10"
+                        }
                         sizes="(max-width: 768px) 100vw, 50vw"
                         priority={index < 2}
                       />
@@ -193,17 +140,16 @@ export default function FeaturesPage() {
           <section>
             <div className="bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-8 md:p-12 text-center shadow-2xl">
               <h2 className="text-2xl font-bold text-white mb-4">
-                Ready to Transform Your Social Media?
+                {t("pages.features.cta.title")}
               </h2>
               <p className="text-lg text-green-50 mb-8 max-w-2xl mx-auto">
-                Start your free trial and experience the power of intelligent
-                automation.
+                {t("pages.features.cta.description")}
               </p>
               <Link
                 href="/login-launch"
                 className="inline-flex items-center gap-2 bg-white text-green-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg"
               >
-                Get Started Free
+                {t("pages.features.cta.button")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

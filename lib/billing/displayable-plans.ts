@@ -86,15 +86,15 @@ export async function getDisplayablePlans(
         plans: {} as Record<string, any>,
       };
       
-      // Extract plan keys from translation function
+      // Extract plan keys from translation function (billing.plans.* in locale files)
       apiPlans.forEach((plan) => {
-        const testKey = `plans.${plan.planKey}.displayName`;
+        const testKey = `billing.plans.${plan.planKey}.displayName`;
         const result = t(testKey, "__MISSING__");
         if (result !== "__MISSING__") {
           translations.plans[plan.planKey] = {
-            displayName: t(`plans.${plan.planKey}.displayName`),
-            shortTagline: t(`plans.${plan.planKey}.shortTagline`),
-            description: t(`plans.${plan.planKey}.description`),
+            displayName: t(`billing.plans.${plan.planKey}.displayName`),
+            shortTagline: t(`billing.plans.${plan.planKey}.shortTagline`),
+            description: t(`billing.plans.${plan.planKey}.description`),
             bullets: [],
           };
         }

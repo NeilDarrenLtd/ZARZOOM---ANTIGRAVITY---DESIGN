@@ -4,12 +4,12 @@
  * Utilities for accessing standardized plan marketing copy from i18n.
  * Plan copy is separate from pricing data - it contains display text only.
  * 
- * Structure:
- * - plans.{planKey}.displayName
- * - plans.{planKey}.shortTagline
- * - plans.{planKey}.description
- * - plans.{planKey}.bullets[]
- * - plans.{planKey}.cta (optional)
+ * Structure (in locale JSON under billing.plans):
+ * - billing.plans.{planKey}.displayName
+ * - billing.plans.{planKey}.shortTagline
+ * - billing.plans.{planKey}.description
+ * - billing.plans.{planKey}.bullets[]
+ * - billing.plans.{planKey}.cta (optional)
  * 
  * Rules:
  * - No numeric pricing in i18n
@@ -67,19 +67,18 @@ const REQUIRED_PLAN_KEYS = [
  */
 export function hasPlanCopy(planKey: string, t: TranslateFn): boolean {
   // Check each required key
+  const prefix = `billing.plans.${planKey}`;
   for (const key of REQUIRED_PLAN_KEYS) {
-    const fullKey = `plans.${planKey}.${key}`;
+    const fullKey = `${prefix}.${key}`;
     const value = t(fullKey, '');
-    
-    // If value is empty or equals the key (translation missing), return false
+
     if (!value || value === fullKey) {
       return false;
     }
-    
-    // For bullets array, check if we can get at least one bullet
+
     if (key === 'bullets') {
-      const firstBullet = t(`${fullKey}.0`, '');
-      if (!firstBullet || firstBullet === `${fullKey}.0`) {
+      const firstBullet = t(`${prefix}.bullets.0`, '');
+      if (!firstBullet || firstBullet === `${prefix}.bullets.0`) {
         return false;
       }
     }
@@ -127,26 +126,25 @@ export function getPlanCopy(planKey: string, t: TranslateFn): PlanCopy {
     );
   }
   
-  // Extract all bullets (keep fetching until we get an empty/missing key)
+  const prefix = `billing.plans.${planKey}`;
   const bullets: string[] = [];
   let bulletIndex = 0;
   while (true) {
-    const bullet = t(`plans.${planKey}.bullets.${bulletIndex}`, '');
-    if (!bullet || bullet === `plans.${planKey}.bullets.${bulletIndex}`) {
+    const bullet = t(`${prefix}.bullets.${bulletIndex}`, '');
+    if (!bullet || bullet === `${prefix}.bullets.${bulletIndex}`) {
       break;
     }
     bullets.push(bullet);
     bulletIndex++;
   }
-  
-  // Get CTA (optional)
-  const cta = t(`plans.${planKey}.cta`, '');
-  const ctaValue = cta && cta !== `plans.${planKey}.cta` ? cta : undefined;
-  
+
+  const cta = t(`${prefix}.cta`, '');
+  const ctaValue = cta && cta !== `${prefix}.cta` ? cta : undefined;
+
   return {
-    displayName: t(`plans.${planKey}.displayName`),
-    shortTagline: t(`plans.${planKey}.shortTagline`),
-    description: t(`plans.${planKey}.description`),
+    displayName: t(`${prefix}.displayName`),
+    shortTagline: t(`${prefix}.shortTagline`),
+    description: t(`${prefix}.description`),
     bullets,
     cta: ctaValue,
   };
@@ -200,7 +198,7 @@ export function hasPlanCopyKey(
   copyKey: string,
   t: TranslateFn
 ): boolean {
-  const fullKey = `plans.${planKey}.${copyKey}`;
+  const fullKey = `billing.plans.${planKey}.${copyKey}`;
   const value = t(fullKey, '');
   return !!value && value !== fullKey;
 }
@@ -225,7 +223,7 @@ export function getPlanCopyValue(
   t: TranslateFn,
   fallback = ''
 ): string {
-  const fullKey = `plans.${planKey}.${copyKey}`;
+  const fullKey = `billing.plans.${planKey}.${copyKey}`;
   const value = t(fullKey, fallback);
   return value === fullKey ? fallback : value;
 }

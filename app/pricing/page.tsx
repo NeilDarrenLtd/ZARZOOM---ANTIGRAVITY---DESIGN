@@ -30,10 +30,10 @@ export default async function PricingPage() {
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
-            Simple, Transparent Pricing
+            {t("billing.pricing.page.title")}
           </h1>
           <p className="mt-4 text-lg text-zinc-600">
-            Choose the plan that's right for you. All plans include a 14-day free trial.
+            {t("billing.pricing.page.subtitle")}
           </p>
         </div>
 
@@ -43,7 +43,9 @@ export default async function PricingPage() {
         {/* FAQ Section */}
         <div className="mt-16 text-center">
           <p className="text-sm text-zinc-600">
-            Questions? <a href="/contact" className="text-green-600 hover:text-green-700 underline">Contact us</a> and we'll help you find the right plan.
+            {t("billing.pricing.page.contactCtaPrefix")}
+            <a href="/contact" className="text-green-600 hover:text-green-700 underline">{t("billing.pricing.page.contactLink")}</a>
+            {t("billing.pricing.page.contactCtaSuffix")}
           </p>
         </div>
       </div>

@@ -44,31 +44,38 @@ export async function POST(req: NextRequest) {
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  /* -- Signature verification ------------------------------------- */
-  let event: Stripe.Event;
+  /* -- Signature verification (fail closed) ----------------------- */
+  if (!webhookSecret) {
+    return NextResponse.json(
+      { error: "STRIPE_WEBHOOK_SECRET is required" },
+      { status: 400 }
+    );
+  }
+  if (!sig) {
+    return NextResponse.json(
+      { error: "Missing stripe-signature header" },
+      { status: 400 }
+    );
+  }
 
-  if (webhookSecret && sig) {
-    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-        apiVersion: "2026-01-28.clover",
-      });
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-    } catch (err) {
-      console.error("[Billing Webhook] Signature verification failed:", err);
+  let event: Stripe.Event;
+  try {
+    const stripeSecret = process.env.STRIPE_SECRET_KEY;
+    if (!stripeSecret) {
       return NextResponse.json(
-        { error: "Webhook signature verification failed" },
-        { status: 400 }
+        { error: "Webhook misconfiguration" },
+        { status: 503 }
       );
     }
-  } else {
-    // Development fallback -- no Stripe configured yet
-    try {
-      event = JSON.parse(body) as Stripe.Event;
-    } catch {
-      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-    }
-    console.warn(
-      "[Billing Webhook] No STRIPE_WEBHOOK_SECRET set. Skipping signature verification."
+    const stripe = new Stripe(stripeSecret, {
+      apiVersion: "2026-01-28.clover",
+    });
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+  } catch (err) {
+    console.error("[Billing Webhook] Signature verification failed:", err);
+    return NextResponse.json(
+      { error: "Webhook signature verification failed" },
+      { status: 400 }
     );
   }
 

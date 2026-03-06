@@ -79,7 +79,7 @@ async function main() {
   
   const enContent = fs.readFileSync(enPath, "utf-8");
   const translations = JSON.parse(enContent);
-  const planCopies: Record<string, PlanCopy> = translations.plans || {};
+  const planCopies: Record<string, PlanCopy> = translations.billing?.plans || {};
   
   console.log(`✓ Loaded translations for ${Object.keys(planCopies).length} plan(s)`);
   
@@ -103,7 +103,7 @@ async function main() {
     console.error("❌ Plans in database WITHOUT i18n copy:");
     missingI18n.forEach((key) => {
       console.error(`   • ${key}`);
-      console.error(`     → Add plans.${key}.{displayName,shortTagline,description,bullets} to locales/en.json`);
+      console.error(`     → Add billing.plans.${key}.{displayName,shortTagline,description,bullets} to locales/en.json`);
     });
     console.error("");
   }
@@ -120,7 +120,7 @@ async function main() {
     console.warn("⚠️  i18n translations WITHOUT database entry:");
     orphanedI18n.forEach((key) => {
       console.warn(`   • ${key}`);
-      console.warn(`     → Either create plan in DB or remove plans.${key} from locales/en.json`);
+      console.warn(`     → Either create plan in DB or remove billing.plans.${key} from locales/en.json`);
     });
     console.warn("");
   }
@@ -155,7 +155,7 @@ async function main() {
     console.error("❌ Plans with INCOMPLETE i18n copy:");
     incompleteCopy.forEach(({ key, missing }) => {
       console.error(`   • ${key} missing: ${missing.join(", ")}`);
-      console.error(`     → Add missing fields to plans.${key} in locales/en.json`);
+      console.error(`     → Add missing fields to billing.plans.${key} in locales/en.json`);
     });
     console.error("");
   }
