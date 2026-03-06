@@ -5,16 +5,11 @@
  */
 
 import { cookies } from "next/headers";
-import enTranslationsJson from "@/locales/en.json";
-
-const enTranslations = enTranslationsJson as Record<string, unknown>;
 
 type Translations = Record<string, unknown>;
 type TranslationKey = string;
 
-const translationCache: Record<string, Translations> = {
-  en: enTranslations,
-};
+const translationCache: Record<string, Translations> = {};
 
 async function loadServerTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -27,7 +22,12 @@ async function loadServerTranslations(locale: string): Promise<Translations> {
     translationCache[locale] = translations;
     return translations;
   } catch {
-    return enTranslations;
+    // Fallback to English
+    if (!translationCache.en) {
+      const enModule = await import(`@/locales/en.json`);
+      translationCache.en = enModule.default;
+    }
+    return translationCache.en;
   }
 }
 

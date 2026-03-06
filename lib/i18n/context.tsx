@@ -9,7 +9,6 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-import enTranslationsRaw from "@/locales/en.json";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
@@ -31,14 +30,12 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
-// Pre-populate with English for synchronous first render
-const translationCache: Record<string, Translations> = {
-  en: enTranslationsRaw,
-};
+// Pre-populate with an empty object initially
+const translationCache: Record<string, Translations> = {};
 
-if (process.env.NODE_ENV === "development") {
-  devCheckPricing(enTranslationsRaw, "en");
-}
+// Flag to track if English has been loaded
+let enTranslationsLoaded = false;
+let enTranslationsRaw: Translations = {};
 
 async function loadTranslation(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
@@ -54,7 +51,16 @@ async function loadTranslation(locale: string): Promise<Translations> {
     }
     return translations;
   } catch {
-    // Fallback to English if locale cannot be loaded
+    // Ensure English is loaded as fallback
+    if (!enTranslationsLoaded) {
+      const enMod = await import(`@/locales/en.json`);
+      enTranslationsRaw = enMod.default;
+      enTranslationsLoaded = true;
+      translationCache.en = enTranslationsRaw;
+      if (process.env.NODE_ENV === "development") {
+        devCheckPricing(enTranslationsRaw, "en");
+      }
+    }
     return enTranslationsRaw;
   }
 }
@@ -78,25 +84,40 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState(defaultLanguage);
-  // Initialize with English so translations are available on first render
-  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw as Translations);
+  // Start with empty object, will be populated on first render
+  const [translations, setTranslations] = useState<Translations>({});
 
   useEffect(() => {
-    const stored = localStorage.getItem("zarzoom-locale");
-    if (stored) {
-      setLocaleState(stored);
-      // If stored locale is not English, load it asynchronously
-      if (stored !== "en") {
-        loadTranslation(stored).then(setTranslations);
+    const initializeI18n = async () => {
+      // Load English translations first (always needed as fallback)
+      if (!enTranslationsLoaded) {
+        await loadTranslation("en");
       }
-    } else {
-      const browserLang = navigator.language || defaultLanguage;
-      const detected = getSupportedLanguageCode(browserLang);
-      setLocaleState(detected);
-      if (detected !== defaultLanguage && detected !== "en") {
-        loadTranslation(detected).then(setTranslations);
+
+      const stored = localStorage.getItem("zarzoom-locale");
+      if (stored) {
+        setLocaleState(stored);
+        // If stored locale is not English, load it asynchronously
+        if (stored !== "en") {
+          const trans = await loadTranslation(stored);
+          setTranslations(trans);
+        } else {
+          setTranslations(enTranslationsRaw);
+        }
+      } else {
+        const browserLang = navigator.language || defaultLanguage;
+        const detected = getSupportedLanguageCode(browserLang);
+        setLocaleState(detected);
+        if (detected !== defaultLanguage && detected !== "en") {
+          const trans = await loadTranslation(detected);
+          setTranslations(trans);
+        } else {
+          setTranslations(enTranslationsRaw);
+        }
       }
-    }
+    };
+
+    initializeI18n();
   }, []);
 
   useEffect(() => {
