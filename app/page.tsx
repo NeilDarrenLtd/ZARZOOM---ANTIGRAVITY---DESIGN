@@ -34,7 +34,7 @@ export default function Home() {
   const ctaY = useTransform(scrollYProgress, [0.55, 0.65], [40, 0]);
 
   return (
-    <main className="bg-white min-h-screen">
+    <main className="bg-white min-h-screen relative">
       <DynamicSEO />
       <Navbar />
 

@@ -9,9 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-// Import from TypeScript module to guarantee a plain JS object on first render,
-// bypassing any webpack JSON-module handling.
-import enTranslationsRaw from "./en-translations";
+import enTranslationsRaw from "@/locales/en.json";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
