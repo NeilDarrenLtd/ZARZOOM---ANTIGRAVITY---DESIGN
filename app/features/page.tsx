@@ -21,7 +21,7 @@ export default function FeaturesPage() {
   const features = [
     {
       icon: Sparkles,
-      title: "AI-Powered Content Generation: TESTING",
+      title: "AI-Powered Content Generation: TESTING STAGING CHANGE",
       description:
         "Create engaging posts in seconds with our advanced AI that understands your brand voice, audience preferences, and trending topics. Generate captions, hashtags, and full post ideas that resonate with your community.",
       features: [
