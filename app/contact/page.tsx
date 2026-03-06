@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, Mail, Phone, MapPin, Loader } from "lucide-react";
+import { ArrowLeft, Mail, Phone, MapPin, Clock, Loader } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import SiteNavbar from "@/components/SiteNavbar";
@@ -112,66 +112,86 @@ export default function ContactPage() {
             ))}
           </div>
         ) : (
-          <div className={`grid gap-8 mb-12 ${
-            isLoggedIn ? 'md:grid-cols-3' : 'md:grid-cols-1 max-w-md'
-          }`}>
-            {/* Email Card - Always visible */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <Mail className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Email
-                  </h3>
-                  <a
-                    href="mailto:support@zarzoom.com"
-                    className="text-green-600 hover:text-green-700 font-medium transition-colors"
-                  >
-                    support@zarzoom.com
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Phone Card - Only visible when logged in */}
-            {isLoggedIn && (
+          <div className="mb-12">
+            {/* Email and Office Hours Cards - Side by side */}
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Email Card - Always visible */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-green-50 rounded-lg">
-                    <Phone className="w-6 h-6 text-green-600" />
+                    <Mail className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">
-                      Phone
+                      Email
                     </h3>
                     <a
-                      href="tel:+441234567890"
+                      href="mailto:support@zarzoom.com"
                       className="text-green-600 hover:text-green-700 font-medium transition-colors"
                     >
-                      +44 (0) 123 456 7890
+                      support@zarzoom.com
                     </a>
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Office Card - Only visible when logged in */}
-            {isLoggedIn && (
+              {/* Office Hours Card - Always visible */}
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-green-50 rounded-lg">
-                    <MapPin className="w-6 h-6 text-green-600" />
+                    <Clock className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">
-                      Office
+                      Office Hours
                     </h3>
-                    <p className="text-gray-600 text-sm">
-                      123 Business Street<br />
-                      London, UK EC1A 1AA
-                    </p>
+                    <div className="text-gray-600 text-sm space-y-1">
+                      <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+                      <p>Saturday - Sunday: Closed</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Cards - Only visible when logged in */}
+            {isLoggedIn && (
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Phone Card */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <Phone className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Phone
+                      </h3>
+                      <a
+                        href="tel:+441234567890"
+                        className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                      >
+                        +44 (0) 123 456 7890
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Office Card */}
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                      <MapPin className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        Office
+                      </h3>
+                      <p className="text-gray-600 text-sm">
+                        123 Business Street<br />
+                        London, UK EC1A 1AA
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
