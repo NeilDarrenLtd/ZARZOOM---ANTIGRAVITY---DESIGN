@@ -2,12 +2,12 @@
  * Server-side i18n utilities
  *
  * For use in Server Components and API routes.
- * English is imported from a TypeScript module (not JSON) to guarantee
- * a plain JS object, bypassing any webpack JSON-module handling.
  */
 
 import { cookies } from "next/headers";
-import enTranslations from "./en-translations";
+import enTranslationsJson from "@/locales/en.json";
+
+const enTranslations = enTranslationsJson as Record<string, unknown>;
 
 type Translations = Record<string, unknown>;
 type TranslationKey = string;
