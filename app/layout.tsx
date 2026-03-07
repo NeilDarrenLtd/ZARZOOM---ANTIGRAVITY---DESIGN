@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/lib/i18n";
+import { getPreferredLocale } from "@/lib/i18n/server";
 
 const inter = Inter({ subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext", "greek", "greek-ext", "vietnamese"] });
 
@@ -61,15 +62,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const preferredLocale = await getPreferredLocale();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={preferredLocale ?? "en"} suppressHydrationWarning>
       <body className={inter.className}>
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider initialLocale={preferredLocale}>{children}</I18nProvider>
       </body>
     </html>
   );

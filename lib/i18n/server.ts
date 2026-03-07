@@ -4,8 +4,28 @@
  * For use in Server Components and API routes.
  */
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getDefaultTranslationsSync, loadLocale } from "./load";
+import { languages } from "./languages";
+
+const SUPPORTED_CODES = new Set(languages.map((l) => l.code));
+
+/**
+ * Read the user's preferred locale: cookie first (persisted choice), then x-next-locale header
+ * (set by middleware for locale-prefixed paths so first paint is correct before cookie exists).
+ * Returns the value only if it is a supported language code; otherwise undefined.
+ */
+export async function getPreferredLocale(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  const raw = cookieStore.get("locale")?.value?.trim();
+  if (raw) {
+    const decoded = decodeURIComponent(raw);
+    if (SUPPORTED_CODES.has(decoded)) return decoded;
+  }
+  const headerLocale = (await headers()).get("x-next-locale")?.trim();
+  if (headerLocale && SUPPORTED_CODES.has(headerLocale)) return headerLocale;
+  return undefined;
+}
 
 type Translations = Record<string, unknown>;
 type TranslationKey = string;

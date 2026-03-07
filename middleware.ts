@@ -1,5 +1,5 @@
 import { updateSession } from '@/lib/supabase/middleware'
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { DEFAULT_LOCALE, isRoutedLocale, getPublicPathSegments } from '@/lib/i18n/routing'
 
 export async function middleware(request: NextRequest) {
@@ -14,16 +14,29 @@ export async function middleware(request: NextRequest) {
   const segments = pathname.split('/').filter(Boolean)
   const first = segments[0]
 
-  // Root → default locale
+  // Root → redirect to locale (prefer cookie so login → home keeps language)
   if (pathname === '/' || pathname === '') {
     const url = request.nextUrl.clone()
-    url.pathname = `/${DEFAULT_LOCALE}`
+    const cookieLocale = request.cookies.get('locale')?.value?.trim()
+    const targetLocale =
+      cookieLocale && isRoutedLocale(cookieLocale) ? cookieLocale : DEFAULT_LOCALE
+    url.pathname = `/${targetLocale}`
     return NextResponse.redirect(url)
   }
 
-  // First segment is a locale: set locale cookie (so login/app preserve language) then continue
+  // First segment is a locale: respect cookie if user chose a different language (e.g. login → home)
   if (isRoutedLocale(first)) {
-    const response = await updateSession(request)
+    const existingCookie = request.cookies.get('locale')?.value?.trim()
+    if (existingCookie && isRoutedLocale(existingCookie) && existingCookie !== first) {
+      const url = request.nextUrl.clone()
+      const rest = pathname.slice(first.length + 1)
+      url.pathname = rest ? `/${existingCookie}/${rest}` : `/${existingCookie}`
+      return NextResponse.redirect(url)
+    }
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-next-locale', first)
+    const requestWithLocale = new NextRequest(request.url, { headers: requestHeaders })
+    const response = await updateSession(requestWithLocale)
     response.cookies.set('locale', first, {
       path: '/',
       maxAge: 31536000,

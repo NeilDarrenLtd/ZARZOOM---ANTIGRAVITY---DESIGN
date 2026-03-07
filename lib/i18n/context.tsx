@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import { defaultLanguage, getSupportedLanguageCode, languages } from "./languages";
 import { getDefaultTranslationsSync, loadLocale } from "./load";
 import { devCheckPricing } from "./validate-no-pricing";
@@ -94,6 +95,7 @@ export interface I18nProviderProps {
 }
 
 export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
+  const pathname = usePathname();
   const [locale, setLocaleState] = useState(initialLocale ?? defaultLanguage);
   const [translations, setTranslations] = useState<Translations>(
     initialLocale === "en" ? enTranslationsRaw : enTranslationsRaw
@@ -127,6 +129,23 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
       setTranslations(enTranslationsRaw);
     }
   }, [initialLocale]);
+
+  // Sync from cookie when pathname changes so root provider stays in sync (e.g. home → login keeps language)
+  useEffect(() => {
+    const fromCookie = getLocaleFromCookie();
+    if (fromCookie && fromCookie !== locale) {
+      setLocaleState(fromCookie);
+      setLocaleCookie(fromCookie);
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, fromCookie);
+      }
+      if (fromCookie !== "en") {
+        loadTranslation(fromCookie).then(setTranslations);
+      } else {
+        setTranslations(enTranslationsRaw);
+      }
+    }
+  }, [pathname]);
 
   useEffect(() => {
     document.documentElement.lang = locale;
