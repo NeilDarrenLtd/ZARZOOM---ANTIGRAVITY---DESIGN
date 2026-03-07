@@ -13,9 +13,9 @@ import { useWorkspaceFetch, useWorkspaceFetcher } from "@/lib/workspace/context"
 /* ------------------------------------------------------------------ */
 
 export default function ApiKeysPage() {
-  const workspaceFetcher = useWorkspaceFetcher();
+  const workspaceFetcher = useWorkspaceFetcher<{ keys: ApiKeyItem[] }>();
   const workspaceFetch = useWorkspaceFetch();
-  const { data, error, isLoading, mutate } = useSWR<{ keys: ApiKeyItem[] }>(
+  const { data, error, isLoading, mutate } = useSWR(
     "/api/v1/api-keys",
     workspaceFetcher
   );

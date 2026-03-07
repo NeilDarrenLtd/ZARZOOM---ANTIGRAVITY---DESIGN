@@ -60,13 +60,13 @@ export function useWorkspaceFetch(): (
  * Returns a fetcher suitable for useSWR that includes X-Tenant-Id.
  * Usage: const fetcher = useWorkspaceFetcher(); useSWR(key, fetcher);
  */
-export function useWorkspaceFetcher(): (url: string) => Promise<unknown> {
+export function useWorkspaceFetcher<T = unknown>(): (url: string) => Promise<T> {
   const workspaceFetch = useWorkspaceFetch();
   return useCallback(
-    async (url: string) => {
+    async (url: string): Promise<T> => {
       const res = await workspaceFetch(url);
       if (!res.ok) throw new Error("Failed to fetch");
-      return res.json();
+      return res.json() as Promise<T>;
     },
     [workspaceFetch]
   );
