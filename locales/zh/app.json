@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "欢迎回来",
+    "loginSubtitle": "登录您的 ZARZOOM 账户",
+    "registerTitle": "创建账户",
+    "registerSubtitle": "加入数千名正在自动化社交媒体的营销人",
+    "email": "邮箱地址",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "login": "登录",
+    "register": "创建账户",
+    "forgotPassword": "忘记密码？",
+    "orContinueWith": "或使用以下方式继续",
+    "noAccount": "还没有账户？",
+    "hasAccount": "已有账户？",
+    "signUpLink": "注册",
+    "signInLink": "登录",
+    "passwordMinLength": "密码至少 8 个字符",
+    "passwordUppercase": "须包含大写字母",
+    "passwordLowercase": "须包含小写字母",
+    "passwordNumber": "须包含数字",
+    "passwordSpecial": "须包含特殊字符",
+    "passwordsNoMatch": "两次密码不一致",
+    "emailRequired": "请输入邮箱",
+    "emailInvalid": "请输入有效邮箱",
+    "signUpSuccess": "请查收邮件",
+    "signUpSuccessMessage": "我们已向您的邮箱发送验证链接，请查收并点击链接激活账户。",
+    "backToLogin": "返回登录",
+    "authError": "认证错误",
+    "authErrorMessage": "认证过程中出现问题，请重试。",
+    "tryAgain": "重试",
+    "tabLogin": "登录",
+    "tabCreateAccount": "创建账户",
+    "continueWithGoogle": "使用 Google 继续",
+    "continueWithFacebook": "使用 Facebook 继续",
+    "continueWithLinkedIn": "使用 LinkedIn 继续",
+    "continueWithX": "使用 X 继续",
+    "rememberMe": "记住我",
+    "forgotLogin": "忘记登录信息？",
+    "verifyTitle": "请查收邮件",
+    "verifySubtitle": "我们已向您的邮箱发送验证链接，请查收并点击链接激活账户。",
+    "verifyResend": "重新发送验证邮件",
+    "verifyResent": "验证邮件已重新发送",
+    "verifyBack": "返回登录",
+    "verifiedTitle": "邮箱已验证",
+    "verifiedSubtitle": "您的邮箱已成功验证，现在可以登录账户。",
+    "verifiedContinue": "前往登录",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "控制台",
+    "welcome": "欢迎回来",
+    "overview": "概览",
+    "accountSettings": "账户设置",
+    "connectedAccounts": "已连接账号",
+    "comingSoon": "即将推出——您的社交媒体指挥中心。",
+    "emailVerified": "邮箱已验证",
+    "memberSince": "加入于",
+    "profile": "品牌设置",
+    "supportDescription": "获取支持团队帮助，创建并管理工单。",
+    "restartSetup": "重新开始设置",
+    "restarting": "正在重启…"
+  },
+  "connect": {
+    "heading": "连接您的账号",
+    "subheading": "关联社交媒体账号，开始用 ZARZOOM 自动发帖。",
+    "connectAccounts": "连接账号",
+    "back": "返回"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "从文件自动填充"
+  },
+  "apiKeys": {
+    "createKeyTitle": "创建 API 密钥",
+    "keyCreated": "密钥已创建",
+    "close": "关闭",
+    "keyName": "密钥名称",
+    "keyNamePlaceholder": "如：生产环境、预发布、CI/CD",
+    "keyNameRequired": "名称为必填项",
+    "active": "有效",
+    "revoked": "已撤销",
+    "created": "创建于",
+    "lastUsed": "最后使用",
+    "revokedAt": "撤销于",
+    "rotate": "轮换",
+    "revoke": "撤销",
+    "revokeConfirm": "确定撤销此密钥？",
+    "rotateConfirm": "确定轮换密钥？",
+    "confirm": "确认",
+    "cancel": "取消",
+    "revoking": "撤销中…",
+    "rotating": "轮换中…",
+    "rotateTitle": "轮换：撤销此密钥并创建新密钥"
+  },
+  "profile": {
+    "title": "品牌设置",
+    "subtitle": "管理您的品牌、目标、套餐与社交连接。",
+    "saving": "保存中…",
+    "saved": "已成功保存。",
+    "saveFailed": "保存失败，请重试。",
+    "loadFailed": "加载资料失败，请重试。",
+    "save": "保存",
+    "sections": {
+      "brand": "品牌基础",
+      "brandDesc": "您的业务身份与内容偏好。",
+      "goals": "目标与增长",
+      "goalsDesc": "您希望用 ZARZOOM 达成的目标。",
+      "posting": "发帖偏好",
+      "postingDesc": "ZARZOOM 如何发布您的内容。",
+      "plan": "您的套餐",
+      "planDesc": "当前订阅与账单偏好。",
+      "social": "社交连接",
+      "socialDesc": "管理已连接的社交媒体账号。"
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "自动发布",
+        "help": "允许 ZARZOOM 代表您自动发布内容。"
+      }
+    },
+    "plan": {
+      "current": "当前套餐",
+      "noPlan": "未选择套餐",
+      "annualBilling": "按年计费",
+      "changePlan": "更换套餐"
+    },
+    "social": {
+      "username": "社交用户名",
+      "noUsername": "尚未配置",
+      "connected": "已连接社交账号",
+      "notConnected": "尚未连接任何账号",
+      "connect": "连接账号",
+      "manage": "管理连接"
+    },
+    "back": "返回控制台"
+  },
+  "support": {
+    "nav": {
+      "title": "支持",
+      "myTickets": "我的工单",
+      "createTicket": "创建工单",
+      "backToSupport": "返回支持",
+      "backToDashboard": "返回控制台"
+    },
+    "landing": {
+      "title": "获取支持",
+      "subtitle": "我们随时帮助您更好地使用 ZARZOOM。",
+      "description": "提交工单，我们将在工作日内 24 小时内回复。",
+      "createTicketBtn": "创建工单",
+      "myTicketsBtn": "我的工单"
+    },
+    "list": {
+      "title": "我的支持工单",
+      "subtitle": "查看并管理您的支持请求。",
+      "empty": "暂无工单",
+      "emptyDescription": "您尚未创建任何工单，点击下方按钮开始。",
+      "createFirstTicket": "创建第一个工单",
+      "filterByStatus": "按状态筛选",
+      "allTickets": "全部工单",
+      "showingTickets": "显示 {filtered} / {total} 个工单",
+      "noMatchFilter": "没有符合所选状态筛选的工单。",
+      "clearFilter": "清除筛选",
+      "table": {
+        "ticketId": "工单 ID",
+        "subject": "主题",
+        "status": "状态",
+        "lastUpdated": "最后更新",
+        "created": "创建时间"
+      }
+    },
+    "create": {
+      "title": "创建支持工单",
+      "subtitle": "描述您的问题，我们将协助解决。",
+      "form": {
+        "subject": "主题",
+        "subjectPlaceholder": "简要描述您的问题",
+        "subjectHelp": "必填，请简短清晰。",
+        "category": "类别",
+        "categoryHelp": "选填，选择最符合的类别。",
+        "priority": "优先级",
+        "priorityHelp": "选填，告知紧急程度。",
+        "description": "描述",
+        "descriptionPlaceholder": "请详细描述您的问题…",
+        "descriptionHelp": "必填，请包含复现步骤、错误信息或其他相关信息。",
+        "attachments": "上传截图",
+        "attachmentsHelp": "选填，最多上传 3 张截图（PNG、JPG 或 WebP），单张最大 5MB。",
+        "attachmentsBtn": "选择文件",
+        "attachmentsSelected": "个文件已选",
+        "removeAttachment": "移除",
+        "submit": "提交工单",
+        "submitting": "正在创建工单…",
+        "cancel": "取消"
+      },
+      "success": {
+        "title": "工单已创建",
+        "message": "您的工单已创建，我们将在工作日内 24 小时内回复。",
+        "viewTicket": "查看工单",
+        "createAnother": "再建一个工单"
+      },
+      "error": {
+        "title": "创建工单失败",
+        "message": "出现错误，请重试。",
+        "retry": "重试"
+      }
+    },
+    "detail": {
+      "title": "工单详情",
+      "status": "状态",
+      "category": "类别",
+      "priority": "优先级",
+      "created": "创建时间",
+      "lastActivity": "最后活动",
+      "comments": "评论",
+      "addComment": "添加评论",
+      "commentPlaceholder": "输入您的消息…",
+      "attachScreenshots": "上传截图",
+      "sendComment": "发送",
+      "sending": "发送中…",
+      "loadingTicket": "加载工单中…",
+      "ticketNotFound": "工单不存在",
+      "ticketNotFoundMessage": "该工单不存在或您无权查看。",
+      "noComments": "暂无评论",
+      "userRole": "您",
+      "adminRole": "支持团队",
+      "systemRole": "系统",
+      "attachmentPreview": "点击查看大图",
+      "attachmentAlt": "附件",
+      "closeModal": "关闭",
+      "closeTicketTitle": "关闭工单",
+      "closeTicketMessage": "确定要关闭此工单吗？您可选择性填写原因。",
+      "closeTicketPlaceholder": "选填：关闭原因？",
+      "closeTicketCancel": "取消",
+      "closeTicketButton": "关闭工单",
+      "closeTicketClosing": "关闭中…"
+    },
+    "status": {
+      "open": "待处理",
+      "investigating": "处理中",
+      "waiting_on_user": "等待您回复",
+      "resolved": "已解决",
+      "closed": "已关闭"
+    },
+    "category": {
+      "none": "未指定",
+      "account_login": "账户与登录",
+      "billing_subscription": "账单与订阅",
+      "social_connections": "社交连接",
+      "content_generation": "内容生成",
+      "publishing_issues": "发布问题",
+      "technical_bug": "技术故障",
+      "feature_request": "功能建议",
+      "general_question": "一般咨询"
+    },
+    "priority": {
+      "none": "未指定",
+      "urgent": "紧急——系统受阻",
+      "high": "高——严重问题",
+      "normal": "普通——常规",
+      "low": "低——次要/建议"
+    },
+    "attachments": {
+      "uploading": "正在上传附件…",
+      "uploadSuccess": "附件上传成功",
+      "uploadError": "部分附件上传失败",
+      "fileTypeError": "仅支持 PNG、JPG、WebP 文件",
+      "fileSizeError": "单文件须小于 5MB",
+      "fileCountError": "每条评论最多上传 3 个文件",
+      "viewFullSize": "查看大图"
+    },
+    "errors": {
+      "loadFailed": "加载工单失败",
+      "createFailed": "创建工单失败",
+      "commentFailed": "添加评论失败",
+      "unauthorized": "您无权访问此工单",
+      "networkError": "网络错误，请检查连接后重试。"
+    },
+    "validation": {
+      "subjectRequired": "主题为必填项",
+      "descriptionRequired": "描述为必填项",
+      "messageRequired": "消息为必填项",
+      "emailRequired": "邮箱为必填项",
+      "invalidEmail": "请输入有效邮箱地址",
+      "noUpdatesProvided": "未提供更新内容",
+      "noFilesProvided": "未提供文件",
+      "tooManyFiles": "文件过多，最多允许 {count} 个文件。",
+      "invalidFileType": "{name} 的文件类型无效，仅支持 PNG、JPG、WebP。",
+      "fileTooLarge": "文件 {name} 过大（{size}），最大为 5MB。"
+    }
+  },
+  "onboarding": {
+    "title": "设置您的 ZARZOOM",
+    "subtitle": "用几个简单步骤完成社交媒体自动驾驶配置。",
+    "stepper": {
+      "step1": "账户",
+      "step2": "品牌",
+      "step3": "目标",
+      "step4": "套餐",
+      "step5": "连接"
+    },
+    "nav": {
+      "back": "上一步",
+      "next": "继续",
+      "saveExit": "保存并退出",
+      "skipForNow": "暂时跳过",
+      "finish": "启动 ZARZOOM",
+      "saving": "保存中…"
+    },
+    "step1": {
+      "title": "账户已创建",
+      "subtitle": "您已登录，可以继续。",
+      "signedInAs": "当前登录为",
+      "continue": "开始设置品牌"
+    },
+    "step2": {
+      "title": "品牌基础",
+      "subtitle": "介绍一下您的业务，以便我们按品牌定制内容。",
+      "businessName": {
+        "label": "企业/品牌名称",
+        "placeholder": "如：某某公司",
+        "help": "您的企业或品牌名称。"
+      },
+      "description": {
+        "label": "简介",
+        "placeholder": "简要描述您的业务…",
+        "help": "简短摘要，便于 AI 理解您的品牌调性。"
+      },
+      "websiteUrl": {
+        "label": "网站地址",
+        "placeholder": "https://yourwebsite.com",
+        "help": "我们将分析您的网站以定制内容。"
+      },
+      "autofillFromWebsite": "从网站自动填充",
+      "analysing": "分析中…",
+      "importFromFile": "从文件导入",
+      "choosePdfOrWord": "选择 PDF 或 Word 文档",
+      "investigate": {
+        "button": "分析网站",
+        "loading": "正在分析您的网站…",
+        "success": "网站分析完成！",
+        "error": "无法分析网站，请手动填写。"
+      },
+      "contentLanguage": {
+        "label": "内容语言",
+        "help": "生成内容的主要语言。"
+      },
+      "articleStyles": {
+        "label": "文章风格",
+        "help": "选择您希望 ZARZOOM 创作的内容类型。",
+        "options": {
+          "let_zarzoom_decide": "由 ZARZOOM 决定",
+          "how_to_guides": "操作指南",
+          "listicles": "清单体",
+          "tutorials": "教程",
+          "opinion_pieces": "观点文章",
+          "case_studies": "案例研究",
+          "news_commentary": "新闻评论",
+          "interviews": "访谈",
+          "product_reviews": "产品评测",
+          "explainer_articles": "解读类文章",
+          "comparisons_vs_articles": "对比与 VS 类",
+          "ultimate_guides_pillar": "终极指南 / 支柱内容",
+          "checklists_cheat_sheets": "清单与速查表",
+          "best_top_forecasts": "最佳/趋势预测",
+          "problem_solution_posts": "问题/解决方案",
+          "myth_busting": "辟谣与误区澄清",
+          "resource_roundups": "资源汇总",
+          "faqs_qa_content": "常见问题 / 问答",
+          "personal_stories": "个人故事与经历",
+          "research_summaries": "研究与数据洞察",
+          "historical_timeline": "历史与时间线",
+          "satire_humor": "讽刺或幽默",
+          "explained_in_minutes": "X 分钟读懂"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "由 AI 为内容选择最佳形式",
+          "how_to_guides": "分步操作说明",
+          "listicles": "列表式（如：X 的 10 个技巧）",
+          "tutorials": "比操作指南更深入",
+          "opinion_pieces": "专家观点或评论",
+          "case_studies": "真实案例与结果",
+          "news_commentary": "围绕时事的解读",
+          "interviews": "人物/权威问答",
+          "product_reviews": "评测与评分",
+          "explainer_articles": "用简单方式解释复杂概念",
+          "comparisons_vs_articles": "X 与 Y 对比、优劣分析",
+          "ultimate_guides_pillar": "长文、权威、覆盖整主题",
+          "checklists_cheat_sheets": "速查、可执行清单",
+          "best_top_forecasts": "X 最佳工具、202X 趋势",
+          "problem_solution_posts": "指出痛点并给出方案",
+          "myth_busting": "澄清常见误解",
+          "resource_roundups": "某主题下的好文、工具、链接",
+          "faqs_qa_content": "直接对应长尾搜索",
+          "personal_stories": "叙事、情感共鸣",
+          "research_summaries": "调研、研究结果摘要",
+          "historical_timeline": "回顾发展或演变",
+          "satire_humor": "娱乐化、品牌个性",
+          "explained_in_minutes": "要点速览、快速消费"
+        }
+      },
+      "styleLinks": {
+        "label": "风格参考链接",
+        "placeholder": "https://example.com/article",
+        "help": "最多添加 3 个希望模仿风格的文章链接。",
+        "add": "添加链接",
+        "max": "最多 3 个链接"
+      },
+      "brandColor": {
+        "label": "品牌主色",
+        "help": "用于生成视觉的主色。"
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "上传品牌 Logo（JPG 格式）。",
+        "upload": "上传 Logo",
+        "change": "更换 Logo",
+        "uploading": "上传中…"
+      }
+    },
+    "step3": {
+      "title": "目标与增长",
+      "subtitle": "您希望用 ZARZOOM 达成什么？",
+      "goals": {
+        "label": "选择目标",
+        "help": "可多选，我们将据此定制策略。",
+        "options": {
+          "increase_website_traffic": "增加网站流量",
+          "get_more_subscribers_leads": "获取更多订阅与线索",
+          "promote_product_or_service": "推广产品或服务",
+          "increase_sales": "提升销量",
+          "build_brand_authority": "建立品牌权威",
+          "improve_seo": "提升 SEO",
+          "educate_audience": "教育受众",
+          "generate_social_content": "生成社交内容"
+        }
+      },
+      "websiteUrl": {
+        "label": "网站或落地页地址",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "当目标包含网站流量或获客时为必填。"
+      },
+      "productUrl": {
+        "label": "产品或销售页地址",
+        "placeholder": "https://yoursite.com/product",
+        "help": "当目标包含产品推广或销售时为必填。"
+      }
+    },
+    "step4": {
+      "title": "选择套餐",
+      "subtitle": "选择与您增长目标匹配的套餐。",
+      "discount": {
+        "label": "按年计费",
+        "save": "省 {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "最多 3 个社交账号",
+          "postsPerMonth": "每月 30 篇帖子",
+          "aiGeneration": "基础 AI 内容生成",
+          "scheduling": "发帖排期",
+          "emailSupport": "邮件支持"
+        },
+        "pro": {
+          "socialProfiles": "最多 10 个社交账号",
+          "postsPerMonth": "每月 150 篇帖子",
+          "aiGeneration": "高级 AI 内容生成",
+          "scheduling": "智能排期与最佳时间",
+          "analytics": "数据分析看板",
+          "prioritySupport": "优先支持"
+        },
+        "scale": {
+          "socialProfiles": "不限社交账号",
+          "postsPerMonth": "不限发帖量",
+          "aiGeneration": "高级 AI 与定制品牌调性",
+          "scheduling": "AI 自动排期",
+          "analytics": "高级分析与报表",
+          "customBranding": "定制品牌与白标",
+          "dedicatedSupport": "专属客户经理",
+          "apiAccess": "完整 API 访问"
+        }
+      },
+      "planNames": {
+        "basic": "基础版",
+        "pro": "专业版",
+        "scale": "规模版"
+      },
+      "planDescriptions": {
+        "basic": "适合开始尝试社交媒体自动化。",
+        "pro": "适合成长型业务，需要更强能力与洞察。",
+        "scale": "团队与代理商的不限套餐。"
+      },
+      "popular": "最受欢迎",
+      "perMonth": "/月",
+      "selectPlan": "选择套餐",
+      "selected": "已选",
+      "trialDays": "{days} 天免费试用"
+    },
+    "step5": {
+      "title": "连接并启动",
+      "subtitle": "连接社交账号并设置偏好。",
+      "connectSocials": {
+        "label": "连接社交账号",
+        "help": "关联您的社交媒体账号",
+        "button": "连接账号",
+        "manage": "管理连接",
+        "connected": "已连接社交账号",
+        "notConnected": "尚未连接任何账号"
+      },
+      "approval": {
+        "label": "内容审批",
+        "help": "选择 ZARZOOM 如何发布您的内容。",
+        "auto": "自动发布",
+        "autoHelp": "ZARZOOM 按排期自动发布内容。",
+        "manual": "人工审批",
+        "manualHelp": "每条帖子发布前需您审核通过。"
+      },
+      "notes": {
+        "label": "补充说明",
+        "placeholder": "关于品牌或内容偏好的其他说明…",
+        "help": "选填，供 AI 参考。"
+      }
+    },
+    "modal": {
+      "title": "连接社交账号",
+      "loading": "正在准备社交连接…",
+      "checking": "正在检查连接…",
+      "close": "完成",
+      "openInNewTab": "在新标签页打开",
+      "skipConnect": "暂时跳过",
+      "errorGeneric": "无法加载社交连接器，请稍后重试。",
+      "errorNoUrl": "未返回连接地址，请重试。",
+      "demoTitle": "社交连接即将推出",
+      "demoDescription": "当前环境中社交连接器尚未配置。管理员完成配置后，您即可使用社交账号连接功能。"
+    },
+    "errors": {
+      "loadFailed": "加载引导数据失败，请重试。",
+      "saveFailed": "保存失败，请重试。",
+      "completeFailed": "无法完成引导，请检查所有必填项。"
+    },
+    "banner": {
+      "skipped": "您已跳过设置，完成设置可解锁全部功能。",
+      "inProgress": "设置未完成，完成即可开始使用。",
+      "cta": "完成设置"
+    },
+    "gate": {
+      "title": "需要先完成设置",
+      "description": "完成引导设置即可解锁此功能，只需几分钟。",
+      "cta": "完成设置"
+    },
+    "a11y": {
+      "brandLogoAlt": "品牌 Logo",
+      "socialConnectorTitle": "社交连接器",
+      "dismissBanner": "关闭横幅",
+      "currency": "£",
+      "stepperLabel": "引导进度"
+    },
+    "validation": {
+      "invalidUrl": "请输入有效网址（如 https://example.com）"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "账单历史"
+    },
+    "selectCurrencyLabel": "选择货币",
+    "selectCurrencyHelp": "选择您偏好的定价货币。",
+    "selectBillingInterval": "选择计费周期",
+    "toggleDiscount": "切换广告合作折扣",
+    "discountPartnershipTitle": "广告合作立省 {percent}%",
+    "discountActive": "已启用",
+    "discountPartnershipDescription": "允许 ZARZOOM 在您的时间线发布推广内容（最多 {maxFrequency}），即可享受订阅 {percent}% 折扣。您可随时关闭，完全自主。",
+    "discountOncePerDay": "每天一次",
+    "discountPerWeek": "每周 {count} 次",
+    "discountPartnerApplied": "已应用合作折扣",
+    "discountAdvertisingApplied": "已应用广告合作折扣",
+    "contactUs": "联系我们",
+    "partnerDiscountEnable": "启用 50% 合作折扣",
+    "partnerDiscountStandardPrice": "标准价格",
+    "partnerDiscount50Off": "五折",
+    "partnerDiscountSubheading": "省 50%。我们每天最多发布 1 条小型 ZARZOOM 推广（每周最多 3–7 条）——绝不会在您自己的帖子上。",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "简单透明的定价",
+      "subtitle": "选择适合您增长的套餐。免费试用开始，随时升级。",
+      "monthly": "按月",
+      "annual": "按年",
+      "popular": "最受欢迎",
+      "getStarted": "开始使用",
+      "savePercent": "按年计费省 {percent}%",
+      "trialDays": "{days} 天免费试用",
+      "page": {
+        "title": "简单透明的定价",
+        "subtitle": "选择适合您的套餐，所有套餐均含 14 天免费试用。",
+        "footer": "价格均不含适用增值税。可随时取消或更换套餐。",
+        "contactCta": "有疑问？联系我们，帮您选对套餐。",
+        "contactCtaPrefix": "有疑问？",
+        "contactLink": "联系我们",
+        "contactCtaSuffix": "，我们帮您选对套餐。"
+      },
+      "fallback": {
+        "title": "定价暂不可用",
+        "message": "我们正在更新定价方案，请稍后再试或联系支持。"
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "基础版",
+        "shortTagline": "适合入门",
+        "description": "用 AI 内容创作与排期启动社交媒体所需的基础功能。",
+        "bullets": [
+          "最多 3 个社交账号",
+          "每月 30 篇帖子",
+          "基础 AI 内容生成",
+          "发帖排期",
+          "邮件支持"
+        ],
+        "cta": "免费试用"
+      },
+      "pro": {
+        "displayName": "专业版",
+        "shortTagline": "适合成长型业务",
+        "description": "高级功能与数据分析，用智能自动化扩展社交媒体策略。",
+        "bullets": [
+          "最多 10 个社交账号",
+          "每月 150 篇帖子",
+          "高级 AI 内容生成",
+          "智能排期与最佳时间",
+          "数据分析看板",
+          "优先支持"
+        ],
+        "cta": "免费试用"
+      },
+      "advanced": {
+        "displayName": "高级版",
+        "shortTagline": "适合团队与代理商",
+        "description": "企业级功能：不限内容、定制品牌与专属支持，最大化效果。",
+        "bullets": [
+          "不限社交账号",
+          "不限发帖量",
+          "高级 AI 与定制品牌调性",
+          "AI 自动排期",
+          "高级分析与报表",
+          "定制品牌与白标",
+          "专属客户经理",
+          "完整 API 访问"
+        ],
+        "cta": "联系销售"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "最多 3 个社交账号",
+        "postsPerMonth": "每月 30 篇帖子",
+        "aiGeneration": "基础 AI 内容生成",
+        "scheduling": "发帖排期",
+        "emailSupport": "邮件支持"
+      },
+      "pro": {
+        "socialProfiles": "最多 10 个社交账号",
+        "postsPerMonth": "每月 150 篇帖子",
+        "aiGeneration": "高级 AI 内容生成",
+        "scheduling": "智能排期与最佳时间",
+        "analytics": "数据分析看板",
+        "prioritySupport": "优先支持"
+      },
+      "advanced": {
+        "socialProfiles": "不限社交账号",
+        "postsPerMonth": "不限发帖量",
+        "aiGeneration": "高级 AI 与定制品牌调性",
+        "scheduling": "AI 自动排期",
+        "analytics": "高级分析与报表",
+        "customBranding": "定制品牌与白标",
+        "dedicatedSupport": "专属客户经理",
+        "apiAccess": "完整 API 访问"
+      }
+    }
+  }
+}

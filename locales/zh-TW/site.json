@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - 社群媒體自動駕駛",
+    "description": "以 AI 驅動的內容生成與排程，自動化您的社群媒體成長。"
+  },
+  "nav": {
+    "about": "關於我們",
+    "features": "功能特色",
+    "pricing": "方案定價",
+    "contact": "聯絡我們",
+    "getStarted": "登入啟動",
+    "support": "支援服務",
+    "logout": "登出",
+    "dashboard": "控制台",
+    "userTerms": "使用者條款",
+    "websiteTerms": "網站條款",
+    "privacy": "隱私權",
+    "cookies": "Cookie",
+    "admin": "Admin",
+    "selectLanguage": "選擇語言"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "幾秒內啟動社群自動駕駛",
+    "scrollToLaunch": "向下捲動啟動"
+  },
+  "tagline": {
+    "heading": "AI 驅動的社群媒體成長",
+    "subheading": "生成、排程、發文 — 全程自動駕駛。"
+  },
+  "feature": {
+    "heading": "一鍵啟動，爆發式成長。"
+  },
+  "cta": {
+    "heading": "準備好改變您的社群形象了嗎？",
+    "button": "開始免費試用"
+  },
+  "testimonials": {
+    "heading": "業界領袖的信賴之選",
+    "subheading": "加入 10,000+ 行銷人，與 ZARZOOM 一起擴張。",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM 在 30 天內讓我們的觸及翻倍。AI 生成的內容與真人撰寫幾乎無法區分。"
+      },
+      {
+        "name": "David Chen",
+        "role": "創辦人, GrowthStack",
+        "content": "自動駕駛功能改變了遊戲規則。我現在每週只花 5 分鐘在社群上。"
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "影響力負責人",
+        "content": "真的是爆發式成長。我們各平台的互動指標都成長了 400%。"
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "準備好起飛了嗎？",
+    "subheading": "開始 14 天免費試用，無需信用卡。",
+    "button": "立即開始"
+  },
+  "loading": {
+    "text": "載入體驗中…"
+  },
+  "notFound": {
+    "title": "抱歉，找不到頁面",
+    "description": "您尋找的頁面已飄向深空。讓我們帶您回到正軌。",
+    "backHome": "返回首頁",
+    "support": "支援服務"
+  },
+  "error": {
+    "title": "發生錯誤",
+    "description": "我們遇到未預期的錯誤，請稍後再試或返回首頁。",
+    "tryAgain": "再試一次",
+    "backHome": "返回首頁"
+  },
+  "footer": {
+    "tagline": "幾秒內啟動社群自動駕駛",
+    "product": "產品",
+    "company": "公司",
+    "legal": "法律",
+    "about": "關於我們",
+    "features": "功能特色",
+    "pricing": "方案定價",
+    "contact": "聯絡我們",
+    "support": "支援服務",
+    "userTerms": "使用者條款",
+    "websiteTerms": "網站條款",
+    "privacy": "隱私權政策",
+    "cookies": "Cookie 政策",
+    "copyright": "ZARZOOM. 版權所有。"
+  },
+  "pages": {
+    "support": {
+      "title": "支援中心",
+      "subtitle": "我們在此協助您充分發揮 ZARZOOM 的價值。",
+      "faqTitle": "常見問題",
+      "faq1q": "如何連結我的社群媒體帳號？",
+      "faq1a": "前往控制台，點選「已連結帳號」，並依提示授權各平台。我們支援 Facebook、Instagram、X (Twitter)、LinkedIn 與 TikTok。",
+      "faq2q": "可以提前排程發文嗎？",
+      "faq2a": "當然可以。我們的日曆檢視可讓您提前數週甚至數月排程內容。只需建立貼文、選擇日期與時間，其餘交給 ZARZOOM。",
+      "faq3q": "若超過方案限制會怎樣？",
+      "faq3a": "接近限制時您會收到通知。您可隨時在帳戶設定頁面升級方案，變更會立即生效。",
+      "faq4q": "我的資料安全嗎？",
+      "faq4a": "是的。我們對靜態與傳輸中的資料採用業界標準加密，絕不與第三方分享您的資料。詳見隱私權政策。",
+      "contactTitle": "還需要協助？",
+      "contactText": "我們的支援團隊通常在營業日 24 小時內回覆。",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "關於 ZARZOOM - AI 驅動的社群媒體自動化",
+        "description": "了解 ZARZOOM 如何透過智慧自動化與 AI 驅動的內容創作，革新社群媒體管理。"
+      },
+      "badge": "關於 ZARZOOM",
+      "heroTitle": "幾秒內",
+      "heroTitleHighlight": "啟動社群自動駕駛。",
+      "heroDescription": "ZARZOOM 是 AI 驅動平台，協助企業與創作者自動生成並發布社群內容 — 讓您專注於最擅長的事。",
+      "hero": {
+        "title": "關於 ZARZOOM",
+        "subtitle": "以智慧自動化與 AI 驅動的內容創作，革新社群媒體管理。"
+      },
+      "storySteps": [
+        {
+          "title": "初衷",
+          "text": "為了解決每個創作者都面臨的問題而成立 — 在社群上保持穩定輸出，卻不必燃燒殆盡。"
+        },
+        {
+          "title": "打造平台",
+          "text": "我們結合 AI 內容生成與智慧排程，打造全自動的社群媒體流程。"
+        },
+        {
+          "title": "規模化自動化",
+          "text": "ZARZOOM 如今協助企業與創作者維持強勁的線上存在感 — 無需以往那種每日投入。"
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "AI 內容生成",
+          "text": "依您的品牌聲調與受眾，自動生成吸睛貼文。",
+          "bullets": [
+            "品牌聲調學習",
+            "熱門話題整合",
+            "標題與 hashtag"
+          ]
+        },
+        {
+          "title": "智慧排程",
+          "text": "在最佳時段於各社群平台排程並發布內容。",
+          "bullets": [
+            "受眾活躍度分析",
+            "時區最佳化",
+            "內容日曆自動化"
+          ]
+        },
+        {
+          "title": "穩定線上存在",
+          "text": "維持能見度、成長受眾，無需日復一日的苦工。",
+          "bullets": [
+            "多平台發文",
+            "依互動調整時機",
+            "集中式控制台"
+          ]
+        },
+        {
+          "title": "省時自動化",
+          "text": "專注於事業，內容流程全交給 ZARZOOM。",
+          "bullets": [
+            "零手動操作",
+            "設定即忘的自動駕駛",
+            "即時報表"
+          ]
+        }
+      ],
+      "getStartedFree": "免費開始",
+      "viewFeatures": "查看功能",
+      "autopilotActive": "自動駕駛已啟動",
+      "mission": {
+        "title": "我們的使命",
+        "subtitle": "移除社群媒體成長的最大障礙",
+        "para1": "我們的使命是移除社群媒體成長的最大障礙 — 對新鮮內容的持續需求。",
+        "para2": "ZARZOOM 運用人工智慧自動化內容創作與發布，讓創業者與企業專注於最擅長的事。",
+        "para3": "不必再花數小時規劃貼文、撰寫內容、管理多平台，ZARZOOM 助您輕鬆維持線上能見度。"
+      },
+      "missionStats": {
+        "contentCreated": "已建立內容",
+        "hoursSaved": "節省時數",
+        "platformsActive": "啟用平台"
+      },
+      "story": {
+        "sectionTitle": "我們的故事",
+        "heading": "為解決真實問題而打造",
+        "para1": "ZARZOOM 的誕生是為了解決許多創辦人與創作者面臨的問題 — 在社群媒體上保持穩定。",
+        "para2": "社群媒體雖是建立受眾最有力的工具之一，但要持續產出高品質內容既困難又耗時。",
+        "para3": "透過 AI 內容生成與自動排程的結合，ZARZOOM 讓使用者無需以往那種每日投入，就能維持強勁的線上存在感。"
+      },
+      "platform": {
+        "badge": "平台",
+        "heading": "ZARZOOM 如何助您成長"
+      },
+      "lookingAhead": {
+        "badge": "展望未來",
+        "heading": "社群媒體成長的未來",
+        "para1": "我們相信社群媒體成長的未來將由智慧自動化驅動。",
+        "para2": "ZARZOOM 持續進化，協助企業與創作者更快、更有效地建立線上存在感。",
+        "para3": "我們的目標很簡單：讓強大的社群媒體成長工具人人可用。"
+      },
+      "intelligentAutomation": {
+        "title": "智慧自動化",
+        "subtitle": "以前瞻 AI 驅動，在您專注事業的同時擴大受眾。",
+        "tags": [
+          "AI 生成",
+          "自動排程",
+          "多平台",
+          "數據分析"
+        ]
+      },
+      "cta": {
+        "badge": "今日開始",
+        "title": "今天就開始社群自動駕駛",
+        "description": "加入數千名以自動駕駛成長的創作者與企業。",
+        "getStarted": "開始使用",
+        "viewFeatures": "查看功能"
+      },
+      "values": {
+        "title": "核心價值",
+        "innovation": {
+          "title": "創新優先",
+          "description": "我們不斷突破 AI 與自動化的邊界，提供昨日仍不可能的解決方案。對創新的承諾代表您始終能使用社群媒體技術的最新進展。"
+        },
+        "authenticity": {
+          "title": "真實互動",
+          "description": "自動化應強化而非取代真實的人際連結。我們的工具旨在協助您維持獨特聲線，並在規模化下與受眾建立真實關係。"
+        },
+        "simplicity": {
+          "title": "簡潔與強大",
+          "description": "先進技術不必複雜。我們相信讓人人都能使用強大工具，不論技術背景。"
+        },
+        "trust": {
+          "title": "信任與隱私",
+          "description": "您的資料、內容與社群 — 我們以最高尊重與安全對待。我們絕不出售您的資料，並維持最高隱私保護標準。"
+        }
+      },
+      "team": {
+        "title": "專家打造",
+        "description": "我們的團隊匯聚 AI、社群行銷與使用者體驗設計的數十年經驗。我們熱衷於打造真正改變企業與受眾連結方式的工具。"
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "功能特色 - ZARZOOM 社群媒體自動化",
+        "description": "探索自動化社群的強大功能：AI 內容生成、智慧排程、多平台發文、數據分析等。"
+      },
+      "hero": {
+        "title": "強大功能",
+        "subtitle": "自動化、最佳化與擴張社群形象所需的一切 — 全在一個智慧平台。"
+      },
+      "aiContent": {
+        "title": "AI 驅動內容生成",
+        "description": "以先進 AI 在幾秒內建立吸睛貼文，它了解您的品牌聲調、受眾偏好與熱門話題。生成能引起社群共鳴的標題、hashtag 與完整貼文構想。",
+        "features": [
+          "品牌聲調學習與適應",
+          "熱門話題整合",
+          "多格式內容（文字、標題、hashtag）",
+          "A/B 測試建議"
+        ]
+      },
+      "smartScheduling": {
+        "title": "智慧排程與自動駕駛",
+        "description": "讓 AI 為您決定最佳發文時段以最大化互動。設定一次偏好，專注事業的同時看著社群形象在自動駕駛下成長。",
+        "features": [
+          "受眾活躍度分析",
+          "時區最佳化",
+          "內容日曆自動化",
+          "依互動排程"
+        ]
+      },
+      "multiPlatform": {
+        "title": "多平台管理",
+        "description": "在單一控制台管理所有社群帳號。一鍵發文至 Twitter、LinkedIn、Facebook、Instagram 等。",
+        "features": [
+          "跨平台發文",
+          "依平台最佳化",
+          "統一收件匣",
+          "集中數據分析"
+        ]
+      },
+      "analytics": {
+        "title": "進階數據與洞察",
+        "description": "以超越虛榮指標的完整數據追蹤關鍵指標。了解受眾、衡量 ROI，並以數據驅動決策優化策略。",
+        "features": [
+          "即時成效追蹤",
+          "受眾人口與行為",
+          "互動率分析",
+          "競品基準"
+        ]
+      },
+      "contentLibrary": {
+        "title": "內容庫與素材",
+        "description": "以智慧媒體庫建立並整理內容庫。儲存圖片、影片、範本與文案片段，便於快速取用與重用。",
+        "features": [
+          "無限量媒體儲存",
+          "智慧標籤與搜尋",
+          "範本庫",
+          "素材成效追蹤"
+        ]
+      },
+      "collaboration": {
+        "title": "團隊協作",
+        "description": "與團隊、客戶或代理商無縫協作。在平台內指派角色、管理權限並簡化審核流程。",
+        "features": [
+          "角色權限控管",
+          "審核流程",
+          "團隊活動紀錄",
+          "客戶管理"
+        ]
+      },
+      "integration": {
+        "title": "整合與 API",
+        "description": "將 ZARZOOM 與既有工具與流程連結。我們穩健的 API 與預建整合確保資料在技術堆疊間順暢流動。",
+        "features": [
+          "Zapier 整合",
+          "Webhook 支援",
+          "REST API 存取",
+          "自訂整合"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API 與 OpenClaw 整合",
+        "description": "透過 ZARZOOM 強大的 OpenClaw 整合，在 10 個平台上按需自動化社群內容建立與排程，讓工作流程如虎添翼。透過 REST API 從既有系統直接觸發 AI 內容生成，或讓 OpenClaw 代理自主處理一切。適合代理商、開發者與追求無縫自動化的企業。",
+        "features": [
+          "OpenClaw 代理自動化（10+ 平台）",
+          "透過 API 按需 AI 內容建立",
+          "即時排程觸發",
+          "自訂工作流程自動化"
+        ]
+      },
+      "support": {
+        "title": "頂級支援",
+        "description": "專屬支援團隊在您需要時提供協助。可取得完整文件、影片教學與即時客服。",
+        "features": [
+          "24/7 電子郵件支援",
+          "即時聊天（Pro+）",
+          "影片教學",
+          "知識庫"
+        ]
+      },
+      "cta": {
+        "title": "準備好改變您的社群媒體了嗎？",
+        "description": "開始免費試用，體驗智慧自動化的力量。",
+        "button": "免費開始"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "聯絡我們 - ZARZOOM",
+        "description": "與 ZARZOOM 團隊聯繫。我們樂意解答任何問題或疑慮。"
+      },
+      "title": "與我們聯絡",
+      "subtitle": "有問題或需要支援？我們在此協助。傳送訊息給我們，我們會盡快回覆。",
+      "info": {
+        "title": "聯絡資訊",
+        "email": {
+          "label": "電子郵件"
+        },
+        "phone": {
+          "label": "電話"
+        },
+        "address": {
+          "label": "辦公室"
+        }
+      },
+      "hours": {
+        "title": "營業時間",
+        "note": "我們通常在營業日 24 小時內回覆所有詢問。",
+        "weekdays": "週一至週五",
+        "weekdaysTime": "上午 9:00 - 下午 6:00",
+        "saturday": "週六",
+        "saturdayTime": "上午 10:00 - 下午 4:00",
+        "sunday": "週日",
+        "closed": "休息"
+      },
+      "form": {
+        "title": "傳送訊息給我們",
+        "name": "您的姓名",
+        "namePlaceholder": "王小明",
+        "email": "您的電子郵件",
+        "emailPlaceholder": "example@email.com",
+        "subject": "主旨",
+        "subjectPlaceholder": "我們能如何協助您？",
+        "message": "訊息內容",
+        "messagePlaceholder": "請詳細說明您的詢問…",
+        "messageHint": "至少 10 個字元",
+        "submit": "傳送訊息",
+        "sending": "傳送中…",
+        "success": {
+          "title": "訊息已成功送出！",
+          "message": "感謝您與我們聯絡。我們會盡快回覆。"
+        },
+        "error": {
+          "title": "錯誤"
+        },
+        "errors": {
+          "required": "請填寫所有欄位",
+          "failed": "傳送失敗，請再試一次。"
+        }
+      }
+    },
+    "termsUser": {
+      "title": "使用者條款與條件",
+      "subtitle": "使用 ZARZOOM 前請詳閱本條款。",
+      "lastUpdated": "最後更新：2026 年 2 月 1 日",
+      "s1Title": "1. 條款接受",
+      "s1Text": "建立帳戶或使用 ZARZOOM 平台即表示您同意受本使用者條款與條件約束。若不同意，請勿使用本服務。",
+      "s2Title": "2. 帳戶註冊",
+      "s2Text": "註冊時須提供正確、完整之資訊。您須對帳戶憑證的保密及帳戶下之一切活動負責。",
+      "s3Title": "3. 可接受使用",
+      "s3Text": "您同意不以 ZARZOOM 發布違法、誹謗、猥褻或侵害他人智慧財產權之內容。我們保留暫停或終止違反本政策之帳戶的權利。",
+      "s4Title": "4. 訂閱與帳單",
+      "s4Text": "付費方案採月繳或年繳預付。您可隨時取消；取消於當前帳單週期結束時生效。部分期間不予退款。",
+      "s5Title": "5. 智慧財產權",
+      "s5Text": "您保留透過 ZARZOOM 建立與發布之內容的所有權。使用平台即授予我們僅為提供服務而處理、儲存與顯示您內容的有限授權。",
+      "s6Title": "6. 責任限制",
+      "s6Text": "ZARZOOM 以「現狀」提供。在法律允許的最大範圍內，我們不提供任何保證，且對因使用本服務所生之間接、附帶或衍生損害不負責任。",
+      "s7Title": "7. 條款變更",
+      "s7Text": "我們可能不時更新本條款。變更公布後繼續使用服務即視為接受修訂後之條款。"
+    },
+    "termsWebsite": {
+      "title": "網站條款與條件",
+      "subtitle": "規範您使用 zarzoom.com 網站之條款。",
+      "lastUpdated": "最後更新：2026 年 2 月 1 日",
+      "s1Title": "1. 網站使用",
+      "s1Text": "本網站由 ZARZOOM Ltd 營運。存取與瀏覽本網站即表示您完全接受本網站條款與條件。",
+      "s2Title": "2. 智慧財產權",
+      "s2Text": "本網站所有內容，含文字、圖形、標誌與軟體，均為 ZARZOOM Ltd 或其授權人所有，受著作權與商標法保護。",
+      "s3Title": "3. 資訊正確性",
+      "s3Text": "我們雖力求本網站資訊正確且最新，但對其完整性或正確性不做任何保證或聲明。",
+      "s4Title": "4. 第三方連結",
+      "s4Text": "本網站可能含第三方網站連結。我們對該等網站之內容或隱私做法不負責。",
+      "s5Title": "5. 準據法",
+      "s5Text": "本條款受英格蘭與威爾斯法律管轄。任何爭議須受英格蘭與威爾斯法院專屬管轄。"
+    },
+    "privacy": {
+      "title": "隱私權政策",
+      "subtitle": "我們如何收集、使用與保護您的個人資訊。",
+      "lastUpdated": "最後更新：2026 年 2 月 1 日",
+      "s1Title": "1. 我們收集的資訊",
+      "s1Text": "我們收集您直接提供的資訊（姓名、電子郵件、付款詳情）以及您使用 ZARZOOM 時自動產生的資訊（IP 位址、瀏覽器類型、使用資料）。",
+      "s2Title": "2. 資訊使用方式",
+      "s2Text": "我們使用您的資訊以提供與改進服務、處理付款、寄送服務相關通訊並遵守法律義務。",
+      "s3Title": "3. 資料分享",
+      "s3Text": "我們不出售您的個人資料。我們可能與協助營運平台之可信服務提供者（付款處理、主機供應商）分享資料，且須受嚴格保密協議約束。",
+      "s4Title": "4. 資料保留",
+      "s4Text": "我們在您的帳戶有效或為提供服務所需期間保留您的個人資料。您可隨時聯絡支援要求刪除資料。",
+      "s5Title": "5. 您的權利",
+      "s5Text": "您有權存取、更正或刪除您的個人資料，亦可反對處理或請求資料可攜。行使權利請聯絡 privacy@zarzoom.com。",
+      "s6Title": "6. 安全",
+      "s6Text": "我們採取適當技術與組織措施保護您的資料，包含加密、存取控管與定期安全評估。",
+      "s7Title": "7. 本政策變更",
+      "s7Text": "我們可能不時更新本政策。重大變更將透過電子郵件或平台通知您。"
+    },
+    "cookies": {
+      "title": "Cookie 政策",
+      "subtitle": "我們如何使用 Cookie 及類似技術。",
+      "lastUpdated": "最後更新：2026 年 2 月 1 日",
+      "s1Title": "1. 什麼是 Cookie",
+      "s1Text": "Cookie 是您造訪網站時放置於裝置上的小型文字檔。它們協助網站記住您的偏好並了解您的使用方式。",
+      "s2Title": "2. 我們使用的 Cookie",
+      "s2Essential": "必要 Cookie",
+      "s2EssentialText": "網站正常運作所必需，無法停用。包含工作階段 Cookie 與驗證權杖。",
+      "s2Analytics": "分析 Cookie",
+      "s2AnalyticsText": "透過收集匿名使用資料協助我們了解訪客如何與網站互動，我們據此改進服務。",
+      "s2Preference": "偏好 Cookie",
+      "s2PreferenceText": "記住您的設定與偏好（如語言選擇），以提供更個人化的體驗。",
+      "s3Title": "3. 管理 Cookie",
+      "s3Text": "您可透過瀏覽器設定控制 Cookie。請注意停用部分 Cookie 可能影響網站功能。",
+      "s4Title": "4. 第三方 Cookie",
+      "s4Text": "部分 Cookie 由出現在我們頁面上的第三方服務放置。我們無法控制該等 Cookie。詳情請參閱各第三方隱私權政策。",
+      "s5Title": "5. 聯絡我們",
+      "s5Text": "若對我們使用 Cookie 有疑問，請聯絡 privacy@zarzoom.com。"
+    }
+  }
+}

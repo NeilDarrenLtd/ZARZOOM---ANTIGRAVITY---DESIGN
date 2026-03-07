@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "おかえりなさい",
+    "loginSubtitle": "ZARZOOMアカウントにサインイン",
+    "registerTitle": "アカウント作成",
+    "registerSubtitle": "ソーシャルメディアを自動化する何千人ものマーケターに参加",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード（確認）",
+    "login": "サインイン",
+    "register": "アカウント作成",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "orContinueWith": "または次の方法で続行",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "hasAccount": "すでにアカウントをお持ちですか？",
+    "signUpLink": "新規登録",
+    "signInLink": "サインイン",
+    "passwordMinLength": "パスワードは8文字以上にしてください",
+    "passwordUppercase": "大文字を1文字以上含めてください",
+    "passwordLowercase": "小文字を1文字以上含めてください",
+    "passwordNumber": "数字を1文字以上含めてください",
+    "passwordSpecial": "特殊文字を1文字以上含めてください",
+    "passwordsNoMatch": "パスワードが一致しません",
+    "emailRequired": "メールアドレスは必須です",
+    "emailInvalid": "有効なメールアドレスを入力してください",
+    "signUpSuccess": "メールをご確認ください",
+    "signUpSuccessMessage": "確認リンクをメールアドレスに送信しました。受信トレイをご確認のうえ、リンクをクリックしてアカウントを有効化してください。",
+    "backToLogin": "ログインに戻る",
+    "authError": "認証エラー",
+    "authErrorMessage": "認証中に問題が発生しました。もう一度お試しください。",
+    "tryAgain": "再試行",
+    "tabLogin": "ログイン",
+    "tabCreateAccount": "アカウント作成",
+    "continueWithGoogle": "Googleで続行",
+    "continueWithFacebook": "Facebookで続行",
+    "continueWithLinkedIn": "LinkedInで続行",
+    "continueWithX": "Xで続行",
+    "rememberMe": "ログイン状態を保持",
+    "forgotLogin": "ログイン情報をお忘れですか？",
+    "verifyTitle": "受信トレイをご確認ください",
+    "verifySubtitle": "確認リンクをメールアドレスに送信しました。受信トレイをご確認のうえ、リンクをクリックしてアカウントを有効化してください。",
+    "verifyResend": "確認メールを再送信",
+    "verifyResent": "確認メールを再送信しました",
+    "verifyBack": "ログインに戻る",
+    "verifiedTitle": "メール認証完了",
+    "verifiedSubtitle": "メールの認証が完了しました。アカウントにサインインできます。",
+    "verifiedContinue": "ログインへ進む",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "welcome": "おかえりなさい",
+    "overview": "概要",
+    "accountSettings": "アカウント設定",
+    "connectedAccounts": "接続済みアカウント",
+    "comingSoon": "近日公開 — ソーシャルメディアのコマンドセンター。",
+    "emailVerified": "メール認証済み",
+    "memberSince": "登録日",
+    "profile": "ブランド設定",
+    "supportDescription": "サポートチームにヘルプを依頼。サポートチケットの作成と管理。",
+    "restartSetup": "セットアップを再開",
+    "restarting": "再開中..."
+  },
+  "connect": {
+    "heading": "アカウントを接続",
+    "subheading": "ソーシャルメディアアカウントをリンクして、ZARZOOMで自動投稿を開始しましょう。",
+    "connectAccounts": "アカウントを接続",
+    "back": "戻る"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "ファイルから自動入力"
+  },
+  "apiKeys": {
+    "createKeyTitle": "APIキーを作成",
+    "keyCreated": "キーを作成しました",
+    "close": "閉じる",
+    "keyName": "キー名",
+    "keyNamePlaceholder": "例：本番、ステージング、CI/CD",
+    "keyNameRequired": "名前は必須です",
+    "active": "有効",
+    "revoked": "無効化済み",
+    "created": "作成日",
+    "lastUsed": "最終使用",
+    "revokedAt": "無効化日",
+    "rotate": "ローテート",
+    "revoke": "無効化",
+    "revokeConfirm": "このキーを無効化しますか？",
+    "rotateConfirm": "キーをローテートしますか？",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "revoking": "無効化中...",
+    "rotating": "ローテート中...",
+    "rotateTitle": "ローテート：このキーを無効化して新規キーを作成"
+  },
+  "profile": {
+    "title": "ブランド設定",
+    "subtitle": "ブランド、目標、プラン、ソーシャル接続を管理します。",
+    "saving": "保存中...",
+    "saved": "変更を保存しました。",
+    "saveFailed": "変更の保存に失敗しました。もう一度お試しください。",
+    "loadFailed": "プロフィールの読み込みに失敗しました。もう一度お試しください。",
+    "save": "変更を保存",
+    "sections": {
+      "brand": "ブランド基本",
+      "brandDesc": "ビジネスアイデンティティとコンテンツの好み。",
+      "goals": "目標と成長",
+      "goalsDesc": "ZARZOOMで達成したいこと。",
+      "posting": "投稿設定",
+      "postingDesc": "ZARZOOMがコンテンツを公開する方法。",
+      "plan": "ご利用中のプラン",
+      "planDesc": "現在のサブスクリプションと請求設定。",
+      "social": "ソーシャル接続",
+      "socialDesc": "接続済みソーシャルメディアアカウントを管理。"
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "自動公開",
+        "help": "ZARZOOMがお客様に代わってコンテンツを自動公開することを許可します。"
+      }
+    },
+    "plan": {
+      "current": "現在のプラン",
+      "noPlan": "プラン未選択",
+      "annualBilling": "年額請求",
+      "changePlan": "プランを変更"
+    },
+    "social": {
+      "username": "ソーシャルユーザー名",
+      "noUsername": "未設定",
+      "connected": "ソーシャルアカウント接続済み",
+      "notConnected": "まだアカウントが接続されていません",
+      "connect": "アカウントを接続",
+      "manage": "接続を管理"
+    },
+    "back": "ダッシュボードに戻る"
+  },
+  "support": {
+    "nav": {
+      "title": "サポート",
+      "myTickets": "マイチケット",
+      "createTicket": "チケット作成",
+      "backToSupport": "サポートに戻る",
+      "backToDashboard": "ダッシュボードに戻る"
+    },
+    "landing": {
+      "title": "サポートを受ける",
+      "subtitle": "ZARZOOMを最大限に活用できるよう、サポートいたします。",
+      "description": "サポートチケットを送信いただければ、営業日24時間以内にチームがご返信します。",
+      "createTicketBtn": "チケット作成",
+      "myTicketsBtn": "マイチケット"
+    },
+    "list": {
+      "title": "サポートチケット一覧",
+      "subtitle": "サポートリクエストの確認と管理。",
+      "empty": "チケットはまだありません",
+      "emptyDescription": "サポートチケットはまだ作成されていません。下のボタンから始めましょう。",
+      "createFirstTicket": "最初のチケットを作成",
+      "filterByStatus": "ステータスで絞り込み",
+      "allTickets": "すべてのチケット",
+      "showingTickets": "{filtered} / {total} 件のチケットを表示",
+      "noMatchFilter": "選択したステータスに一致するチケットはありません。",
+      "clearFilter": "絞り込みを解除",
+      "table": {
+        "ticketId": "チケットID",
+        "subject": "件名",
+        "status": "ステータス",
+        "lastUpdated": "最終更新",
+        "created": "作成日"
+      }
+    },
+    "create": {
+      "title": "サポートチケットを作成",
+      "subtitle": "お困りの内容をご記入ください。解決をお手伝いします。",
+      "form": {
+        "subject": "件名",
+        "subjectPlaceholder": "問題の簡単な説明",
+        "subjectHelp": "必須。簡潔にご記入ください。",
+        "category": "カテゴリ",
+        "categoryHelp": "任意。該当するカテゴリを選択してください。",
+        "priority": "優先度",
+        "priorityHelp": "任意。緊急度をお知らせください。",
+        "description": "説明",
+        "descriptionPlaceholder": "問題の詳細をご記入ください...",
+        "descriptionHelp": "必須。再現手順、エラーメッセージ、その他関連情報を含めてください。",
+        "attachments": "スクリーンショットを添付",
+        "attachmentsHelp": "任意。スクリーンショットを最大3枚（PNG、JPG、WebP）アップロード。1ファイル5MBまで。",
+        "attachmentsBtn": "ファイルを選択",
+        "attachmentsSelected": "件のファイルを選択",
+        "removeAttachment": "削除",
+        "submit": "チケットを送信",
+        "submitting": "チケット作成中...",
+        "cancel": "キャンセル"
+      },
+      "success": {
+        "title": "チケットを作成しました",
+        "message": "サポートチケットを作成しました。営業日24時間以内にご返信します。",
+        "viewTicket": "チケットを見る",
+        "createAnother": "別のチケットを作成"
+      },
+      "error": {
+        "title": "チケットの作成に失敗しました",
+        "message": "問題が発生しました。もう一度お試しください。",
+        "retry": "再試行"
+      }
+    },
+    "detail": {
+      "title": "チケット詳細",
+      "status": "ステータス",
+      "category": "カテゴリ",
+      "priority": "優先度",
+      "created": "作成日",
+      "lastActivity": "最終アクティビティ",
+      "comments": "コメント",
+      "addComment": "コメントを追加",
+      "commentPlaceholder": "メッセージを入力...",
+      "attachScreenshots": "スクリーンショットを添付",
+      "sendComment": "送信",
+      "sending": "送信中...",
+      "loadingTicket": "チケットを読み込み中...",
+      "ticketNotFound": "チケットが見つかりません",
+      "ticketNotFoundMessage": "このチケットは存在しないか、閲覧権限がありません。",
+      "noComments": "コメントはまだありません",
+      "userRole": "あなた",
+      "adminRole": "サポートチーム",
+      "systemRole": "システム",
+      "attachmentPreview": "クリックでフルサイズ表示",
+      "attachmentAlt": "添付ファイル",
+      "closeModal": "閉じる",
+      "closeTicketTitle": "チケットを閉じる",
+      "closeTicketMessage": "このチケットを閉じてもよろしいですか？任意で理由をご記入いただけます。",
+      "closeTicketPlaceholder": "任意：チケットを閉じる理由",
+      "closeTicketCancel": "キャンセル",
+      "closeTicketButton": "チケットを閉じる",
+      "closeTicketClosing": "閉じています..."
+    },
+    "status": {
+      "open": "オープン",
+      "investigating": "調査中",
+      "waiting_on_user": "お客様の対応待ち",
+      "resolved": "解決済み",
+      "closed": "クローズ"
+    },
+    "category": {
+      "none": "指定なし",
+      "account_login": "アカウント・ログイン",
+      "billing_subscription": "請求・サブスクリプション",
+      "social_connections": "ソーシャル接続",
+      "content_generation": "コンテンツ生成",
+      "publishing_issues": "公開に関する問題",
+      "technical_bug": "技術的な不具合",
+      "feature_request": "機能リクエスト",
+      "general_question": "一般的な質問"
+    },
+    "priority": {
+      "none": "指定なし",
+      "urgent": "緊急 — システム利用不可",
+      "high": "高 — 重大な問題",
+      "normal": "通常 — 標準",
+      "low": "低 — 軽微・提案"
+    },
+    "attachments": {
+      "uploading": "添付ファイルをアップロード中...",
+      "uploadSuccess": "添付ファイルのアップロードが完了しました",
+      "uploadError": "一部の添付ファイルのアップロードに失敗しました",
+      "fileTypeError": "PNG、JPG、WebP形式のみ利用できます",
+      "fileSizeError": "ファイルサイズは5MB未満にしてください",
+      "fileCountError": "コメントあたり最大3ファイルまでアップロードできます",
+      "viewFullSize": "フルサイズで表示"
+    },
+    "errors": {
+      "loadFailed": "サポートチケットの読み込みに失敗しました",
+      "createFailed": "チケットの作成に失敗しました",
+      "commentFailed": "コメントの追加に失敗しました",
+      "unauthorized": "このチケットにアクセスする権限がありません",
+      "networkError": "ネットワークエラー。接続を確認して再度お試しください。"
+    },
+    "validation": {
+      "subjectRequired": "件名は必須です",
+      "descriptionRequired": "説明は必須です",
+      "messageRequired": "メッセージは必須です",
+      "emailRequired": "メールアドレスは必須です",
+      "invalidEmail": "有効なメールアドレスを入力してください",
+      "noUpdatesProvided": "更新内容がありません",
+      "noFilesProvided": "ファイルが指定されていません",
+      "tooManyFiles": "ファイルが多すぎます。最大{count}ファイルまで。",
+      "invalidFileType": "{name}のファイル形式が無効です。PNG、JPG、WebPのみ利用できます。",
+      "fileTooLarge": "{name}のファイルが大きすぎます（{size}）。最大5MBです。"
+    }
+  },
+  "onboarding": {
+    "title": "ZARZOOMをセットアップ",
+    "subtitle": "数ステップでソーシャルメディアの自動運転を設定しましょう。",
+    "stepper": {
+      "step1": "アカウント",
+      "step2": "ブランド",
+      "step3": "目標",
+      "step4": "プラン",
+      "step5": "接続"
+    },
+    "nav": {
+      "back": "戻る",
+      "next": "続ける",
+      "saveExit": "保存して終了",
+      "skipForNow": "今はスキップ",
+      "finish": "ZARZOOMを起動",
+      "saving": "保存中..."
+    },
+    "step1": {
+      "title": "アカウント作成完了",
+      "subtitle": "サインイン済み。準備完了です。",
+      "signedInAs": "サインイン中：",
+      "continue": "ブランドを設定しましょう"
+    },
+    "step2": {
+      "title": "ブランド基本",
+      "subtitle": "ビジネスについて教えてください。ブランドに合わせたコンテンツを作成します。",
+      "businessName": {
+        "label": "ビジネス名",
+        "placeholder": "例：株式会社サンプル",
+        "help": "ビジネスまたはブランドの名前。"
+      },
+      "description": {
+        "label": "説明",
+        "placeholder": "ビジネスの内容を簡単に...",
+        "help": "AIがブランドの声を理解するための短い要約。"
+      },
+      "websiteUrl": {
+        "label": "ウェブサイトURL",
+        "placeholder": "https://yoursite.com",
+        "help": "サイトを分析してコンテンツを最適化します。"
+      },
+      "autofillFromWebsite": "ウェブサイトから自動入力",
+      "analysing": "分析中...",
+      "importFromFile": "ファイルからインポート",
+      "choosePdfOrWord": "PDFまたはWord文書を選択",
+      "investigate": {
+        "button": "ウェブサイトを分析",
+        "loading": "ウェブサイトを分析中...",
+        "success": "ウェブサイトの分析が完了しました。",
+        "error": "ウェブサイトを分析できませんでした。手動でご入力ください。"
+      },
+      "contentLanguage": {
+        "label": "コンテンツ言語",
+        "help": "生成コンテンツの主な言語。"
+      },
+      "articleStyles": {
+        "label": "記事スタイル",
+        "help": "ZARZOOMに作成してほしいコンテンツの種類を選択してください。",
+        "options": {
+          "let_zarzoom_decide": "ZARZOOMに任せる",
+          "how_to_guides": "ハウツーガイド",
+          "listicles": "リスト形式（例：Xの10のヒント）",
+          "tutorials": "チュートリアル",
+          "opinion_pieces": "オピニオン",
+          "case_studies": "ケーススタディ",
+          "news_commentary": "ニュース解説",
+          "interviews": "インタビュー",
+          "product_reviews": "製品レビュー",
+          "explainer_articles": "解説記事",
+          "comparisons_vs_articles": "比較・対決記事",
+          "ultimate_guides_pillar": "オーソリティ・ピラーテキスト",
+          "checklists_cheat_sheets": "チェックリスト・チートシート",
+          "best_top_forecasts": "ベスト・トップ・予測",
+          "problem_solution_posts": "課題・解決型",
+          "myth_busting": "迷信・誤解の解消",
+          "resource_roundups": "リソースまとめ",
+          "faqs_qa_content": "FAQ・Q&A形式",
+          "personal_stories": "体験談・ストーリー",
+          "research_summaries": "調査・データの要約",
+          "historical_timeline": "歴史・タイムライン",
+          "satire_humor": "風刺・ユーモア",
+          "explained_in_minutes": "X分でわかる系"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "AIが最適なフォーマットを選択します",
+          "how_to_guides": "ステップバイステップの手順",
+          "listicles": "番号付きリスト（例：Xの10のヒント）",
+          "tutorials": "ハウツーより詳しい解説",
+          "opinion_pieces": "専門家の見解やコメント",
+          "case_studies": "実例・結果の紹介",
+          "news_commentary": "時事ニュースの背景",
+          "interviews": "人物・権威者とのQ&A",
+          "product_reviews": "評価・レーティング",
+          "explainer_articles": "複雑な概念をわかりやすく解説",
+          "comparisons_vs_articles": "X vs Y、メリット・デメリット比較",
+          "ultimate_guides_pillar": "長文・権威性・トピック全体を網羅",
+          "checklists_cheat_sheets": "クイックリファレンス、実践リスト",
+          "best_top_forecasts": "Xに最適なツール、202X年のトレンド",
+          "problem_solution_posts": "課題を特定し解決策を提示",
+          "myth_busting": "よくある誤解を解消",
+          "resource_roundups": "トピック別の記事・ツール・リンク集",
+          "faqs_qa_content": "ロングテール検索に直接対応",
+          "personal_stories": "物語性、感情に訴える",
+          "research_summaries": "調査・リサーチ結果の要約",
+          "historical_timeline": "発展・変遷の振り返り",
+          "satire_humor": "エンターテインメント、ブランドの個性",
+          "explained_in_minutes": "要点を素早く伝える"
+        }
+      },
+      "styleLinks": {
+        "label": "スタイル参考リンク",
+        "placeholder": "https://example.com/article",
+        "help": "真似したい記事のリンクを最大3件追加。",
+        "add": "リンクを追加",
+        "max": "最大3リンク"
+      },
+      "brandColor": {
+        "label": "ブランドカラー",
+        "help": "生成ビジュアル用のメインブランドカラー。"
+      },
+      "logo": {
+        "label": "ロゴ",
+        "help": "ブランドロゴをアップロード（JPG形式）。",
+        "upload": "ロゴをアップロード",
+        "change": "ロゴを変更",
+        "uploading": "アップロード中..."
+      }
+    },
+    "step3": {
+      "title": "目標と成長",
+      "subtitle": "ZARZOOMで何を達成したいですか？",
+      "goals": {
+        "label": "目標を選択",
+        "help": "1つ以上選択してください。戦略を合わせます。",
+        "options": {
+          "increase_website_traffic": "ウェブサイトへのトラフィック増加",
+          "get_more_subscribers_leads": "登録者・リードの獲得",
+          "promote_product_or_service": "商品・サービスのプロモーション",
+          "increase_sales": "売上増加",
+          "build_brand_authority": "ブランドの権威構築",
+          "improve_seo": "SEO改善",
+          "educate_audience": "オーディエンスの教育",
+          "generate_social_content": "ソーシャルコンテンツの生成"
+        }
+      },
+      "websiteUrl": {
+        "label": "ウェブサイトまたはランディングページURL",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "ウェブサイトトラフィックやリード獲得を目標に含める場合は必須。"
+      },
+      "productUrl": {
+        "label": "商品・販売ページURL",
+        "placeholder": "https://yoursite.com/product",
+        "help": "商品プロモーションや売上を目標に含める場合は必須。"
+      }
+    },
+    "step4": {
+      "title": "プランを選択",
+      "subtitle": "成長の目標に合ったプランで始めましょう。",
+      "discount": {
+        "label": "年額請求",
+        "save": "{percent}%お得"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "最大3ソーシャルプロフィール",
+          "postsPerMonth": "月30投稿",
+          "aiGeneration": "基本AIコンテンツ生成",
+          "scheduling": "投稿スケジューリング",
+          "emailSupport": "メールサポート"
+        },
+        "pro": {
+          "socialProfiles": "最大10ソーシャルプロフィール",
+          "postsPerMonth": "月150投稿",
+          "aiGeneration": "高度なAIコンテンツ生成",
+          "scheduling": "最適時間のスマートスケジューリング",
+          "analytics": "分析ダッシュボード",
+          "prioritySupport": "優先サポート"
+        },
+        "scale": {
+          "socialProfiles": "無制限ソーシャルプロフィール",
+          "postsPerMonth": "無制限投稿",
+          "aiGeneration": "カスタムブランドボイスのプレミアムAI",
+          "scheduling": "AIによる自動スケジューリング",
+          "analytics": "高度な分析・レポート",
+          "customBranding": "カスタムブランディング・ホワイトラベル",
+          "dedicatedSupport": "専任アカウントマネージャー",
+          "apiAccess": "フルAPIアクセス"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "ソーシャルメディア自動化を始めるのに最適。",
+        "pro": "より多くの機能とインサイトが必要な成長企業向け。",
+        "scale": "チーム・代理店向けの無制限プラン。"
+      },
+      "popular": "最も人気",
+      "perMonth": "/月",
+      "selectPlan": "プランを選択",
+      "selected": "選択中",
+      "trialDays": "{days}日間無料トライアル"
+    },
+    "step5": {
+      "title": "接続して起動",
+      "subtitle": "ソーシャルアカウントを接続し、設定を決めましょう。",
+      "connectSocials": {
+        "label": "ソーシャルアカウントを接続",
+        "help": "ソーシャルメディアアカウントをリンク",
+        "button": "アカウントを接続",
+        "manage": "接続を管理",
+        "connected": "ソーシャルアカウント接続済み",
+        "notConnected": "まだアカウントが接続されていません"
+      },
+      "approval": {
+        "label": "コンテンツ承認",
+        "help": "ZARZOOMがコンテンツを公開する方法を選択。",
+        "auto": "自動公開",
+        "autoHelp": "ZARZOOMがスケジュールに従い自動で公開します。",
+        "manual": "手動承認",
+        "manualHelp": "公開前に各投稿を確認・承認します。"
+      },
+      "notes": {
+        "label": "その他メモ",
+        "placeholder": "ブランドやコンテンツの希望など、他に伝えたいことがあれば...",
+        "help": "AIが考慮する任意のメモ。"
+      }
+    },
+    "modal": {
+      "title": "ソーシャルアカウントを接続",
+      "loading": "ソーシャルコネクターを準備中...",
+      "checking": "接続を確認中...",
+      "close": "完了",
+      "openInNewTab": "新しいタブで開く",
+      "skipConnect": "今はスキップ",
+      "errorGeneric": "ソーシャルコネクターを読み込めませんでした。後でもう一度お試しください。",
+      "errorNoUrl": "接続URLが返されませんでした。もう一度お試しください。",
+      "demoTitle": "ソーシャルコネクター近日公開",
+      "demoDescription": "この環境ではソーシャルコネクターはまだ設定されていません。管理者によるプロバイダー設定後に、ソーシャルアカウントの接続が利用可能になります。"
+    },
+    "errors": {
+      "loadFailed": "オンボーディングデータの読み込みに失敗しました。もう一度お試しください。",
+      "saveFailed": "保存に失敗しました。もう一度お試しください。",
+      "completeFailed": "オンボーディングを完了できませんでした。必須項目をご確認ください。"
+    },
+    "banner": {
+      "skipped": "セットアップをスキップしました。完了するとすべての機能が利用できます。",
+      "inProgress": "セットアップが未完了です。完了してから始めましょう。",
+      "cta": "セットアップを完了"
+    },
+    "gate": {
+      "title": "セットアップが必要です",
+      "description": "この機能を利用するにはオンボーディングを完了してください。数分で完了します。",
+      "cta": "セットアップを完了"
+    },
+    "a11y": {
+      "brandLogoAlt": "ブランドロゴ",
+      "socialConnectorTitle": "ソーシャルコネクター",
+      "dismissBanner": "バナーを閉じる",
+      "currency": "£",
+      "stepperLabel": "オンボーディングの進捗"
+    },
+    "validation": {
+      "invalidUrl": "有効なURLを入力してください（例：https://example.com）"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "請求履歴"
+    },
+    "selectCurrencyLabel": "通貨を選択",
+    "selectCurrencyHelp": "料金表示に使用する通貨を選択してください。",
+    "selectBillingInterval": "請求間隔を選択",
+    "toggleDiscount": "広告パートナーシップ割引の表示切替",
+    "discountPartnershipTitle": "広告パートナーシップで{percent}%お得",
+    "discountActive": "有効",
+    "discountPartnershipDescription": "ZARZOOMがフィードにプロモーションコンテンツを投稿することを許可（最大{maxFrequency}）し、サブスクリプションが{percent}%割引になります。いつでも無効にできます。",
+    "discountOncePerDay": "1日1回",
+    "discountPerWeek": "週{count}回",
+    "discountPartnerApplied": "パートナー割引を適用しました",
+    "discountAdvertisingApplied": "広告パートナーシップ割引を適用しました",
+    "contactUs": "お問い合わせ",
+    "partnerDiscountEnable": "50%パートナー割引を有効にする",
+    "partnerDiscountStandardPrice": "通常価格",
+    "partnerDiscount50Off": "50%OFF",
+    "partnerDiscountSubheading": "50%お得。ZARZOOMの小さなプロモを1日最大1件（週3〜7件まで）投稿する場合があります — お客様の投稿には重ねません。",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "シンプルで透明な料金",
+      "subtitle": "成長に合ったプランを選べます。無料トライアルで始めて、いつでもアップグレード可能。",
+      "monthly": "月額",
+      "annual": "年額",
+      "popular": "最も人気",
+      "getStarted": "始める",
+      "savePercent": "年額請求で{percent}%お得",
+      "trialDays": "{days}日間無料トライアル",
+      "page": {
+        "title": "シンプルで透明な料金",
+        "subtitle": "ご自身に合ったプランをお選びください。全プラン14日間無料トライアル付き。",
+        "footer": "表示価格は適用される場合のVATを除きます。いつでもキャンセルまたはプラン変更が可能です。",
+        "contactCta": "ご質問はお問い合わせください。最適なプランをご提案します。",
+        "contactCtaPrefix": "ご質問は ",
+        "contactLink": "お問い合わせ",
+        "contactCtaSuffix": " まで。最適なプランをご提案します。"
+      },
+      "fallback": {
+        "title": "料金の一時的な表示不可",
+        "message": "料金プランを更新中です。しばらくしてから再度ご確認いたか、サポートまでお問い合わせください。"
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "始めるのに最適",
+        "description": "AIによるコンテンツ作成とスケジューリングで、ソーシャルメディアを立ち上げるための基本機能。",
+        "bullets": [
+          "最大3ソーシャルプロフィール",
+          "月30投稿",
+          "基本AIコンテンツ生成",
+          "投稿スケジューリング",
+          "メールサポート"
+        ],
+        "cta": "無料トライアルを開始"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "成長企業に最適",
+        "description": "インテリジェントな自動化で、ソーシャルメディア戦略をスケールする高度な機能と分析。",
+        "bullets": [
+          "最大10ソーシャルプロフィール",
+          "月150投稿",
+          "高度なAIコンテンツ生成",
+          "最適時間のスマートスケジューリング",
+          "分析ダッシュボード",
+          "優先サポート"
+        ],
+        "cta": "無料トライアルを開始"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "チーム・代理店向け",
+        "description": "無制限コンテンツ、カスタムブランディング、専任サポートで最大のインパクトを実現するエンタープライズ向け機能。",
+        "bullets": [
+          "無制限ソーシャルプロフィール",
+          "無制限投稿",
+          "カスタムブランドボイスのプレミアムAI",
+          "AIによる自動スケジューリング",
+          "高度な分析・レポート",
+          "カスタムブランディング・ホワイトラベル",
+          "専任アカウントマネージャー",
+          "フルAPIアクセス"
+        ],
+        "cta": "営業に相談"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "最大3ソーシャルプロフィール",
+        "postsPerMonth": "月30投稿",
+        "aiGeneration": "基本AIコンテンツ生成",
+        "scheduling": "投稿スケジューリング",
+        "emailSupport": "メールサポート"
+      },
+      "pro": {
+        "socialProfiles": "最大10ソーシャルプロフィール",
+        "postsPerMonth": "月150投稿",
+        "aiGeneration": "高度なAIコンテンツ生成",
+        "scheduling": "最適時間のスマートスケジューリング",
+        "analytics": "分析ダッシュボード",
+        "prioritySupport": "優先サポート"
+      },
+      "advanced": {
+        "socialProfiles": "無制限ソーシャルプロフィール",
+        "postsPerMonth": "無制限投稿",
+        "aiGeneration": "カスタムブランドボイスのプレミアムAI",
+        "scheduling": "AIによる自動スケジューリング",
+        "analytics": "高度な分析・レポート",
+        "customBranding": "カスタムブランディング・ホワイトラベル",
+        "dedicatedSupport": "専任アカウントマネージャー",
+        "apiAccess": "フルAPIアクセス"
+      }
+    }
+  }
+}

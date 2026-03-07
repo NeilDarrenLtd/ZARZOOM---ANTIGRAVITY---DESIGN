@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "歡迎回來",
+    "loginSubtitle": "登入您的 ZARZOOM 帳戶",
+    "registerTitle": "建立帳戶",
+    "registerSubtitle": "加入數千名正在自動化社群媒體的行銷人",
+    "email": "電子郵件地址",
+    "password": "密碼",
+    "confirmPassword": "確認密碼",
+    "login": "登入",
+    "register": "建立帳戶",
+    "forgotPassword": "忘記密碼？",
+    "orContinueWith": "或使用以下方式繼續",
+    "noAccount": "還沒有帳戶？",
+    "hasAccount": "已有帳戶？",
+    "signUpLink": "註冊",
+    "signInLink": "登入",
+    "passwordMinLength": "密碼至少 8 個字元",
+    "passwordUppercase": "須包含大寫字母",
+    "passwordLowercase": "須包含小寫字母",
+    "passwordNumber": "須包含數字",
+    "passwordSpecial": "須包含特殊字元",
+    "passwordsNoMatch": "兩次密碼不一致",
+    "emailRequired": "請輸入電子郵件",
+    "emailInvalid": "請輸入有效的電子郵件",
+    "signUpSuccess": "請查收電子郵件",
+    "signUpSuccessMessage": "我們已將驗證連結寄至您的電子郵件。請查看收件匣並點擊連結以啟用帳戶。",
+    "backToLogin": "返回登入",
+    "authError": "驗證錯誤",
+    "authErrorMessage": "驗證過程中發生錯誤，請再試一次。",
+    "tryAgain": "再試一次",
+    "tabLogin": "登入",
+    "tabCreateAccount": "建立帳戶",
+    "continueWithGoogle": "使用 Google 繼續",
+    "continueWithFacebook": "使用 Facebook 繼續",
+    "continueWithLinkedIn": "使用 LinkedIn 繼續",
+    "continueWithX": "使用 X 繼續",
+    "rememberMe": "記住我",
+    "forgotLogin": "忘記登入資訊？",
+    "verifyTitle": "請查收收件匣",
+    "verifySubtitle": "我們已將驗證連結寄至您的電子郵件。請查看收件匣並點擊連結以啟用帳戶。",
+    "verifyResend": "重新寄送驗證信",
+    "verifyResent": "驗證信已重新寄出",
+    "verifyBack": "返回登入",
+    "verifiedTitle": "電子郵件已驗證",
+    "verifiedSubtitle": "您的電子郵件已成功驗證，現在可以登入帳戶。",
+    "verifiedContinue": "前往登入",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "控制台",
+    "welcome": "歡迎回來",
+    "overview": "總覽",
+    "accountSettings": "帳戶設定",
+    "connectedAccounts": "已連結帳號",
+    "comingSoon": "即將推出 — 您的社群媒體指揮中心。",
+    "emailVerified": "電子郵件已驗證",
+    "memberSince": "加入時間",
+    "profile": "品牌設定",
+    "supportDescription": "向支援團隊取得協助。建立與管理支援單。",
+    "restartSetup": "重新開始設定",
+    "restarting": "重新啟動中…"
+  },
+  "connect": {
+    "heading": "連結您的帳號",
+    "subheading": "連結社群媒體帳號，即可透過 ZARZOOM 開始自動發文。",
+    "connectAccounts": "連結帳號",
+    "back": "返回"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "從檔案自動填入"
+  },
+  "apiKeys": {
+    "createKeyTitle": "建立 API 金鑰",
+    "keyCreated": "金鑰已建立",
+    "close": "關閉",
+    "keyName": "金鑰名稱",
+    "keyNamePlaceholder": "例如：正式環境、測試環境、CI/CD",
+    "keyNameRequired": "名稱為必填",
+    "active": "啟用中",
+    "revoked": "已撤銷",
+    "created": "建立時間",
+    "lastUsed": "最後使用",
+    "revokedAt": "撤銷時間",
+    "rotate": "輪換",
+    "revoke": "撤銷",
+    "revokeConfirm": "確定要撤銷此金鑰？",
+    "rotateConfirm": "確定要輪換金鑰？",
+    "confirm": "確認",
+    "cancel": "取消",
+    "revoking": "撤銷中…",
+    "rotating": "輪換中…",
+    "rotateTitle": "輪換：撤銷此金鑰並建立新金鑰"
+  },
+  "profile": {
+    "title": "品牌設定",
+    "subtitle": "管理您的品牌、目標、方案與社群連結。",
+    "saving": "儲存中…",
+    "saved": "變更已成功儲存。",
+    "saveFailed": "儲存失敗，請再試一次。",
+    "loadFailed": "無法載入您的設定檔，請再試一次。",
+    "save": "儲存變更",
+    "sections": {
+      "brand": "品牌基本資料",
+      "brandDesc": "您的企業識別與內容偏好。",
+      "goals": "目標與成長",
+      "goalsDesc": "您希望透過 ZARZOOM 達成的目標。",
+      "posting": "發文偏好",
+      "postingDesc": "ZARZOOM 如何發布您的內容。",
+      "plan": "您的方案",
+      "planDesc": "目前訂閱與帳單偏好。",
+      "social": "社群連結",
+      "socialDesc": "管理已連結的社群媒體帳號。"
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "自動發布",
+        "help": "允許 ZARZOOM 代您自動發布內容。"
+      }
+    },
+    "plan": {
+      "current": "目前方案",
+      "noPlan": "尚未選擇方案",
+      "annualBilling": "年繳",
+      "changePlan": "變更方案"
+    },
+    "social": {
+      "username": "社群使用者名稱",
+      "noUsername": "尚未設定",
+      "connected": "已連結社群帳號",
+      "notConnected": "尚無已連結帳號",
+      "connect": "連結帳號",
+      "manage": "管理連結"
+    },
+    "back": "返回控制台"
+  },
+  "support": {
+    "nav": {
+      "title": "支援",
+      "myTickets": "我的支援單",
+      "createTicket": "建立支援單",
+      "backToSupport": "返回支援",
+      "backToDashboard": "返回控制台"
+    },
+    "landing": {
+      "title": "取得支援",
+      "subtitle": "我們在此協助您充分發揮 ZARZOOM 的價值。",
+      "description": "提交支援單，我們的團隊將在營業日 24 小時內回覆。",
+      "createTicketBtn": "建立支援單",
+      "myTicketsBtn": "我的支援單"
+    },
+    "list": {
+      "title": "我的支援單",
+      "subtitle": "檢視與管理您的支援請求。",
+      "empty": "尚無支援單",
+      "emptyDescription": "您尚未建立任何支援單。點擊下方按鈕開始。",
+      "createFirstTicket": "建立第一張支援單",
+      "filterByStatus": "依狀態篩選",
+      "allTickets": "全部支援單",
+      "showingTickets": "顯示 {filtered} / {total} 張支援單",
+      "noMatchFilter": "沒有符合所選狀態篩選的支援單。",
+      "clearFilter": "清除篩選",
+      "table": {
+        "ticketId": "支援單編號",
+        "subject": "主旨",
+        "status": "狀態",
+        "lastUpdated": "最後更新",
+        "created": "建立時間"
+      }
+    },
+    "create": {
+      "title": "建立支援單",
+      "subtitle": "描述您的問題，我們會協助您解決。",
+      "form": {
+        "subject": "主旨",
+        "subjectPlaceholder": "簡要描述您的問題",
+        "subjectHelp": "必填。簡短清楚即可。",
+        "category": "類別",
+        "categoryHelp": "選填。選擇最符合您問題的類別。",
+        "priority": "優先級",
+        "priorityHelp": "選填。讓我們知道緊急程度。",
+        "description": "描述",
+        "descriptionPlaceholder": "請詳細說明您的問題…",
+        "descriptionHelp": "必填。請包含重現步驟、錯誤訊息或其他相關細節。",
+        "attachments": "附加截圖",
+        "attachmentsHelp": "選填。最多上傳 3 張截圖（PNG、JPG 或 WebP），每張最大 5MB。",
+        "attachmentsBtn": "選擇檔案",
+        "attachmentsSelected": "個檔案已選",
+        "removeAttachment": "移除",
+        "submit": "提交支援單",
+        "submitting": "建立支援單中…",
+        "cancel": "取消"
+      },
+      "success": {
+        "title": "支援單已成功建立",
+        "message": "您的支援單已建立。我們將在營業日 24 小時內回覆。",
+        "viewTicket": "檢視支援單",
+        "createAnother": "再建一張支援單"
+      },
+      "error": {
+        "title": "建立支援單失敗",
+        "message": "發生錯誤，請再試一次。",
+        "retry": "再試一次"
+      }
+    },
+    "detail": {
+      "title": "支援單詳情",
+      "status": "狀態",
+      "category": "類別",
+      "priority": "優先級",
+      "created": "建立時間",
+      "lastActivity": "最後活動",
+      "comments": "留言",
+      "addComment": "新增留言",
+      "commentPlaceholder": "輸入您的訊息…",
+      "attachScreenshots": "附加截圖",
+      "sendComment": "送出",
+      "sending": "傳送中…",
+      "loadingTicket": "載入支援單中…",
+      "ticketNotFound": "找不到支援單",
+      "ticketNotFoundMessage": "此支援單不存在或您無權檢視。",
+      "noComments": "尚無留言",
+      "userRole": "您",
+      "adminRole": "支援團隊",
+      "systemRole": "系統",
+      "attachmentPreview": "點擊檢視大圖",
+      "attachmentAlt": "附件",
+      "closeModal": "關閉",
+      "closeTicketTitle": "關閉支援單",
+      "closeTicketMessage": "確定要關閉此支援單嗎？您可選擇填寫關閉原因。",
+      "closeTicketPlaceholder": "選填：您為何要關閉此支援單？",
+      "closeTicketCancel": "取消",
+      "closeTicketButton": "關閉支援單",
+      "closeTicketClosing": "關閉中…"
+    },
+    "status": {
+      "open": "處理中",
+      "investigating": "調查中",
+      "waiting_on_user": "等待您回覆",
+      "resolved": "已解決",
+      "closed": "已關閉"
+    },
+    "category": {
+      "none": "未指定",
+      "account_login": "帳戶與登入",
+      "billing_subscription": "帳單與訂閱",
+      "social_connections": "社群連結",
+      "content_generation": "內容生成",
+      "publishing_issues": "發布問題",
+      "technical_bug": "技術錯誤",
+      "feature_request": "功能建議",
+      "general_question": "一般問題"
+    },
+    "priority": {
+      "none": "未指定",
+      "urgent": "緊急 — 系統受阻",
+      "high": "高 — 重大問題",
+      "normal": "一般 — 標準",
+      "low": "低 — 次要／建議"
+    },
+    "attachments": {
+      "uploading": "上傳附件中…",
+      "uploadSuccess": "附件已成功上傳",
+      "uploadError": "部分附件上傳失敗",
+      "fileTypeError": "僅允許 PNG、JPG 與 WebP 檔案",
+      "fileSizeError": "檔案大小須小於 5MB",
+      "fileCountError": "每則留言最多上傳 3 個檔案",
+      "viewFullSize": "檢視大圖"
+    },
+    "errors": {
+      "loadFailed": "無法載入支援單",
+      "createFailed": "無法建立支援單",
+      "commentFailed": "無法新增留言",
+      "unauthorized": "您無權存取此支援單",
+      "networkError": "網路錯誤。請檢查連線後再試。"
+    },
+    "validation": {
+      "subjectRequired": "主旨為必填",
+      "descriptionRequired": "描述為必填",
+      "messageRequired": "訊息為必填",
+      "emailRequired": "電子郵件為必填",
+      "invalidEmail": "請輸入有效的電子郵件地址",
+      "noUpdatesProvided": "未提供更新內容",
+      "noFilesProvided": "未提供檔案",
+      "tooManyFiles": "檔案過多。最多允許 {count} 個檔案。",
+      "invalidFileType": "{name} 的檔案類型無效。僅允許 PNG、JPG 與 WebP。",
+      "fileTooLarge": "{name} 檔案過大（{size}）。最大為 5MB。"
+    }
+  },
+  "onboarding": {
+    "title": "設定您的 ZARZOOM",
+    "subtitle": "讓我們用幾個簡單步驟完成您的社群媒體自動駕駛設定。",
+    "stepper": {
+      "step1": "帳戶",
+      "step2": "品牌",
+      "step3": "目標",
+      "step4": "方案",
+      "step5": "連結"
+    },
+    "nav": {
+      "back": "上一步",
+      "next": "繼續",
+      "saveExit": "儲存並離開",
+      "skipForNow": "暫時略過",
+      "finish": "啟動 ZARZOOM",
+      "saving": "儲存中…"
+    },
+    "step1": {
+      "title": "帳戶已建立",
+      "subtitle": "您已登入，可以開始了。",
+      "signedInAs": "目前登入為",
+      "continue": "接著設定您的品牌"
+    },
+    "step2": {
+      "title": "品牌基本資料",
+      "subtitle": "告訴我們您的業務，我們才能為您的品牌量身打造內容。",
+      "businessName": {
+        "label": "企業名稱",
+        "placeholder": "例如：某某公司",
+        "help": "您的企業或品牌名稱。"
+      },
+      "description": {
+        "label": "描述",
+        "placeholder": "簡要描述您的業務…",
+        "help": "簡短摘要，讓 AI 了解您的品牌聲調。"
+      },
+      "websiteUrl": {
+        "label": "網站網址",
+        "placeholder": "https://yourwebsite.com",
+        "help": "我們會分析您的網站以量身打造內容。"
+      },
+      "autofillFromWebsite": "從網站自動填入",
+      "analysing": "分析中…",
+      "importFromFile": "從檔案匯入",
+      "choosePdfOrWord": "選擇 PDF 或 Word 檔案",
+      "investigate": {
+        "button": "分析網站",
+        "loading": "正在分析您的網站…",
+        "success": "網站分析完成！",
+        "error": "無法分析網站，請手動填寫。"
+      },
+      "contentLanguage": {
+        "label": "內容語言",
+        "help": "生成內容的主要語言。"
+      },
+      "articleStyles": {
+        "label": "文章風格",
+        "help": "選擇您希望 ZARZOOM 建立的內容類型。",
+        "options": {
+          "let_zarzoom_decide": "由 ZARZOOM 決定",
+          "how_to_guides": "操作指南",
+          "listicles": "清單文（如：X 的 10 個技巧）",
+          "tutorials": "教學文",
+          "opinion_pieces": "觀點評論",
+          "case_studies": "案例研究",
+          "news_commentary": "新聞評論",
+          "interviews": "訪談",
+          "product_reviews": "產品評測",
+          "explainer_articles": "概念說明文",
+          "comparisons_vs_articles": "比較文與對決文",
+          "ultimate_guides_pillar": "終極指南／支柱內容",
+          "checklists_cheat_sheets": "檢查清單與速查表",
+          "best_top_forecasts": "最佳／趨勢預測",
+          "problem_solution_posts": "問題／解決方案文",
+          "myth_busting": "破除迷思",
+          "resource_roundups": "資源彙整",
+          "faqs_qa_content": "常見問題／問答式內容",
+          "personal_stories": "個人故事與經驗",
+          "research_summaries": "研究摘要／數據洞察",
+          "historical_timeline": "歷史／時間軸",
+          "satire_humor": "諷刺或幽默內容",
+          "explained_in_minutes": "X 分鐘讀懂"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "由 AI 為您選擇最適合的內容格式",
+          "how_to_guides": "步驟式說明",
+          "listicles": "條列式清單（如：X 的 10 個技巧）",
+          "tutorials": "比操作指南更深入",
+          "opinion_pieces": "專家觀點或評論",
+          "case_studies": "實例與成果",
+          "news_commentary": "時事脈絡與解讀",
+          "interviews": "人物或權威問答",
+          "product_reviews": "評測與評分",
+          "explainer_articles": "用簡單方式拆解複雜概念",
+          "comparisons_vs_articles": "X vs Y、優缺點比較",
+          "ultimate_guides_pillar": "長文、權威、涵蓋完整主題",
+          "checklists_cheat_sheets": "快速參考、可執行清單",
+          "best_top_forecasts": "X 最佳工具、202X 趨勢",
+          "problem_solution_posts": "指出痛點並提供解法",
+          "myth_busting": "澄清常見錯誤認知",
+          "resource_roundups": "某主題的精選文章、工具與連結",
+          "faqs_qa_content": "直接對應長尾搜尋需求",
+          "personal_stories": "敘事、情感連結",
+          "research_summaries": "彙整調查、研究結果",
+          "historical_timeline": "回顧發展或演進",
+          "satire_humor": "娛樂性、品牌個性內容",
+          "explained_in_minutes": "重點精華、快速吸收"
+        }
+      },
+      "styleLinks": {
+        "label": "風格參考連結",
+        "placeholder": "https://example.com/article",
+        "help": "最多新增 3 個您想模仿風格的文章連結。",
+        "add": "新增連結",
+        "max": "最多 3 個連結"
+      },
+      "brandColor": {
+        "label": "品牌色彩",
+        "help": "用於生成視覺的主要品牌色。"
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "上傳您的品牌 Logo（JPG 格式）。",
+        "upload": "上傳 Logo",
+        "change": "更換 Logo",
+        "uploading": "上傳中…"
+      }
+    },
+    "step3": {
+      "title": "目標與成長",
+      "subtitle": "您希望透過 ZARZOOM 達成什麼？",
+      "goals": {
+        "label": "選擇您的目標",
+        "help": "可選一項或多項。我們會據此調整策略。",
+        "options": {
+          "increase_website_traffic": "增加網站流量",
+          "get_more_subscribers_leads": "增加訂閱與潛在客戶",
+          "promote_product_or_service": "推廣產品或服務",
+          "increase_sales": "提升銷售",
+          "build_brand_authority": "建立品牌權威",
+          "improve_seo": "改善 SEO",
+          "educate_audience": "教育受眾",
+          "generate_social_content": "生成社群內容"
+        }
+      },
+      "websiteUrl": {
+        "label": "網站或登陸頁網址",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "當目標包含網站流量或潛在客戶時為必填。"
+      },
+      "productUrl": {
+        "label": "產品或銷售頁網址",
+        "placeholder": "https://yoursite.com/product",
+        "help": "當目標包含產品推廣或銷售時為必填。"
+      }
+    },
+    "step4": {
+      "title": "選擇方案",
+      "subtitle": "從符合您成長目標的方案開始。",
+      "discount": {
+        "label": "年繳",
+        "save": "省 {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "最多 3 個社群帳號",
+          "postsPerMonth": "每月 30 則貼文",
+          "aiGeneration": "基本 AI 內容生成",
+          "scheduling": "貼文排程",
+          "emailSupport": "電子郵件支援"
+        },
+        "pro": {
+          "socialProfiles": "最多 10 個社群帳號",
+          "postsPerMonth": "每月 150 則貼文",
+          "aiGeneration": "進階 AI 內容生成",
+          "scheduling": "智慧排程與最佳時段",
+          "analytics": "數據分析控制台",
+          "prioritySupport": "優先支援"
+        },
+        "scale": {
+          "socialProfiles": "無限量社群帳號",
+          "postsPerMonth": "無限量貼文",
+          "aiGeneration": "進階 AI 與自訂品牌聲調",
+          "scheduling": "AI 自動排程",
+          "analytics": "進階數據與報表",
+          "customBranding": "自訂品牌與白標",
+          "dedicatedSupport": "專屬客戶經理",
+          "apiAccess": "完整 API 存取"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "適合開始使用社群媒體自動化。",
+        "pro": "適合需要更多效能與洞察的成長型企業。",
+        "scale": "團隊與代理商適用的無限量方案。"
+      },
+      "popular": "最受歡迎",
+      "perMonth": "/月",
+      "selectPlan": "選擇方案",
+      "selected": "已選",
+      "trialDays": "{days} 天免費試用"
+    },
+    "step5": {
+      "title": "連結並啟動",
+      "subtitle": "連結社群帳號並設定偏好。",
+      "connectSocials": {
+        "label": "連結社群帳號",
+        "help": "連結您的社群媒體帳號",
+        "button": "連結帳號",
+        "manage": "管理連結",
+        "connected": "已連結社群帳號",
+        "notConnected": "尚無已連結帳號"
+      },
+      "approval": {
+        "label": "內容審核",
+        "help": "選擇 ZARZOOM 如何發布您的內容。",
+        "auto": "自動發布",
+        "autoHelp": "ZARZOOM 依排程自動發布內容。",
+        "manual": "手動審核",
+        "manualHelp": "每則貼文上線前由您審核通過。"
+      },
+      "notes": {
+        "label": "其他備註",
+        "placeholder": "還有任何關於品牌或內容偏好的說明…",
+        "help": "選填，供 AI 參考。"
+      }
+    },
+    "modal": {
+      "title": "連結社群帳號",
+      "loading": "準備社群連結器中…",
+      "checking": "檢查連線中…",
+      "close": "完成",
+      "openInNewTab": "在新分頁開啟",
+      "skipConnect": "暫時略過",
+      "errorGeneric": "無法載入社群連結器，請稍後再試。",
+      "errorNoUrl": "未取得連結網址，請再試一次。",
+      "demoTitle": "社群連結器即將推出",
+      "demoDescription": "此環境尚未設定社群連結器。管理員完成供應商設定後，即可使用社群帳號連結功能。"
+    },
+    "errors": {
+      "loadFailed": "無法載入您的設定資料，請再試一次。",
+      "saveFailed": "儲存失敗，請再試一次。",
+      "completeFailed": "無法完成設定。請檢查所有必填欄位。"
+    },
+    "banner": {
+      "skipped": "您已略過設定。完成設定以解鎖所有功能。",
+      "inProgress": "您的設定尚未完成。完成後即可開始使用。",
+      "cta": "完成設定"
+    },
+    "gate": {
+      "title": "需完成設定",
+      "description": "完成設定即可解鎖此功能，只需幾分鐘。",
+      "cta": "完成設定"
+    },
+    "a11y": {
+      "brandLogoAlt": "品牌 Logo",
+      "socialConnectorTitle": "社群連結器",
+      "dismissBanner": "關閉橫幅",
+      "currency": "£",
+      "stepperLabel": "設定進度"
+    },
+    "validation": {
+      "invalidUrl": "請輸入有效網址（例如 https://example.com）"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "帳單紀錄"
+    },
+    "selectCurrencyLabel": "選擇幣別",
+    "selectCurrencyHelp": "選擇您偏好的計價幣別。",
+    "selectBillingInterval": "選擇帳單週期",
+    "toggleDiscount": "切換廣告合作折扣",
+    "discountPartnershipTitle": "廣告合作省 {percent}%",
+    "discountActive": "已啟用",
+    "discountPartnershipDescription": "允許 ZARZOOM 在您的動態中發布宣傳內容（最多 {maxFrequency}），即可享有訂閱 {percent}% 折扣。您可隨時關閉，完全由您掌控。",
+    "discountOncePerDay": "每天一次",
+    "discountPerWeek": "每週 {count} 次",
+    "discountPartnerApplied": "合作折扣已套用",
+    "discountAdvertisingApplied": "廣告合作折扣已套用",
+    "contactUs": "聯絡我們",
+    "partnerDiscountEnable": "啟用 50% 合作折扣",
+    "partnerDiscountStandardPrice": "原價",
+    "partnerDiscount50Off": "五折",
+    "partnerDiscountSubheading": "省 50%。我們每天最多可能發布 1 則小型 ZARZOOM 宣傳（每週最多 3–7 則）— 絕不穿插在您的貼文中。",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "簡單透明的定價",
+      "subtitle": "選擇符合您成長的方案。免費試用開始，隨時可升級。",
+      "monthly": "月繳",
+      "annual": "年繳",
+      "popular": "最受歡迎",
+      "getStarted": "開始使用",
+      "savePercent": "年繳省 {percent}%",
+      "trialDays": "{days} 天免費試用",
+      "page": {
+        "title": "簡單透明的定價",
+        "subtitle": "選擇適合您的方案。所有方案均含 14 天免費試用。",
+        "footer": "所有價格未含適用之加值稅。可隨時取消或變更方案。",
+        "contactCta": "有疑問？聯絡我們，我們會協助您找到合適方案。",
+        "contactCtaPrefix": "有疑問？",
+        "contactLink": "聯絡我們",
+        "contactCtaSuffix": "，我們會協助您找到合適方案。"
+      },
+      "fallback": {
+        "title": "定價暫時無法使用",
+        "message": "我們正在更新方案與定價。請稍後再試或聯絡支援。"
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "適合入門",
+        "description": "以 AI 內容創作與排程啟動社群形象的基本功能。",
+        "bullets": [
+          "最多 3 個社群帳號",
+          "每月 30 則貼文",
+          "基本 AI 內容生成",
+          "貼文排程",
+          "電子郵件支援"
+        ],
+        "cta": "開始免費試用"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "最適合成長型企業",
+        "description": "進階功能與數據分析，以智慧自動化擴張社群策略。",
+        "bullets": [
+          "最多 10 個社群帳號",
+          "每月 150 則貼文",
+          "進階 AI 內容生成",
+          "智慧排程與最佳時段",
+          "數據分析控制台",
+          "優先支援"
+        ],
+        "cta": "開始免費試用"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "適合團隊與代理商",
+        "description": "企業級功能：無限量內容、自訂品牌與專屬支援，發揮最大效益。",
+        "bullets": [
+          "無限量社群帳號",
+          "無限量貼文",
+          "進階 AI 與自訂品牌聲調",
+          "AI 自動排程",
+          "進階數據與報表",
+          "自訂品牌與白標",
+          "專屬客戶經理",
+          "完整 API 存取"
+        ],
+        "cta": "聯絡業務"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "最多 3 個社群帳號",
+        "postsPerMonth": "每月 30 則貼文",
+        "aiGeneration": "基本 AI 內容生成",
+        "scheduling": "貼文排程",
+        "emailSupport": "電子郵件支援"
+      },
+      "pro": {
+        "socialProfiles": "最多 10 個社群帳號",
+        "postsPerMonth": "每月 150 則貼文",
+        "aiGeneration": "進階 AI 內容生成",
+        "scheduling": "智慧排程與最佳時段",
+        "analytics": "數據分析控制台",
+        "prioritySupport": "優先支援"
+      },
+      "advanced": {
+        "socialProfiles": "無限量社群帳號",
+        "postsPerMonth": "無限量貼文",
+        "aiGeneration": "進階 AI 與自訂品牌聲調",
+        "scheduling": "AI 自動排程",
+        "analytics": "進階數據與報表",
+        "customBranding": "自訂品牌與白標",
+        "dedicatedSupport": "專屬客戶經理",
+        "apiAccess": "完整 API 存取"
+      }
+    }
+  }
+}

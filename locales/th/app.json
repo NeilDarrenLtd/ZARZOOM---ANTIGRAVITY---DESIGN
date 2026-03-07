@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "ยินดีต้อนรับกลับ",
+    "loginSubtitle": "เข้าสู่บัญชี ZARZOOM ของคุณ",
+    "registerTitle": "สร้างบัญชี",
+    "registerSubtitle": "ร่วมกับนักการตลาดนับพันที่ทำให้โซเชียลมีเดียอัตโนมัติ",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "confirmPassword": "ยืนยันรหัสผ่าน",
+    "login": "เข้าสู่ระบบ",
+    "register": "สร้างบัญชี",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "orContinueWith": "หรือดำเนินการต่อด้วย",
+    "noAccount": "ยังไม่มีบัญชี?",
+    "hasAccount": "มีบัญชีอยู่แล้ว?",
+    "signUpLink": "สมัครสมาชิก",
+    "signInLink": "เข้าสู่ระบบ",
+    "passwordMinLength": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
+    "passwordUppercase": "ต้องมีตัวอักษรพิมพ์ใหญ่",
+    "passwordLowercase": "ต้องมีตัวอักษรพิมพ์เล็ก",
+    "passwordNumber": "ต้องมีตัวเลข",
+    "passwordSpecial": "ต้องมีอักขระพิเศษ",
+    "passwordsNoMatch": "รหัสผ่านไม่ตรงกัน",
+    "emailRequired": "กรุณากรอกอีเมล",
+    "emailInvalid": "กรุณากรอกอีเมลที่ถูกต้อง",
+    "signUpSuccess": "กรุณาตรวจสอบอีเมล",
+    "signUpSuccessMessage": "เราส่งลิงก์ยืนยันไปยังอีเมลของคุณแล้ว กรุณาตรวจสอบกล่องขาเข้าและคลิกลิงก์เพื่อเปิดใช้งานบัญชี",
+    "backToLogin": "กลับไปเข้าสู่ระบบ",
+    "authError": "ข้อผิดพลาดในการยืนยันตัวตน",
+    "authErrorMessage": "เกิดข้อผิดพลาดระหว่างการยืนยันตัวตน กรุณาลองอีกครั้ง",
+    "tryAgain": "ลองอีกครั้ง",
+    "tabLogin": "เข้าสู่ระบบ",
+    "tabCreateAccount": "สร้างบัญชี",
+    "continueWithGoogle": "ดำเนินการต่อด้วย Google",
+    "continueWithFacebook": "ดำเนินการต่อด้วย Facebook",
+    "continueWithLinkedIn": "ดำเนินการต่อด้วย LinkedIn",
+    "continueWithX": "ดำเนินการต่อด้วย X",
+    "rememberMe": "จดจำฉัน",
+    "forgotLogin": "ลืมข้อมูลเข้าสู่ระบบ?",
+    "verifyTitle": "กรุณาตรวจสอบกล่องขาเข้า",
+    "verifySubtitle": "เราส่งลิงก์ยืนยันไปยังอีเมลของคุณแล้ว กรุณาตรวจสอบกล่องขาเข้าและคลิกลิงก์เพื่อเปิดใช้งานบัญชี",
+    "verifyResend": "ส่งอีเมลยืนยันอีกครั้ง",
+    "verifyResent": "ส่งอีเมลยืนยันอีกครั้งแล้ว",
+    "verifyBack": "กลับไปเข้าสู่ระบบ",
+    "verifiedTitle": "ยืนยันอีเมลแล้ว",
+    "verifiedSubtitle": "อีเมลของคุณได้รับการยืนยันแล้ว คุณสามารถเข้าสู่บัญชีได้แล้ว",
+    "verifiedContinue": "ดำเนินการต่อเพื่อเข้าสู่ระบบ",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ด",
+    "welcome": "ยินดีต้อนรับกลับ",
+    "overview": "ภาพรวม",
+    "accountSettings": "ตั้งค่าบัญชี",
+    "connectedAccounts": "บัญชีที่เชื่อมต่อ",
+    "comingSoon": "เร็วๆ นี้ — ศูนย์บัญชาการโซเชียลมีเดียของคุณ",
+    "emailVerified": "ยืนยันอีเมลแล้ว",
+    "memberSince": "สมาชิกตั้งแต่",
+    "profile": "ตั้งค่าแบรนด์",
+    "supportDescription": "รับความช่วยเหลือจากทีมสนับสนุน สร้างและจัดการตั๋วสนับสนุน",
+    "restartSetup": "เริ่มการตั้งค่าครั้งใหม่",
+    "restarting": "กำลังเริ่มใหม่..."
+  },
+  "connect": {
+    "heading": "เชื่อมบัญชีของคุณ",
+    "subheading": "เชื่อมบัญชีโซเชียลมีเดียเพื่อเริ่มโพสต์อัตโนมัติด้วย ZARZOOM",
+    "connectAccounts": "เชื่อมบัญชี",
+    "back": "กลับ"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "กรอกอัตโนมัติจากไฟล์"
+  },
+  "apiKeys": {
+    "createKeyTitle": "สร้าง API Key",
+    "keyCreated": "สร้าง Key แล้ว",
+    "close": "ปิด",
+    "keyName": "ชื่อ Key",
+    "keyNamePlaceholder": "เช่น Production, Staging, CI/CD",
+    "keyNameRequired": "กรุณาระบุชื่อ",
+    "active": "ใช้งาน",
+    "revoked": "เพิกถอนแล้ว",
+    "created": "สร้างเมื่อ",
+    "lastUsed": "ใช้ล่าสุด",
+    "revokedAt": "เพิกถอนเมื่อ",
+    "rotate": "หมุน",
+    "revoke": "เพิกถอน",
+    "revokeConfirm": "เพิกถอน key นี้?",
+    "rotateConfirm": "หมุน key?",
+    "confirm": "ยืนยัน",
+    "cancel": "ยกเลิก",
+    "revoking": "กำลังเพิกถอน...",
+    "rotating": "กำลังหมุน...",
+    "rotateTitle": "หมุน: เพิกถอน key นี้และสร้างใหม่"
+  },
+  "profile": {
+    "title": "ตั้งค่าแบรนด์",
+    "subtitle": "จัดการแบรนด์ เป้าหมาย แผน และการเชื่อมต่อโซเชียล",
+    "saving": "กำลังบันทึก...",
+    "saved": "บันทึกการเปลี่ยนแปลงเรียบร้อยแล้ว",
+    "saveFailed": "บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง",
+    "loadFailed": "โหลดโปรไฟล์ไม่สำเร็จ กรุณาลองอีกครั้ง",
+    "save": "บันทึกการเปลี่ยนแปลง",
+    "sections": {
+      "brand": "ข้อมูลพื้นฐานแบรนด์",
+      "brandDesc": "ตัวตนธุรกิจและความชอบคอนเทนต์",
+      "goals": "เป้าหมายและการเติบโต",
+      "goalsDesc": "สิ่งที่คุณต้องการบรรลุด้วย ZARZOOM",
+      "posting": "การตั้งค่าโพสต์",
+      "postingDesc": "วิธีที่ ZARZOOM เผยแพร่คอนเทนต์ของคุณ",
+      "plan": "แผนของคุณ",
+      "planDesc": "การสมัครสมาชิกและการตั้งค่าการเรียกเก็บเงินปัจจุบัน",
+      "social": "การเชื่อมต่อโซเชียล",
+      "socialDesc": "จัดการบัญชีโซเชียลมีเดียที่เชื่อมต่อ"
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "เผยแพร่อัตโนมัติ",
+        "help": "อนุญาตให้ ZARZOOM เผยแพร่คอนเทนต์อัตโนมัติแทนคุณ"
+      }
+    },
+    "plan": {
+      "current": "แผนปัจจุบัน",
+      "noPlan": "ยังไม่ได้เลือกแผน",
+      "annualBilling": "เรียกเก็บรายปี",
+      "changePlan": "เปลี่ยนแผน"
+    },
+    "social": {
+      "username": "ชื่อผู้ใช้โซเชียล",
+      "noUsername": "ยังไม่ได้ตั้งค่า",
+      "connected": "บัญชีโซเชียลที่เชื่อมต่อ",
+      "notConnected": "ยังไม่มีบัญชีที่เชื่อมต่อ",
+      "connect": "เชื่อมบัญชี",
+      "manage": "จัดการการเชื่อมต่อ"
+    },
+    "back": "กลับไปแดชบอร์ด"
+  },
+  "support": {
+    "nav": {
+      "title": "สนับสนุน",
+      "myTickets": "ตั๋วของฉัน",
+      "createTicket": "สร้างตั๋ว",
+      "backToSupport": "กลับไปสนับสนุน",
+      "backToDashboard": "กลับไปแดชบอร์ด"
+    },
+    "landing": {
+      "title": "รับความช่วยเหลือ",
+      "subtitle": "เราพร้อมช่วยให้คุณใช้ ZARZOOM ได้อย่างเต็มที่",
+      "description": "ส่งตั๋วสนับสนุน และทีมเราจะตอบกลับภายใน 24 ชั่วโมงในวันทำการ",
+      "createTicketBtn": "สร้างตั๋ว",
+      "myTicketsBtn": "ตั๋วของฉัน"
+    },
+    "list": {
+      "title": "ตั๋วสนับสนุนของฉัน",
+      "subtitle": "ดูและจัดการคำขอสนับสนุนของคุณ",
+      "empty": "ยังไม่มีตั๋ว",
+      "emptyDescription": "คุณยังไม่ได้สร้างตั๋วสนับสนุน คลิกปุ่มด้านล่างเพื่อเริ่มต้น",
+      "createFirstTicket": "สร้างตั๋วแรกของคุณ",
+      "filterByStatus": "กรองตามสถานะ",
+      "allTickets": "ตั๋วทั้งหมด",
+      "showingTickets": "แสดง {filtered} จาก {total} ตั๋ว",
+      "noMatchFilter": "ไม่มีตั๋วตรงกับตัวกรองสถานะที่เลือก",
+      "clearFilter": "ล้างตัวกรอง",
+      "table": {
+        "ticketId": "รหัสตั๋ว",
+        "subject": "หัวข้อ",
+        "status": "สถานะ",
+        "lastUpdated": "อัปเดตล่าสุด",
+        "created": "สร้างเมื่อ"
+      }
+    },
+    "create": {
+      "title": "สร้างตั๋วสนับสนุน",
+      "subtitle": "อธิบายปัญหาของคุณ เราจะช่วยแก้ไข",
+      "form": {
+        "subject": "หัวข้อ",
+        "subjectPlaceholder": "อธิบายปัญหาสั้นๆ",
+        "subjectHelp": "จำเป็น ให้สั้นและชัดเจน",
+        "category": "หมวดหมู่",
+        "categoryHelp": "ไม่บังคับ เลือกหมวดหมู่ที่ตรงกับปัญหามากที่สุด",
+        "priority": "ความเร่งด่วน",
+        "priorityHelp": "ไม่บังคับ แจ้งระดับความเร่งด่วน",
+        "description": "รายละเอียด",
+        "descriptionPlaceholder": "ให้รายละเอียดเกี่ยวกับปัญหาของคุณ...",
+        "descriptionHelp": "จำเป็น รวมขั้นตอนที่ทำซ้ำได้ ข้อความผิดพลาด หรือรายละเอียดอื่นที่เกี่ยวข้อง",
+        "attachments": "แนบภาพหน้าจอ",
+        "attachmentsHelp": "ไม่บังคับ อัปโหลดได้สูงสุด 3 ภาพ (PNG, JPG หรือ WebP) ขนาดไม่เกิน 5MB ต่อไฟล์",
+        "attachmentsBtn": "เลือกไฟล์",
+        "attachmentsSelected": "ไฟล์ที่เลือก",
+        "removeAttachment": "ลบ",
+        "submit": "ส่งตั๋ว",
+        "submitting": "กำลังสร้างตั๋ว...",
+        "cancel": "ยกเลิก"
+      },
+      "success": {
+        "title": "สร้างตั๋วสำเร็จ",
+        "message": "ตั๋วสนับสนุนของคุณถูกสร้างแล้ว เราจะตอบกลับภายใน 24 ชั่วโมงในวันทำการ",
+        "viewTicket": "ดูตั๋ว",
+        "createAnother": "สร้างตั๋วอีกใบ"
+      },
+      "error": {
+        "title": "สร้างตั๋วไม่สำเร็จ",
+        "message": "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง",
+        "retry": "ลองอีกครั้ง"
+      }
+    },
+    "detail": {
+      "title": "รายละเอียดตั๋ว",
+      "status": "สถานะ",
+      "category": "หมวดหมู่",
+      "priority": "ความเร่งด่วน",
+      "created": "สร้างเมื่อ",
+      "lastActivity": "กิจกรรมล่าสุด",
+      "comments": "ความคิดเห็น",
+      "addComment": "เพิ่มความคิดเห็น",
+      "commentPlaceholder": "พิมพ์ข้อความของคุณ...",
+      "attachScreenshots": "แนบภาพหน้าจอ",
+      "sendComment": "ส่ง",
+      "sending": "กำลังส่ง...",
+      "loadingTicket": "กำลังโหลดตั๋ว...",
+      "ticketNotFound": "ไม่พบตั๋ว",
+      "ticketNotFoundMessage": "ตั๋วนี้ไม่มีอยู่หรือคุณไม่มีสิทธิ์ดู",
+      "noComments": "ยังไม่มีความคิดเห็น",
+      "userRole": "คุณ",
+      "adminRole": "ทีมสนับสนุน",
+      "systemRole": "ระบบ",
+      "attachmentPreview": "คลิกเพื่อดูขนาดเต็ม",
+      "attachmentAlt": "ไฟล์แนบ",
+      "closeModal": "ปิด",
+      "closeTicketTitle": "ปิดตั๋ว",
+      "closeTicketMessage": "คุณต้องการปิดตั๋วนี้ใช่ไหม? คุณสามารถระบุเหตุผลได้ (ไม่บังคับ)",
+      "closeTicketPlaceholder": "ไม่บังคับ: ทำไมคุณถึงปิดตั๋วนี้?",
+      "closeTicketCancel": "ยกเลิก",
+      "closeTicketButton": "ปิดตั๋ว",
+      "closeTicketClosing": "กำลังปิด..."
+    },
+    "status": {
+      "open": "เปิด",
+      "investigating": "กำลังตรวจสอบ",
+      "waiting_on_user": "รอคุณ",
+      "resolved": "แก้ไขแล้ว",
+      "closed": "ปิด"
+    },
+    "category": {
+      "none": "ไม่ได้ระบุ",
+      "account_login": "บัญชีและการเข้าสู่ระบบ",
+      "billing_subscription": "การเรียกเก็บเงินและการสมัครสมาชิก",
+      "social_connections": "การเชื่อมต่อโซเชียล",
+      "content_generation": "การสร้างคอนเทนต์",
+      "publishing_issues": "ปัญหาในการเผยแพร่",
+      "technical_bug": "บั๊กทางเทคนิค",
+      "feature_request": "ขอฟีเจอร์",
+      "general_question": "คำถามทั่วไป"
+    },
+    "priority": {
+      "none": "ไม่ได้ระบุ",
+      "urgent": "เร่งด่วน – ระบบขัดข้อง",
+      "high": "สูง – ปัญหาร้ายแรง",
+      "normal": "ปกติ – มาตรฐาน",
+      "low": "ต่ำ – เล็กน้อย / คำแนะนำ"
+    },
+    "attachments": {
+      "uploading": "กำลังอัปโหลดไฟล์แนบ...",
+      "uploadSuccess": "อัปโหลดไฟล์แนบสำเร็จ",
+      "uploadError": "อัปโหลดไฟล์แนบบางส่วนไม่สำเร็จ",
+      "fileTypeError": "อนุญาตเฉพาะไฟล์ PNG, JPG และ WebP",
+      "fileSizeError": "ขนาดไฟล์ต้องน้อยกว่า 5MB",
+      "fileCountError": "อัปโหลดได้สูงสุด 3 ไฟล์ต่อความคิดเห็น",
+      "viewFullSize": "ดูขนาดเต็ม"
+    },
+    "errors": {
+      "loadFailed": "โหลดตั๋วสนับสนุนไม่สำเร็จ",
+      "createFailed": "สร้างตั๋วไม่สำเร็จ",
+      "commentFailed": "เพิ่มความคิดเห็นไม่สำเร็จ",
+      "unauthorized": "คุณไม่มีสิทธิ์เข้าถึงตั๋วนี้",
+      "networkError": "ข้อผิดพลาดเครือข่าย กรุณาตรวจสอบการเชื่อมต่อและลองอีกครั้ง"
+    },
+    "validation": {
+      "subjectRequired": "กรุณาระบุหัวข้อ",
+      "descriptionRequired": "กรุณาระบุรายละเอียด",
+      "messageRequired": "กรุณาระบุข้อความ",
+      "emailRequired": "กรุณาระบุอีเมล",
+      "invalidEmail": "กรุณากรอกอีเมลที่ถูกต้อง",
+      "noUpdatesProvided": "ไม่ได้ให้การอัปเดต",
+      "noFilesProvided": "ไม่ได้ให้ไฟล์",
+      "tooManyFiles": "ไฟล์มากเกินไป อนุญาตสูงสุด {count} ไฟล์",
+      "invalidFileType": "ประเภทไฟล์ไม่ถูกต้องสำหรับ {name} อนุญาตเฉพาะ PNG, JPG และ WebP",
+      "fileTooLarge": "ไฟล์ {name} ใหญ่เกินไป ({size}) ขนาดสูงสุด 5MB"
+    }
+  },
+  "onboarding": {
+    "title": "ตั้งค่า ZARZOOM ของคุณ",
+    "subtitle": "มาปรับ autopilot โซเชียลมีเดียในไม่กี่ขั้นตอน",
+    "stepper": {
+      "step1": "บัญชี",
+      "step2": "แบรนด์",
+      "step3": "เป้าหมาย",
+      "step4": "แผน",
+      "step5": "เชื่อมต่อ"
+    },
+    "nav": {
+      "back": "กลับ",
+      "next": "ดำเนินการต่อ",
+      "saveExit": "บันทึกและออก",
+      "skipForNow": "ข้ามไปก่อน",
+      "finish": "เปิดตัว ZARZOOM",
+      "saving": "กำลังบันทึก..."
+    },
+    "step1": {
+      "title": "สร้างบัญชีแล้ว",
+      "subtitle": "คุณเข้าสู่ระบบและพร้อมแล้ว",
+      "signedInAs": "เข้าสู่ระบบในฐานะ",
+      "continue": "มาตั้งค่าแบรนด์กัน"
+    },
+    "step2": {
+      "title": "ข้อมูลพื้นฐานแบรนด์",
+      "subtitle": "บอกเราเกี่ยวกับธุรกิจของคุณ เพื่อให้เราปรับคอนเทนต์ให้เหมาะกับแบรนด์",
+      "businessName": {
+        "label": "ชื่อธุรกิจ",
+        "placeholder": "เช่น Acme Corp",
+        "help": "ชื่อธุรกิจหรือแบรนด์ของคุณ"
+      },
+      "description": {
+        "label": "คำอธิบาย",
+        "placeholder": "อธิบายสั้นๆ ว่าธุรกิจของคุณทำอะไร...",
+        "help": "สรุปสั้นๆ เพื่อให้ AI เข้าใจเสียงแบรนด์ของคุณ"
+      },
+      "websiteUrl": {
+        "label": "URL เว็บไซต์",
+        "placeholder": "https://yourwebsite.com",
+        "help": "เราจะวิเคราะห์ไซต์เพื่อปรับคอนเทนต์"
+      },
+      "autofillFromWebsite": "กรอกอัตโนมัติจากเว็บไซต์",
+      "analysing": "กำลังวิเคราะห์...",
+      "importFromFile": "นำเข้าจากไฟล์",
+      "choosePdfOrWord": "เลือกไฟล์ PDF หรือ Word",
+      "investigate": {
+        "button": "วิเคราะห์เว็บไซต์",
+        "loading": "กำลังวิเคราะห์เว็บไซต์ของคุณ...",
+        "success": "วิเคราะห์เว็บไซต์สำเร็จ!",
+        "error": "วิเคราะห์เว็บไซต์ไม่ได้ กรุณากรอกรายละเอียดด้วยตนเอง"
+      },
+      "contentLanguage": {
+        "label": "ภาษาคอนเทนต์",
+        "help": "ภาษาหลักสำหรับคอนเทนต์ที่สร้าง"
+      },
+      "articleStyles": {
+        "label": "สไตล์บทความ",
+        "help": "เลือกประเภทคอนเทนต์ที่คุณต้องการให้ ZARZOOM สร้าง",
+        "options": {
+          "let_zarzoom_decide": "ให้ ZARZOOM เลือก",
+          "how_to_guides": "คู่มือวิธีทำ",
+          "listicles": "ลิสต์ (เช่น 10 เคล็ดลับสำหรับ X)",
+          "tutorials": "บทเรียนเชิงลึก",
+          "opinion_pieces": "บทความความเห็น",
+          "case_studies": "เคสสตัดดี",
+          "news_commentary": "ความเห็นข่าว",
+          "interviews": "สัมภาษณ์",
+          "product_reviews": "รีวิวผลิตภัณฑ์",
+          "explainer_articles": "บทความอธิบายแนวคิดซับซ้อนอย่างง่าย",
+          "comparisons_vs_articles": "X เทียบ Y เปรียบเทียบข้อดีข้อเสีย",
+          "ultimate_guides_pillar": "คอนเทนต์ยาว มี authority ครอบคลุมทั้งหัวข้อ",
+          "checklists_cheat_sheets": "เช็กลิสต์และชีทสรุป",
+          "best_top_forecasts": "เครื่องมือที่ดีที่สุดสำหรับ X เทรนด์ยอดนิยมปี 20XX",
+          "problem_solution_posts": "ระบุปัญหาแล้วตอบ",
+          "myth_busting": "ไขความเข้าใจผิดที่พบบ่อย",
+          "resource_roundups": "บทความ เครื่องมือ ลิงก์ที่ดีที่สุดในหัวข้อ",
+          "faqs_qa_content": "ตอบ long-tail search โดยตรง",
+          "personal_stories": "เรื่องเล่า มีผลทางอารมณ์",
+          "research_summaries": "สรุปแบบสำรวจ ผลวิจัย",
+          "historical_timeline": "ย้อนพัฒนาการหรือวิวัฒนาการ",
+          "satire_humor": "บันเทิง สไตล์แบรนด์",
+          "explained_in_minutes": "ประเด็นหลัก อ่านเร็ว"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "ให้ AI เลือกรูปแบบที่ดีที่สุดสำหรับคอนเทนต์ของคุณ",
+          "how_to_guides": "คำแนะนำทีละขั้นตอน",
+          "listicles": "ลิสต์ตัวเลข (เช่น 10 เคล็ดลับสำหรับ X)",
+          "tutorials": "เชิงลึกกว่าคู่มือวิธีทำ",
+          "opinion_pieces": "มุมมองผู้เชี่ยวชาญหรือความเห็น",
+          "case_studies": "ตัวอย่าง/ผลลัพธ์จริง",
+          "news_commentary": "บริบทเหตุการณ์ปัจจุบัน",
+          "interviews": "Q&A กับบุคคล/ผู้มีอำนาจ",
+          "product_reviews": "การประเมิน/ให้คะแนน",
+          "explainer_articles": "อธิบายแนวคิดซับซ้อนอย่างง่าย",
+          "comparisons_vs_articles": "X เทียบ Y เปรียบเทียบข้อดีข้อเสีย",
+          "ultimate_guides_pillar": "คอนเทนต์ยาว มี authority ครอบคลุมทั้งหัวข้อ",
+          "checklists_cheat_sheets": "อ้างอิงเร็ว ลิสต์ที่ทำได้จริง",
+          "best_top_forecasts": "เครื่องมือที่ดีที่สุดสำหรับ X เทรนด์ยอดนิยมปี 20XX",
+          "problem_solution_posts": "ระบุจุดเจ็บแล้วตอบ",
+          "myth_busting": "ไขความเข้าใจผิดที่พบบ่อย",
+          "resource_roundups": "บทความ เครื่องมือ ลิงก์ที่ดีที่สุดในหัวข้อ",
+          "faqs_qa_content": "ตอบ long-tail search โดยตรง",
+          "personal_stories": "เล่าเรื่อง มีผลทางอารมณ์",
+          "research_summaries": "สรุปแบบสำรวจ ผลวิจัย",
+          "historical_timeline": "ย้อนพัฒนาการหรือวิวัฒนาการ",
+          "satire_humor": "บันเทิง สไตล์แบรนด์",
+          "explained_in_minutes": "ประเด็นหลัก บริโภคเร็ว"
+        }
+      },
+      "styleLinks": {
+        "label": "ลิงก์อ้างอิงสไตล์",
+        "placeholder": "https://example.com/article",
+        "help": "เพิ่มได้สูงสุด 3 ลิงก์ไปยังบทความที่ต้องการให้สไตล์คล้าย",
+        "add": "เพิ่มลิงก์",
+        "max": "สูงสุด 3 ลิงก์"
+      },
+      "brandColor": {
+        "label": "สีแบรนด์",
+        "help": "สีหลักของแบรนด์สำหรับภาพที่สร้าง"
+      },
+      "logo": {
+        "label": "โลโก้",
+        "help": "อัปโหลดโลโก้แบรนด์ (รูปแบบ JPG)",
+        "upload": "อัปโหลดโลโก้",
+        "change": "เปลี่ยนโลโก้",
+        "uploading": "กำลังอัปโหลด..."
+      }
+    },
+    "step3": {
+      "title": "เป้าหมายและการเติบโต",
+      "subtitle": "คุณต้องการบรรลุอะไรด้วย ZARZOOM?",
+      "goals": {
+        "label": "เลือกเป้าหมายของคุณ",
+        "help": "เลือกหนึ่งหรือมากกว่า เราจะปรับกลยุทธ์ให้เหมาะ",
+        "options": {
+          "increase_website_traffic": "เพิ่ม traffic เว็บไซต์",
+          "get_more_subscribers_leads": "ได้สมาชิกและลีดมากขึ้น",
+          "promote_product_or_service": "โปรโมตผลิตภัณฑ์หรือบริการ",
+          "increase_sales": "เพิ่มยอดขาย",
+          "build_brand_authority": "สร้าง authority แบรนด์",
+          "improve_seo": "ปรับปรุง SEO",
+          "educate_audience": "ให้ความรู้ผู้ชม",
+          "generate_social_content": "สร้างคอนเทนต์โซเชียล"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL เว็บไซต์หรือ Landing Page",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "จำเป็นเมื่อเป้าหมายรวม traffic เว็บไซต์หรือการสร้างลีด"
+      },
+      "productUrl": {
+        "label": "URL ผลิตภัณฑ์หรือหน้าขาย",
+        "placeholder": "https://yoursite.com/product",
+        "help": "จำเป็นเมื่อเป้าหมายรวมการโปรโมตผลิตภัณฑ์หรือยอดขาย"
+      }
+    },
+    "step4": {
+      "title": "เลือกแผน",
+      "subtitle": "เริ่มด้วยแผนที่ตรงกับความทะเยอทะยานในการเติบโต",
+      "discount": {
+        "label": "เรียกเก็บรายปี",
+        "save": "ประหยัด {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "โปรไฟล์โซเชียลสูงสุด 3 บัญชี",
+          "postsPerMonth": "30 โพสต์ต่อเดือน",
+          "aiGeneration": "การสร้างคอนเทนต์ด้วย AI พื้นฐาน",
+          "scheduling": "จัดตารางโพสต์",
+          "emailSupport": "สนับสนุนทางอีเมล"
+        },
+        "pro": {
+          "socialProfiles": "โปรไฟล์โซเชียลสูงสุด 10 บัญชี",
+          "postsPerMonth": "150 โพสต์ต่อเดือน",
+          "aiGeneration": "การสร้างคอนเทนต์ด้วย AI ขั้นสูง",
+          "scheduling": "จัดตารางอัจฉริยะในเวลาที่เหมาะสม",
+          "analytics": "แดชบอร์ดวิเคราะห์",
+          "prioritySupport": "สนับสนุนพิเศษ"
+        },
+        "scale": {
+          "socialProfiles": "โปรไฟล์โซเชียลไม่จำกัด",
+          "postsPerMonth": "โพสต์ไม่จำกัด",
+          "aiGeneration": "AI พรีเมียมพร้อมเสียงแบรนด์กำหนดเอง",
+          "scheduling": "จัดตารางอัตโนมัติด้วย AI",
+          "analytics": "วิเคราะห์และรายงานขั้นสูง",
+          "customBranding": "แบรนด์และ white-label กำหนดเอง",
+          "dedicatedSupport": "ผู้จัดการบัญชีเฉพาะ",
+          "apiAccess": "เข้าถึง API เต็มรูปแบบ"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "เหมาะสำหรับเริ่มต้นอัตโนมัติโซเชียลมีเดีย",
+        "pro": "สำหรับธุรกิจที่กำลังเติบโตที่ต้องการพลังและข้อมูลเชิงลึกมากขึ้น",
+        "scale": "ไม่จำกัดทุกอย่าง สำหรับทีมและเอเจนซี"
+      },
+      "popular": "ยอดนิยมที่สุด",
+      "perMonth": "/เดือน",
+      "selectPlan": "เลือกแผน",
+      "selected": "เลือกแล้ว",
+      "trialDays": "ทดลองฟรี {days} วัน"
+    },
+    "step5": {
+      "title": "เชื่อมต่อและเปิดตัว",
+      "subtitle": "เชื่อมบัญชีโซเชียลและตั้งค่าตามที่ต้องการ",
+      "connectSocials": {
+        "label": "เชื่อมบัญชีโซเชียล",
+        "help": "เชื่อมบัญชีโซเชียลมีเดีย",
+        "button": "เชื่อมบัญชี",
+        "manage": "จัดการการเชื่อมต่อ",
+        "connected": "บัญชีโซเชียลที่เชื่อมต่อ",
+        "notConnected": "ยังไม่มีบัญชีที่เชื่อมต่อ"
+      },
+      "approval": {
+        "label": "การอนุมัติคอนเทนต์",
+        "help": "เลือกวิธีที่ ZARZOOM เผยแพร่คอนเทนต์ของคุณ",
+        "auto": "เผยแพร่อัตโนมัติ",
+        "autoHelp": "ZARZOOM เผยแพร่คอนเทนต์อัตโนมัติตามตาราง",
+        "manual": "อนุมัติด้วยตนเอง",
+        "manualHelp": "ตรวจและอนุมัติแต่ละโพสต์ก่อนเผยแพร่"
+      },
+      "notes": {
+        "label": "หมายเหตุเพิ่มเติม",
+        "placeholder": "มีอะไรอื่นที่อยากให้เรารู้เกี่ยวกับแบรนด์หรือความชอบคอนเทนต์...",
+        "help": "หมายเหตุไม่บังคับสำหรับ AI พิจารณา"
+      }
+    },
+    "modal": {
+      "title": "เชื่อมบัญชีโซเชียล",
+      "loading": "กำลังเตรียมตัวเชื่อมต่อโซเชียล...",
+      "checking": "กำลังตรวจสอบการเชื่อมต่อ...",
+      "close": "เสร็จ",
+      "openInNewTab": "เปิดในแท็บใหม่",
+      "skipConnect": "ข้ามไปก่อน",
+      "errorGeneric": "โหลดตัวเชื่อมต่อโซเชียลไม่ได้ กรุณาลองใหม่ในภายหลัง",
+      "errorNoUrl": "ไม่ได้รับ URL สำหรับเชื่อมต่อ กรุณาลองอีกครั้ง",
+      "demoTitle": "ตัวเชื่อมต่อโซเชียลเร็วๆ นี้",
+      "demoDescription": "ตัวเชื่อมต่อโซเชียลยังไม่ได้ตั้งค่าสำหรับ environment นี้ การเชื่อมต่อบัญชีโซเชียลจะพร้อมเมื่อผู้ดูแลระบบตั้งค่า provider แล้ว"
+    },
+    "errors": {
+      "loadFailed": "โหลดข้อมูล onboarding ไม่สำเร็จ กรุณาลองอีกครั้ง",
+      "saveFailed": "บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง",
+      "completeFailed": "ดำเนินการ onboarding ไม่สมบูรณ์ กรุณาตรวจสอบช่องที่จำเป็นทั้งหมด"
+    },
+    "banner": {
+      "skipped": "คุณข้ามการตั้งค่า ทำให้ครบเพื่อปลดล็อกฟีเจอร์ทั้งหมด",
+      "inProgress": "การตั้งค่าของคุณยังไม่ครบ ทำให้เสร็จเพื่อเริ่มต้น",
+      "cta": "ทำการตั้งค่าให้ครบ"
+    },
+    "gate": {
+      "title": "ต้องตั้งค่าก่อน",
+      "description": "ทำการตั้งค่า onboarding ให้ครบเพื่อปลดล็อกฟีเจอร์นี้ ใช้เวลาเพียงไม่กี่นาที",
+      "cta": "ทำการตั้งค่าให้ครบ"
+    },
+    "a11y": {
+      "brandLogoAlt": "โลโก้แบรนด์",
+      "socialConnectorTitle": "ตัวเชื่อมต่อโซเชียล",
+      "dismissBanner": "ปิดแบนเนอร์",
+      "currency": "£",
+      "stepperLabel": "ความคืบหน้า onboarding"
+    },
+    "validation": {
+      "invalidUrl": "กรุณากรอก URL ที่ถูกต้อง (เช่น https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "ประวัติการเรียกเก็บเงิน"
+    },
+    "selectCurrencyLabel": "เลือกสกุลเงิน",
+    "selectCurrencyHelp": "เลือกสกุลเงินที่ต้องการสำหรับราคา",
+    "selectBillingInterval": "เลือกช่วงการเรียกเก็บเงิน",
+    "toggleDiscount": "สลับส่วนลดความร่วมมือโฆษณา",
+    "discountPartnershipTitle": "ประหยัด {percent}% กับความร่วมมือโฆษณา",
+    "discountActive": "ใช้งาน",
+    "discountPartnershipDescription": "อนุญาตให้ ZARZOOM โพสต์คอนเทนต์โปรโมตในฟีดของคุณ (สูงสุด {maxFrequency}) และรับส่วนลด {percent}% จากการสมัครสมาชิก คุณควบคุมเต็มและปิดได้ตลอด",
+    "discountOncePerDay": "ครั้งเดียวต่อวัน",
+    "discountPerWeek": "{count} ครั้งต่อสัปดาห์",
+    "discountPartnerApplied": "ใช้ส่วนลดพาร์ทเนอร์แล้ว",
+    "discountAdvertisingApplied": "ใช้ส่วนลดความร่วมมือโฆษณาแล้ว",
+    "contactUs": "ติดต่อเรา",
+    "partnerDiscountEnable": "เปิดส่วนลดพาร์ทเนอร์ 50%",
+    "partnerDiscountStandardPrice": "ราคาปกติ",
+    "partnerDiscount50Off": "ลด 50%",
+    "partnerDiscountSubheading": "ประหยัด 50% เราอาจโพสต์โปรโมต ZARZOOM ขนาดเล็กได้สูงสุด 1 ครั้งต่อวัน (สูงสุด 3–7 ครั้งต่อสัปดาห์) — ไม่เคยบนโพสต์ของคุณ",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "ราคาชัดเจน เรียบง่าย",
+      "subtitle": "เลือกแผนที่เหมาะกับการเติบโต เริ่มทดลองฟรี อัปเกรดได้ตลอด",
+      "monthly": "รายเดือน",
+      "annual": "รายปี",
+      "popular": "ยอดนิยมที่สุด",
+      "getStarted": "เริ่มต้น",
+      "savePercent": "ประหยัด {percent}% เมื่อเรียกเก็บรายปี",
+      "trialDays": "ทดลองฟรี {days} วัน",
+      "page": {
+        "title": "ราคาชัดเจน เรียบง่าย",
+        "subtitle": "เลือกแผนที่เหมาะกับคุณ ทุกแผนมีทดลองฟรี 14 วัน",
+        "footer": "ราคาทั้งหมดไม่รวม VAT ตามที่ใช้บังคับ ยกเลิกหรือเปลี่ยนแผนได้ตลอด",
+        "contactCta": "มีคำถาม? ติดต่อเรา เราจะช่วยหาแผนที่เหมาะ",
+        "contactCtaPrefix": "มีคำถาม? ",
+        "contactLink": "ติดต่อเรา",
+        "contactCtaSuffix": " และเราจะช่วยหาแผนที่เหมาะ"
+      },
+      "fallback": {
+        "title": "ราคาชั่วคราวไม่พร้อม",
+        "message": "เรากำลังอัปเดตแผนราคา กรุณาตรวจสอบอีกครั้งในไม่ช้าหรือติดต่อฝ่ายสนับสนุน"
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "เหมาะสำหรับเริ่มต้น",
+        "description": "ฟีเจอร์จำเป็นเพื่อเปิดตัวโซเชียลมีเดียด้วย AI สร้างคอนเทนต์และจัดตาราง",
+        "bullets": [
+          "โปรไฟล์โซเชียลสูงสุด 3 บัญชี",
+          "30 โพสต์ต่อเดือน",
+          "การสร้างคอนเทนต์ด้วย AI พื้นฐาน",
+          "จัดตารางโพสต์",
+          "สนับสนุนทางอีเมล"
+        ],
+        "cta": "เริ่มทดลองฟรี"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "เหมาะสำหรับธุรกิจที่กำลังเติบโต",
+        "description": "ฟีเจอร์ขั้นสูงและวิเคราะห์เพื่อขยายกลยุทธ์โซเชียลมีเดียด้วยอัตโนมัติอัจฉริยะ",
+        "bullets": [
+          "โปรไฟล์โซเชียลสูงสุด 10 บัญชี",
+          "150 โพสต์ต่อเดือน",
+          "การสร้างคอนเทนต์ด้วย AI ขั้นสูง",
+          "จัดตารางอัจฉริยะในเวลาที่เหมาะสม",
+          "แดชบอร์ดวิเคราะห์",
+          "สนับสนุนพิเศษ"
+        ],
+        "cta": "เริ่มทดลองฟรี"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "สำหรับทีมและเอเจนซี",
+        "description": "ฟีเจอร์ระดับองค์กร คอนเทนต์ไม่จำกัด แบรนด์กำหนดเอง และสนับสนุนเฉพาะ สำหรับผลลัพธ์สูงสุด",
+        "bullets": [
+          "โปรไฟล์โซเชียลไม่จำกัด",
+          "โพสต์ไม่จำกัด",
+          "AI พรีเมียมพร้อมเสียงแบรนด์กำหนดเอง",
+          "จัดตารางอัตโนมัติด้วย AI",
+          "วิเคราะห์และรายงานขั้นสูง",
+          "แบรนด์และ white-label กำหนดเอง",
+          "ผู้จัดการบัญชีเฉพาะ",
+          "เข้าถึง API เต็มรูปแบบ"
+        ],
+        "cta": "ติดต่อฝ่ายขาย"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "โปรไฟล์โซเชียลสูงสุด 3 บัญชี",
+        "postsPerMonth": "30 โพสต์ต่อเดือน",
+        "aiGeneration": "การสร้างคอนเทนต์ด้วย AI พื้นฐาน",
+        "scheduling": "จัดตารางโพสต์",
+        "emailSupport": "สนับสนุนทางอีเมล"
+      },
+      "pro": {
+        "socialProfiles": "โปรไฟล์โซเชียลสูงสุด 10 บัญชี",
+        "postsPerMonth": "150 โพสต์ต่อเดือน",
+        "aiGeneration": "การสร้างคอนเทนต์ด้วย AI ขั้นสูง",
+        "scheduling": "จัดตารางอัจฉริยะในเวลาที่เหมาะสม",
+        "analytics": "แดชบอร์ดวิเคราะห์",
+        "prioritySupport": "สนับสนุนพิเศษ"
+      },
+      "advanced": {
+        "socialProfiles": "โปรไฟล์โซเชียลไม่จำกัด",
+        "postsPerMonth": "โพสต์ไม่จำกัด",
+        "aiGeneration": "AI พรีเมียมพร้อมเสียงแบรนด์กำหนดเอง",
+        "scheduling": "จัดตารางอัตโนมัติด้วย AI",
+        "analytics": "วิเคราะห์และรายงานขั้นสูง",
+        "customBranding": "แบรนด์และ white-label กำหนดเอง",
+        "dedicatedSupport": "ผู้จัดการบัญชีเฉพาะ",
+        "apiAccess": "เข้าถึง API เต็มรูปแบบ"
+      }
+    }
+  }
+}

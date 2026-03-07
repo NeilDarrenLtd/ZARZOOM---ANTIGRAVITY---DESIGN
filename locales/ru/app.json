@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "С возвращением",
+    "loginSubtitle": "Войдите в аккаунт ZARZOOM",
+    "registerTitle": "Создать аккаунт",
+    "registerSubtitle": "Присоединяйтесь к тысячам маркетологов, автоматизирующих соцсети",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "login": "Войти",
+    "register": "Создать аккаунт",
+    "forgotPassword": "Забыли пароль?",
+    "orContinueWith": "Или продолжить с",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "signUpLink": "Регистрация",
+    "signInLink": "Войти",
+    "passwordMinLength": "Пароль должен быть не менее 8 символов",
+    "passwordUppercase": "Должен содержать заглавную букву",
+    "passwordLowercase": "Должен содержать строчную букву",
+    "passwordNumber": "Должен содержать цифру",
+    "passwordSpecial": "Должен содержать спецсимвол",
+    "passwordsNoMatch": "Пароли не совпадают",
+    "emailRequired": "Укажите email",
+    "emailInvalid": "Введите корректный email",
+    "signUpSuccess": "Проверьте почту",
+    "signUpSuccessMessage": "Мы отправили ссылку для подтверждения на ваш email. Проверьте почту и перейдите по ссылке для активации аккаунта.",
+    "backToLogin": "Вернуться к входу",
+    "authError": "Ошибка аутентификации",
+    "authErrorMessage": "Произошла ошибка при входе. Попробуйте ещё раз.",
+    "tryAgain": "Попробовать снова",
+    "tabLogin": "Вход",
+    "tabCreateAccount": "Создать аккаунт",
+    "continueWithGoogle": "Продолжить с Google",
+    "continueWithFacebook": "Продолжить с Facebook",
+    "continueWithLinkedIn": "Продолжить с LinkedIn",
+    "continueWithX": "Продолжить с X",
+    "rememberMe": "Запомнить меня",
+    "forgotLogin": "Забыли данные для входа?",
+    "verifyTitle": "Проверьте почту",
+    "verifySubtitle": "Мы отправили ссылку для подтверждения на ваш email. Проверьте почту и перейдите по ссылке для активации аккаунта.",
+    "verifyResend": "Отправить письмо повторно",
+    "verifyResent": "Письмо отправлено повторно",
+    "verifyBack": "Вернуться к входу",
+    "verifiedTitle": "Email подтверждён",
+    "verifiedSubtitle": "Ваш email успешно подтверждён. Теперь вы можете войти в аккаунт.",
+    "verifiedContinue": "Перейти к входу",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "С возвращением",
+    "overview": "Обзор",
+    "accountSettings": "Настройки аккаунта",
+    "connectedAccounts": "Подключённые аккаунты",
+    "comingSoon": "Скоро — ваш центр управления соцсетями.",
+    "emailVerified": "Email подтверждён",
+    "memberSince": "В проекте с",
+    "profile": "Настройки бренда",
+    "supportDescription": "Получите помощь от команды поддержки. Создавайте и управляйте обращениями.",
+    "restartSetup": "Перезапустить настройку",
+    "restarting": "Перезапуск..."
+  },
+  "connect": {
+    "heading": "Подключите аккаунты",
+    "subheading": "Привяжите аккаунты соцсетей, чтобы начать публиковать автоматически с ZARZOOM.",
+    "connectAccounts": "Подключить аккаунты",
+    "back": "Назад"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Заполнить из файла"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Создать API-ключ",
+    "keyCreated": "Ключ создан",
+    "close": "Закрыть",
+    "keyName": "Название ключа",
+    "keyNamePlaceholder": "напр. Production, Staging, CI/CD",
+    "keyNameRequired": "Укажите название",
+    "active": "Активен",
+    "revoked": "Отозван",
+    "created": "Создан",
+    "lastUsed": "Последнее использование",
+    "revokedAt": "Отозван",
+    "rotate": "Заменить",
+    "revoke": "Отозвать",
+    "revokeConfirm": "Отозвать этот ключ?",
+    "rotateConfirm": "Заменить ключ?",
+    "confirm": "Подтвердить",
+    "cancel": "Отмена",
+    "revoking": "Отзыв...",
+    "rotating": "Замена...",
+    "rotateTitle": "Заменить: отозвать ключ и создать новый"
+  },
+  "profile": {
+    "title": "Настройки бренда",
+    "subtitle": "Управляйте брендом, целями, тарифом и подключениями соцсетей.",
+    "saving": "Сохранение...",
+    "saved": "Изменения сохранены.",
+    "saveFailed": "Не удалось сохранить. Попробуйте ещё раз.",
+    "loadFailed": "Не удалось загрузить профиль. Попробуйте ещё раз.",
+    "save": "Сохранить",
+    "sections": {
+      "brand": "Основное о бренде",
+      "brandDesc": "Идентичность бизнеса и предпочтения по контенту.",
+      "goals": "Цели и рост",
+      "goalsDesc": "Чего вы хотите достичь с ZARZOOM.",
+      "posting": "Настройки публикаций",
+      "postingDesc": "Как ZARZOOM публикует ваш контент.",
+      "plan": "Ваш тариф",
+      "planDesc": "Текущая подписка и настройки оплаты.",
+      "social": "Соцсети",
+      "socialDesc": "Управление подключёнными аккаунтами соцсетей."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Автопубликация",
+        "help": "Разрешить ZARZOOM автоматически публиковать контент от вашего имени."
+      }
+    },
+    "plan": {
+      "current": "Текущий тариф",
+      "noPlan": "Тариф не выбран",
+      "annualBilling": "Годовая оплата",
+      "changePlan": "Изменить тариф"
+    },
+    "social": {
+      "username": "Имя в соцсетях",
+      "noUsername": "Пока не указано",
+      "connected": "Аккаунты соцсетей подключены",
+      "notConnected": "Аккаунты ещё не подключены",
+      "connect": "Подключить аккаунты",
+      "manage": "Управление подключениями"
+    },
+    "back": "Назад в панель"
+  },
+  "support": {
+    "nav": {
+      "title": "Поддержка",
+      "myTickets": "Мои обращения",
+      "createTicket": "Создать обращение",
+      "backToSupport": "К поддержке",
+      "backToDashboard": "В панель"
+    },
+    "landing": {
+      "title": "Поддержка",
+      "subtitle": "Мы поможем вам получить максимум от ZARZOOM.",
+      "description": "Создайте обращение — мы ответим в течение 24 часов в рабочие дни.",
+      "createTicketBtn": "Создать обращение",
+      "myTicketsBtn": "Мои обращения"
+    },
+    "list": {
+      "title": "Мои обращения",
+      "subtitle": "Просмотр и управление запросами в поддержку.",
+      "empty": "Обращений пока нет",
+      "emptyDescription": "Вы ещё не создавали обращений. Нажмите кнопку ниже, чтобы начать.",
+      "createFirstTicket": "Создать первое обращение",
+      "filterByStatus": "Фильтр по статусу",
+      "allTickets": "Все обращения",
+      "showingTickets": "Показано {filtered} из {total} обращений",
+      "noMatchFilter": "Нет обращений с выбранным статусом.",
+      "clearFilter": "Сбросить фильтр",
+      "table": {
+        "ticketId": "ID обращения",
+        "subject": "Тема",
+        "status": "Статус",
+        "lastUpdated": "Обновлено",
+        "created": "Создано"
+      }
+    },
+    "create": {
+      "title": "Создать обращение",
+      "subtitle": "Опишите проблему — мы поможем её решить.",
+      "form": {
+        "subject": "Тема",
+        "subjectPlaceholder": "Краткое описание проблемы",
+        "subjectHelp": "Обязательно. Коротко и ясно.",
+        "category": "Категория",
+        "categoryHelp": "Необязательно. Выберите наиболее подходящую категорию.",
+        "priority": "Приоритет",
+        "priorityHelp": "Необязательно. Укажите срочность.",
+        "description": "Описание",
+        "descriptionPlaceholder": "Подробно опишите проблему...",
+        "descriptionHelp": "Обязательно. Укажите шаги воспроизведения, сообщения об ошибках и другие детали.",
+        "attachments": "Скриншоты",
+        "attachmentsHelp": "Необязательно. До 3 файлов (PNG, JPG или WebP). Не более 5 МБ каждый.",
+        "attachmentsBtn": "Выбрать файлы",
+        "attachmentsSelected": "файл(ов) выбрано",
+        "removeAttachment": "Удалить",
+        "submit": "Отправить",
+        "submitting": "Создание обращения...",
+        "cancel": "Отмена"
+      },
+      "success": {
+        "title": "Обращение создано",
+        "message": "Обращение создано. Мы ответим в течение 24 часов в рабочие дни.",
+        "viewTicket": "Открыть обращение",
+        "createAnother": "Создать ещё"
+      },
+      "error": {
+        "title": "Не удалось создать обращение",
+        "message": "Что-то пошло не так. Попробуйте ещё раз.",
+        "retry": "Попробовать снова"
+      }
+    },
+    "detail": {
+      "title": "Детали обращения",
+      "status": "Статус",
+      "category": "Категория",
+      "priority": "Приоритет",
+      "created": "Создано",
+      "lastActivity": "Последняя активность",
+      "comments": "Комментарии",
+      "addComment": "Добавить комментарий",
+      "commentPlaceholder": "Введите сообщение...",
+      "attachScreenshots": "Прикрепить скриншоты",
+      "sendComment": "Отправить",
+      "sending": "Отправка...",
+      "loadingTicket": "Загрузка обращения...",
+      "ticketNotFound": "Обращение не найдено",
+      "ticketNotFoundMessage": "Этого обращения не существует или у вас нет доступа к нему.",
+      "noComments": "Комментариев пока нет",
+      "userRole": "Вы",
+      "adminRole": "Команда поддержки",
+      "systemRole": "Система",
+      "attachmentPreview": "Нажмите для просмотра в полном размере",
+      "attachmentAlt": "Вложение",
+      "closeModal": "Закрыть",
+      "closeTicketTitle": "Закрыть обращение",
+      "closeTicketMessage": "Закрыть это обращение? При желании укажите причину.",
+      "closeTicketPlaceholder": "Необязательно: почему закрываете обращение?",
+      "closeTicketCancel": "Отмена",
+      "closeTicketButton": "Закрыть обращение",
+      "closeTicketClosing": "Закрытие..."
+    },
+    "status": {
+      "open": "Открыто",
+      "investigating": "На рассмотрении",
+      "waiting_on_user": "Ожидаем ответа",
+      "resolved": "Решено",
+      "closed": "Закрыто"
+    },
+    "category": {
+      "none": "Не указано",
+      "account_login": "Аккаунт и вход",
+      "billing_subscription": "Оплата и подписка",
+      "social_connections": "Подключение соцсетей",
+      "content_generation": "Генерация контента",
+      "publishing_issues": "Проблемы с публикацией",
+      "technical_bug": "Техническая ошибка",
+      "feature_request": "Запрос функции",
+      "general_question": "Общий вопрос"
+    },
+    "priority": {
+      "none": "Не указано",
+      "urgent": "Срочно — блокирует работу",
+      "high": "Высокий — серьёзная проблема",
+      "normal": "Обычный — стандартный",
+      "low": "Низкий — мелочь / предложение"
+    },
+    "attachments": {
+      "uploading": "Загрузка вложений...",
+      "uploadSuccess": "Вложения загружены",
+      "uploadError": "Не удалось загрузить часть вложений",
+      "fileTypeError": "Допустимы только PNG, JPG и WebP",
+      "fileSizeError": "Размер файла не более 5 МБ",
+      "fileCountError": "Не более 3 файлов на комментарий",
+      "viewFullSize": "Открыть в полном размере"
+    },
+    "errors": {
+      "loadFailed": "Не удалось загрузить обращения",
+      "createFailed": "Не удалось создать обращение",
+      "commentFailed": "Не удалось добавить комментарий",
+      "unauthorized": "Нет доступа к этому обращению",
+      "networkError": "Ошибка сети. Проверьте подключение и попробуйте снова."
+    },
+    "validation": {
+      "subjectRequired": "Укажите тему",
+      "descriptionRequired": "Укажите описание",
+      "messageRequired": "Укажите сообщение",
+      "emailRequired": "Укажите email",
+      "invalidEmail": "Введите корректный email",
+      "noUpdatesProvided": "Обновления не указаны",
+      "noFilesProvided": "Файлы не прикреплены",
+      "tooManyFiles": "Слишком много файлов. Допустимо не более {count}.",
+      "invalidFileType": "Недопустимый тип файла {name}. Разрешены только PNG, JPG и WebP.",
+      "fileTooLarge": "Файл {name} слишком большой ({size}). Максимум 5 МБ."
+    }
+  },
+  "onboarding": {
+    "title": "Настройте ZARZOOM",
+    "subtitle": "Настроим автопилот соцсетей за несколько шагов.",
+    "stepper": {
+      "step1": "Аккаунт",
+      "step2": "Бренд",
+      "step3": "Цели",
+      "step4": "Тариф",
+      "step5": "Подключение"
+    },
+    "nav": {
+      "back": "Назад",
+      "next": "Далее",
+      "saveExit": "Сохранить и выйти",
+      "skipForNow": "Пропустить",
+      "finish": "Запустить ZARZOOM",
+      "saving": "Сохранение..."
+    },
+    "step1": {
+      "title": "Аккаунт создан",
+      "subtitle": "Вы вошли и готовы к настройке.",
+      "signedInAs": "Вход выполнен как",
+      "continue": "Настроим бренд"
+    },
+    "step2": {
+      "title": "Основное о бренде",
+      "subtitle": "Расскажите о бизнесе — мы подстроим контент под ваш бренд.",
+      "businessName": {
+        "label": "Название компании",
+        "placeholder": "напр. ООО «Пример»",
+        "help": "Название вашего бизнеса или бренда."
+      },
+      "description": {
+        "label": "Описание",
+        "placeholder": "Кратко опишите, чем занимается компания...",
+        "help": "Краткое описание, чтобы ИИ понимал голос бренда."
+      },
+      "websiteUrl": {
+        "label": "URL сайта",
+        "placeholder": "https://yoursite.com",
+        "help": "Мы проанализируем сайт, чтобы подстроить контент."
+      },
+      "autofillFromWebsite": "Заполнить по сайту",
+      "analysing": "Анализ...",
+      "importFromFile": "Импорт из файла",
+      "choosePdfOrWord": "Выберите PDF или Word",
+      "investigate": {
+        "button": "Анализировать сайт",
+        "loading": "Анализ сайта...",
+        "success": "Сайт успешно проанализирован!",
+        "error": "Не удалось проанализировать сайт. Заполните данные вручную."
+      },
+      "contentLanguage": {
+        "label": "Язык контента",
+        "help": "Основной язык генерируемого контента."
+      },
+      "articleStyles": {
+        "label": "Стили статей",
+        "help": "Выберите типы контента, которые будет создавать ZARZOOM.",
+        "options": {
+          "let_zarzoom_decide": "Пусть ZARZOOM выберет",
+          "how_to_guides": "Пошаговые инструкции",
+          "listicles": "Списки (напр. 10 советов по X)",
+          "tutorials": "Туториалы",
+          "opinion_pieces": "Экспертные мнения",
+          "case_studies": "Кейсы",
+          "news_commentary": "Комментарии к новостям",
+          "interviews": "Интервью",
+          "product_reviews": "Обзоры товаров",
+          "explainer_articles": "Объясняющие статьи",
+          "comparisons_vs_articles": "Сравнения X vs Y",
+          "ultimate_guides_pillar": "Большие гайды по теме",
+          "checklists_cheat_sheets": "Чек-листы и шпаргалки",
+          "best_top_forecasts": "Лучшие инструменты, тренды года",
+          "problem_solution_posts": "Проблема и решение",
+          "myth_busting": "Развенчание мифов",
+          "resource_roundups": "Подборки материалов",
+          "faqs_qa_content": "FAQ и ответы на вопросы",
+          "personal_stories": "Личные истории",
+          "research_summaries": "Итоги исследований",
+          "historical_timeline": "История и хронология",
+          "satire_humor": "Сатира и юмор",
+          "explained_in_minutes": "Объяснение за X минут"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "ИИ выберет лучший формат контента",
+          "how_to_guides": "Пошаговые инструкции",
+          "listicles": "Нумерованные списки",
+          "tutorials": "Более глубокие, чем how-to",
+          "opinion_pieces": "Мнения экспертов",
+          "case_studies": "Реальные примеры и результаты",
+          "news_commentary": "Контекст текущих событий",
+          "interviews": "Вопросы и ответы с экспертом",
+          "product_reviews": "Оценки и обзоры",
+          "explainer_articles": "Простые объяснения сложного",
+          "comparisons_vs_articles": "X vs Y, плюсы и минусы",
+          "ultimate_guides_pillar": "Большие авторитетные материалы",
+          "checklists_cheat_sheets": "Краткие списки для действий",
+          "best_top_forecasts": "Лучшие инструменты, тренды",
+          "problem_solution_posts": "Проблема и её решение",
+          "myth_busting": "Развенчание мифов",
+          "resource_roundups": "Подборки статей и инструментов",
+          "faqs_qa_content": "Ответы на частые запросы",
+          "personal_stories": "Истории с эмоциональным посылом",
+          "research_summaries": "Итоги опросов и исследований",
+          "historical_timeline": "История развития темы",
+          "satire_humor": "Развлекательный контент в стиле бренда",
+          "explained_in_minutes": "Главное за минуты"
+        }
+      },
+      "styleLinks": {
+        "label": "Ссылки на образцы стиля",
+        "placeholder": "https://example.com/article",
+        "help": "До 3 ссылок на статьи в желаемом стиле.",
+        "add": "Добавить ссылку",
+        "max": "Не более 3 ссылок"
+      },
+      "brandColor": {
+        "label": "Цвет бренда",
+        "help": "Основной цвет бренда для визуалов."
+      },
+      "logo": {
+        "label": "Логотип",
+        "help": "Загрузите логотип (JPG).",
+        "upload": "Загрузить логотип",
+        "change": "Изменить логотип",
+        "uploading": "Загрузка..."
+      }
+    },
+    "step3": {
+      "title": "Цели и рост",
+      "subtitle": "Чего вы хотите достичь с ZARZOOM?",
+      "goals": {
+        "label": "Выберите цели",
+        "help": "Одна или несколько. Мы подстроим стратегию.",
+        "options": {
+          "increase_website_traffic": "Увеличить трафик на сайт",
+          "get_more_subscribers_leads": "Больше подписчиков и лидов",
+          "promote_product_or_service": "Продвижение продукта или услуги",
+          "increase_sales": "Рост продаж",
+          "build_brand_authority": "Укрепить авторитет бренда",
+          "improve_seo": "Улучшить SEO",
+          "educate_audience": "Обучать аудиторию",
+          "generate_social_content": "Генерировать контент для соцсетей"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL сайта или лендинга",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "Нужен, если среди целей — трафик или лиды."
+      },
+      "productUrl": {
+        "label": "URL продукта или страницы продаж",
+        "placeholder": "https://yoursite.com/product",
+        "help": "Нужен, если среди целей — продвижение продукта или продажи."
+      }
+    },
+    "step4": {
+      "title": "Выберите тариф",
+      "subtitle": "Начните с тарифа под ваши цели.",
+      "discount": {
+        "label": "Годовая оплата",
+        "save": "Экономия {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "До 3 аккаунтов соцсетей",
+          "postsPerMonth": "30 постов в месяц",
+          "aiGeneration": "Базовая генерация контента на ИИ",
+          "scheduling": "Планирование публикаций",
+          "emailSupport": "Поддержка по email"
+        },
+        "pro": {
+          "socialProfiles": "До 10 аккаунтов соцсетей",
+          "postsPerMonth": "150 постов в месяц",
+          "aiGeneration": "Расширенная генерация на ИИ",
+          "scheduling": "Умное планирование по лучшему времени",
+          "analytics": "Панель аналитики",
+          "prioritySupport": "Приоритетная поддержка"
+        },
+        "scale": {
+          "socialProfiles": "Неограниченно аккаунтов",
+          "postsPerMonth": "Неограниченно постов",
+          "aiGeneration": "Премиум ИИ с голосом бренда",
+          "scheduling": "Автопланирование на ИИ",
+          "analytics": "Расширенная аналитика и отчёты",
+          "customBranding": "Свой бренд и white-label",
+          "dedicatedSupport": "Выделенный менеджер",
+          "apiAccess": "Полный доступ к API"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Идеально для старта с автоматизацией соцсетей.",
+        "pro": "Для растущего бизнеса с потребностью в аналитике.",
+        "scale": "Без лимитов для команд и агентств."
+      },
+      "popular": "Популярный",
+      "perMonth": "/мес",
+      "selectPlan": "Выбрать тариф",
+      "selected": "Выбрано",
+      "trialDays": "Бесплатный период {days} дней"
+    },
+    "step5": {
+      "title": "Подключение и запуск",
+      "subtitle": "Подключите аккаунты соцсетей и настройте параметры.",
+      "connectSocials": {
+        "label": "Подключить аккаунты соцсетей",
+        "help": "Привязать аккаунты",
+        "button": "Подключить аккаунты",
+        "manage": "Управление подключениями",
+        "connected": "Аккаунты соцсетей подключены",
+        "notConnected": "Аккаунты ещё не подключены"
+      },
+      "approval": {
+        "label": "Согласование контента",
+        "help": "Как ZARZOOM будет публиковать контент.",
+        "auto": "Автопубликация",
+        "autoHelp": "ZARZOOM публикует контент автоматически по расписанию.",
+        "manual": "Ручное согласование",
+        "manualHelp": "Проверяйте и одобряйте каждый пост перед публикацией."
+      },
+      "notes": {
+        "label": "Дополнительные заметки",
+        "placeholder": "Всё, что важно знать о бренде или предпочтениях по контенту...",
+        "help": "Необязательные заметки для ИИ."
+      }
+    },
+    "modal": {
+      "title": "Подключение аккаунтов соцсетей",
+      "loading": "Подготовка подключения...",
+      "checking": "Проверка подключения...",
+      "close": "Готово",
+      "openInNewTab": "Открыть в новой вкладке",
+      "skipConnect": "Пропустить",
+      "errorGeneric": "Не удалось загрузить подключение. Попробуйте позже.",
+      "errorNoUrl": "URL подключения не получен. Попробуйте снова.",
+      "demoTitle": "Подключение соцсетей скоро",
+      "demoDescription": "Подключение соцсетей ещё не настроено в этой среде. Подключение аккаунтов станет доступно после настройки администратором."
+    },
+    "errors": {
+      "loadFailed": "Не удалось загрузить данные настройки. Попробуйте снова.",
+      "saveFailed": "Не удалось сохранить. Попробуйте снова.",
+      "completeFailed": "Не удалось завершить настройку. Проверьте обязательные поля."
+    },
+    "banner": {
+      "skipped": "Настройка пропущена. Завершите её, чтобы открыть все возможности.",
+      "inProgress": "Настройка не завершена. Завершите её для старта.",
+      "cta": "Завершить настройку"
+    },
+    "gate": {
+      "title": "Требуется настройка",
+      "description": "Завершите настройку, чтобы открыть эту возможность. Это займёт несколько минут.",
+      "cta": "Завершить настройку"
+    },
+    "a11y": {
+      "brandLogoAlt": "Логотип бренда",
+      "socialConnectorTitle": "Подключение соцсетей",
+      "dismissBanner": "Закрыть баннер",
+      "currency": "£",
+      "stepperLabel": "Прогресс настройки"
+    },
+    "validation": {
+      "invalidUrl": "Введите корректный URL (напр. https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "История платежей"
+    },
+    "selectCurrencyLabel": "Валюта",
+    "selectCurrencyHelp": "Выберите валюту для отображения цен.",
+    "selectBillingInterval": "Интервал оплаты",
+    "toggleDiscount": "Включить скидку партнёрской программы",
+    "discountPartnershipTitle": "Скидка {percent}% по партнёрской программе",
+    "discountActive": "Активна",
+    "discountPartnershipDescription": "Разрешите ZARZOOM публиковать рекламный контент в вашей ленте (не чаще {maxFrequency}) и получите скидку {percent}% на подписку. Вы сохраняете полный контроль и можете отключить это в любой момент.",
+    "discountOncePerDay": "не чаще раза в день",
+    "discountPerWeek": "{count} раз в неделю",
+    "discountPartnerApplied": "Партнёрская скидка применена",
+    "discountAdvertisingApplied": "Скидка партнёрской программы применена",
+    "contactUs": "Связаться с нами",
+    "partnerDiscountEnable": "Включить партнёрскую скидку 50%",
+    "partnerDiscountStandardPrice": "Обычная цена",
+    "partnerDiscount50Off": "Скидка 50%",
+    "partnerDiscountSubheading": "Экономия 50%. Мы можем публиковать до 1 небольшого промо ZARZOOM в день (не более 3–7 в неделю) — никогда в ваших постах.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Простые и прозрачные тарифы",
+      "subtitle": "Выберите тариф под ваши цели. Начните с бесплатного периода, сменить тариф можно в любой момент.",
+      "monthly": "Ежемесячно",
+      "annual": "Ежегодно",
+      "popular": "Популярный",
+      "getStarted": "Начать",
+      "savePercent": "Экономия {percent}% при годовой оплате",
+      "trialDays": "Бесплатный период {days} дней",
+      "page": {
+        "title": "Простые и прозрачные тарифы",
+        "subtitle": "Выберите подходящий тариф. Во всех — 14 дней бесплатно.",
+        "footer": "Цены указаны без НДС, где применимо. Отменить или сменить тариф можно в любой момент.",
+        "contactCta": "Вопросы? Свяжитесь с нами — подберём подходящий тариф.",
+        "contactCtaPrefix": "Вопросы? ",
+        "contactLink": "Связаться с нами",
+        "contactCtaSuffix": " — подберём подходящий тариф."
+      },
+      "fallback": {
+        "title": "Тарифы временно недоступны",
+        "message": "Мы обновляем тарифы. Зайдите позже или обратитесь в поддержку."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Идеально для старта",
+        "description": "Базовые возможности для запуска присутствия в соцсетях с созданием контента на ИИ и планированием.",
+        "bullets": [
+          "До 3 аккаунтов соцсетей",
+          "30 постов в месяц",
+          "Базовая генерация на ИИ",
+          "Планирование публикаций",
+          "Поддержка по email"
+        ],
+        "cta": "Начать бесплатный период"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Для растущего бизнеса",
+        "description": "Расширенные возможности и аналитика для масштабирования стратегии в соцсетях с умной автоматизацией.",
+        "bullets": [
+          "До 10 аккаунтов соцсетей",
+          "150 постов в месяц",
+          "Расширенная генерация на ИИ",
+          "Умное планирование по лучшему времени",
+          "Панель аналитики",
+          "Приоритетная поддержка"
+        ],
+        "cta": "Начать бесплатный период"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Для команд и агентств",
+        "description": "Возможности для бизнеса: неограниченный контент, свой бренд и выделенная поддержка.",
+        "bullets": [
+          "Неограниченно аккаунтов",
+          "Неограниченно постов",
+          "Премиум ИИ с голосом бренда",
+          "Автопланирование на ИИ",
+          "Расширенная аналитика и отчёты",
+          "Свой бренд и white-label",
+          "Выделенный менеджер",
+          "Полный доступ к API"
+        ],
+        "cta": "Связаться с отделом продаж"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "До 3 аккаунтов соцсетей",
+        "postsPerMonth": "30 постов в месяц",
+        "aiGeneration": "Базовая генерация на ИИ",
+        "scheduling": "Планирование публикаций",
+        "emailSupport": "Поддержка по email"
+      },
+      "pro": {
+        "socialProfiles": "До 10 аккаунтов соцсетей",
+        "postsPerMonth": "150 постов в месяц",
+        "aiGeneration": "Расширенная генерация на ИИ",
+        "scheduling": "Умное планирование по лучшему времени",
+        "analytics": "Панель аналитики",
+        "prioritySupport": "Приоритетная поддержка"
+      },
+      "advanced": {
+        "socialProfiles": "Неограниченно аккаунтов",
+        "postsPerMonth": "Неограниченно постов",
+        "aiGeneration": "Премиум ИИ с голосом бренда",
+        "scheduling": "Автопланирование на ИИ",
+        "analytics": "Расширенная аналитика и отчёты",
+        "customBranding": "Свой бренд и white-label",
+        "dedicatedSupport": "Выделенный менеджер",
+        "apiAccess": "Полный доступ к API"
+      }
+    }
+  }
+}

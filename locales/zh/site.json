@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - 社交媒体自动驾驶",
+    "description": "通过 AI 驱动的内容生成与排期，自动化您的社交媒体增长。"
+  },
+  "nav": {
+    "about": "关于我们",
+    "features": "功能",
+    "pricing": "定价",
+    "contact": "联系我们",
+    "getStarted": "登录并启动",
+    "support": "支持",
+    "logout": "退出登录",
+    "dashboard": "控制台",
+    "userTerms": "用户条款",
+    "websiteTerms": "网站条款",
+    "privacy": "隐私",
+    "cookies": "Cookie",
+    "admin": "Admin",
+    "selectLanguage": "选择语言"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "数秒内让社交账号进入自动驾驶",
+    "scrollToLaunch": "向下滚动启动"
+  },
+  "tagline": {
+    "heading": "AI 驱动的社交媒体增长",
+    "subheading": "生成、排期、发布——全程自动驾驶。"
+  },
+  "feature": {
+    "heading": "一键操作，爆发式增长。"
+  },
+  "cta": {
+    "heading": "准备好升级您的社交形象了吗？",
+    "button": "免费试用"
+  },
+  "testimonials": {
+    "heading": "深受行业领袖信赖",
+    "subheading": "加入 10,000+ 正在用 ZARZOOM 实现增长的营销人。",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO，TechFlow",
+        "content": "ZARZOOM 在 30 天内让我们的触达翻倍。AI 生成的内容与人工撰写几乎无法区分。"
+      },
+      {
+        "name": "David Chen",
+        "role": "创始人，GrowthStack",
+        "content": "自动驾驶功能改变了一切。我现在每周只在社交上花 5 分钟。"
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "影响力负责人",
+        "content": "确实是爆发式增长。我们在各平台的互动指标提升了 400%。"
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "准备一飞冲天？",
+    "subheading": "开启 14 天免费试用，无需信用卡。",
+    "button": "立即开始"
+  },
+  "loading": {
+    "text": "加载中…"
+  },
+  "notFound": {
+    "title": "抱歉，页面找不到了",
+    "description": "您访问的页面已消失在茫茫网络中。我们带您回到首页。",
+    "backHome": "返回首页",
+    "support": "支持"
+  },
+  "error": {
+    "title": "出了点问题",
+    "description": "我们遇到了意外错误，请重试或返回首页。",
+    "tryAgain": "重试",
+    "backHome": "返回首页"
+  },
+  "footer": {
+    "tagline": "数秒内让社交账号进入自动驾驶",
+    "product": "产品",
+    "company": "公司",
+    "legal": "法律",
+    "about": "关于我们",
+    "features": "功能",
+    "pricing": "定价",
+    "contact": "联系我们",
+    "support": "支持",
+    "userTerms": "用户条款",
+    "websiteTerms": "网站条款",
+    "privacy": "隐私政策",
+    "cookies": "Cookie 政策",
+    "copyright": "ZARZOOM。保留所有权利。"
+  },
+  "pages": {
+    "support": {
+      "title": "支持中心",
+      "subtitle": "我们随时帮助您更好地使用 ZARZOOM。",
+      "faqTitle": "常见问题",
+      "faq1q": "如何连接我的社交媒体账号？",
+      "faq1a": "进入控制台，点击「已连接账号」，按提示授权各平台。我们支持 Facebook、Instagram、X（Twitter）、LinkedIn 和 TikTok。",
+      "faq2q": "可以提前排期发帖吗？",
+      "faq2a": "可以。日历视图支持您提前数周甚至数月排期。创建帖子、选择日期与时间后，其余由 ZARZOOM 自动处理。",
+      "faq3q": "超出套餐限制会怎样？",
+      "faq3a": "接近限制时您会收到通知。您可随时在账户设置中升级套餐，变更立即生效。",
+      "faq4q": "我的数据安全吗？",
+      "faq4a": "安全。我们对静态与传输中的数据采用行业标准加密，且不会向第三方共享您的数据。详见隐私政策。",
+      "contactTitle": "还需要帮助？",
+      "contactText": "我们的支持团队通常在工作日 24 小时内回复。",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "关于 ZARZOOM - AI 驱动的社交媒体自动化",
+        "description": "了解 ZARZOOM 如何通过智能自动化与 AI 内容创作革新社交媒体管理。"
+      },
+      "badge": "关于 ZARZOOM",
+      "heroTitle": "让您的社交账号",
+      "heroTitleHighlight": "数秒进入自动驾驶。",
+      "heroDescription": "ZARZOOM 是 AI 驱动平台，帮助企业与创作者自动生成并发布社交媒体内容，让您专注做最擅长的事。",
+      "hero": {
+        "title": "关于 ZARZOOM",
+        "subtitle": "通过智能自动化与 AI 内容创作，革新社交媒体管理。"
+      },
+      "storySteps": [
+        {
+          "title": "初心",
+          "text": "为解决每个创作者都面临的难题而诞生——在保持社交媒体持续更新的同时避免 burnout。"
+        },
+        {
+          "title": "打造平台",
+          "text": "我们将 AI 内容生成与智能排期结合，构建了全自动的社交媒体内容流水线。"
+        },
+        {
+          "title": "规模化自动化",
+          "text": "ZARZOOM 现已帮助企业与创作者保持强劲的线上存在感——无需日复一日的繁琐操作。"
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "AI 内容生成",
+          "text": "根据您的品牌调性与受众，自动生成吸引人的帖子。",
+          "bullets": [
+            "品牌语调学习",
+            "热门话题融入",
+            "文案与话题标签"
+          ]
+        },
+        {
+          "title": "智能排期",
+          "text": "在最佳时间跨社交平台排期并发布内容。",
+          "bullets": [
+            "受众活跃度分析",
+            "时区优化",
+            "内容日历自动化"
+          ]
+        },
+        {
+          "title": "稳定的线上存在",
+          "text": "在无需每日苦撑的情况下保持曝光、扩大受众。",
+          "bullets": [
+            "多平台发布",
+            "基于互动的发布时间",
+            "统一控制台"
+          ]
+        },
+        {
+          "title": "省时自动化",
+          "text": "专注业务，内容流水线交给 ZARZOOM 全权处理。",
+          "bullets": [
+            "零人工操作",
+            "设置即忘的自动驾驶",
+            "实时报表"
+          ]
+        }
+      ],
+      "getStartedFree": "免费开始",
+      "viewFeatures": "查看功能",
+      "autopilotActive": "自动驾驶已开启",
+      "mission": {
+        "title": "我们的使命",
+        "subtitle": "消除社交媒体增长的最大障碍",
+        "para1": "我们的使命是消除社交媒体增长的最大障碍——对持续新鲜内容的无尽需求。",
+        "para2": "ZARZOOM 用人工智能自动化内容创作与发布，让创业者和企业专注核心业务。",
+        "para3": "无需再花数小时规划帖子、撰写内容、管理多平台，ZARZOOM 助您轻松保持线上可见度。"
+      },
+      "missionStats": {
+        "contentCreated": "已创建内容",
+        "hoursSaved": "节省时间",
+        "platformsActive": "活跃平台"
+      },
+      "story": {
+        "sectionTitle": "我们的故事",
+        "heading": "为解决真实问题而建",
+        "para1": "ZARZOOM 的诞生是为了解决许多创始人与创作者共同面对的难题——在社交媒体上保持稳定输出。",
+        "para2": "社交媒体是建立受众的利器，但维持高质量内容的稳定输出既难又耗时。",
+        "para3": "通过将 AI 内容生成与自动排期结合，ZARZOOM 让用户无需日常繁重操作即可保持强劲的线上存在。"
+      },
+      "platform": {
+        "badge": "平台",
+        "heading": "ZARZOOM 如何助您增长"
+      },
+      "lookingAhead": {
+        "badge": "展望",
+        "heading": "社交媒体增长的未来",
+        "para1": "我们相信社交媒体增长将由智能自动化驱动。",
+        "para2": "ZARZOOM 持续进化，帮助企业与创作者更快、更有效地建立线上存在。",
+        "para3": "我们的目标很简单：让强大的社交媒体增长工具惠及每一个人。"
+      },
+      "intelligentAutomation": {
+        "title": "智能自动化",
+        "subtitle": "依托前沿 AI，在您专注业务的同时扩大受众。",
+        "tags": [
+          "AI 生成",
+          "自动排期",
+          "多平台",
+          "数据分析"
+        ]
+      },
+      "cta": {
+        "badge": "今日开始",
+        "title": "立即开启社交自动驾驶",
+        "description": "加入数千名正在用自动驾驶实现增长的创作者与企业。",
+        "getStarted": "开始使用",
+        "viewFeatures": "查看功能"
+      },
+      "values": {
+        "title": "我们的核心价值",
+        "innovation": {
+          "title": "创新优先",
+          "description": "我们不断突破 AI 与自动化的边界，提供昨日还不可行的解决方案。对创新的承诺意味着您总能获得社交媒体技术的最新进展。"
+        },
+        "authenticity": {
+          "title": "真实互动",
+          "description": "自动化应增强而非取代真实的人际连接。我们的工具旨在助您保持独特声音，并与受众建立真实关系、实现规模化。"
+        },
+        "simplicity": {
+          "title": "简洁与强大",
+          "description": "复杂技术不必难以使用。我们相信让强大工具人人可用，无论技术背景如何。"
+        },
+        "trust": {
+          "title": "信任与隐私",
+          "description": "您的数据、内容与社群——我们以最高尊重与安全对待。我们从不出售您的数据，并坚持最高标准的隐私保护。"
+        }
+      },
+      "team": {
+        "title": "专家打造",
+        "description": "我们的团队汇聚 AI、社交媒体营销与用户体验设计领域的多年经验。我们致力于打造真正改变企业与受众连接方式的工具。"
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "功能 - ZARZOOM 社交媒体自动化",
+        "description": "了解自动化社交媒体的强大功能：AI 内容生成、智能排期、多平台发布、数据分析等。"
+      },
+      "hero": {
+        "title": "强大功能",
+        "subtitle": "自动化、优化与扩展社交媒体所需的一切——尽在一个智能平台。"
+      },
+      "aiContent": {
+        "title": "AI 驱动的内容生成",
+        "description": "用我们理解您品牌调性、受众偏好与热门话题的先进 AI，数秒内创作吸引人的帖子。生成与社群共鸣的文案、话题标签与完整创意。",
+        "features": [
+          "品牌语调学习与适配",
+          "热门话题融入",
+          "多格式内容（文字、文案、话题标签）",
+          "A/B 测试建议"
+        ]
+      },
+      "smartScheduling": {
+        "title": "智能排期与自动驾驶",
+        "description": "由 AI 判断最佳发帖时间以最大化互动。一次设置，社交存在自动增长，您专注业务即可。",
+        "features": [
+          "受众活跃度分析",
+          "时区优化",
+          "内容日历自动化",
+          "基于互动的排期"
+        ]
+      },
+      "multiPlatform": {
+        "title": "多平台管理",
+        "description": "在统一控制台管理所有社交媒体账号。一键发布到 Twitter、LinkedIn、Facebook、Instagram 等。",
+        "features": [
+          "跨平台发布",
+          "按平台优化",
+          "统一收件箱",
+          "集中数据分析"
+        ]
+      },
+      "analytics": {
+        "title": "高级分析与洞察",
+        "description": "用超越表面指标的综合分析追踪关键数据。了解受众、衡量 ROI，用数据驱动决策优化策略。",
+        "features": [
+          "实时表现追踪",
+          "受众画像与行为",
+          "互动率分析",
+          "竞品对标"
+        ]
+      },
+      "contentLibrary": {
+        "title": "内容库与素材",
+        "description": "用智能媒体库构建并管理内容库。存储图片、视频、模板与文案片段，便于快速调用与复用。",
+        "features": [
+          "不限媒体存储",
+          "智能标签与搜索",
+          "模板库",
+          "素材表现追踪"
+        ]
+      },
+      "collaboration": {
+        "title": "团队协作",
+        "description": "与团队、客户或代理商无缝协作。分配角色、管理权限、在平台内完成审批流程。",
+        "features": [
+          "基于角色的访问控制",
+          "审批流程",
+          "团队活动日志",
+          "客户管理"
+        ]
+      },
+      "integration": {
+        "title": "集成与 API",
+        "description": "将 ZARZOOM 与现有工具与工作流连接。我们可靠的 API 与预置集成确保数据在技术栈中无缝流动。",
+        "features": [
+          "Zapier 集成",
+          "Webhook 支持",
+          "REST API 访问",
+          "自定义集成"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API 与 OpenClaw 集成",
+        "description": "通过 ZARZOOM 强大的 OpenClaw 集成，按需实现 10 大平台的自动化社交媒体创作与排期。通过 REST API 从现有系统直接触发 AI 内容生成，或让 OpenClaw 代理自主处理一切。适合代理商、开发者与追求无缝自动化的企业。",
+        "features": [
+          "OpenClaw 代理自动化（10+ 平台）",
+          "通过 API 按需 AI 内容创作",
+          "即时排期触发",
+          "自定义工作流自动化"
+        ]
+      },
+      "support": {
+        "title": "一流支持",
+        "description": "需要时获得我们专属支持团队的帮助。提供完整文档、视频教程与及时客服。",
+        "features": [
+          "24/7 邮件支持",
+          "在线客服（Pro+）",
+          "视频教程",
+          "知识库"
+        ]
+      },
+      "cta": {
+        "title": "准备好升级您的社交媒体了吗？",
+        "description": "开启免费试用，体验智能自动化的力量。",
+        "button": "免费开始"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "联系我们 - ZARZOOM",
+        "description": "联系 ZARZOOM 团队。我们随时解答您的问题与疑虑。"
+      },
+      "title": "联系我们",
+      "subtitle": "有问题或需要支持？我们在此协助。发送消息，我们将尽快回复。",
+      "info": {
+        "title": "联系信息",
+        "email": {
+          "label": "邮箱"
+        },
+        "phone": {
+          "label": "电话"
+        },
+        "address": {
+          "label": "办公地址"
+        }
+      },
+      "hours": {
+        "title": "营业时间",
+        "note": "我们通常在工作日 24 小时内回复所有咨询。",
+        "weekdays": "周一至周五",
+        "weekdaysTime": "9:00 - 18:00",
+        "saturday": "周六",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "周日",
+        "closed": "休息"
+      },
+      "form": {
+        "title": "发送消息",
+        "name": "您的姓名",
+        "namePlaceholder": "张三",
+        "email": "您的邮箱",
+        "emailPlaceholder": "zhangsan@example.com",
+        "subject": "主题",
+        "subjectPlaceholder": "我们如何帮助您？",
+        "message": "留言",
+        "messagePlaceholder": "请详细描述您的问题…",
+        "messageHint": "至少 10 个字符",
+        "submit": "发送",
+        "sending": "发送中…",
+        "success": {
+          "title": "发送成功！",
+          "message": "感谢您的留言，我们将尽快回复。"
+        },
+        "error": {
+          "title": "错误"
+        },
+        "errors": {
+          "required": "请填写所有必填项",
+          "failed": "发送失败，请重试。"
+        }
+      }
+    },
+    "termsUser": {
+      "title": "用户条款与条件",
+      "subtitle": "使用 ZARZOOM 前请仔细阅读本条款。",
+      "lastUpdated": "最后更新：2026 年 2 月 1 日",
+      "s1Title": "1. 条款接受",
+      "s1Text": "创建账户或使用 ZARZOOM 平台即表示您同意受本用户条款与条件约束。若不同意，请勿使用本服务。",
+      "s2Title": "2. 账户注册",
+      "s2Text": "注册时须提供准确、完整信息。您有责任对账户凭证保密，并对账户下的一切活动负责。",
+      "s3Title": "3. 合规使用",
+      "s3Text": "您同意不利用 ZARZOOM 发布违法、诽谤、淫秽或侵犯他人知识产权的内容。我们保留对违反本政策的账户暂停或终止的权利。",
+      "s4Title": "4. 订阅与账单",
+      "s4Text": "付费方案按月或按年预先计费。您可随时取消；取消于当前计费周期结束时生效。部分周期不予退款。",
+      "s5Title": "5. 知识产权",
+      "s5Text": "您保留通过 ZARZOOM 创建和发布内容的权利。使用平台即授予我们为提供服务而处理、存储与展示您内容的有限许可。",
+      "s6Title": "6. 责任限制",
+      "s6Text": "ZARZOOM 按「现状」提供。在法律允许的最大范围内，我们免除所有保证，且不对因使用服务而产生的间接、附带或后果性损害负责。",
+      "s7Title": "7. 条款变更",
+      "s7Text": "我们可能不时更新本条款。变更公布后继续使用服务即视为接受修订后的条款。"
+    },
+    "termsWebsite": {
+      "title": "网站条款与条件",
+      "subtitle": "适用于您使用 zarzoom.com 网站的条款。",
+      "lastUpdated": "最后更新：2026 年 2 月 1 日",
+      "s1Title": "1. 网站使用",
+      "s1Text": "本网站由 ZARZOOM Ltd 运营。访问与浏览本网站即表示您完全接受本网站条款与条件。",
+      "s2Title": "2. 知识产权",
+      "s2Text": "本网站所有内容，包括文字、图形、标识与软件，均为 ZARZOOM Ltd 或其许可方财产，受版权与商标法保护。",
+      "s3Title": "3. 信息准确性",
+      "s3Text": "我们力求本网站信息准确、及时，但对其完整性或准确性不作任何保证或陈述。",
+      "s4Title": "4. 第三方链接",
+      "s4Text": "本网站可能包含第三方链接。我们不对这些网站的内容或隐私做法负责。",
+      "s5Title": "5. 适用法律",
+      "s5Text": "本条款受英格兰与威尔士法律管辖。任何争议须提交英格兰与威尔士法院专属管辖。"
+    },
+    "privacy": {
+      "title": "隐私政策",
+      "subtitle": "我们如何收集、使用与保护您的个人信息。",
+      "lastUpdated": "最后更新：2026 年 2 月 1 日",
+      "s1Title": "1. 我们收集的信息",
+      "s1Text": "我们收集您直接提供的信息（姓名、邮箱、支付信息）以及您使用 ZARZOOM 时自动产生的信息（IP、浏览器类型、使用数据）。",
+      "s2Title": "2. 信息使用方式",
+      "s2Text": "我们使用您的信息以提供与改进服务、处理支付、发送与服务相关的通知并履行法律义务。",
+      "s3Title": "3. 数据共享",
+      "s3Text": "我们不出售您的个人数据。我们可能与受信任的服务商（支付处理、托管等）共享数据以运营平台，并受严格保密约定约束。",
+      "s4Title": "4. 数据保留",
+      "s4Text": "在账户有效或为提供服务所需期间，我们保留您的个人数据。您可随时联系支持请求删除数据。",
+      "s5Title": "5. 您的权利",
+      "s5Text": "您有权访问、更正或删除个人数据，也可反对处理或请求数据可携。行使权利请联系 privacy@zarzoom.com。",
+      "s6Title": "6. 安全",
+      "s6Text": "我们采取适当技术与组织措施保护您的数据，包括加密、访问控制与定期安全评估。",
+      "s7Title": "7. 政策变更",
+      "s7Text": "我们可能不时更新本政策。重大变更将通过邮件或平台通知您。"
+    },
+    "cookies": {
+      "title": "Cookie 政策",
+      "subtitle": "我们如何使用 Cookie 及类似技术。",
+      "lastUpdated": "最后更新：2026 年 2 月 1 日",
+      "s1Title": "1. 什么是 Cookie",
+      "s1Text": "Cookie 是您访问网站时放置在设备上的小型文本文件，用于帮助网站记住您的偏好并了解您的使用方式。",
+      "s2Title": "2. 我们使用的 Cookie",
+      "s2Essential": "必要 Cookie",
+      "s2EssentialText": "网站正常运行所必需，无法关闭。包括会话 Cookie 与认证令牌。",
+      "s2Analytics": "分析 Cookie",
+      "s2AnalyticsText": "通过收集匿名使用数据帮助我们了解访客如何与网站互动，用于改进服务。",
+      "s2Preference": "偏好 Cookie",
+      "s2PreferenceText": "记住您的设置与偏好（如语言），以提供更个性化的体验。",
+      "s3Title": "3. 管理 Cookie",
+      "s3Text": "您可通过浏览器设置控制 Cookie。请注意，禁用部分 Cookie 可能影响网站功能。",
+      "s4Title": "4. 第三方 Cookie",
+      "s4Text": "部分 Cookie 由我们页面上的第三方服务放置。我们无法控制这些 Cookie，请参阅各第三方隐私政策。",
+      "s5Title": "5. 联系我们",
+      "s5Text": "若对 Cookie 使用有疑问，请通过 privacy@zarzoom.com 联系我们。"
+    }
+  }
+}

@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Chào mừng trở lại",
+    "loginSubtitle": "Đăng nhập vào tài khoản ZARZOOM của bạn",
+    "registerTitle": "Tạo tài khoản",
+    "registerSubtitle": "Tham gia hàng nghìn nhà tiếp thị đang tự động hóa mạng xã hội",
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "login": "Đăng nhập",
+    "register": "Tạo tài khoản",
+    "forgotPassword": "Quên mật khẩu?",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "noAccount": "Chưa có tài khoản?",
+    "hasAccount": "Đã có tài khoản?",
+    "signUpLink": "Đăng ký",
+    "signInLink": "Đăng nhập",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "passwordUppercase": "Phải có chữ in hoa",
+    "passwordLowercase": "Phải có chữ thường",
+    "passwordNumber": "Phải có số",
+    "passwordSpecial": "Phải có ký tự đặc biệt",
+    "passwordsNoMatch": "Mật khẩu không khớp",
+    "emailRequired": "Email là bắt buộc",
+    "emailInvalid": "Vui lòng nhập email hợp lệ",
+    "signUpSuccess": "Kiểm tra email của bạn",
+    "signUpSuccessMessage": "Chúng tôi đã gửi liên kết xác minh đến email của bạn. Vui lòng kiểm tra hộp thư và nhấp liên kết để kích hoạt tài khoản.",
+    "backToLogin": "Quay lại đăng nhập",
+    "authError": "Lỗi xác thực",
+    "authErrorMessage": "Đã xảy ra lỗi trong quá trình xác thực. Vui lòng thử lại.",
+    "tryAgain": "Thử lại",
+    "tabLogin": "Đăng nhập",
+    "tabCreateAccount": "Tạo tài khoản",
+    "continueWithGoogle": "Tiếp tục với Google",
+    "continueWithFacebook": "Tiếp tục với Facebook",
+    "continueWithLinkedIn": "Tiếp tục với LinkedIn",
+    "continueWithX": "Tiếp tục với X",
+    "rememberMe": "Ghi nhớ đăng nhập",
+    "forgotLogin": "Quên thông tin đăng nhập?",
+    "verifyTitle": "Kiểm tra hộp thư",
+    "verifySubtitle": "Chúng tôi đã gửi liên kết xác minh đến email của bạn. Vui lòng kiểm tra hộp thư và nhấp liên kết để kích hoạt tài khoản.",
+    "verifyResend": "Gửi lại email xác minh",
+    "verifyResent": "Đã gửi lại email xác minh",
+    "verifyBack": "Quay lại đăng nhập",
+    "verifiedTitle": "Đã xác minh email",
+    "verifiedSubtitle": "Email của bạn đã được xác minh thành công. Bạn có thể đăng nhập vào tài khoản.",
+    "verifiedContinue": "Tiếp tục đăng nhập",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Chào mừng trở lại",
+    "overview": "Tổng quan",
+    "accountSettings": "Cài đặt tài khoản",
+    "connectedAccounts": "Tài khoản đã kết nối",
+    "comingSoon": "Sắp ra mắt - trung tâm điều khiển mạng xã hội của bạn.",
+    "emailVerified": "Đã xác minh email",
+    "memberSince": "Thành viên từ",
+    "profile": "Cài đặt thương hiệu",
+    "supportDescription": "Nhận hỗ trợ từ đội ngũ của chúng tôi. Tạo và quản lý phiếu hỗ trợ.",
+    "restartSetup": "Khởi động lại thiết lập",
+    "restarting": "Đang khởi động lại..."
+  },
+  "connect": {
+    "heading": "Kết nối tài khoản của bạn",
+    "subheading": "Liên kết tài khoản mạng xã hội để bắt đầu đăng bài tự động với ZARZOOM.",
+    "connectAccounts": "Kết nối tài khoản",
+    "back": "Quay lại"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Tự động điền từ tệp"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Tạo API Key",
+    "keyCreated": "Đã tạo key",
+    "close": "Đóng",
+    "keyName": "Tên key",
+    "keyNamePlaceholder": "vd. Production, Staging, CI/CD",
+    "keyNameRequired": "Tên là bắt buộc",
+    "active": "Đang hoạt động",
+    "revoked": "Đã thu hồi",
+    "created": "Ngày tạo",
+    "lastUsed": "Lần dùng cuối",
+    "revokedAt": "Đã thu hồi",
+    "rotate": "Xoay",
+    "revoke": "Thu hồi",
+    "revokeConfirm": "Thu hồi key này?",
+    "rotateConfirm": "Xoay key?",
+    "confirm": "Xác nhận",
+    "cancel": "Hủy",
+    "revoking": "Đang thu hồi...",
+    "rotating": "Đang xoay...",
+    "rotateTitle": "Xoay: thu hồi key này và tạo key mới"
+  },
+  "profile": {
+    "title": "Cài đặt thương hiệu",
+    "subtitle": "Quản lý thương hiệu, mục tiêu, gói và kết nối mạng xã hội.",
+    "saving": "Đang lưu...",
+    "saved": "Đã lưu thay đổi thành công.",
+    "saveFailed": "Lưu thay đổi thất bại. Vui lòng thử lại.",
+    "loadFailed": "Tải hồ sơ thất bại. Vui lòng thử lại.",
+    "save": "Lưu thay đổi",
+    "sections": {
+      "brand": "Thông tin thương hiệu",
+      "brandDesc": "Bản sắc doanh nghiệp và tùy chọn nội dung.",
+      "goals": "Mục tiêu & Tăng trưởng",
+      "goalsDesc": "Bạn muốn đạt gì với ZARZOOM.",
+      "posting": "Tùy chọn đăng bài",
+      "postingDesc": "Cách ZARZOOM xuất bản nội dung của bạn.",
+      "plan": "Gói của bạn",
+      "planDesc": "Gói đăng ký hiện tại và tùy chọn thanh toán.",
+      "social": "Kết nối mạng xã hội",
+      "socialDesc": "Quản lý tài khoản mạng xã hội đã kết nối."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Tự động đăng",
+        "help": "Cho phép ZARZOOM tự động đăng nội dung thay bạn."
+      }
+    },
+    "plan": {
+      "current": "Gói hiện tại",
+      "noPlan": "Chưa chọn gói",
+      "annualBilling": "Thanh toán hàng năm",
+      "changePlan": "Đổi gói"
+    },
+    "social": {
+      "username": "Tên người dùng mạng xã hội",
+      "noUsername": "Chưa cấu hình",
+      "connected": "Tài khoản mạng xã hội đã kết nối",
+      "notConnected": "Chưa kết nối tài khoản nào",
+      "connect": "Kết nối tài khoản",
+      "manage": "Quản lý kết nối"
+    },
+    "back": "Quay lại Bảng điều khiển"
+  },
+  "support": {
+    "nav": {
+      "title": "Hỗ trợ",
+      "myTickets": "Phiếu của tôi",
+      "createTicket": "Tạo phiếu",
+      "backToSupport": "Quay lại Hỗ trợ",
+      "backToDashboard": "Quay lại Bảng điều khiển"
+    },
+    "landing": {
+      "title": "Nhận hỗ trợ",
+      "subtitle": "Chúng tôi sẵn sàng giúp bạn tận dụng tối đa ZARZOOM.",
+      "description": "Gửi phiếu hỗ trợ và đội ngũ sẽ phản hồi trong vòng 24 giờ trong ngày làm việc.",
+      "createTicketBtn": "Tạo phiếu",
+      "myTicketsBtn": "Phiếu của tôi"
+    },
+    "list": {
+      "title": "Phiếu hỗ trợ của tôi",
+      "subtitle": "Xem và quản lý yêu cầu hỗ trợ.",
+      "empty": "Chưa có phiếu nào",
+      "emptyDescription": "Bạn chưa tạo phiếu hỗ trợ nào. Nhấp nút bên dưới để bắt đầu.",
+      "createFirstTicket": "Tạo phiếu đầu tiên",
+      "filterByStatus": "Lọc theo trạng thái",
+      "allTickets": "Tất cả phiếu",
+      "showingTickets": "Đang hiển thị {filtered} trong tổng {total} phiếu",
+      "noMatchFilter": "Không có phiếu nào khớp bộ lọc trạng thái đã chọn.",
+      "clearFilter": "Xóa bộ lọc",
+      "table": {
+        "ticketId": "Mã phiếu",
+        "subject": "Chủ đề",
+        "status": "Trạng thái",
+        "lastUpdated": "Cập nhật lần cuối",
+        "created": "Ngày tạo"
+      }
+    },
+    "create": {
+      "title": "Tạo phiếu hỗ trợ",
+      "subtitle": "Mô tả vấn đề và chúng tôi sẽ giúp bạn xử lý.",
+      "form": {
+        "subject": "Chủ đề",
+        "subjectPlaceholder": "Mô tả ngắn gọn vấn đề của bạn",
+        "subjectHelp": "Bắt buộc. Giữ ngắn gọn và rõ ràng.",
+        "category": "Danh mục",
+        "categoryHelp": "Tùy chọn. Chọn danh mục phù hợp nhất với vấn đề.",
+        "priority": "Độ ưu tiên",
+        "priorityHelp": "Tùy chọn. Cho chúng tôi biết mức độ khẩn cấp.",
+        "description": "Mô tả",
+        "descriptionPlaceholder": "Cung cấp thông tin chi tiết về vấn đề của bạn...",
+        "descriptionHelp": "Bắt buộc. Bao gồm các bước tái hiện, thông báo lỗi hoặc chi tiết liên quan khác.",
+        "attachments": "Đính kèm ảnh chụp màn hình",
+        "attachmentsHelp": "Tùy chọn. Tải tối đa 3 ảnh chụp màn hình (PNG, JPG hoặc WebP). Tối đa 5MB mỗi tệp.",
+        "attachmentsBtn": "Chọn tệp",
+        "attachmentsSelected": "tệp đã chọn",
+        "removeAttachment": "Xóa",
+        "submit": "Gửi phiếu",
+        "submitting": "Đang tạo phiếu...",
+        "cancel": "Hủy"
+      },
+      "success": {
+        "title": "Đã tạo phiếu thành công",
+        "message": "Phiếu hỗ trợ của bạn đã được tạo. Chúng tôi sẽ phản hồi trong vòng 24 giờ trong ngày làm việc.",
+        "viewTicket": "Xem phiếu",
+        "createAnother": "Tạo phiếu khác"
+      },
+      "error": {
+        "title": "Tạo phiếu thất bại",
+        "message": "Đã xảy ra lỗi. Vui lòng thử lại.",
+        "retry": "Thử lại"
+      }
+    },
+    "detail": {
+      "title": "Chi tiết phiếu",
+      "status": "Trạng thái",
+      "category": "Danh mục",
+      "priority": "Độ ưu tiên",
+      "created": "Ngày tạo",
+      "lastActivity": "Hoạt động gần nhất",
+      "comments": "Bình luận",
+      "addComment": "Thêm bình luận",
+      "commentPlaceholder": "Nhập tin nhắn của bạn...",
+      "attachScreenshots": "Đính kèm ảnh chụp màn hình",
+      "sendComment": "Gửi",
+      "sending": "Đang gửi...",
+      "loadingTicket": "Đang tải phiếu...",
+      "ticketNotFound": "Không tìm thấy phiếu",
+      "ticketNotFoundMessage": "Phiếu này không tồn tại hoặc bạn không có quyền xem.",
+      "noComments": "Chưa có bình luận",
+      "userRole": "Bạn",
+      "adminRole": "Đội hỗ trợ",
+      "systemRole": "Hệ thống",
+      "attachmentPreview": "Nhấp để xem kích thước đầy đủ",
+      "attachmentAlt": "Tệp đính kèm",
+      "closeModal": "Đóng",
+      "closeTicketTitle": "Đóng phiếu",
+      "closeTicketMessage": "Bạn có chắc muốn đóng phiếu này? Bạn có thể nêu lý do (tùy chọn).",
+      "closeTicketPlaceholder": "Tùy chọn: Tại sao bạn đóng phiếu này?",
+      "closeTicketCancel": "Hủy",
+      "closeTicketButton": "Đóng phiếu",
+      "closeTicketClosing": "Đang đóng..."
+    },
+    "status": {
+      "open": "Mở",
+      "investigating": "Đang điều tra",
+      "waiting_on_user": "Đang chờ bạn",
+      "resolved": "Đã xử lý",
+      "closed": "Đã đóng"
+    },
+    "category": {
+      "none": "Không xác định",
+      "account_login": "Tài khoản & Đăng nhập",
+      "billing_subscription": "Thanh toán & Gói",
+      "social_connections": "Kết nối mạng xã hội",
+      "content_generation": "Tạo nội dung",
+      "publishing_issues": "Sự cố đăng bài",
+      "technical_bug": "Lỗi kỹ thuật",
+      "feature_request": "Yêu cầu tính năng",
+      "general_question": "Câu hỏi chung"
+    },
+    "priority": {
+      "none": "Không xác định",
+      "urgent": "Khẩn cấp – Hệ thống bị chặn",
+      "high": "Cao – Vấn đề nghiêm trọng",
+      "normal": "Bình thường – Tiêu chuẩn",
+      "low": "Thấp – Nhỏ / Đề xuất"
+    },
+    "attachments": {
+      "uploading": "Đang tải tệp đính kèm...",
+      "uploadSuccess": "Đã tải tệp đính kèm thành công",
+      "uploadError": "Tải một số tệp đính kèm thất bại",
+      "fileTypeError": "Chỉ chấp nhận tệp PNG, JPG và WebP",
+      "fileSizeError": "Kích thước tệp phải dưới 5MB",
+      "fileCountError": "Bạn có thể tải tối đa 3 tệp mỗi bình luận",
+      "viewFullSize": "Xem kích thước đầy đủ"
+    },
+    "errors": {
+      "loadFailed": "Tải phiếu hỗ trợ thất bại",
+      "createFailed": "Tạo phiếu thất bại",
+      "commentFailed": "Thêm bình luận thất bại",
+      "unauthorized": "Bạn không có quyền truy cập phiếu này",
+      "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối và thử lại."
+    },
+    "validation": {
+      "subjectRequired": "Chủ đề là bắt buộc",
+      "descriptionRequired": "Mô tả là bắt buộc",
+      "messageRequired": "Tin nhắn là bắt buộc",
+      "emailRequired": "Email là bắt buộc",
+      "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
+      "noUpdatesProvided": "Chưa cung cấp cập nhật",
+      "noFilesProvided": "Chưa cung cấp tệp",
+      "tooManyFiles": "Quá nhiều tệp. Tối đa {count} tệp.",
+      "invalidFileType": "Loại tệp không hợp lệ cho {name}. Chỉ chấp nhận PNG, JPG và WebP.",
+      "fileTooLarge": "Tệp {name} quá lớn ({size}). Kích thước tối đa 5MB."
+    }
+  },
+  "onboarding": {
+    "title": "Thiết lập ZARZOOM của bạn",
+    "subtitle": "Hãy cấu hình tự động hóa mạng xã hội trong vài bước nhanh.",
+    "stepper": {
+      "step1": "Tài khoản",
+      "step2": "Thương hiệu",
+      "step3": "Mục tiêu",
+      "step4": "Gói",
+      "step5": "Kết nối"
+    },
+    "nav": {
+      "back": "Quay lại",
+      "next": "Tiếp tục",
+      "saveExit": "Lưu & Thoát",
+      "skipForNow": "Bỏ qua tạm thời",
+      "finish": "Khởi động ZARZOOM",
+      "saving": "Đang lưu..."
+    },
+    "step1": {
+      "title": "Đã tạo tài khoản",
+      "subtitle": "Bạn đã đăng nhập và sẵn sàng.",
+      "signedInAs": "Đăng nhập với tư cách",
+      "continue": "Thiết lập thương hiệu"
+    },
+    "step2": {
+      "title": "Thông tin thương hiệu",
+      "subtitle": "Cho chúng tôi biết về doanh nghiệp để chúng tôi điều chỉnh nội dung theo thương hiệu.",
+      "businessName": {
+        "label": "Tên doanh nghiệp",
+        "placeholder": "vd. Công ty ABC",
+        "help": "Tên doanh nghiệp hoặc thương hiệu của bạn."
+      },
+      "description": {
+        "label": "Mô tả",
+        "placeholder": "Mô tả ngắn gọn doanh nghiệp của bạn làm gì...",
+        "help": "Tóm tắt ngắn để AI hiểu giọng điệu thương hiệu của bạn."
+      },
+      "websiteUrl": {
+        "label": "URL website",
+        "placeholder": "https://websitecuaban.com",
+        "help": "Chúng tôi sẽ phân tích site để điều chỉnh nội dung."
+      },
+      "autofillFromWebsite": "Tự động điền từ website",
+      "analysing": "Đang phân tích...",
+      "importFromFile": "Nhập từ tệp",
+      "choosePdfOrWord": "Chọn tài liệu PDF hoặc Word",
+      "investigate": {
+        "button": "Phân tích website",
+        "loading": "Đang phân tích website của bạn...",
+        "success": "Đã phân tích website thành công!",
+        "error": "Không thể phân tích website. Vui lòng điền thông tin thủ công."
+      },
+      "contentLanguage": {
+        "label": "Ngôn ngữ nội dung",
+        "help": "Ngôn ngữ chính cho nội dung được tạo."
+      },
+      "articleStyles": {
+        "label": "Phong cách bài viết",
+        "help": "Chọn loại nội dung bạn muốn ZARZOOM tạo.",
+        "options": {
+          "let_zarzoom_decide": "Để ZARZOOM quyết định",
+          "how_to_guides": "Hướng dẫn cách làm",
+          "listicles": "Bài dạng danh sách",
+          "tutorials": "Hướng dẫn chi tiết",
+          "opinion_pieces": "Bài quan điểm",
+          "case_studies": "Case study",
+          "news_commentary": "Bình luận tin tức",
+          "interviews": "Phỏng vấn",
+          "product_reviews": "Đánh giá sản phẩm",
+          "explainer_articles": "Bài giải thích",
+          "comparisons_vs_articles": "So sánh & Bài đối chiếu",
+          "ultimate_guides_pillar": "Hướng dẫn toàn diện / Nội dung trụ cột",
+          "checklists_cheat_sheets": "Checklist & Cheat sheet",
+          "best_top_forecasts": "Tốt nhất / Dự báo hàng đầu",
+          "problem_solution_posts": "Bài vấn đề / Giải pháp",
+          "myth_busting": "Phá bỏ hiểu lầm",
+          "resource_roundups": "Tổng hợp tài nguyên",
+          "faqs_qa_content": "FAQ / Nội dung Q&A",
+          "personal_stories": "Câu chuyện / Trải nghiệm cá nhân",
+          "research_summaries": "Tóm tắt nghiên cứu / Dữ liệu",
+          "historical_timeline": "Bài lịch sử / Dòng thời gian",
+          "satire_humor": "Châm biếm hoặc hài hước",
+          "explained_in_minutes": "Giải thích trong X phút"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Để AI chọn định dạng tốt nhất cho nội dung của bạn",
+          "how_to_guides": "Hướng dẫn từng bước",
+          "listicles": "Danh sách đánh số (vd. 10 mẹo cho X)",
+          "tutorials": "Chi tiết hơn hướng dẫn cách làm",
+          "opinion_pieces": "Quan điểm chuyên gia hoặc bình luận",
+          "case_studies": "Ví dụ / Kết quả thực tế",
+          "news_commentary": "Bối cảnh sự kiện hiện tại",
+          "interviews": "Hỏi đáp với người / chuyên gia",
+          "product_reviews": "Đánh giá / Xếp hạng",
+          "explainer_articles": "Giải thích khái niệm phức tạp đơn giản",
+          "comparisons_vs_articles": "X so với Y, so sánh ưu nhược",
+          "ultimate_guides_pillar": "Nội dung dài, có thẩm quyền, bao quát chủ đề",
+          "checklists_cheat_sheets": "Tham chiếu nhanh, danh sách hành động",
+          "best_top_forecasts": "Công cụ tốt nhất cho X, Xu hướng hàng đầu 202X",
+          "problem_solution_posts": "Chỉ ra điểm đau rồi trả lời",
+          "myth_busting": "Làm rõ hiểu lầm phổ biến",
+          "resource_roundups": "Bài viết, Công cụ, Liên kết tốt nhất về chủ đề",
+          "faqs_qa_content": "Nhắm truy vấn tìm kiếm dài trực tiếp",
+          "personal_stories": "Kể chuyện, tác động cảm xúc",
+          "research_summaries": "Tóm tắt khảo sát, kết quả nghiên cứu",
+          "historical_timeline": "Nhìn lại quá trình phát triển hoặc tiến hóa",
+          "satire_humor": "Giải trí, thể hiện cá tính thương hiệu",
+          "explained_in_minutes": "Điểm chính, tiêu thụ nhanh"
+        }
+      },
+      "styleLinks": {
+        "label": "Liên kết tham khảo phong cách",
+        "placeholder": "https://vidu.com/bai-viet",
+        "help": "Thêm tối đa 3 liên kết đến bài viết có phong cách bạn muốn mô phỏng.",
+        "add": "Thêm liên kết",
+        "max": "Tối đa 3 liên kết"
+      },
+      "brandColor": {
+        "label": "Màu thương hiệu",
+        "help": "Màu chính của thương hiệu cho hình ảnh được tạo."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Tải logo thương hiệu (định dạng JPG).",
+        "upload": "Tải logo",
+        "change": "Đổi logo",
+        "uploading": "Đang tải..."
+      }
+    },
+    "step3": {
+      "title": "Mục tiêu & Tăng trưởng",
+      "subtitle": "Bạn muốn đạt gì với ZARZOOM?",
+      "goals": {
+        "label": "Chọn mục tiêu của bạn",
+        "help": "Chọn một hoặc nhiều mục tiêu. Chúng tôi sẽ điều chỉnh chiến lược cho phù hợp.",
+        "options": {
+          "increase_website_traffic": "Tăng lưu lượng truy cập website",
+          "get_more_subscribers_leads": "Tăng người đăng ký & Khách tiềm năng",
+          "promote_product_or_service": "Quảng bá sản phẩm hoặc dịch vụ",
+          "increase_sales": "Tăng doanh số",
+          "build_brand_authority": "Xây dựng uy tín thương hiệu",
+          "improve_seo": "Cải thiện SEO",
+          "educate_audience": "Giáo dục đối tượng",
+          "generate_social_content": "Tạo nội dung mạng xã hội"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL website hoặc trang đích",
+        "placeholder": "https://trangcuaban.com/landing",
+        "help": "Bắt buộc khi mục tiêu của bạn bao gồm lưu lượng website hoặc thu thập khách tiềm năng."
+      },
+      "productUrl": {
+        "label": "URL sản phẩm hoặc trang bán hàng",
+        "placeholder": "https://trangcuaban.com/san-pham",
+        "help": "Bắt buộc khi mục tiêu của bạn bao gồm quảng bá sản phẩm hoặc bán hàng."
+      }
+    },
+    "step4": {
+      "title": "Chọn gói của bạn",
+      "subtitle": "Bắt đầu với gói phù hợp tham vọng tăng trưởng của bạn.",
+      "discount": {
+        "label": "Thanh toán hàng năm",
+        "save": "Tiết kiệm {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Tối đa 3 hồ sơ mạng xã hội",
+          "postsPerMonth": "30 bài mỗi tháng",
+          "aiGeneration": "Tạo nội dung AI cơ bản",
+          "scheduling": "Lên lịch đăng bài",
+          "emailSupport": "Hỗ trợ qua email"
+        },
+        "pro": {
+          "socialProfiles": "Tối đa 10 hồ sơ mạng xã hội",
+          "postsPerMonth": "150 bài mỗi tháng",
+          "aiGeneration": "Tạo nội dung AI nâng cao",
+          "scheduling": "Lên lịch thông minh với thời điểm tối ưu",
+          "analytics": "Bảng điều khiển phân tích",
+          "prioritySupport": "Hỗ trợ ưu tiên"
+        },
+        "scale": {
+          "socialProfiles": "Hồ sơ mạng xã hội không giới hạn",
+          "postsPerMonth": "Bài đăng không giới hạn",
+          "aiGeneration": "AI cao cấp với giọng thương hiệu tùy chỉnh",
+          "scheduling": "Tự lên lịch bằng AI",
+          "analytics": "Phân tích và báo cáo nâng cao",
+          "customBranding": "Thương hiệu tùy chỉnh và white-label",
+          "dedicatedSupport": "Quản lý tài khoản chuyên trách",
+          "apiAccess": "Truy cập API đầy đủ"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Hoàn hảo để bắt đầu với tự động hóa mạng xã hội.",
+        "pro": "Cho doanh nghiệp đang phát triển cần sức mạnh và thông tin chi tiết hơn.",
+        "scale": "Không giới hạn mọi thứ cho đội ngũ và đại lý."
+      },
+      "popular": "Phổ biến nhất",
+      "perMonth": "/tháng",
+      "selectPlan": "Chọn gói",
+      "selected": "Đã chọn",
+      "trialDays": "Dùng thử miễn phí {days} ngày"
+    },
+    "step5": {
+      "title": "Kết nối & Khởi động",
+      "subtitle": "Kết nối tài khoản mạng xã hội và thiết lập tùy chọn.",
+      "connectSocials": {
+        "label": "Kết nối tài khoản mạng xã hội",
+        "help": "Liên kết tài khoản mạng xã hội của bạn",
+        "button": "Kết nối tài khoản",
+        "manage": "Quản lý kết nối",
+        "connected": "Tài khoản mạng xã hội đã kết nối",
+        "notConnected": "Chưa kết nối tài khoản nào"
+      },
+      "approval": {
+        "label": "Phê duyệt nội dung",
+        "help": "Chọn cách ZARZOOM xuất bản nội dung của bạn.",
+        "auto": "Tự động đăng",
+        "autoHelp": "ZARZOOM đăng nội dung tự động theo lịch.",
+        "manual": "Phê duyệt thủ công",
+        "manualHelp": "Xem và phê duyệt từng bài trước khi đăng."
+      },
+      "notes": {
+        "label": "Ghi chú bổ sung",
+        "placeholder": "Điều gì khác bạn muốn chúng tôi biết về thương hiệu hoặc tùy chọn nội dung...",
+        "help": "Ghi chú tùy chọn cho AI cân nhắc."
+      }
+    },
+    "modal": {
+      "title": "Kết nối tài khoản mạng xã hội",
+      "loading": "Đang chuẩn bị bộ kết nối...",
+      "checking": "Đang kiểm tra kết nối...",
+      "close": "Xong",
+      "openInNewTab": "Mở trong tab mới",
+      "skipConnect": "Bỏ qua tạm thời",
+      "errorGeneric": "Không thể tải bộ kết nối. Vui lòng thử lại sau.",
+      "errorNoUrl": "Không nhận được URL kết nối. Vui lòng thử lại.",
+      "demoTitle": "Bộ kết nối sắp ra mắt",
+      "demoDescription": "Bộ kết nối chưa được cấu hình cho môi trường này. Kết nối tài khoản mạng xã hội sẽ khả dụng khi quản trị viên thiết lập nhà cung cấp."
+    },
+    "errors": {
+      "loadFailed": "Tải dữ liệu onboarding thất bại. Vui lòng thử lại.",
+      "saveFailed": "Lưu thất bại. Vui lòng thử lại.",
+      "completeFailed": "Không thể hoàn tất onboarding. Vui lòng kiểm tra tất cả trường bắt buộc."
+    },
+    "banner": {
+      "skipped": "Bạn đã bỏ qua thiết lập. Hoàn tất để mở khóa mọi tính năng.",
+      "inProgress": "Thiết lập chưa hoàn tất. Hoàn tất để bắt đầu.",
+      "cta": "Hoàn tất thiết lập"
+    },
+    "gate": {
+      "title": "Cần thiết lập",
+      "description": "Hoàn tất thiết lập onboarding để mở khóa tính năng này. Chỉ mất vài phút.",
+      "cta": "Hoàn tất thiết lập"
+    },
+    "a11y": {
+      "brandLogoAlt": "Logo thương hiệu",
+      "socialConnectorTitle": "Bộ kết nối mạng xã hội",
+      "dismissBanner": "Đóng banner",
+      "currency": "£",
+      "stepperLabel": "Tiến độ onboarding"
+    },
+    "validation": {
+      "invalidUrl": "Vui lòng nhập URL hợp lệ (vd. https://vidu.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Lịch sử thanh toán"
+    },
+    "selectCurrencyLabel": "Chọn loại tiền",
+    "selectCurrencyHelp": "Chọn loại tiền ưa thích cho giá.",
+    "selectBillingInterval": "Chọn chu kỳ thanh toán",
+    "toggleDiscount": "Bật/tắt giảm giá đối tác quảng cáo",
+    "discountPartnershipTitle": "Tiết kiệm {percent}% với Đối tác quảng cáo",
+    "discountActive": "Đang áp dụng",
+    "discountPartnershipDescription": "Cho phép ZARZOOM đăng nội dung quảng cáo lên feed của bạn (tối đa {maxFrequency}) và nhận giảm {percent}% gói đăng ký. Bạn giữ toàn quyền và có thể tắt bất cứ lúc nào.",
+    "discountOncePerDay": "một lần mỗi ngày",
+    "discountPerWeek": "{count} lần mỗi tuần",
+    "discountPartnerApplied": "Đã áp dụng giảm đối tác",
+    "discountAdvertisingApplied": "Đã áp dụng giảm đối tác quảng cáo",
+    "contactUs": "Liên hệ chúng tôi",
+    "partnerDiscountEnable": "Bật giảm 50% đối tác",
+    "partnerDiscountStandardPrice": "Giá gốc",
+    "partnerDiscount50Off": "Giảm 50%",
+    "partnerDiscountSubheading": "Tiết kiệm 50%. Chúng tôi có thể đăng tối đa 1 quảng cáo nhỏ ZARZOOM mỗi ngày (tối đa 3–7/tuần) — không bao giờ trên bài đăng của bạn.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Bảng giá đơn giản, minh bạch",
+      "subtitle": "Chọn gói phù hợp tăng trưởng của bạn. Bắt đầu dùng thử miễn phí, nâng cấp bất cứ lúc nào.",
+      "monthly": "Hàng tháng",
+      "annual": "Hàng năm",
+      "popular": "Phổ biến nhất",
+      "getStarted": "Bắt đầu",
+      "savePercent": "Tiết kiệm {percent}% với thanh toán hàng năm",
+      "trialDays": "Dùng thử miễn phí {days} ngày",
+      "page": {
+        "title": "Bảng giá đơn giản, minh bạch",
+        "subtitle": "Chọn gói phù hợp với bạn. Tất cả gói đều có dùng thử 14 ngày miễn phí.",
+        "footer": "Tất cả giá chưa bao gồm VAT nếu có. Hủy hoặc đổi gói bất cứ lúc nào.",
+        "contactCta": "Có câu hỏi? Liên hệ chúng tôi và chúng tôi sẽ giúp bạn chọn gói phù hợp.",
+        "contactCtaPrefix": "Có câu hỏi? ",
+        "contactLink": "Liên hệ chúng tôi",
+        "contactCtaSuffix": " và chúng tôi sẽ giúp bạn chọn gói phù hợp."
+      },
+      "fallback": {
+        "title": "Tạm thời không có bảng giá",
+        "message": "Chúng tôi đang cập nhật gói giá. Vui lòng quay lại sau hoặc liên hệ hỗ trợ."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Hoàn hảo để bắt đầu",
+        "description": "Tính năng cần thiết để khởi động hiện diện mạng xã hội với tạo nội dung và lên lịch bằng AI.",
+        "bullets": [
+          "Tối đa 3 hồ sơ mạng xã hội",
+          "30 bài mỗi tháng",
+          "Tạo nội dung AI cơ bản",
+          "Lên lịch đăng bài",
+          "Hỗ trợ qua email"
+        ],
+        "cta": "Dùng thử miễn phí"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Tốt nhất cho doanh nghiệp đang phát triển",
+        "description": "Tính năng nâng cao và phân tích để mở rộng chiến lược mạng xã hội với tự động hóa thông minh.",
+        "bullets": [
+          "Tối đa 10 hồ sơ mạng xã hội",
+          "150 bài mỗi tháng",
+          "Tạo nội dung AI nâng cao",
+          "Lên lịch thông minh với thời điểm tối ưu",
+          "Bảng điều khiển phân tích",
+          "Hỗ trợ ưu tiên"
+        ],
+        "cta": "Dùng thử miễn phí"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Cho đội ngũ và đại lý",
+        "description": "Tính năng cấp doanh nghiệp với nội dung không giới hạn, thương hiệu tùy chỉnh và hỗ trợ chuyên trách để tối đa tác động.",
+        "bullets": [
+          "Hồ sơ mạng xã hội không giới hạn",
+          "Bài đăng không giới hạn",
+          "AI cao cấp với giọng thương hiệu tùy chỉnh",
+          "Tự lên lịch bằng AI",
+          "Phân tích và báo cáo nâng cao",
+          "Thương hiệu tùy chỉnh và white-label",
+          "Quản lý tài khoản chuyên trách",
+          "Truy cập API đầy đủ"
+        ],
+        "cta": "Liên hệ bán hàng"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Tối đa 3 hồ sơ mạng xã hội",
+        "postsPerMonth": "30 bài mỗi tháng",
+        "aiGeneration": "Tạo nội dung AI cơ bản",
+        "scheduling": "Lên lịch đăng bài",
+        "emailSupport": "Hỗ trợ qua email"
+      },
+      "pro": {
+        "socialProfiles": "Tối đa 10 hồ sơ mạng xã hội",
+        "postsPerMonth": "150 bài mỗi tháng",
+        "aiGeneration": "Tạo nội dung AI nâng cao",
+        "scheduling": "Lên lịch thông minh với thời điểm tối ưu",
+        "analytics": "Bảng điều khiển phân tích",
+        "prioritySupport": "Hỗ trợ ưu tiên"
+      },
+      "advanced": {
+        "socialProfiles": "Hồ sơ mạng xã hội không giới hạn",
+        "postsPerMonth": "Bài đăng không giới hạn",
+        "aiGeneration": "AI cao cấp với giọng thương hiệu tùy chỉnh",
+        "scheduling": "Tự lên lịch bằng AI",
+        "analytics": "Phân tích và báo cáo nâng cao",
+        "customBranding": "Thương hiệu tùy chỉnh và white-label",
+        "dedicatedSupport": "Quản lý tài khoản chuyên trách",
+        "apiAccess": "Truy cập API đầy đủ"
+      }
+    }
+  }
+}

@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Tự động hóa mạng xã hội",
+    "description": "Tự động hóa tăng trưởng mạng xã hội với nội dung AI và lên lịch đăng bài."
+  },
+  "nav": {
+    "about": "Về chúng tôi",
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "contact": "Liên hệ",
+    "getStarted": "Đăng nhập-Khởi động",
+    "support": "Hỗ trợ",
+    "logout": "ĐĂNG XUẤT",
+    "dashboard": "BẢNG ĐIỀU KHIỂN",
+    "userTerms": "Điều khoản người dùng",
+    "websiteTerms": "Điều khoản website",
+    "privacy": "Quyền riêng tư",
+    "cookies": "Cookie",
+    "admin": "Admin",
+    "selectLanguage": "Chọn ngôn ngữ"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Tự động hóa mạng xã hội trong vài giây",
+    "scrollToLaunch": "Cuộn để khởi động"
+  },
+  "tagline": {
+    "heading": "Tăng trưởng mạng xã hội bằng AI",
+    "subheading": "Tạo nội dung, lên lịch và đăng bài — tất cả tự động."
+  },
+  "feature": {
+    "heading": "Một cú nhấp. Bùng nổ tăng trưởng."
+  },
+  "cta": {
+    "heading": "Sẵn sàng chuyển đổi hình ảnh mạng xã hội?",
+    "button": "Dùng thử miễn phí"
+  },
+  "testimonials": {
+    "heading": "Được tin dùng bởi doanh nghiệp hàng đầu",
+    "subheading": "Tham gia hơn 10.000 nhà tiếp thị đang mở rộng với ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM giúp chúng tôi tăng gấp đôi phạm vi tiếp cận trong 30 ngày. Nội dung do AI tạo không khác gì người viết."
+      },
+      {
+        "name": "David Chen",
+        "role": "Nhà sáng lập, GrowthStack",
+        "content": "Tính năng tự động là bước ngoặt. Giờ tôi chỉ dành 5 phút mỗi tuần cho mạng xã hội."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Trưởng phòng ảnh hưởng",
+        "content": "Đúng là tăng trưởng bùng nổ. Chỉ số tương tác tăng 400% trên mọi nền tảng."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Sẵn sàng cất cánh?",
+    "subheading": "Bắt đầu dùng thử 14 ngày miễn phí. Không cần thẻ tín dụng.",
+    "button": "Bắt đầu ngay"
+  },
+  "loading": {
+    "text": "Đang tải trải nghiệm..."
+  },
+  "notFound": {
+    "title": "Houston, chúng ta gặp sự cố",
+    "description": "Trang bạn tìm đã lạc vào không gian. Hãy để chúng tôi đưa bạn về đúng hướng.",
+    "backHome": "Về trang chủ",
+    "support": "Hỗ trợ"
+  },
+  "error": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Chúng tôi gặp lỗi không mong đợi. Vui lòng thử lại hoặc quay về trang chủ.",
+    "tryAgain": "Thử lại",
+    "backHome": "Về trang chủ"
+  },
+  "footer": {
+    "tagline": "Tự động hóa mạng xã hội trong vài giây",
+    "product": "Sản phẩm",
+    "company": "Công ty",
+    "legal": "Pháp lý",
+    "about": "Về chúng tôi",
+    "features": "Tính năng",
+    "pricing": "Bảng giá",
+    "contact": "Liên hệ",
+    "support": "Hỗ trợ",
+    "userTerms": "Điều khoản người dùng",
+    "websiteTerms": "Điều khoản website",
+    "privacy": "Chính sách quyền riêng tư",
+    "cookies": "Chính sách Cookie",
+    "copyright": "ZARZOOM. Bảo lưu mọi quyền."
+  },
+  "pages": {
+    "support": {
+      "title": "Trung tâm hỗ trợ",
+      "subtitle": "Chúng tôi sẵn sàng giúp bạn tận dụng tối đa ZARZOOM.",
+      "faqTitle": "Câu hỏi thường gặp",
+      "faq1q": "Làm thế nào để kết nối tài khoản mạng xã hội?",
+      "faq1a": "Vào Bảng điều khiển, nhấp 'Tài khoản đã kết nối' và làm theo hướng dẫn để ủy quyền từng nền tảng. Chúng tôi hỗ trợ Facebook, Instagram, X (Twitter), LinkedIn và TikTok.",
+      "faq2q": "Tôi có thể lên lịch đăng bài trước không?",
+      "faq2a": "Hoàn toàn có thể. Chế độ xem lịch cho phép bạn lên lịch nội dung nhiều tuần hoặc nhiều tháng. Chỉ cần tạo bài đăng, chọn ngày giờ, ZARZOOM sẽ xử lý phần còn lại.",
+      "faq3q": "Điều gì xảy ra nếu tôi vượt giới hạn gói?",
+      "faq3a": "Bạn sẽ nhận thông báo khi gần đạt giới hạn. Bạn có thể nâng cấp gói bất cứ lúc nào từ trang Cài đặt tài khoản và thay đổi có hiệu lực ngay.",
+      "faq4q": "Dữ liệu của tôi có an toàn không?",
+      "faq4a": "Có. Chúng tôi dùng mã hóa chuẩn ngành cho dữ liệu lưu trữ và truyền tải. Chúng tôi không chia sẻ dữ liệu với bên thứ ba. Xem Chính sách quyền riêng tư để biết chi tiết.",
+      "contactTitle": "Vẫn cần hỗ trợ?",
+      "contactText": "Đội ngũ hỗ trợ thường phản hồi trong vòng 24 giờ trong ngày làm việc.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "Về ZARZOOM - Tự động hóa mạng xã hội bằng AI",
+        "description": "Tìm hiểu sứ mệnh của ZARZOOM trong việc cách mạng hóa quản lý mạng xã hội qua tự động hóa thông minh và tạo nội dung bằng AI."
+      },
+      "badge": "Về ZARZOOM",
+      "heroTitle": "Tự động hóa mạng xã hội",
+      "heroTitleHighlight": "trong vài giây.",
+      "heroDescription": "ZARZOOM là nền tảng AI giúp doanh nghiệp và người sáng tạo tạo và đăng nội dung mạng xã hội tự động — để bạn tập trung vào việc bạn làm tốt nhất.",
+      "hero": {
+        "title": "Về ZARZOOM",
+        "subtitle": "Cách mạng hóa quản lý mạng xã hội qua tự động hóa thông minh và tạo nội dung bằng AI."
+      },
+      "storySteps": [
+        {
+          "title": "Ý tưởng",
+          "text": "Ra đời để giải quyết vấn đề mọi người sáng tạo gặp phải — duy trì đều đặn trên mạng xã hội mà không kiệt sức."
+        },
+        {
+          "title": "Xây dựng nền tảng",
+          "text": "Chúng tôi kết hợp tạo nội dung AI với lên lịch thông minh để tạo quy trình mạng xã hội tự động hoàn toàn."
+        },
+        {
+          "title": "Tự động hóa quy mô lớn",
+          "text": "ZARZOOM giờ giúp doanh nghiệp và người sáng tạo duy trì sự hiện diện trực tuyến mạnh mẽ — không cần nỗ lực hàng ngày như trước."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Tạo nội dung bằng AI",
+          "text": "Tự động tạo bài đăng hấp dẫn phù hợp giọng điệu thương hiệu và đối tượng của bạn.",
+          "bullets": [
+            "Học giọng điệu thương hiệu",
+            "Tích hợp chủ đề xu hướng",
+            "Chú thích và hashtag"
+          ]
+        },
+        {
+          "title": "Lên lịch thông minh",
+          "text": "Lên lịch và đăng nội dung trên các nền tảng xã hội vào thời điểm tối ưu.",
+          "bullets": [
+            "Phân tích hoạt động đối tượng",
+            "Tối ưu múi giờ",
+            "Tự động hóa lịch nội dung"
+          ]
+        },
+        {
+          "title": "Hiện diện trực tuyến ổn định",
+          "text": "Duy trì độ hiển thị và phát triển đối tượng mà không cần làm việc hàng ngày.",
+          "bullets": [
+            "Đăng đa nền tảng",
+            "Thời điểm theo tương tác",
+            "Bảng điều khiển tập trung"
+          ]
+        },
+        {
+          "title": "Tự động hóa tiết kiệm thời gian",
+          "text": "Tập trung vào kinh doanh trong khi ZARZOOM xử lý toàn bộ quy trình nội dung.",
+          "bullets": [
+            "Không thao tác thủ công",
+            "Tự động đặt và quên",
+            "Báo cáo thời gian thực"
+          ]
+        }
+      ],
+      "getStartedFree": "Bắt đầu miễn phí",
+      "viewFeatures": "Xem tính năng",
+      "autopilotActive": "Tự động đang bật",
+      "mission": {
+        "title": "Sứ mệnh của chúng tôi",
+        "subtitle": "Gỡ rào cản lớn nhất cho tăng trưởng mạng xã hội",
+        "para1": "Sứ mệnh của chúng tôi là gỡ rào cản lớn nhất cho tăng trưởng mạng xã hội — nhu cầu liên tục về nội dung mới.",
+        "para2": "ZARZOOM dùng trí tuệ nhân tạo để tự động hóa tạo và đăng nội dung, giúp doanh nhân và doanh nghiệp tập trung vào việc họ làm tốt nhất.",
+        "para3": "Thay vì dành hàng giờ lên kế hoạch bài đăng, viết nội dung và quản lý nhiều nền tảng, ZARZOOM giúp bạn duy trì hiện diện trực tuyến — không tốn sức."
+      },
+      "missionStats": {
+        "contentCreated": "Nội dung đã tạo",
+        "hoursSaved": "Giờ tiết kiệm",
+        "platformsActive": "Nền tảng đang hoạt động"
+      },
+      "story": {
+        "sectionTitle": "Câu chuyện của chúng tôi",
+        "heading": "Xây dựng để giải quyết vấn đề thực tế",
+        "para1": "ZARZOOM ra đời để giải quyết vấn đề nhiều nhà sáng lập và người sáng tạo gặp — duy trì đều đặn trên mạng xã hội.",
+        "para2": "Mạng xã hội là công cụ mạnh để xây dựng đối tượng, nhưng duy trì dòng nội dung chất lượng cao ổn định rất khó và tốn thời gian.",
+        "para3": "Bằng cách kết hợp tạo nội dung AI với lên lịch tự động, ZARZOOM giúp người dùng duy trì hiện diện trực tuyến mạnh mẽ mà không cần nỗ lực hàng ngày như trước."
+      },
+      "platform": {
+        "badge": "Nền tảng",
+        "heading": "ZARZOOM giúp bạn phát triển như thế nào"
+      },
+      "lookingAhead": {
+        "badge": "Hướng tới",
+        "heading": "Tương lai của tăng trưởng mạng xã hội",
+        "para1": "Chúng tôi tin tương lai tăng trưởng mạng xã hội sẽ do tự động hóa thông minh dẫn dắt.",
+        "para2": "ZARZOOM không ngừng phát triển để giúp doanh nghiệp và người sáng tạo xây dựng hiện diện trực tuyến nhanh và hiệu quả hơn.",
+        "para3": "Mục tiêu của chúng tôi đơn giản: đưa công cụ tăng trưởng mạng xã hội mạnh mẽ đến mọi người."
+      },
+      "intelligentAutomation": {
+        "title": "Tự động hóa thông minh",
+        "subtitle": "Được hỗ trợ bởi AI tiên tiến để phát triển đối tượng trong khi bạn tập trung vào kinh doanh.",
+        "tags": [
+          "Tạo nội dung AI",
+          "Tự lên lịch",
+          "Đa nền tảng",
+          "Phân tích"
+        ]
+      },
+      "cta": {
+        "badge": "Bắt đầu hôm nay",
+        "title": "Bắt đầu tự động hóa mạng xã hội hôm nay",
+        "description": "Tham gia hàng nghìn người sáng tạo và doanh nghiệp đang phát triển ở chế độ tự động.",
+        "getStarted": "Bắt đầu",
+        "viewFeatures": "Xem tính năng"
+      },
+      "values": {
+        "title": "Giá trị cốt lõi",
+        "innovation": {
+          "title": "Đổi mới hàng đầu",
+          "description": "Chúng tôi đẩy giới hạn AI và tự động hóa để mang giải pháp không thể có trước đây. Cam kết đổi mới giúp bạn luôn tiếp cận công nghệ mạng xã hội mới nhất."
+        },
+        "authenticity": {
+          "title": "Tương tác chân thật",
+          "description": "Tự động hóa nên bổ trợ, không thay thế kết nối con người. Công cụ của chúng tôi giúp bạn giữ giọng điệu riêng và xây dựng quan hệ thật với đối tượng ở quy mô lớn."
+        },
+        "simplicity": {
+          "title": "Đơn giản & Mạnh mẽ",
+          "description": "Công nghệ tinh vi không cần phức tạp. Chúng tôi tin vào việc đưa công cụ mạnh mẽ đến mọi người, bất kể trình độ kỹ thuật."
+        },
+        "trust": {
+          "title": "Tin cậy & Quyền riêng tư",
+          "description": "Dữ liệu, nội dung và cộng đồng của bạn — chúng tôi xử lý mọi thứ với sự tôn trọng và bảo mật tối đa. Chúng tôi không bán dữ liệu và duy trì tiêu chuẩn bảo vệ quyền riêng tư cao nhất."
+        }
+      },
+      "team": {
+        "title": "Được xây dựng bởi chuyên gia",
+        "description": "Đội ngũ chúng tôi kết hợp nhiều thập kỷ kinh nghiệm về AI, tiếp thị mạng xã hội và thiết kế trải nghiệm người dùng. Chúng tôi đam mê tạo công cụ thực sự thay đổi cách doanh nghiệp kết nối với đối tượng."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Tính năng - Tự động hóa mạng xã hội ZARZOOM",
+        "description": "Khám phá tính năng mạnh mẽ tự động hóa mạng xã hội: tạo nội dung AI, lên lịch thông minh, đăng đa nền tảng, phân tích và hơn thế."
+      },
+      "hero": {
+        "title": "Tính năng mạnh mẽ",
+        "subtitle": "Mọi thứ bạn cần để tự động hóa, tối ưu và mở rộng hiện diện mạng xã hội — trong một nền tảng thông minh."
+      },
+      "aiContent": {
+        "title": "Tạo nội dung bằng AI",
+        "description": "Tạo bài đăng hấp dẫn trong vài giây với AI tiên tiến hiểu giọng điệu thương hiệu, sở thích đối tượng và chủ đề xu hướng. Tạo chú thích, hashtag và ý tưởng bài đăng thu hút cộng đồng.",
+        "features": [
+          "Học và thích ứng giọng điệu thương hiệu",
+          "Tích hợp chủ đề xu hướng",
+          "Nội dung đa định dạng (chữ, chú thích, hashtag)",
+          "Gợi ý A/B testing"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Lên lịch thông minh & Tự động",
+        "description": "Để AI xác định thời điểm đăng tối ưu cho tương tác tối đa. Thiết lập một lần và xem hiện diện mạng xã hội phát triển tự động trong khi bạn tập trung vào kinh doanh.",
+        "features": [
+          "Phân tích hoạt động đối tượng",
+          "Tối ưu múi giờ",
+          "Tự động hóa lịch nội dung",
+          "Lên lịch theo tương tác"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Quản lý đa nền tảng",
+        "description": "Quản lý mọi tài khoản mạng xã hội từ một bảng điều khiển thống nhất. Đăng lên Twitter, LinkedIn, Facebook, Instagram và hơn thế chỉ với một cú nhấp.",
+        "features": [
+          "Đăng đa nền tảng",
+          "Tối ưu theo từng nền tảng",
+          "Hộp thư thống nhất",
+          "Phân tích tập trung"
+        ]
+      },
+      "analytics": {
+        "title": "Phân tích & Thông tin chi tiết nâng cao",
+        "description": "Theo dõi điều quan trọng với phân tích toàn diện vượt chỉ số ảo. Hiểu đối tượng, đo ROI và đưa quyết định dựa trên dữ liệu để cải thiện chiến lược.",
+        "features": [
+          "Theo dõi hiệu suất thời gian thực",
+          "Nhân khẩu học & hành vi đối tượng",
+          "Phân tích tỷ lệ tương tác",
+          "So sánh đối thủ"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Thư viện nội dung & Tài sản",
+        "description": "Xây dựng và tổ chức kho nội dung với thư viện truyền thông thông minh. Lưu hình ảnh, video, mẫu và đoạn nội dung để truy cập và tái sử dụng nhanh.",
+        "features": [
+          "Lưu trữ truyền thông không giới hạn",
+          "Gắn thẻ và tìm kiếm thông minh",
+          "Thư viện mẫu",
+          "Theo dõi hiệu suất tài sản"
+        ]
+      },
+      "collaboration": {
+        "title": "Cộng tác nhóm",
+        "description": "Làm việc trơn tru với nhóm, khách hàng hoặc đại lý. Phân vai, quản lý quyền và tối ưu quy trình phê duyệt ngay trên nền tảng.",
+        "features": [
+          "Kiểm soát truy cập theo vai trò",
+          "Quy trình phê duyệt",
+          "Nhật ký hoạt động nhóm",
+          "Quản lý khách hàng"
+        ]
+      },
+      "integration": {
+        "title": "Tích hợp & API",
+        "description": "Kết nối ZARZOOM với công cụ và quy trình hiện có. API mạnh mẽ và tích hợp sẵn đảm bảo luồng dữ liệu liền mạch trong ngăn xếp công nghệ của bạn.",
+        "features": [
+          "Tích hợp Zapier",
+          "Hỗ trợ Webhook",
+          "Truy cập REST API",
+          "Tích hợp tùy chỉnh"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API & Tích hợp OpenClaw",
+        "description": "Tăng cường quy trình với tích hợp OpenClaw mạnh mẽ của ZARZOOM cho tạo và lên lịch mạng xã hội tự động theo yêu cầu trên 10 nền tảng. Kích hoạt tạo nội dung AI trực tiếp từ hệ thống hiện có qua REST API, hoặc để tác nhân OpenClaw xử lý mọi thứ tự chủ. Lý tưởng cho đại lý, nhà phát triển và doanh nghiệp muốn tự động hóa liền mạch.",
+        "features": [
+          "Tự động hóa tác nhân OpenClaw (10+ nền tảng)",
+          "Tạo nội dung AI theo yêu cầu qua API",
+          "Kích hoạt lên lịch tức thì",
+          "Tự động hóa quy trình tùy chỉnh"
+        ]
+      },
+      "support": {
+        "title": "Hỗ trợ đẳng cấp",
+        "description": "Được hỗ trợ khi cần với đội ngũ chuyên trách. Truy cập tài liệu đầy đủ, video hướng dẫn và dịch vụ khách hàng phản hồi nhanh.",
+        "features": [
+          "Hỗ trợ email 24/7",
+          "Chat trực tuyến (Pro+)",
+          "Video hướng dẫn",
+          "Cơ sở kiến thức"
+        ]
+      },
+      "cta": {
+        "title": "Sẵn sàng chuyển đổi mạng xã hội?",
+        "description": "Bắt đầu dùng thử miễn phí và trải nghiệm sức mạnh tự động hóa thông minh.",
+        "button": "Bắt đầu miễn phí"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Liên hệ - ZARZOOM",
+        "description": "Liên hệ đội ngũ ZARZOOM. Chúng tôi sẵn sàng hỗ trợ mọi câu hỏi hoặc thắc mắc."
+      },
+      "title": "Liên hệ",
+      "subtitle": "Có câu hỏi hoặc cần hỗ trợ? Chúng tôi sẵn sàng giúp đỡ. Gửi tin nhắn và chúng tôi sẽ phản hồi sớm nhất.",
+      "info": {
+        "title": "Thông tin liên hệ",
+        "email": {
+          "label": "Email"
+        },
+        "phone": {
+          "label": "Điện thoại"
+        },
+        "address": {
+          "label": "Văn phòng"
+        }
+      },
+      "hours": {
+        "title": "Giờ làm việc",
+        "note": "Chúng tôi thường phản hồi mọi yêu cầu trong vòng 24 giờ trong ngày làm việc.",
+        "weekdays": "Thứ Hai - Thứ Sáu",
+        "weekdaysTime": "9:00 - 18:00",
+        "saturday": "Thứ Bảy",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Chủ Nhật",
+        "closed": "Đóng cửa"
+      },
+      "form": {
+        "title": "Gửi tin nhắn cho chúng tôi",
+        "name": "Họ tên",
+        "namePlaceholder": "Nguyễn Văn A",
+        "email": "Email",
+        "emailPlaceholder": "email@vidu.com",
+        "subject": "Chủ đề",
+        "subjectPlaceholder": "Chúng tôi có thể giúp gì cho bạn?",
+        "message": "Nội dung",
+        "messagePlaceholder": "Vui lòng mô tả chi tiết yêu cầu của bạn...",
+        "messageHint": "Tối thiểu 10 ký tự",
+        "submit": "Gửi tin nhắn",
+        "sending": "Đang gửi...",
+        "success": {
+          "title": "Đã gửi tin nhắn thành công!",
+          "message": "Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất có thể."
+        },
+        "error": {
+          "title": "Lỗi"
+        },
+        "errors": {
+          "required": "Vui lòng điền đầy đủ các trường",
+          "failed": "Gửi tin nhắn thất bại. Vui lòng thử lại."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Điều khoản & Điều kiện người dùng",
+      "subtitle": "Vui lòng đọc kỹ điều khoản trước khi sử dụng ZARZOOM.",
+      "lastUpdated": "Cập nhật lần cuối: 1 tháng 2 năm 2026",
+      "s1Title": "1. Chấp nhận điều khoản",
+      "s1Text": "Bằng việc tạo tài khoản hoặc sử dụng nền tảng ZARZOOM, bạn đồng ý bị ràng buộc bởi Điều khoản & Điều kiện người dùng này. Nếu không đồng ý, bạn không được sử dụng dịch vụ.",
+      "s2Title": "2. Đăng ký tài khoản",
+      "s2Text": "Bạn phải cung cấp thông tin chính xác, đầy đủ khi đăng ký. Bạn chịu trách nhiệm bảo mật thông tin đăng nhập và mọi hoạt động dưới tài khoản của bạn.",
+      "s3Title": "3. Sử dụng hợp lệ",
+      "s3Text": "Bạn đồng ý không dùng ZARZOOM để đăng nội dung bất hợp pháp, phỉ báng, khiêu dâm hoặc xâm phạm quyền sở hữu trí tuệ của người khác. Chúng tôi có quyền tạm ngưng hoặc chấm dứt tài khoản vi phạm.",
+      "s4Title": "4. Gói & Thanh toán",
+      "s4Text": "Gói trả phí được tính trước theo tháng hoặc năm. Bạn có thể hủy bất cứ lúc nào; hủy có hiệu lực vào cuối kỳ thanh toán hiện tại. Không hoàn tiền cho phần kỳ còn lại.",
+      "s5Title": "5. Sở hữu trí tuệ",
+      "s5Text": "Bạn giữ quyền sở hữu nội dung bạn tạo và đăng qua ZARZOOM. Bằng việc sử dụng nền tảng, bạn cấp cho chúng tôi giấy phép hạn chế để xử lý, lưu trữ và hiển thị nội dung của bạn chỉ nhằm cung cấp dịch vụ.",
+      "s6Title": "6. Giới hạn trách nhiệm",
+      "s6Text": "ZARZOOM được cung cấp 'nguyên trạng'. Trong phạm vi pháp luật cho phép, chúng tôi từ chối mọi bảo đảm và không chịu trách nhiệm về thiệt hại gián tiếp, ngẫu nhiên hoặc hậu quả phát sinh từ việc bạn sử dụng dịch vụ.",
+      "s7Title": "7. Thay đổi điều khoản",
+      "s7Text": "Chúng tôi có thể cập nhật điều khoản theo thời gian. Việc tiếp tục sử dụng dịch vụ sau khi có thay đổi được coi là chấp nhận điều khoản đã sửa đổi."
+    },
+    "termsWebsite": {
+      "title": "Điều khoản & Điều kiện website",
+      "subtitle": "Điều khoản điều chỉnh việc bạn sử dụng website zarzoom.com.",
+      "lastUpdated": "Cập nhật lần cuối: 1 tháng 2 năm 2026",
+      "s1Title": "1. Sử dụng website",
+      "s1Text": "Website này do ZARZOOM Ltd vận hành. Bằng việc truy cập và duyệt site này, bạn chấp nhận toàn bộ Điều khoản & Điều kiện website.",
+      "s2Title": "2. Sở hữu trí tuệ",
+      "s2Text": "Mọi nội dung trên website, bao gồm văn bản, đồ họa, logo và phần mềm, là tài sản của ZARZOOM Ltd hoặc bên cấp phép và được bảo vệ bởi luật bản quyền và thương hiệu.",
+      "s3Title": "3. Chính xác thông tin",
+      "s3Text": "Chúng tôi cố gắng giữ thông tin trên site chính xác và cập nhật nhưng không đưa ra bảo đảm hay tuyên bố về tính đầy đủ hoặc chính xác.",
+      "s4Title": "4. Liên kết bên thứ ba",
+      "s4Text": "Website có thể chứa liên kết đến site bên thứ ba. Chúng tôi không chịu trách nhiệm về nội dung hoặc thực hành quyền riêng tư của các site đó.",
+      "s5Title": "5. Luật điều chỉnh",
+      "s5Text": "Điều khoản này chịu sự điều chỉnh của luật Anh và xứ Wales. Mọi tranh chấp thuộc thẩm quyền riêng của tòa án Anh và xứ Wales."
+    },
+    "privacy": {
+      "title": "Chính sách quyền riêng tư",
+      "subtitle": "Cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.",
+      "lastUpdated": "Cập nhật lần cuối: 1 tháng 2 năm 2026",
+      "s1Title": "1. Thông tin chúng tôi thu thập",
+      "s1Text": "Chúng tôi thu thập thông tin bạn cung cấp trực tiếp (tên, email, chi tiết thanh toán) và thông tin tự động (địa chỉ IP, loại trình duyệt, dữ liệu sử dụng) khi bạn dùng ZARZOOM.",
+      "s2Title": "2. Cách chúng tôi sử dụng thông tin",
+      "s2Text": "Chúng tôi dùng thông tin để cung cấp và cải thiện dịch vụ, xử lý thanh toán, gửi thông tin liên quan dịch vụ và tuân thủ nghĩa vụ pháp lý.",
+      "s3Title": "3. Chia sẻ dữ liệu",
+      "s3Text": "Chúng tôi không bán dữ liệu cá nhân của bạn. Chúng tôi có thể chia sẻ với nhà cung cấp dịch vụ tin cậy (xử lý thanh toán, lưu trữ) hỗ trợ vận hành nền tảng, theo thỏa thuận bảo mật nghiêm ngặt.",
+      "s4Title": "4. Lưu trữ dữ liệu",
+      "s4Text": "Chúng tôi lưu dữ liệu cá nhân của bạn khi tài khoản còn hoạt động hoặc khi cần để cung cấp dịch vụ. Bạn có thể yêu cầu xóa dữ liệu bất cứ lúc nào bằng cách liên hệ hỗ trợ.",
+      "s5Title": "5. Quyền của bạn",
+      "s5Text": "Bạn có quyền truy cập, sửa hoặc xóa dữ liệu cá nhân. Bạn cũng có thể phản đối xử lý hoặc yêu cầu chuyển dữ liệu. Để thực hiện các quyền này, liên hệ privacy@zarzoom.com.",
+      "s6Title": "6. Bảo mật",
+      "s6Text": "Chúng tôi áp dụng biện pháp kỹ thuật và tổ chức phù hợp để bảo vệ dữ liệu, bao gồm mã hóa, kiểm soát truy cập và đánh giá bảo mật định kỳ.",
+      "s7Title": "7. Thay đổi chính sách",
+      "s7Text": "Chúng tôi có thể cập nhật chính sách theo thời gian. Chúng tôi sẽ thông báo thay đổi quan trọng qua email hoặc trên nền tảng."
+    },
+    "cookies": {
+      "title": "Chính sách Cookie",
+      "subtitle": "Cách chúng tôi sử dụng cookie và công nghệ tương tự.",
+      "lastUpdated": "Cập nhật lần cuối: 1 tháng 2 năm 2026",
+      "s1Title": "1. Cookie là gì",
+      "s1Text": "Cookie là tệp văn bản nhỏ đặt trên thiết bị khi bạn truy cập website. Chúng giúp site ghi nhớ tùy chọn và hiểu cách bạn sử dụng.",
+      "s2Title": "2. Cookie chúng tôi dùng",
+      "s2Essential": "Cookie thiết yếu",
+      "s2EssentialText": "Cần để website hoạt động đúng. Không thể tắt. Bao gồm cookie phiên và token xác thực.",
+      "s2Analytics": "Cookie phân tích",
+      "s2AnalyticsText": "Giúp chúng tôi hiểu cách khách tương tác với website bằng cách thu thập dữ liệu sử dụng ẩn danh. Chúng tôi dùng để cải thiện dịch vụ.",
+      "s2Preference": "Cookie tùy chọn",
+      "s2PreferenceText": "Ghi nhớ cài đặt và tùy chọn (như ngôn ngữ) để mang trải nghiệm cá nhân hóa hơn.",
+      "s3Title": "3. Quản lý Cookie",
+      "s3Text": "Bạn có thể điều khiển cookie qua cài đặt trình duyệt. Lưu ý tắt một số cookie có thể ảnh hưởng chức năng website.",
+      "s4Title": "4. Cookie bên thứ ba",
+      "s4Text": "Một số cookie do dịch vụ bên thứ ba đặt trên trang của chúng tôi. Chúng tôi không kiểm soát các cookie này. Vui lòng tham khảo chính sách quyền riêng tư của từng bên để biết thêm.",
+      "s5Title": "5. Liên hệ",
+      "s5Text": "Nếu có câu hỏi về việc chúng tôi sử dụng cookie, vui lòng liên hệ privacy@zarzoom.com."
+    }
+  }
+}
