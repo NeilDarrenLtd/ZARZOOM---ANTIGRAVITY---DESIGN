@@ -12,7 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 
-export type WorkspaceStatus = "paid" | "setup_incomplete" | "payment_required";
+export type WorkspaceStatus = "active" | "setup_incomplete" | "payment_required";
 
 export interface Workspace {
   id: string;
@@ -30,7 +30,7 @@ interface WorkspaceSwitcherProps {
 
 function getStatusConfig(status: WorkspaceStatus) {
   switch (status) {
-    case "paid":
+    case "active":
       return {
         label: "Active",
         className: "bg-green-100 text-green-700",
