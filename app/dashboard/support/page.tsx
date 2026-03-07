@@ -5,7 +5,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { Ticket, List, HelpCircle } from "lucide-react";
+import { ArrowLeft, Ticket, List, HelpCircle } from "lucide-react";
 
 export default function SupportLandingPage() {
   const { t } = useI18n();
@@ -16,6 +16,17 @@ export default function SupportLandingPage() {
       <SiteNavbar />
 
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-12">
+        {/* Back to Dashboard */}
+        <div className="mb-8">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
@@ -68,16 +79,6 @@ export default function SupportLandingPage() {
             <p className="text-gray-600">
               View and manage your existing support tickets and their status.
             </p>
-          </Link>
-        </div>
-
-        {/* Back Link */}
-        <div className="text-center">
-          <Link
-            href="/dashboard"
-            className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-2"
-          >
-            ← {t("support.nav.backToDashboard")}
           </Link>
         </div>
       </div>
