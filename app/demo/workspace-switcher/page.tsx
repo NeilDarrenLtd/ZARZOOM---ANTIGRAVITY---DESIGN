@@ -12,7 +12,7 @@ const demoWorkspaces: Workspace[] = [
   {
     id: "ws-1",
     name: "Acme Corporation",
-    status: "paid",
+    status: "active",
     role: "owner",
   },
   {
@@ -30,7 +30,7 @@ const demoWorkspaces: Workspace[] = [
   {
     id: "ws-4",
     name: "Design Studio",
-    status: "paid",
+    status: "active",
     role: "viewer",
   },
 ];
