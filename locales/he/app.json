@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "שוב ברוך הבא",
+    "loginSubtitle": "התחבר לחשבון ZARZOOM שלך",
+    "registerTitle": "צור את החשבון שלך",
+    "registerSubtitle": "הצטרף לאלפי משווקים שמאלצים את הרשתות החברתיות שלהם",
+    "email": "כתובת אימייל",
+    "password": "סיסמה",
+    "confirmPassword": "אימות סיסמה",
+    "login": "התחבר",
+    "register": "צור חשבון",
+    "forgotPassword": "שכחת סיסמה?",
+    "orContinueWith": "או המשך עם",
+    "noAccount": "אין לך חשבון?",
+    "hasAccount": "כבר יש לך חשבון?",
+    "signUpLink": "הירשם",
+    "signInLink": "התחבר",
+    "passwordMinLength": "הסיסמה חייבת להכיל לפחות 8 תווים",
+    "passwordUppercase": "חייבת להכיל אות גדולה",
+    "passwordLowercase": "חייבת להכיל אות קטנה",
+    "passwordNumber": "חייבת להכיל ספרה",
+    "passwordSpecial": "חייבת להכיל תו מיוחד",
+    "passwordsNoMatch": "הסיסמאות לא תואמות",
+    "emailRequired": "אימייל חובה",
+    "emailInvalid": "נא להזין אימייל תקין",
+    "signUpSuccess": "בדוק את האימייל שלך",
+    "signUpSuccessMessage": "שלחנו קישור אימות לכתובת האימייל שלך. נא לבדוק את תיבת הדואר ולחץ על הקישור להפעלת החשבון.",
+    "backToLogin": "חזרה להתחברות",
+    "authError": "שגיאת אימות",
+    "authErrorMessage": "משהו השתבש בזמן האימות. נא לנסות שוב.",
+    "tryAgain": "נסה שוב",
+    "tabLogin": "התחבר",
+    "tabCreateAccount": "צור חשבון",
+    "continueWithGoogle": "המשך עם Google",
+    "continueWithFacebook": "המשך עם Facebook",
+    "continueWithLinkedIn": "המשך עם LinkedIn",
+    "continueWithX": "המשך עם X",
+    "rememberMe": "זכור אותי",
+    "forgotLogin": "שכחת את פרטי ההתחברות?",
+    "verifyTitle": "בדוק את תיבת הדואר",
+    "verifySubtitle": "שלחנו קישור אימות לכתובת האימייל שלך. נא לבדוק את תיבת הדואר ולחץ על הקישור להפעלת החשבון.",
+    "verifyResend": "שלח שוב אימייל אימות",
+    "verifyResent": "אימייל האימות נשלח שוב",
+    "verifyBack": "חזרה להתחברות",
+    "verifiedTitle": "האימייל אומת",
+    "verifiedSubtitle": "האימייל שלך אומת בהצלחה. כעת אפשר להתחבר לחשבון.",
+    "verifiedContinue": "המשך להתחברות",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "לוח בקרה",
+    "welcome": "שוב ברוך הבא",
+    "overview": "סקירה",
+    "accountSettings": "הגדרות חשבון",
+    "connectedAccounts": "חשבונות מחוברים",
+    "comingSoon": "בקרוב — מרכז הבקרה לרשתות החברתיות שלך.",
+    "emailVerified": "אימייל מאומת",
+    "memberSince": "חבר מאז",
+    "profile": "הגדרות מותג",
+    "supportDescription": "קבל עזרה מצוות התמיכה. צור ונהל כרטיסי תמיכה.",
+    "restartSetup": "הפעל מחדש הגדרה",
+    "restarting": "מפעיל מחדש..."
+  },
+  "connect": {
+    "heading": "חבר את החשבונות שלך",
+    "subheading": "קשר את חשבונות הרשתות החברתיות כדי להתחיל לפרסם אוטומטית עם ZARZOOM.",
+    "connectAccounts": "חבר חשבונות",
+    "back": "חזרה"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "מילוי אוטומטי מקובץ"
+  },
+  "apiKeys": {
+    "createKeyTitle": "צור מפתח API",
+    "keyCreated": "המפתח נוצר",
+    "close": "סגור",
+    "keyName": "שם המפתח",
+    "keyNamePlaceholder": "למשל Production, Staging, CI/CD",
+    "keyNameRequired": "שם חובה",
+    "active": "פעיל",
+    "revoked": "בוטל",
+    "created": "נוצר",
+    "lastUsed": "שימוש אחרון",
+    "revokedAt": "בוטל ב־",
+    "rotate": "החלף",
+    "revoke": "בטל",
+    "revokeConfirm": "לבטל את המפתח הזה?",
+    "rotateConfirm": "להחליף מפתח?",
+    "confirm": "אישור",
+    "cancel": "ביטול",
+    "revoking": "מבטל...",
+    "rotating": "מחליף...",
+    "rotateTitle": "החלף: בטל מפתח זה וצור חדש"
+  },
+  "profile": {
+    "title": "הגדרות מותג",
+    "subtitle": "נהל את המותג, היעדים, התוכנית והחיבורים החברתיים שלך.",
+    "saving": "שומר...",
+    "saved": "השינויים נשמרו בהצלחה.",
+    "saveFailed": "שמירת השינויים נכשלה. נא לנסות שוב.",
+    "loadFailed": "טעינת הפרופיל נכשלה. נא לנסות שוב.",
+    "save": "שמור שינויים",
+    "sections": {
+      "brand": "יסודות המותג",
+      "brandDesc": "זהות העסק והעדפות התוכן שלך.",
+      "goals": "יעדים וצמיחה",
+      "goalsDesc": "מה אתה רוצה להשיג עם ZARZOOM.",
+      "posting": "העדפות פרסום",
+      "postingDesc": "איך ZARZOOM מפרסם את התוכן שלך.",
+      "plan": "התוכנית שלך",
+      "planDesc": "המנוי והעדפות החיוב הנוכחיים.",
+      "social": "חיבורים חברתיים",
+      "socialDesc": "נהל את חשבונות הרשתות המחוברים."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "פרסום אוטומטי",
+        "help": "אפשר ל־ZARZOOM לפרסם תוכן אוטומטית בשמך."
+      }
+    },
+    "plan": {
+      "current": "תוכנית נוכחית",
+      "noPlan": "לא נבחרה תוכנית",
+      "annualBilling": "חיוב שנתי",
+      "changePlan": "שנה תוכנית"
+    },
+    "social": {
+      "username": "שם משתמש ברשת",
+      "noUsername": "עדיין לא הוגדר",
+      "connected": "חשבונות רשת מחוברים",
+      "notConnected": "עדיין אין חשבונות מחוברים",
+      "connect": "חבר חשבונות",
+      "manage": "נהל חיבורים"
+    },
+    "back": "חזרה ללוח הבקרה"
+  },
+  "support": {
+    "nav": {
+      "title": "תמיכה",
+      "myTickets": "הכרטיסים שלי",
+      "createTicket": "צור כרטיס",
+      "backToSupport": "חזרה לתמיכה",
+      "backToDashboard": "חזרה ללוח הבקרה"
+    },
+    "landing": {
+      "title": "קבל תמיכה",
+      "subtitle": "אנחנו כאן כדי לעזור לך להפיק את המרב מ־ZARZOOM.",
+      "description": "שלח כרטיס תמיכה והצוות שלנו יגיב תוך 24 שעות בימי עסקים.",
+      "createTicketBtn": "צור כרטיס",
+      "myTicketsBtn": "הכרטיסים שלי"
+    },
+    "list": {
+      "title": "כרטיסי התמיכה שלי",
+      "subtitle": "צפה ונהל את פניות התמיכה שלך.",
+      "empty": "עדיין אין כרטיסים",
+      "emptyDescription": "לא יצרת כרטיסי תמיכה. לחץ על הכפתור למטה כדי להתחיל.",
+      "createFirstTicket": "צור את הכרטיס הראשון שלך",
+      "filterByStatus": "סנן לפי סטטוס",
+      "allTickets": "כל הכרטיסים",
+      "showingTickets": "מציג {filtered} מתוך {total} כרטיסים",
+      "noMatchFilter": "אין כרטיסים התואמים את סינון הסטטוס.",
+      "clearFilter": "נקה סינון",
+      "table": {
+        "ticketId": "מזהה כרטיס",
+        "subject": "נושא",
+        "status": "סטטוס",
+        "lastUpdated": "עדכון אחרון",
+        "created": "נוצר"
+      }
+    },
+    "create": {
+      "title": "צור כרטיס תמיכה",
+      "subtitle": "תאר את הבעיה ונעזור לך לפתור אותה.",
+      "form": {
+        "subject": "נושא",
+        "subjectPlaceholder": "תיאור קצר של הבעיה",
+        "subjectHelp": "חובה. שמור על זה קצר וברור.",
+        "category": "קטגוריה",
+        "categoryHelp": "אופציונלי. בחר את הקטגוריה שהכי מתאימה לבעיה.",
+        "priority": "עדיפות",
+        "priorityHelp": "אופציונלי. ספר לנו כמה דחוף זה.",
+        "description": "תיאור",
+        "descriptionPlaceholder": "ספק פרטים על הבעיה...",
+        "descriptionHelp": "חובה. כלול שלבים לשחזור, הודעות שגיאה או כל פרט רלוונטי אחר.",
+        "attachments": "צרף צילומי מסך",
+        "attachmentsHelp": "אופציונלי. העלה עד 3 צילומי מסך (PNG, JPG או WebP). מקסימום 5MB לכל קובץ.",
+        "attachmentsBtn": "בחר קבצים",
+        "attachmentsSelected": "קובץ/ים נבחרו",
+        "removeAttachment": "הסר",
+        "submit": "שלח כרטיס",
+        "submitting": "יוצר כרטיס...",
+        "cancel": "ביטול"
+      },
+      "success": {
+        "title": "הכרטיס נוצר בהצלחה",
+        "message": "כרטיס התמיכה שלך נוצר. נגיב תוך 24 שעות בימי עסקים.",
+        "viewTicket": "צפה בכרטיס",
+        "createAnother": "צור כרטיס נוסף"
+      },
+      "error": {
+        "title": "יצירת הכרטיס נכשלה",
+        "message": "משהו השתבש. נא לנסות שוב.",
+        "retry": "נסה שוב"
+      }
+    },
+    "detail": {
+      "title": "פרטי כרטיס",
+      "status": "סטטוס",
+      "category": "קטגוריה",
+      "priority": "עדיפות",
+      "created": "נוצר",
+      "lastActivity": "פעילות אחרונה",
+      "comments": "תגובות",
+      "addComment": "הוסף תגובה",
+      "commentPlaceholder": "הקלד את ההודעה שלך...",
+      "attachScreenshots": "צרף צילומי מסך",
+      "sendComment": "שלח",
+      "sending": "שולח...",
+      "loadingTicket": "טוען כרטיס...",
+      "ticketNotFound": "הכרטיס לא נמצא",
+      "ticketNotFoundMessage": "הכרטיס לא קיים או שאין לך הרשאה לצפות בו.",
+      "noComments": "עדיין אין תגובות",
+      "userRole": "אתה",
+      "adminRole": "צוות התמיכה",
+      "systemRole": "מערכת",
+      "attachmentPreview": "לחץ לצפייה בגודל מלא",
+      "attachmentAlt": "צרופה",
+      "closeModal": "סגור",
+      "closeTicketTitle": "סגור כרטיס",
+      "closeTicketMessage": "האם אתה בטוח שברצונך לסגור את הכרטיס? אפשר אופציונלית לציין סיבה.",
+      "closeTicketPlaceholder": "אופציונלי: למה אתה סוגר את הכרטיס?",
+      "closeTicketCancel": "ביטול",
+      "closeTicketButton": "סגור כרטיס",
+      "closeTicketClosing": "סוגר..."
+    },
+    "status": {
+      "open": "פתוח",
+      "investigating": "בבדיקה",
+      "waiting_on_user": "ממתין אליך",
+      "resolved": "נפתר",
+      "closed": "סגור"
+    },
+    "category": {
+      "none": "לא צוין",
+      "account_login": "חשבון והתחברות",
+      "billing_subscription": "חיוב ומנוי",
+      "social_connections": "חיבורים חברתיים",
+      "content_generation": "יצירת תוכן",
+      "publishing_issues": "בעיות פרסום",
+      "technical_bug": "באג טכני",
+      "feature_request": "בקשת תכונה",
+      "general_question": "שאלה כללית"
+    },
+    "priority": {
+      "none": "לא צוין",
+      "urgent": "דחוף – המערכת חוסמת",
+      "high": "גבוה – בעיה משמעותית",
+      "normal": "רגיל – סטנדרטי",
+      "low": "נמוך – שולי / הצעה"
+    },
+    "attachments": {
+      "uploading": "מעלה צרופות...",
+      "uploadSuccess": "הצרופות הועלו בהצלחה",
+      "uploadError": "העלאת חלק מהצרופות נכשלה",
+      "fileTypeError": "מותרים רק קבצי PNG, JPG ו־WebP",
+      "fileSizeError": "גודל הקובץ חייב להיות פחות מ־5MB",
+      "fileCountError": "אפשר להעלות עד 3 קבצים לתגובה",
+      "viewFullSize": "צפה בגודל מלא"
+    },
+    "errors": {
+      "loadFailed": "טעינת כרטיסי התמיכה נכשלה",
+      "createFailed": "יצירת הכרטיס נכשלה",
+      "commentFailed": "הוספת התגובה נכשלה",
+      "unauthorized": "אין לך הרשאה לגשת לכרטיס זה",
+      "networkError": "שגיאת רשת. נא לבדוק את החיבור ולנסות שוב."
+    },
+    "validation": {
+      "subjectRequired": "נושא חובה",
+      "descriptionRequired": "תיאור חובה",
+      "messageRequired": "הודעה חובה",
+      "emailRequired": "אימייל חובה",
+      "invalidEmail": "נא להזין כתובת אימייל תקינה",
+      "noUpdatesProvided": "לא סופקו עדכונים",
+      "noFilesProvided": "לא סופקו קבצים",
+      "tooManyFiles": "יותר מדי קבצים. מקסימום {count} קבצים.",
+      "invalidFileType": "סוג קובץ לא תקין עבור {name}. מותרים רק קבצי PNG, JPG ו־WebP.",
+      "fileTooLarge": "הקובץ {name} גדול מדי ({size}). גודל מקסימלי 5MB."
+    }
+  },
+  "onboarding": {
+    "title": "הגדר את ZARZOOM שלך",
+    "subtitle": "בוא נגדיר את טייס האוטומטי לרשתות בכמה צעדים מהירים.",
+    "stepper": {
+      "step1": "חשבון",
+      "step2": "מותג",
+      "step3": "יעדים",
+      "step4": "תוכנית",
+      "step5": "חיבור"
+    },
+    "nav": {
+      "back": "חזרה",
+      "next": "המשך",
+      "saveExit": "שמור ויצא",
+      "skipForNow": "דלג לעת עתה",
+      "finish": "הפעל את ZARZOOM",
+      "saving": "שומר..."
+    },
+    "step1": {
+      "title": "החשבון נוצר",
+      "subtitle": "אתה מחובר ומוכן.",
+      "signedInAs": "מחובר כ־",
+      "continue": "בוא נגדיר את המותג שלך"
+    },
+    "step2": {
+      "title": "יסודות המותג",
+      "subtitle": "ספר לנו על העסק כדי שנוכל להתאים תוכן למותג שלך.",
+      "businessName": {
+        "label": "שם העסק",
+        "placeholder": "למשל Acme Corp",
+        "help": "שם העסק או המותג שלך."
+      },
+      "description": {
+        "label": "תיאור",
+        "placeholder": "תאר בקצרה מה העסק שלך עושה...",
+        "help": "סיכום קצר כדי שהבינה המלאכותית תבין את קול המותג."
+      },
+      "websiteUrl": {
+        "label": "כתובת האתר",
+        "placeholder": "https://yourwebsite.com",
+        "help": "ננתח את האתר כדי להתאים תוכן."
+      },
+      "autofillFromWebsite": "מילוי אוטומטי מהאתר",
+      "analysing": "מנתח...",
+      "importFromFile": "ייבוא מקובץ",
+      "choosePdfOrWord": "בחר מסמך PDF או Word",
+      "investigate": {
+        "button": "בדוק את האתר",
+        "loading": "מנתח את האתר שלך...",
+        "success": "האתר נותח בהצלחה!",
+        "error": "לא ניתן לנתח את האתר. נא למלא פרטים ידנית."
+      },
+      "contentLanguage": {
+        "label": "שפת התוכן",
+        "help": "השפה הראשית לתוכן שנוצר."
+      },
+      "articleStyles": {
+        "label": "סגנונות מאמרים",
+        "help": "בחר את סוגי התוכן ש־ZARZOOM ייצור עבורך.",
+        "options": {
+          "let_zarzoom_decide": "תן ל־ZARZOOM להחליט",
+          "how_to_guides": "מדריכים שלב־אחר־שלב",
+          "listicles": "רשימות ממוספרות (למשל 10 טיפים ל־X)",
+          "tutorials": "מעמיקים יותר ממדריך",
+          "opinion_pieces": "נקודות מבט או פרשנות מומחים",
+          "case_studies": "דוגמאות ותוצאות מהשטח",
+          "news_commentary": "הקשר לאירועים אקטואליים",
+          "interviews": "שאלות ותשובות עם אדם/מומחה",
+          "product_reviews": "הערכה ודירוגים",
+          "explainer_articles": "הסבר פשוט למושגים מורכבים",
+          "comparisons_vs_articles": "X מול Y, השוואות יתרונות וחסרונות",
+          "ultimate_guides_pillar": "תוכן ארוך, סמכותי, מכסה נושא שלם",
+          "checklists_cheat_sheets": "הפניה מהירה, רשימות מעשיות",
+          "best_top_forecasts": "הכלים הטובים ביותר ל־X, הטרנדים המובילים ב־202X",
+          "problem_solution_posts": "זיהוי בעיה ואז פתרון",
+          "myth_busting": "הפרכת מיתוסים ותפיסות מוטעות",
+          "resource_roundups": "המאמרים, הכלים והקישורים הטובים בנושא",
+          "faqs_qa_content": "מענה ישיר לחיפושי long-tail",
+          "personal_stories": "סיפור, השפעה רגשית",
+          "research_summaries": "סיכום סקרים ותוצאות מחקר",
+          "historical_timeline": "מבט לאחור על התפתחות",
+          "satire_humor": "תוכן מבדר, אישיות המותג",
+          "explained_in_minutes": "נקודות עיקריות, צריכה מהירה"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "תן לבינה המלאכותית לבחור את הפורמט הטוב ביותר לתוכן שלך",
+          "how_to_guides": "הוראות שלב־אחר־שלב",
+          "listicles": "רשימות ממוספרות (למשל 10 טיפים ל־X)",
+          "tutorials": "מעמיק יותר ממדריך how-to",
+          "opinion_pieces": "נקודות מבט או פרשנות מומחים",
+          "case_studies": "דוגמאות ותוצאות מהעולם האמיתי",
+          "news_commentary": "הקשר לאירועים אקטואליים",
+          "interviews": "שאלות ותשובות עם אדם/סמכות",
+          "product_reviews": "הערכה/דירוגים",
+          "explainer_articles": "פירוק מושגים מורכבים בצורה פשוטה",
+          "comparisons_vs_articles": "X מול Y, השוואות יתרונות וחסרונות",
+          "ultimate_guides_pillar": "תוכן ארוך, סמכותי, מכסה נושא שלם",
+          "checklists_cheat_sheets": "הפניה מהירה, רשימות מעשיות",
+          "best_top_forecasts": "הכלים הטובים ביותר ל־X, הטרנדים המובילים ב־202X",
+          "problem_solution_posts": "זיהוי נקודת כאב ואז מענה",
+          "myth_busting": "הפרכת אמונות מוטעות נפוצות",
+          "resource_roundups": "המאמרים, הכלים והקישורים הטובים בנושא",
+          "faqs_qa_content": "מענה ישיר לחיפושי long-tail",
+          "personal_stories": "סיפורי, השפעה רגשית",
+          "research_summaries": "סיכום סקרים ותוצאות מחקר",
+          "historical_timeline": "מבט לאחור על התפתחות או אבולוציה",
+          "satire_humor": "תוכן מבדר, אישיות המותג",
+          "explained_in_minutes": "נקודות עיקריות, צריכה מהירה"
+        }
+      },
+      "styleLinks": {
+        "label": "קישורי סגנון להפניה",
+        "placeholder": "https://example.com/article",
+        "help": "הוסף עד 3 קישורים למאמרים שסגנונם תרצה לחקות.",
+        "add": "הוסף קישור",
+        "max": "מקסימום 3 קישורים"
+      },
+      "brandColor": {
+        "label": "צבע המותג",
+        "help": "צבע המותג הראשי שלך לוויזואלים שנוצרים."
+      },
+      "logo": {
+        "label": "לוגו",
+        "help": "העלה את לוגו המותג (פורמט JPG).",
+        "upload": "העלה לוגו",
+        "change": "החלף לוגו",
+        "uploading": "מעלה..."
+      }
+    },
+    "step3": {
+      "title": "יעדים וצמיחה",
+      "subtitle": "מה אתה רוצה להשיג עם ZARZOOM?",
+      "goals": {
+        "label": "בחר את היעדים שלך",
+        "help": "בחר יעד אחד או יותר. נתאים את האסטרטגיה בהתאם.",
+        "options": {
+          "increase_website_traffic": "הגדלת תנועה לאתר",
+          "get_more_subscribers_leads": "עוד מנויים ו־leads",
+          "promote_product_or_service": "קידום מוצר או שירות",
+          "increase_sales": "הגדלת מכירות",
+          "build_brand_authority": "בניית סמכות המותג",
+          "improve_seo": "שיפור SEO",
+          "educate_audience": "חינוך הקהל",
+          "generate_social_content": "יצירת תוכן לרשתות"
+        }
+      },
+      "websiteUrl": {
+        "label": "כתובת אתר או דף נחיתה",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "חובה כשיעדיך כוללים תנועה לאתר או יצירת leads."
+      },
+      "productUrl": {
+        "label": "כתובת מוצר או דף מכירה",
+        "placeholder": "https://yoursite.com/product",
+        "help": "חובה כשיעדיך כוללים קידום מוצר או מכירות."
+      }
+    },
+    "step4": {
+      "title": "בחר את התוכנית שלך",
+      "subtitle": "התחל עם תוכנית שמתאימה לצמיחה שלך.",
+      "discount": {
+        "label": "חיוב שנתי",
+        "save": "חסכון של {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "עד 3 פרופילים חברתיים",
+          "postsPerMonth": "30 פוסטים בחודש",
+          "aiGeneration": "יצירת תוכן בסיסית בבינה מלאכותית",
+          "scheduling": "תזמון פוסטים",
+          "emailSupport": "תמיכה במייל"
+        },
+        "pro": {
+          "socialProfiles": "עד 10 פרופילים חברתיים",
+          "postsPerMonth": "150 פוסטים בחודש",
+          "aiGeneration": "יצירת תוכן מתקדמת בבינה מלאכותית",
+          "scheduling": "תזמון חכם עם זמנים אופטימליים",
+          "analytics": "לוח אנליטיקה",
+          "prioritySupport": "תמיכה prioritית"
+        },
+        "scale": {
+          "socialProfiles": "פרופילים חברתיים ללא הגבלה",
+          "postsPerMonth": "פוסטים ללא הגבלה",
+          "aiGeneration": "בינה מלאכותית פרימיום עם קול מותג מותאם",
+          "scheduling": "תזמון אוטומטי מבוסס בינה מלאכותית",
+          "analytics": "אנליטיקה ודיווח מתקדמים",
+          "customBranding": "מיתוג מותאם ו־white-label",
+          "dedicatedSupport": "מנהל חשבון ייעודי",
+          "apiAccess": "גישה מלאה ל־API"
+        }
+      },
+      "planNames": {
+        "basic": "בסיסי",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "מושלם להתחלת אוטומציה לרשתות.",
+        "pro": "לעסקים צומחים שצריכים יותר כוח ותובנות.",
+        "scale": "הכל ללא הגבלה לצוותים וסוכנויות."
+      },
+      "popular": "הכי פופולרי",
+      "perMonth": "/חודש",
+      "selectPlan": "בחר תוכנית",
+      "selected": "נבחר",
+      "trialDays": "ניסיון חינם של {days} יום"
+    },
+    "step5": {
+      "title": "חבר והפעל",
+      "subtitle": "חבר את חשבונות הרשת והגדר העדפות.",
+      "connectSocials": {
+        "label": "חבר חשבונות רשת",
+        "help": "קשר את חשבונות הרשתות החברתיות",
+        "button": "חבר חשבונות",
+        "manage": "נהל חיבורים",
+        "connected": "חשבונות רשת מחוברים",
+        "notConnected": "עדיין אין חשבונות מחוברים"
+      },
+      "approval": {
+        "label": "אישור תוכן",
+        "help": "בחר איך ZARZOOM מפרסם את התוכן שלך.",
+        "auto": "פרסום אוטומטי",
+        "autoHelp": "ZARZOOM מפרסם תוכן אוטומטית לפי לוח הזמנים.",
+        "manual": "אישור ידני",
+        "manualHelp": "עבור ואשר כל פוסט לפני הפרסום."
+      },
+      "notes": {
+        "label": "הערות נוספות",
+        "placeholder": "כל דבר נוסף שתרצה שנדע על המותג או העדפות התוכן...",
+        "help": "הערות אופציונליות לבינה המלאכותית."
+      }
+    },
+    "modal": {
+      "title": "חבר חשבונות רשת",
+      "loading": "מכין מחבר רשת...",
+      "checking": "בודק חיבור...",
+      "close": "סיום",
+      "openInNewTab": "פתח בטאב חדש",
+      "skipConnect": "דלג לעת עתה",
+      "errorGeneric": "לא ניתן לטעון את מחבר הרשת. נא לנסות שוב מאוחר יותר.",
+      "errorNoUrl": "לא הוחזר כתובת חיבור. נא לנסות שוב.",
+      "demoTitle": "מחבר הרשת בקרוב",
+      "demoDescription": "מחבר הרשת עדיין לא הוגדר בסביבה זו. חיבורי חשבונות הרשת יהיו זמינים לאחר שהמנהל יגדיר את הספק."
+    },
+    "errors": {
+      "loadFailed": "טעינת נתוני ההגדרה נכשלה. נא לנסות שוב.",
+      "saveFailed": "השמירה נכשלה. נא לנסות שוב.",
+      "completeFailed": "לא ניתן להשלים את ההגדרה. נא לבדוק שכל השדות הנדרשים מלאים."
+    },
+    "banner": {
+      "skipped": "דילגת על ההגדרה. השלם אותה כדי לפתוח את כל התכונות.",
+      "inProgress": "ההגדרה לא הושלמה. סיים כדי להתחיל.",
+      "cta": "השלם הגדרה"
+    },
+    "gate": {
+      "title": "נדרשת הגדרה",
+      "description": "השלם את הגדרת ההתחלה כדי לפתוח תכונה זו. זה לוקח רק כמה דקות.",
+      "cta": "השלם הגדרה"
+    },
+    "a11y": {
+      "brandLogoAlt": "לוגו המותג",
+      "socialConnectorTitle": "מחבר רשת",
+      "dismissBanner": "סגור באנר",
+      "currency": "£",
+      "stepperLabel": "התקדמות ההגדרה"
+    },
+    "validation": {
+      "invalidUrl": "נא להזין כתובת תקינה (למשל https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "היסטוריית חיוב"
+    },
+    "selectCurrencyLabel": "בחר מטבע",
+    "selectCurrencyHelp": "בחר את המטבע המועדף למחירים.",
+    "selectBillingInterval": "בחר מרווח חיוב",
+    "toggleDiscount": "הפעל/כבה הנחת שותפות פרסום",
+    "discountPartnershipTitle": "חסכון של {percent}% עם שותפות פרסום",
+    "discountActive": "פעיל",
+    "discountPartnershipDescription": "אפשר ל־ZARZOOM לפרסם תוכן קידומי בפיד שלך (מקסימום {maxFrequency}) וקבל הנחה של {percent}% על המנוי. יש לך שליטה מלאה ואפשר לכבות בכל עת.",
+    "discountOncePerDay": "פעם ביום",
+    "discountPerWeek": "{count} פעמים בשבוע",
+    "discountPartnerApplied": "הנחת שותף הוחלה",
+    "discountAdvertisingApplied": "הנחת שותפות פרסום הוחלה",
+    "contactUs": "צור קשר",
+    "partnerDiscountEnable": "הפעל הנחת שותף 50%",
+    "partnerDiscountStandardPrice": "מחיר רגיל",
+    "partnerDiscount50Off": "50% הנחה",
+    "partnerDiscountSubheading": "חסכון 50%. אנחנו עשויים לפרסם עד פרומו קטן אחד של ZARZOOM ביום (מקסימום 3–7 בשבוע) — לעולם לא על הפוסטים שלך.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "מחירים פשוטים ושקופים",
+      "subtitle": "בחר את התוכנית שמתאימה לצמיחה שלך. התחל בניסיון חינם, שדרג בכל עת.",
+      "monthly": "חודשי",
+      "annual": "שנתי",
+      "popular": "הכי פופולרי",
+      "getStarted": "התחל",
+      "savePercent": "חסכון של {percent}% בחיוב שנתי",
+      "trialDays": "ניסיון חינם של {days} יום",
+      "page": {
+        "title": "מחירים פשוטים ושקופים",
+        "subtitle": "בחר את התוכנית שמתאימה לך. כל התוכניות כוללות ניסיון חינם של 14 יום.",
+        "footer": "כל המחירים לא כוללים מע\"מ בהתאם. בטל או שנה תוכנית בכל עת.",
+        "contactCta": "שאלות? צור קשר ונעזור לך למצוא את התוכנית הנכונה.",
+        "contactCtaPrefix": "שאלות? ",
+        "contactLink": "צור קשר",
+        "contactCtaSuffix": " ונעזור לך למצוא את התוכנית הנכונה."
+      },
+      "fallback": {
+        "title": "המחירים זמנית לא זמינים",
+        "message": "אנחנו מעדכנים כרגע את תוכניות המחירים. נא לבדוק שוב בקרוב או לפנות לתמיכה."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "בסיסי",
+        "shortTagline": "מושלם להתחלה",
+        "description": "תכונות בסיסיות להפעלת הנוכחות שלך ברשתות עם יצירת תוכן ותזמון מבוססי בינה מלאכותית.",
+        "bullets": [
+          "עד 3 פרופילים חברתיים",
+          "30 פוסטים בחודש",
+          "יצירת תוכן בסיסית בבינה מלאכותית",
+          "תזמון פוסטים",
+          "תמיכה במייל"
+        ],
+        "cta": "התחל ניסיון חינם"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "הכי מתאים לעסקים צומחים",
+        "description": "תכונות מתקדמות ואנליטיקה להגדלת אסטרטגיית הרשתות עם אוטומציה חכמה.",
+        "bullets": [
+          "עד 10 פרופילים חברתיים",
+          "150 פוסטים בחודש",
+          "יצירת תוכן מתקדמת בבינה מלאכותית",
+          "תזמון חכם עם זמנים אופטימליים",
+          "לוח אנליטיקה",
+          "תמיכה prioritית"
+        ],
+        "cta": "התחל ניסיון חינם"
+      },
+      "advanced": {
+        "displayName": "מתקדם",
+        "shortTagline": "לצוותים וסוכנויות",
+        "description": "תכונות ברמת enterprise עם תוכן ללא הגבלה, מיתוג מותאם ותמיכה ייעודית להשפעה מקסימלית.",
+        "bullets": [
+          "פרופילים חברתיים ללא הגבלה",
+          "פוסטים ללא הגבלה",
+          "בינה מלאכותית פרימיום עם קול מותג מותאם",
+          "תזמון אוטומטי מבוסס בינה מלאכותית",
+          "אנליטיקה ודיווח מתקדמים",
+          "מיתוג מותאם ו־white-label",
+          "מנהל חשבון ייעודי",
+          "גישה מלאה ל־API"
+        ],
+        "cta": "צור קשר למכירות"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "עד 3 פרופילים חברתיים",
+        "postsPerMonth": "30 פוסטים בחודש",
+        "aiGeneration": "יצירת תוכן בסיסית בבינה מלאכותית",
+        "scheduling": "תזמון פוסטים",
+        "emailSupport": "תמיכה במייל"
+      },
+      "pro": {
+        "socialProfiles": "עד 10 פרופילים חברתיים",
+        "postsPerMonth": "150 פוסטים בחודש",
+        "aiGeneration": "יצירת תוכן מתקדמת בבינה מלאכותית",
+        "scheduling": "תזמון חכם עם זמנים אופטימליים",
+        "analytics": "לוח אנליטיקה",
+        "prioritySupport": "תמיכה prioritית"
+      },
+      "advanced": {
+        "socialProfiles": "פרופילים חברתיים ללא הגבלה",
+        "postsPerMonth": "פוסטים ללא הגבלה",
+        "aiGeneration": "בינה מלאכותית פרימיום עם קול מותג מותאם",
+        "scheduling": "תזמון אוטומטי מבוסס בינה מלאכותית",
+        "analytics": "אנליטיקה ודיווח מתקדמים",
+        "customBranding": "מיתוג מותאם ו־white-label",
+        "dedicatedSupport": "מנהל חשבון ייעודי",
+        "apiAccess": "גישה מלאה ל־API"
+      }
+    }
+  }
+}

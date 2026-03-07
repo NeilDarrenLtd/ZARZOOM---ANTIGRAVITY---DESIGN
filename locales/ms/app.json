@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Selamat Kembali",
+    "loginSubtitle": "Log masuk ke akaun ZARZOOM anda",
+    "registerTitle": "Cipta Akaun Anda",
+    "registerSubtitle": "Sertai ribuan pemasar yang mengautomasi media sosial mereka",
+    "email": "Alamat E-mel",
+    "password": "Kata Laluan",
+    "confirmPassword": "Sahkan Kata Laluan",
+    "login": "Log Masuk",
+    "register": "Cipta Akaun",
+    "forgotPassword": "Lupa Kata Laluan?",
+    "orContinueWith": "Atau teruskan dengan",
+    "noAccount": "Tiada akaun?",
+    "hasAccount": "Sudah mempunyai akaun?",
+    "signUpLink": "Daftar",
+    "signInLink": "Log masuk",
+    "passwordMinLength": "Kata laluan mesti sekurang-kurangnya 8 aksara",
+    "passwordUppercase": "Mesti mengandungi huruf besar",
+    "passwordLowercase": "Mesti mengandungi huruf kecil",
+    "passwordNumber": "Mesti mengandungi nombor",
+    "passwordSpecial": "Mesti mengandungi aksara khas",
+    "passwordsNoMatch": "Kata laluan tidak sepadan",
+    "emailRequired": "E-mel diperlukan",
+    "emailInvalid": "Sila masukkan e-mel yang sah",
+    "signUpSuccess": "Semak E-mel Anda",
+    "signUpSuccessMessage": "Kami telah menghantar pautan pengesahan ke alamat e-mel anda. Sila semak peti masuk anda dan klik pautan untuk mengaktifkan akaun anda.",
+    "backToLogin": "Kembali ke Log Masuk",
+    "authError": "Ralat Pengesahan",
+    "authErrorMessage": "Sesuatu tidak kena semasa pengesahan. Sila cuba lagi.",
+    "tryAgain": "Cuba Lagi",
+    "tabLogin": "Log Masuk",
+    "tabCreateAccount": "Cipta Akaun",
+    "continueWithGoogle": "Teruskan dengan Google",
+    "continueWithFacebook": "Teruskan dengan Facebook",
+    "continueWithLinkedIn": "Teruskan dengan LinkedIn",
+    "continueWithX": "Teruskan dengan X",
+    "rememberMe": "Ingat saya",
+    "forgotLogin": "Lupa log masuk?",
+    "verifyTitle": "Semak Peti Masuk Anda",
+    "verifySubtitle": "Kami telah menghantar pautan pengesahan ke alamat e-mel anda. Sila semak peti masuk anda dan klik pautan untuk mengaktifkan akaun anda.",
+    "verifyResend": "Hantar semula e-mel pengesahan",
+    "verifyResent": "E-mel pengesahan telah dihantar semula",
+    "verifyBack": "Kembali ke log masuk",
+    "verifiedTitle": "E-mel Disahkan",
+    "verifiedSubtitle": "E-mel anda telah berjaya disahkan. Anda kini boleh log masuk ke akaun anda.",
+    "verifiedContinue": "Teruskan ke log masuk",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Papan Pembentang",
+    "welcome": "Selamat kembali",
+    "overview": "Gambaran",
+    "accountSettings": "Tetapan Akaun",
+    "connectedAccounts": "Akaun Disambung",
+    "comingSoon": "Tidak lama lagi - pusat kawalan media sosial anda.",
+    "emailVerified": "E-mel disahkan",
+    "memberSince": "Ahli sejak",
+    "profile": "Tetapan Jenama",
+    "supportDescription": "Dapatkan bantuan daripada pasukan sokongan kami. Cipta dan urus tiket sokongan.",
+    "restartSetup": "Mulakan Semula Persediaan",
+    "restarting": "Memulakan semula..."
+  },
+  "connect": {
+    "heading": "Sambungkan akaun anda",
+    "subheading": "Pautkan akaun media sosial anda untuk mula menyiarkan secara automatik dengan ZARZOOM.",
+    "connectAccounts": "Sambungkan Akaun",
+    "back": "Kembali"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Auto-isi dari fail"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Cipta Kunci API",
+    "keyCreated": "Kunci Dicipta",
+    "close": "Tutup",
+    "keyName": "Nama Kunci",
+    "keyNamePlaceholder": "cth. Production, Staging, CI/CD",
+    "keyNameRequired": "Nama diperlukan",
+    "active": "Aktif",
+    "revoked": "Dibatalkan",
+    "created": "Dicipta",
+    "lastUsed": "Terakhir digunakan",
+    "revokedAt": "Dibatalkan",
+    "rotate": "Putar",
+    "revoke": "Batalkan",
+    "revokeConfirm": "Batalkan kunci ini?",
+    "rotateConfirm": "Putar kunci?",
+    "confirm": "Sahkan",
+    "cancel": "Batal",
+    "revoking": "Membatalkan...",
+    "rotating": "Memutar...",
+    "rotateTitle": "Putar: batalkan kunci ini dan cipta yang baharu"
+  },
+  "profile": {
+    "title": "Tetapan Jenama",
+    "subtitle": "Urus jenama, matlamat, pelan, dan sambungan sosial anda.",
+    "saving": "Menyimpan...",
+    "saved": "Perubahan berjaya disimpan.",
+    "saveFailed": "Gagal menyimpan perubahan. Sila cuba lagi.",
+    "loadFailed": "Gagal memuatkan profil anda. Sila cuba lagi.",
+    "save": "Simpan Perubahan",
+    "sections": {
+      "brand": "Asas Jenama",
+      "brandDesc": "Identiti perniagaan dan pilihan kandungan anda.",
+      "goals": "Matlamat & Pertumbuhan",
+      "goalsDesc": "Apa yang anda ingin capai dengan ZARZOOM.",
+      "posting": "Pilihan Siaran",
+      "postingDesc": "Cara ZARZOOM menerbitkan kandungan anda.",
+      "plan": "Pelan Anda",
+      "planDesc": "Langganan semasa dan pilihan bil.",
+      "social": "Sambungan Sosial",
+      "socialDesc": "Urus akaun media sosial yang disambungkan."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-terbit",
+        "help": "Benarkan ZARZOOM menerbitkan kandungan secara automatik bagi pihak anda."
+      }
+    },
+    "plan": {
+      "current": "Pelan semasa",
+      "noPlan": "Tiada pelan dipilih",
+      "annualBilling": "Bil tahunan",
+      "changePlan": "Tukar Pelan"
+    },
+    "social": {
+      "username": "Nama Pengguna Sosial",
+      "noUsername": "Belum dikonfigurasi",
+      "connected": "Akaun sosial disambungkan",
+      "notConnected": "Tiada akaun disambungkan lagi",
+      "connect": "Sambungkan Akaun",
+      "manage": "Urus Sambungan"
+    },
+    "back": "Kembali ke Papan Pembentang"
+  },
+  "support": {
+    "nav": {
+      "title": "Sokongan",
+      "myTickets": "Tiket Saya",
+      "createTicket": "Cipta Tiket",
+      "backToSupport": "Kembali ke Sokongan",
+      "backToDashboard": "Kembali ke Papan Pembentang"
+    },
+    "landing": {
+      "title": "Dapatkan Sokongan",
+      "subtitle": "Kami di sini untuk membantu anda memaksimumkan ZARZOOM.",
+      "description": "Hantar tiket sokongan dan pasukan kami akan membalas dalam 24 jam pada hari bekerja.",
+      "createTicketBtn": "Cipta Tiket",
+      "myTicketsBtn": "Tiket Saya"
+    },
+    "list": {
+      "title": "Tiket Sokongan Saya",
+      "subtitle": "Lihat dan urus permintaan sokongan anda.",
+      "empty": "Tiada tiket lagi",
+      "emptyDescription": "Anda belum mencipta sebarang tiket sokongan. Klik butang di bawah untuk bermula.",
+      "createFirstTicket": "Cipta Tiket Pertama Anda",
+      "filterByStatus": "Tapis mengikut Status",
+      "allTickets": "Semua Tiket",
+      "showingTickets": "Menunjukkan {filtered} daripada {total} tiket",
+      "noMatchFilter": "Tiada tiket sepadan dengan penapis status yang dipilih.",
+      "clearFilter": "Kosongkan Penapis",
+      "table": {
+        "ticketId": "ID Tiket",
+        "subject": "Subjek",
+        "status": "Status",
+        "lastUpdated": "Kemas Kini Terakhir",
+        "created": "Dicipta"
+      }
+    },
+    "create": {
+      "title": "Cipta Tiket Sokongan",
+      "subtitle": "Huraikan isu anda dan kami akan membantu anda menyelesaikannya.",
+      "form": {
+        "subject": "Subjek",
+        "subjectPlaceholder": "Huraian ringkas isu anda",
+        "subjectHelp": "Diperlukan. Pastikan ringkas dan jelas.",
+        "category": "Kategori",
+        "categoryHelp": "Pilihan. Pilih kategori yang paling sesuai dengan isu anda.",
+        "priority": "Keutamaan",
+        "priorityHelp": "Pilihan. Beritahu kami betapa mendesaknya ini.",
+        "description": "Huraian",
+        "descriptionPlaceholder": "Berikan maklumat terperinci tentang isu anda...",
+        "descriptionHelp": "Diperlukan. Sertakan langkah untuk menghasilkan semula, mesej ralat, atau butiran lain yang berkaitan.",
+        "attachments": "Lampirkan Tangkapan Skrin",
+        "attachmentsHelp": "Pilihan. Muat naik sehingga 3 tangkapan skrin (PNG, JPG, atau WebP). Maks 5MB setiap satu.",
+        "attachmentsBtn": "Pilih Fail",
+        "attachmentsSelected": "fail dipilih",
+        "removeAttachment": "Buang",
+        "submit": "Hantar Tiket",
+        "submitting": "Mencipta tiket...",
+        "cancel": "Batal"
+      },
+      "success": {
+        "title": "Tiket Berjaya Dicipta",
+        "message": "Tiket sokongan anda telah dicipta. Kami akan membalas dalam 24 jam pada hari bekerja.",
+        "viewTicket": "Lihat Tiket",
+        "createAnother": "Cipta Tiket Lain"
+      },
+      "error": {
+        "title": "Gagal Mencipta Tiket",
+        "message": "Sesuatu tidak kena. Sila cuba lagi.",
+        "retry": "Cuba Lagi"
+      }
+    },
+    "detail": {
+      "title": "Butiran Tiket",
+      "status": "Status",
+      "category": "Kategori",
+      "priority": "Keutamaan",
+      "created": "Dicipta",
+      "lastActivity": "Aktiviti Terakhir",
+      "comments": "Komen",
+      "addComment": "Tambah Komen",
+      "commentPlaceholder": "Taip mesej anda...",
+      "attachScreenshots": "Lampirkan Tangkapan Skrin",
+      "sendComment": "Hantar",
+      "sending": "Menghantar...",
+      "loadingTicket": "Memuatkan tiket...",
+      "ticketNotFound": "Tiket tidak dijumpai",
+      "ticketNotFoundMessage": "Tiket ini tidak wujud atau anda tidak mempunyai kebenaran untuk melihatnya.",
+      "noComments": "Tiada komen lagi",
+      "userRole": "Anda",
+      "adminRole": "Pasukan Sokongan",
+      "systemRole": "Sistem",
+      "attachmentPreview": "Klik untuk lihat saiz penuh",
+      "attachmentAlt": "Lampiran",
+      "closeModal": "Tutup",
+      "closeTicketTitle": "Tutup Tiket",
+      "closeTicketMessage": "Adakah anda pasti mahu menutup tiket ini? Anda boleh pilihan memberikan sebab.",
+      "closeTicketPlaceholder": "Pilihan: Mengapa anda menutup tiket ini?",
+      "closeTicketCancel": "Batal",
+      "closeTicketButton": "Tutup Tiket",
+      "closeTicketClosing": "Menutup..."
+    },
+    "status": {
+      "open": "Terbuka",
+      "investigating": "Menyiasat",
+      "waiting_on_user": "Menunggu Anda",
+      "resolved": "Diselesaikan",
+      "closed": "Tutup"
+    },
+    "category": {
+      "none": "Tidak dinyatakan",
+      "account_login": "Akaun & Log Masuk",
+      "billing_subscription": "Bil & Langganan",
+      "social_connections": "Sambungan Sosial",
+      "content_generation": "Penjanaan Kandungan",
+      "publishing_issues": "Isu Penerbitan",
+      "technical_bug": "Ralat Teknikal",
+      "feature_request": "Permintaan Ciri",
+      "general_question": "Soalan Umum"
+    },
+    "priority": {
+      "none": "Tidak dinyatakan",
+      "urgent": "Mendesak – Sistem Menyekat",
+      "high": "Tinggi – Isu Major",
+      "normal": "Biasa – Standard",
+      "low": "Rendah – Minor / Cadangan"
+    },
+    "attachments": {
+      "uploading": "Memuat naik lampiran...",
+      "uploadSuccess": "Lampiran berjaya dimuat naik",
+      "uploadError": "Gagal memuat naik sesetengah lampiran",
+      "fileTypeError": "Hanya fail PNG, JPG, dan WebP dibenarkan",
+      "fileSizeError": "Saiz fail mesti kurang daripada 5MB",
+      "fileCountError": "Anda boleh muat naik sehingga 3 fail setiap komen",
+      "viewFullSize": "Lihat saiz penuh"
+    },
+    "errors": {
+      "loadFailed": "Gagal memuatkan tiket sokongan",
+      "createFailed": "Gagal mencipta tiket",
+      "commentFailed": "Gagal menambah komen",
+      "unauthorized": "Anda tidak mempunyai kebenaran untuk mengakses tiket ini",
+      "networkError": "Ralat rangkaian. Sila semak sambungan anda dan cuba lagi."
+    },
+    "validation": {
+      "subjectRequired": "Subjek diperlukan",
+      "descriptionRequired": "Huraian diperlukan",
+      "messageRequired": "Mesej diperlukan",
+      "emailRequired": "E-mel diperlukan",
+      "invalidEmail": "Sila masukkan alamat e-mel yang sah",
+      "noUpdatesProvided": "Tiada kemas kini disediakan",
+      "noFilesProvided": "Tiada fail disediakan",
+      "tooManyFiles": "Terlalu banyak fail. Maksimum {count} fail dibenarkan.",
+      "invalidFileType": "Jenis fail tidak sah untuk {name}. Hanya fail PNG, JPG, dan WebP dibenarkan.",
+      "fileTooLarge": "Fail {name} terlalu besar ({size}). Saiz maksimum ialah 5MB."
+    }
+  },
+  "onboarding": {
+    "title": "Sediakan ZARZOOM Anda",
+    "subtitle": "Mari kita konfigurasi autopilot media sosial anda dalam beberapa langkah pantas.",
+    "stepper": {
+      "step1": "Akaun",
+      "step2": "Jenama",
+      "step3": "Matlamat",
+      "step4": "Pelan",
+      "step5": "Sambung"
+    },
+    "nav": {
+      "back": "Kembali",
+      "next": "Teruskan",
+      "saveExit": "Simpan & Keluar",
+      "skipForNow": "Langkau buat sementara",
+      "finish": "Lancar ZARZOOM",
+      "saving": "Menyimpan..."
+    },
+    "step1": {
+      "title": "Akaun Dicipta",
+      "subtitle": "Anda telah log masuk dan bersedia.",
+      "signedInAs": "Log masuk sebagai",
+      "continue": "Mari kita sediakan jenama anda"
+    },
+    "step2": {
+      "title": "Asas Jenama",
+      "subtitle": "Beritahu kami tentang perniagaan anda supaya kami boleh menyesuaikan kandungan dengan jenama anda.",
+      "businessName": {
+        "label": "Nama Perniagaan",
+        "placeholder": "cth. Acme Corp",
+        "help": "Nama perniagaan atau jenama anda."
+      },
+      "description": {
+        "label": "Huraian",
+        "placeholder": "Huraikan secara ringkas apa yang dilakukan perniagaan anda...",
+        "help": "Ringkasan ringkas supaya AI kami memahami suara jenama anda."
+      },
+      "websiteUrl": {
+        "label": "URL Laman Web",
+        "placeholder": "https://lamananda.com",
+        "help": "Kami akan menganalisis laman anda untuk menyesuaikan kandungan."
+      },
+      "autofillFromWebsite": "Auto-isi dari laman web",
+      "analysing": "Menganalisis...",
+      "importFromFile": "Import dari fail",
+      "choosePdfOrWord": "Pilih dokumen PDF atau Word",
+      "investigate": {
+        "button": "Siasat Laman Web",
+        "loading": "Menganalisis laman web anda...",
+        "success": "Laman web berjaya dianalisis!",
+        "error": "Tidak dapat menganalisis laman web. Sila isi butiran secara manual."
+      },
+      "contentLanguage": {
+        "label": "Bahasa Kandungan",
+        "help": "Bahasa utama untuk kandungan yang dijana anda."
+      },
+      "articleStyles": {
+        "label": "Gaya Artikel",
+        "help": "Pilih jenis kandungan yang anda ingin ZARZOOM cipta.",
+        "options": {
+          "let_zarzoom_decide": "Biarkan ZARZOOM Putuskan",
+          "how_to_guides": "Panduan Cara",
+          "listicles": "Senarai Berangka",
+          "tutorials": "Tutorial",
+          "opinion_pieces": "Karya Pendapat",
+          "case_studies": "Kajian Kes",
+          "news_commentary": "Ulasan Berita",
+          "interviews": "Temubual",
+          "product_reviews": "Ulasan Produk",
+          "explainer_articles": "Artikel Penjelasan",
+          "comparisons_vs_articles": "Perbandingan & Artikel Vs",
+          "ultimate_guides_pillar": "Panduan Muktamad / Kandungan Rukun",
+          "checklists_cheat_sheets": "Senarai Semak & Lembaran Tipu",
+          "best_top_forecasts": "Ramalan Terbaik / Teratas",
+          "problem_solution_posts": "Siaran Masalah/Penyelesaian",
+          "myth_busting": "Membongkar Mitos / Salah Tanggapan",
+          "resource_roundups": "Kumpulan Sumber",
+          "faqs_qa_content": "Kandungan Soalan Lazim / Soal Jawab",
+          "personal_stories": "Kisah Peribadi / Pengalaman",
+          "research_summaries": "Ringkasan Penyelidikan / Pandangan Data",
+          "historical_timeline": "Kepingan Sejarah / Garis Masa",
+          "satire_humor": "Kandungan Satira atau Humor",
+          "explained_in_minutes": "Diterangkan dalam X Minit"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Biarkan AI kami pilih format terbaik untuk kandungan anda",
+          "how_to_guides": "Arahan langkah demi langkah",
+          "listicles": "Senarai bernombor (cth. 10 Tip untuk X)",
+          "tutorials": "Lebih mendalam daripada panduan cara",
+          "opinion_pieces": "Pandangan pakar atau ulasan",
+          "case_studies": "Contoh/hasil dunia sebenar",
+          "news_commentary": "Konteks sekitar peristiwa semasa",
+          "interviews": "Soal jawab dengan seseorang/wibawa",
+          "product_reviews": "Penilaian/rating",
+          "explainer_articles": "Permudahkan konsep kompleks",
+          "comparisons_vs_articles": "X vs Y, perbandingan kebaikan/keburukan",
+          "ultimate_guides_pillar": "Bentuk panjang, berwibawa, meliputi seluruh topik",
+          "checklists_cheat_sheets": "Rujukan pantas, senarai boleh tindak",
+          "best_top_forecasts": "Alat Terbaik untuk X, Tren Teratas 202X",
+          "problem_solution_posts": "Kenal pasti titik sakit kemudian jawab",
+          "myth_busting": "Menjelaskan kepercayaan salah yang biasa",
+          "resource_roundups": "Artikel, Alat, Pautan Terbaik tentang topik",
+          "faqs_qa_content": "Sasarkan carian ekor panjang secara langsung",
+          "personal_stories": "Naratif, kesan emosi",
+          "research_summaries": "Ringkaskan tinjauan, hasil penyelidikan",
+          "historical_timeline": "Tinjau perkembangan atau evolusi",
+          "satire_humor": "Menghibur, kepingan personaliti jenama",
+          "explained_in_minutes": "Point utama, penggunaan pantas"
+        }
+      },
+      "styleLinks": {
+        "label": "Pautan Rujukan Gaya",
+        "placeholder": "https://example.com/article",
+        "help": "Tambah sehingga 3 pautan ke artikel yang gaya anda ingin tiru.",
+        "add": "Tambah Pautan",
+        "max": "Maksimum 3 pautan"
+      },
+      "brandColor": {
+        "label": "Warna Jenama",
+        "help": "Warna jenama utama anda untuk visual yang dijana."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Muat naik logo jenama anda (format JPG).",
+        "upload": "Muat Naik Logo",
+        "change": "Tukar Logo",
+        "uploading": "Memuat naik..."
+      }
+    },
+    "step3": {
+      "title": "Matlamat & Pertumbuhan",
+      "subtitle": "Apa yang anda ingin capai dengan ZARZOOM?",
+      "goals": {
+        "label": "Pilih Matlamat Anda",
+        "help": "Pilih satu atau lebih matlamat. Kami akan menyesuaikan strategi anda.",
+        "options": {
+          "increase_website_traffic": "Tingkatkan Trafik Laman Web",
+          "get_more_subscribers_leads": "Dapatkan Lebih Banyak Pelanggan & Petunjuk",
+          "promote_product_or_service": "Promosikan Produk atau Perkhidmatan",
+          "increase_sales": "Tingkatkan Jualan",
+          "build_brand_authority": "Bina Kewibawaan Jenama",
+          "improve_seo": "Perbaiki SEO",
+          "educate_audience": "Didik Audiens Anda",
+          "generate_social_content": "Jana Kandungan Sosial"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL Laman Web atau Halaman Pendaratan",
+        "placeholder": "https://lamananda.com/landing",
+        "help": "Diperlukan apabila matlamat anda termasuk trafik laman web atau penjanaan petunjuk."
+      },
+      "productUrl": {
+        "label": "URL Produk atau Halaman Jualan",
+        "placeholder": "https://lamananda.com/produk",
+        "help": "Diperlukan apabila matlamat anda termasuk promosi produk atau jualan."
+      }
+    },
+    "step4": {
+      "title": "Pilih Pelan Anda",
+      "subtitle": "Mulakan dengan pelan yang sepadan dengan cita-cita pertumbuhan anda.",
+      "discount": {
+        "label": "Bil tahunan",
+        "save": "Jimat {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Sehingga 3 profil sosial",
+          "postsPerMonth": "30 siaran sebulan",
+          "aiGeneration": "Penjanaan kandungan AI asas",
+          "scheduling": "Penjadualan siaran",
+          "emailSupport": "Sokongan e-mel"
+        },
+        "pro": {
+          "socialProfiles": "Sehingga 10 profil sosial",
+          "postsPerMonth": "150 siaran sebulan",
+          "aiGeneration": "Penjanaan kandungan AI lanjutan",
+          "scheduling": "Penjadualan pintar dengan masa optimum",
+          "analytics": "Papan pembentang analitik",
+          "prioritySupport": "Sokongan keutamaan"
+        },
+        "scale": {
+          "socialProfiles": "Profil sosial tanpa had",
+          "postsPerMonth": "Siaran tanpa had",
+          "aiGeneration": "AI premium dengan suara jenama tersuai",
+          "scheduling": "Auto-penjadualan berkuasa AI",
+          "analytics": "Analitik dan pelaporan lanjutan",
+          "customBranding": "Pembrandingan tersuai dan white-label",
+          "dedicatedSupport": "Pengurus akaun berdedikasi",
+          "apiAccess": "Akses API penuh"
+        }
+      },
+      "planNames": {
+        "basic": "Asas",
+        "pro": "Pro",
+        "scale": "Skala"
+      },
+      "planDescriptions": {
+        "basic": "Sesuai untuk bermula dengan automasi media sosial.",
+        "pro": "Untuk perniagaan yang berkembang yang perlukan lebih kuasa dan pandangan.",
+        "scale": "Segala-galanya tanpa had untuk pasukan dan agensi."
+      },
+      "popular": "Paling Popular",
+      "perMonth": "/bln",
+      "selectPlan": "Pilih Pelan",
+      "selected": "Dipilih",
+      "trialDays": "Percubaan percuma {days} hari"
+    },
+    "step5": {
+      "title": "Sambung & Lancar",
+      "subtitle": "Sambungkan akaun sosial anda dan tetapkan pilihan anda.",
+      "connectSocials": {
+        "label": "Sambungkan Akaun Sosial",
+        "help": "Pautkan akaun media sosial anda",
+        "button": "Sambungkan Akaun",
+        "manage": "Urus Sambungan",
+        "connected": "Akaun sosial disambungkan",
+        "notConnected": "Tiada akaun disambungkan lagi"
+      },
+      "approval": {
+        "label": "Kelulusan Kandungan",
+        "help": "Pilih cara ZARZOOM menerbitkan kandungan anda.",
+        "auto": "Auto-terbit",
+        "autoHelp": "ZARZOOM menerbitkan kandungan secara automatik mengikut jadual.",
+        "manual": "Kelulusan manual",
+        "manualHelp": "Semak dan lulus setiap siaran sebelum ia diterbitkan."
+      },
+      "notes": {
+        "label": "Nota Tambahan",
+        "placeholder": "Apa-apa lagi yang anda ingin kami tahu tentang jenama atau pilihan kandungan anda...",
+        "help": "Nota pilihan untuk AI kami pertimbangkan."
+      }
+    },
+    "modal": {
+      "title": "Sambungkan Akaun Sosial",
+      "loading": "Menyediakan penyambung sosial...",
+      "checking": "Menyemak sambungan...",
+      "close": "Selesai",
+      "openInNewTab": "Buka dalam tab baharu",
+      "skipConnect": "Langkau buat sementara",
+      "errorGeneric": "Tidak dapat memuatkan penyambung sosial. Sila cuba lagi nanti.",
+      "errorNoUrl": "Tiada URL sambung dikembalikan. Sila cuba lagi.",
+      "demoTitle": "Penyambung Sosial Tidak Lama Lagi",
+      "demoDescription": "Penyambung sosial belum dikonfigurasi untuk persekitaran ini. Sambungan akaun sosial anda akan tersedia sebaik sahaja pembekal disediakan oleh pentadbir."
+    },
+    "errors": {
+      "loadFailed": "Gagal memuatkan data onboarding anda. Sila cuba lagi.",
+      "saveFailed": "Gagal menyimpan. Sila cuba lagi.",
+      "completeFailed": "Tidak dapat melengkapkan onboarding. Sila semak semua medan wajib."
+    },
+    "banner": {
+      "skipped": "Anda melangkau persediaan. Lengkapkannya untuk membuka kunci semua ciri.",
+      "inProgress": "Persediaan anda belum lengkap. Selesaikannya untuk bermula.",
+      "cta": "Lengkapkan Persediaan"
+    },
+    "gate": {
+      "title": "Persediaan Diperlukan",
+      "description": "Lengkapkan persediaan onboarding anda untuk membuka kunci ciri ini. Hanya mengambil beberapa minit.",
+      "cta": "Lengkapkan Persediaan"
+    },
+    "a11y": {
+      "brandLogoAlt": "Logo jenama",
+      "socialConnectorTitle": "Penyambung Sosial",
+      "dismissBanner": "Tutup banner",
+      "currency": "£",
+      "stepperLabel": "Kemajuan onboarding"
+    },
+    "validation": {
+      "invalidUrl": "Sila masukkan URL yang sah (cth. https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Sejarah Bil"
+    },
+    "selectCurrencyLabel": "Pilih Mata Wang",
+    "selectCurrencyHelp": "Pilih mata wang pilihan anda untuk harga.",
+    "selectBillingInterval": "Pilih selang bil",
+    "toggleDiscount": "Togol diskaun perkongsian pengiklanan",
+    "discountPartnershipTitle": "Jimat {percent}% dengan Perkongsian Pengiklanan",
+    "discountActive": "Aktif",
+    "discountPartnershipDescription": "Benarkan ZARZOOM menyiarkan kandungan promosi ke suapan anda (maks {maxFrequency}) dan terima diskaun {percent}% pada langganan anda. Anda mengekalkan kawalan penuh dan boleh lumpuhkan ini pada bila-bila masa.",
+    "discountOncePerDay": "sekali sehari",
+    "discountPerWeek": "{count}x seminggu",
+    "discountPartnerApplied": "Diskaun rakan kongsi dikenakan",
+    "discountAdvertisingApplied": "Diskaun perkongsian pengiklanan dikenakan",
+    "contactUs": "Hubungi kami",
+    "partnerDiscountEnable": "Dayakan Diskaun Rakan Kongsi 50%",
+    "partnerDiscountStandardPrice": "Harga Standard",
+    "partnerDiscount50Off": "50% DISKAUN",
+    "partnerDiscountSubheading": "Jimat 50%. Kami mungkin menerbitkan sehingga 1 promo ZARZOOM kecil sehari (maks 3–7 mingguan) — tidak pernah pada siaran anda sendiri.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Harga Mudah, Telus",
+      "subtitle": "Pilih pelan yang sesuai dengan pertumbuhan anda. Mulakan dengan percubaan percuma, naik taraf bila-bila masa.",
+      "monthly": "Bulanan",
+      "annual": "Tahunan",
+      "popular": "Paling Popular",
+      "getStarted": "Mulakan",
+      "savePercent": "Jimat {percent}% dengan bil tahunan",
+      "trialDays": "Percubaan percuma {days} hari",
+      "page": {
+        "title": "Harga Mudah, Telus",
+        "subtitle": "Pilih pelan yang sesuai untuk anda. Semua pelan termasuk percubaan percuma 14 hari.",
+        "footer": "Semua harga tidak termasuk VAT jika berkenaan. Batalkan atau tukar pelan anda pada bila-bila masa.",
+        "contactCta": "Ada soalan? Hubungi kami dan kami akan bantu anda cari pelan yang sesuai.",
+        "contactCtaPrefix": "Ada soalan? ",
+        "contactLink": "Hubungi kami",
+        "contactCtaSuffix": " dan kami akan bantu anda cari pelan yang sesuai."
+      },
+      "fallback": {
+        "title": "Harga Sementara Tidak Tersedia",
+        "message": "Kami sedang mengemas kini pelan harga kami. Sila semak tidak lama lagi atau hubungi sokongan untuk bantuan."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Asas",
+        "shortTagline": "Sesuai untuk bermula",
+        "description": "Ciri penting untuk melancarkan kehadiran media sosial anda dengan penciptaan dan penjadualan kandungan berkuasa AI.",
+        "bullets": [
+          "Sehingga 3 profil sosial",
+          "30 siaran sebulan",
+          "Penjanaan kandungan AI asas",
+          "Penjadualan siaran",
+          "Sokongan e-mel"
+        ],
+        "cta": "Mulakan Percubaan Percuma"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Terbaik untuk perniagaan yang berkembang",
+        "description": "Ciri lanjutan dan analitik untuk mengembangkan strategi media sosial anda dengan automasi pintar.",
+        "bullets": [
+          "Sehingga 10 profil sosial",
+          "150 siaran sebulan",
+          "Penjanaan kandungan AI lanjutan",
+          "Penjadualan pintar dengan masa optimum",
+          "Papan pembentang analitik",
+          "Sokongan keutamaan"
+        ],
+        "cta": "Mulakan Percubaan Percuma"
+      },
+      "advanced": {
+        "displayName": "Lanjutan",
+        "shortTagline": "Untuk pasukan dan agensi",
+        "description": "Ciri gred perusahaan dengan kandungan tanpa had, pembrandingan tersuai, dan sokongan berdedikasi untuk impak maksimum.",
+        "bullets": [
+          "Profil sosial tanpa had",
+          "Siaran tanpa had",
+          "AI premium dengan suara jenama tersuai",
+          "Auto-penjadualan berkuasa AI",
+          "Analitik dan pelaporan lanjutan",
+          "Pembrandingan tersuai dan white-label",
+          "Pengurus akaun berdedikasi",
+          "Akses API penuh"
+        ],
+        "cta": "Hubungi Jualan"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Sehingga 3 profil sosial",
+        "postsPerMonth": "30 siaran sebulan",
+        "aiGeneration": "Penjanaan kandungan AI asas",
+        "scheduling": "Penjadualan siaran",
+        "emailSupport": "Sokongan e-mel"
+      },
+      "pro": {
+        "socialProfiles": "Sehingga 10 profil sosial",
+        "postsPerMonth": "150 siaran sebulan",
+        "aiGeneration": "Penjanaan kandungan AI lanjutan",
+        "scheduling": "Penjadualan pintar dengan masa optimum",
+        "analytics": "Papan pembentang analitik",
+        "prioritySupport": "Sokongan keutamaan"
+      },
+      "advanced": {
+        "socialProfiles": "Profil sosial tanpa had",
+        "postsPerMonth": "Siaran tanpa had",
+        "aiGeneration": "AI premium dengan suara jenama tersuai",
+        "scheduling": "Auto-penjadualan berkuasa AI",
+        "analytics": "Analitik dan pelaporan lanjutan",
+        "customBranding": "Pembrandingan tersuai dan white-label",
+        "dedicatedSupport": "Pengurus akaun berdedikasi",
+        "apiAccess": "Akses API penuh"
+      }
+    }
+  }
+}
