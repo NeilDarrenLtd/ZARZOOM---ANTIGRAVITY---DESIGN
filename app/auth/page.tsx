@@ -81,7 +81,9 @@ export default function AuthPage() {
     setLoginError("");
     setLoginLoading(true);
 
+    console.log("[v0] handleLogin - starting login request");
     const result = await signInWithEmail(loginEmail, loginPassword);
+    console.log("[v0] handleLogin - result:", JSON.stringify(result));
 
     if (result.error) {
       if (result.error === "suspended" && result.redirectTo) {
@@ -91,7 +93,10 @@ export default function AuthPage() {
       setLoginError(result.error);
       setLoginLoading(false);
     } else {
-      router.push(result.redirectTo ?? "/dashboard");
+      const redirectPath = result.redirectTo ?? "/dashboard";
+      console.log("[v0] handleLogin - calling router.push to:", redirectPath);
+      router.push(redirectPath);
+      router.refresh();
     }
   }
 
