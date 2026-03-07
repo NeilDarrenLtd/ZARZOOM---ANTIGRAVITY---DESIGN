@@ -8,9 +8,22 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { defaultLanguage, getSupportedLanguageCode } from "./languages";
+import { defaultLanguage, getSupportedLanguageCode, languages } from "./languages";
 import { getDefaultTranslationsSync, loadLocale } from "./load";
 import { devCheckPricing } from "./validate-no-pricing";
+
+const COOKIE_NAME = "locale";
+const STORAGE_KEY = "zarzoom-locale";
+
+/** Read locale from cookie (client-only). Used so app area picks up locale set on public site. */
+function getLocaleFromCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp(`\\b${COOKIE_NAME}=([^;]+)`));
+  const value = match ? decodeURIComponent(match[1].trim()) : null;
+  if (!value) return null;
+  const valid = languages.some((l) => l.code === value);
+  return valid ? value : null;
+}
 
 /* ---------- Types ---------- */
 
@@ -90,6 +103,9 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
     if (initialLocale) {
       setLocaleState(initialLocale);
       setLocaleCookie(initialLocale);
+      if (typeof localStorage !== "undefined") {
+        localStorage.setItem(STORAGE_KEY, initialLocale);
+      }
       if (initialLocale !== "en") {
         loadTranslation(initialLocale).then(setTranslations);
       } else {
@@ -97,21 +113,18 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
       }
       return;
     }
-    const stored = localStorage.getItem("zarzoom-locale");
-    if (stored) {
-      setLocaleState(stored);
-      setLocaleCookie(stored);
-      if (stored !== "en") {
-        loadTranslation(stored).then(setTranslations);
-      }
+    const fromCookie = getLocaleFromCookie();
+    const stored = fromCookie ?? (typeof localStorage !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null);
+    const resolved = stored ?? getSupportedLanguageCode(navigator?.language || defaultLanguage);
+    setLocaleState(resolved);
+    setLocaleCookie(resolved);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, resolved);
+    }
+    if (resolved !== "en") {
+      loadTranslation(resolved).then(setTranslations);
     } else {
-      const browserLang = navigator.language || defaultLanguage;
-      const detected = getSupportedLanguageCode(browserLang);
-      setLocaleState(detected);
-      setLocaleCookie(detected);
-      if (detected !== defaultLanguage && detected !== "en") {
-        loadTranslation(detected).then(setTranslations);
-      }
+      setTranslations(enTranslationsRaw);
     }
   }, [initialLocale]);
 
@@ -120,12 +133,14 @@ export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
   }, [locale]);
 
   function setLocaleCookie(locale: string) {
-    document.cookie = `locale=${encodeURIComponent(locale)};path=/;max-age=31536000;SameSite=Lax`;
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(locale)};path=/;max-age=31536000;SameSite=Lax`;
   }
 
   const setLocale = useCallback((newLocale: string) => {
     setLocaleState(newLocale);
-    localStorage.setItem("zarzoom-locale", newLocale);
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, newLocale);
+    }
     setLocaleCookie(newLocale);
     loadTranslation(newLocale).then(setTranslations);
   }, []);

@@ -4,27 +4,16 @@ import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
+const TESTIMONIAL_INDICES = [0, 1, 2] as const;
+
 export default function TestimonialGrid() {
   const { t } = useI18n();
 
-  const testimonials =
-    [
-      {
-        name: "Alex Chen",
-        role: "Social Media Manager",
-        content: "ZARZOOM has transformed how we manage our social presence. The automation saves us hours every week."
-      },
-      {
-        name: "Sarah Johnson",
-        role: "Content Creator",
-        content: "Finally, a tool that understands creators. Scheduling, analytics, and insights all in one place."
-      },
-      {
-        name: "Marcus Williams",
-        role: "Marketing Director",
-        content: "The ROI has been incredible. Our engagement rates are up 150% since we switched to ZARZOOM."
-      }
-    ] as Array<{ name: string; role: string; content: string }>;
+  const testimonials = TESTIMONIAL_INDICES.map((i) => ({
+    name: t(`testimonials.items.${i}.name`),
+    role: t(`testimonials.items.${i}.role`),
+    content: t(`testimonials.items.${i}.content`),
+  }));
 
   return (
     <section className="py-24 bg-white relative z-10">

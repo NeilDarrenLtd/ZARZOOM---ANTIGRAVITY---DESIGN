@@ -21,10 +21,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // First segment is a locale
+  // First segment is a locale: set locale cookie (so login/app preserve language) then continue
   if (isRoutedLocale(first)) {
-    // Supported locale: continue (no redirect)
-    return await updateSession(request)
+    const response = await updateSession(request)
+    response.cookies.set('locale', first, {
+      path: '/',
+      maxAge: 31536000,
+      sameSite: 'lax',
+    })
+    return response
   }
 
   // First segment is a public path (no locale) → redirect to default locale
