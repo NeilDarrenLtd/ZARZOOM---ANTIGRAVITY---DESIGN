@@ -85,13 +85,14 @@ export default function AuthPage() {
 
     if (result.error) {
       if (result.error === "suspended" && result.redirectTo) {
-        router.push(result.redirectTo);
+        window.location.href = result.redirectTo;
         return;
       }
       setLoginError(result.error);
       setLoginLoading(false);
     } else {
-      router.push(result.redirectTo ?? "/dashboard");
+      // Use hard navigation to ensure cookies are sent with the request
+      window.location.href = result.redirectTo ?? "/dashboard";
     }
   }
 
