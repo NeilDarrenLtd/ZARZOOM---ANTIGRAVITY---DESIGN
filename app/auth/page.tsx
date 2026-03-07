@@ -81,22 +81,18 @@ export default function AuthPage() {
     setLoginError("");
     setLoginLoading(true);
 
-    console.log("[v0] handleLogin - starting login request");
     const result = await signInWithEmail(loginEmail, loginPassword);
-    console.log("[v0] handleLogin - result:", JSON.stringify(result));
 
     if (result.error) {
       if (result.error === "suspended" && result.redirectTo) {
-        router.push(result.redirectTo);
+        window.location.href = result.redirectTo;
         return;
       }
       setLoginError(result.error);
       setLoginLoading(false);
     } else {
-      const redirectPath = result.redirectTo ?? "/dashboard";
-      console.log("[v0] handleLogin - calling router.push to:", redirectPath);
-      router.push(redirectPath);
-      router.refresh();
+      // Use hard navigation to ensure cookies are sent with the request
+      window.location.href = result.redirectTo ?? "/dashboard";
     }
   }
 
