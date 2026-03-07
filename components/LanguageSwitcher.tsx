@@ -15,8 +15,7 @@ export default function LanguageSwitcher() {
   const ref = useRef<HTMLDivElement>(null);
 
   const isOnLocaleRoute = ROUTED_LOCALES.some((code) => pathname === `/${code}` || pathname.startsWith(`/${code}/`));
-  const routedLangs = languages.filter((l) => ROUTED_LOCALES.includes(l.code as "en" | "fr"));
-  const options = isOnLocaleRoute ? routedLangs : languages;
+  const options = languages;
   const currentLang = options.find((l) => l.code === locale) ?? options[0];
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export default function LanguageSwitcher() {
   const handleSelect = (code: string) => {
     setLocale(code);
     setOpen(false);
-    if (isOnLocaleRoute) {
+    if (isOnLocaleRoute && ROUTED_LOCALES.includes(code as "en" | "fr")) {
       const match = pathname.match(/^\/[a-z]{2}(\/.*)?$/);
       const pathWithoutLocale = match ? (match[1] ?? "") : pathname;
       router.push(`/${code}${pathWithoutLocale || ""}`);
