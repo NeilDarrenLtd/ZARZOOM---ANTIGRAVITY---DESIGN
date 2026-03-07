@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Bem-vindo de Volta",
+    "loginSubtitle": "Inicie sessão na sua conta ZARZOOM",
+    "registerTitle": "Crie a Sua Conta",
+    "registerSubtitle": "Junte-se a milhares de profissionais de marketing a automatizar as suas redes sociais",
+    "email": "Endereço de Email",
+    "password": "Palavra-passe",
+    "confirmPassword": "Confirmar Palavra-passe",
+    "login": "Entrar",
+    "register": "Criar Conta",
+    "forgotPassword": "Esqueceu a palavra-passe?",
+    "orContinueWith": "Ou continuar com",
+    "noAccount": "Não tem uma conta?",
+    "hasAccount": "Já tem uma conta?",
+    "signUpLink": "Registar",
+    "signInLink": "Entrar",
+    "passwordMinLength": "A palavra-passe deve ter pelo menos 8 caracteres",
+    "passwordUppercase": "Deve conter uma letra maiúscula",
+    "passwordLowercase": "Deve conter uma letra minúscula",
+    "passwordNumber": "Deve conter um número",
+    "passwordSpecial": "Deve conter um carácter especial",
+    "passwordsNoMatch": "As palavras-passe não coincidem",
+    "emailRequired": "O email é obrigatório",
+    "emailInvalid": "Por favor introduza um email válido",
+    "signUpSuccess": "Verifique o Seu Email",
+    "signUpSuccessMessage": "Enviámos um link de verificação para o seu email. Por favor verifique a sua caixa de entrada e clique no link para ativar a sua conta.",
+    "backToLogin": "Voltar ao Início de Sessão",
+    "authError": "Erro de Autenticação",
+    "authErrorMessage": "Algo correu mal durante a autenticação. Por favor tente novamente.",
+    "tryAgain": "Tentar Novamente",
+    "tabLogin": "Entrar",
+    "tabCreateAccount": "Criar Conta",
+    "continueWithGoogle": "Continuar com Google",
+    "continueWithFacebook": "Continuar com Facebook",
+    "continueWithLinkedIn": "Continuar com LinkedIn",
+    "continueWithX": "Continuar com X",
+    "rememberMe": "Lembrar-me",
+    "forgotLogin": "Esqueceu os dados de acesso?",
+    "verifyTitle": "Verifique a Sua Caixa de Entrada",
+    "verifySubtitle": "Enviámos um link de verificação para o seu email. Por favor verifique a sua caixa de entrada e clique no link para ativar a sua conta.",
+    "verifyResend": "Reenviar email de verificação",
+    "verifyResent": "Email de verificação reenviado",
+    "verifyBack": "Voltar ao início de sessão",
+    "verifiedTitle": "Email Verificado",
+    "verifiedSubtitle": "O seu email foi verificado com sucesso. Já pode iniciar sessão na sua conta.",
+    "verifiedContinue": "Continuar para início de sessão",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo de volta",
+    "overview": "Visão Geral",
+    "accountSettings": "Definições da Conta",
+    "connectedAccounts": "Contas Ligadas",
+    "comingSoon": "Em breve — o seu centro de comando das redes sociais.",
+    "emailVerified": "Email verificado",
+    "memberSince": "Membro desde",
+    "profile": "Definições da Marca",
+    "supportDescription": "Obtenha ajuda da nossa equipa de suporte. Crie e gerencie pedidos de suporte.",
+    "restartSetup": "Reiniciar Configuração",
+    "restarting": "A reiniciar..."
+  },
+  "connect": {
+    "heading": "Ligue as suas contas",
+    "subheading": "Associe as suas contas de redes sociais para começar a publicar automaticamente com o ZARZOOM.",
+    "connectAccounts": "Ligar Contas",
+    "back": "Voltar"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Preencher automaticamente a partir de ficheiro"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Criar Chave API",
+    "keyCreated": "Chave Criada",
+    "close": "Fechar",
+    "keyName": "Nome da Chave",
+    "keyNamePlaceholder": "ex.: Produção, Staging, CI/CD",
+    "keyNameRequired": "O nome é obrigatório",
+    "active": "Ativa",
+    "revoked": "Revogada",
+    "created": "Criada",
+    "lastUsed": "Última utilização",
+    "revokedAt": "Revogada em",
+    "rotate": "Rotacionar",
+    "revoke": "Revogar",
+    "revokeConfirm": "Revogar esta chave?",
+    "rotateConfirm": "Rotacionar chave?",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "revoking": "A revogar...",
+    "rotating": "A rotacionar...",
+    "rotateTitle": "Rotacionar: revogar esta chave e criar uma nova"
+  },
+  "profile": {
+    "title": "Definições da Marca",
+    "subtitle": "Gerir a sua marca, objetivos, plano e ligações sociais.",
+    "saving": "A guardar...",
+    "saved": "Alterações guardadas com sucesso.",
+    "saveFailed": "Falha ao guardar alterações. Por favor tente novamente.",
+    "loadFailed": "Falha ao carregar o seu perfil. Por favor tente novamente.",
+    "save": "Guardar Alterações",
+    "sections": {
+      "brand": "Dados da Marca",
+      "brandDesc": "A identidade do seu negócio e preferências de conteúdo.",
+      "goals": "Objetivos e Crescimento",
+      "goalsDesc": "O que pretende alcançar com o ZARZOOM.",
+      "posting": "Preferências de Publicação",
+      "postingDesc": "Como o ZARZOOM publica o seu conteúdo.",
+      "plan": "O Seu Plano",
+      "planDesc": "Subscrição atual e preferências de faturação.",
+      "social": "Ligações Sociais",
+      "socialDesc": "Gerir as suas contas de redes sociais ligadas."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Publicação automática",
+        "help": "Permitir que o ZARZOOM publique conteúdo automaticamente em seu nome."
+      }
+    },
+    "plan": {
+      "current": "Plano atual",
+      "noPlan": "Nenhum plano selecionado",
+      "annualBilling": "Faturação anual",
+      "changePlan": "Alterar Plano"
+    },
+    "social": {
+      "username": "Nome de Utilizador Social",
+      "noUsername": "Ainda não configurado",
+      "connected": "Contas sociais ligadas",
+      "notConnected": "Ainda sem contas ligadas",
+      "connect": "Ligar Contas",
+      "manage": "Gerir Ligações"
+    },
+    "back": "Voltar ao Painel"
+  },
+  "support": {
+    "nav": {
+      "title": "Suporte",
+      "myTickets": "Os Meus Pedidos",
+      "createTicket": "Criar Pedido",
+      "backToSupport": "Voltar ao Suporte",
+      "backToDashboard": "Voltar ao Painel"
+    },
+    "landing": {
+      "title": "Obter Suporte",
+      "subtitle": "Estamos aqui para o ajudar a tirar o máximo partido do ZARZOOM.",
+      "description": "Envie um pedido de suporte e a nossa equipa responderá em até 24 horas em dias úteis.",
+      "createTicketBtn": "Criar Pedido",
+      "myTicketsBtn": "Os Meus Pedidos"
+    },
+    "list": {
+      "title": "Os Meus Pedidos de Suporte",
+      "subtitle": "Ver e gerir os seus pedidos de suporte.",
+      "empty": "Ainda sem pedidos",
+      "emptyDescription": "Ainda não criou nenhum pedido de suporte. Clique no botão abaixo para começar.",
+      "createFirstTicket": "Criar o Seu Primeiro Pedido",
+      "filterByStatus": "Filtrar por Estado",
+      "allTickets": "Todos os Pedidos",
+      "showingTickets": "A mostrar {filtered} de {total} pedidos",
+      "noMatchFilter": "Nenhum pedido corresponde ao filtro de estado selecionado.",
+      "clearFilter": "Limpar Filtro",
+      "table": {
+        "ticketId": "ID do Pedido",
+        "subject": "Assunto",
+        "status": "Estado",
+        "lastUpdated": "Última Atualização",
+        "created": "Criado"
+      }
+    },
+    "create": {
+      "title": "Criar Pedido de Suporte",
+      "subtitle": "Descreva o seu problema e ajudá-lo-emos a resolvê-lo.",
+      "form": {
+        "subject": "Assunto",
+        "subjectPlaceholder": "Breve descrição do seu problema",
+        "subjectHelp": "Obrigatório. Seja breve e claro.",
+        "category": "Categoria",
+        "categoryHelp": "Opcional. Selecione a categoria que melhor se adequa ao seu problema.",
+        "priority": "Prioridade",
+        "priorityHelp": "Opcional. Indique-nos o quão urgente é.",
+        "description": "Descrição",
+        "descriptionPlaceholder": "Forneça informação detalhada sobre o seu problema...",
+        "descriptionHelp": "Obrigatório. Inclua passos para reproduzir, mensagens de erro ou outros detalhes relevantes.",
+        "attachments": "Anexar Capturas de Ecrã",
+        "attachmentsHelp": "Opcional. Envie até 3 capturas de ecrã (PNG, JPG ou WebP). Máx. 5MB cada.",
+        "attachmentsBtn": "Escolher Ficheiros",
+        "attachmentsSelected": "ficheiro(s) selecionado(s)",
+        "removeAttachment": "Remover",
+        "submit": "Enviar Pedido",
+        "submitting": "A criar pedido...",
+        "cancel": "Cancelar"
+      },
+      "success": {
+        "title": "Pedido Criado com Sucesso",
+        "message": "O seu pedido de suporte foi criado. Responderemos em até 24 horas em dias úteis.",
+        "viewTicket": "Ver Pedido",
+        "createAnother": "Criar Outro Pedido"
+      },
+      "error": {
+        "title": "Falha ao Criar Pedido",
+        "message": "Algo correu mal. Por favor tente novamente.",
+        "retry": "Tentar Novamente"
+      }
+    },
+    "detail": {
+      "title": "Detalhes do Pedido",
+      "status": "Estado",
+      "category": "Categoria",
+      "priority": "Prioridade",
+      "created": "Criado",
+      "lastActivity": "Última Atividade",
+      "comments": "Comentários",
+      "addComment": "Adicionar Comentário",
+      "commentPlaceholder": "Escreva a sua mensagem...",
+      "attachScreenshots": "Anexar Capturas de Ecrã",
+      "sendComment": "Enviar",
+      "sending": "A enviar...",
+      "loadingTicket": "A carregar pedido...",
+      "ticketNotFound": "Pedido não encontrado",
+      "ticketNotFoundMessage": "Este pedido não existe ou não tem permissão para o visualizar.",
+      "noComments": "Ainda sem comentários",
+      "userRole": "Você",
+      "adminRole": "Equipa de Suporte",
+      "systemRole": "Sistema",
+      "attachmentPreview": "Clique para ver em tamanho completo",
+      "attachmentAlt": "Anexo",
+      "closeModal": "Fechar",
+      "closeTicketTitle": "Fechar Pedido",
+      "closeTicketMessage": "Tem a certeza que deseja fechar este pedido? Pode opcionalmente indicar um motivo.",
+      "closeTicketPlaceholder": "Opcional: Por que motivo está a fechar este pedido?",
+      "closeTicketCancel": "Cancelar",
+      "closeTicketButton": "Fechar Pedido",
+      "closeTicketClosing": "A fechar..."
+    },
+    "status": {
+      "open": "Aberto",
+      "investigating": "Em Investigação",
+      "waiting_on_user": "À Espera de Si",
+      "resolved": "Resolvido",
+      "closed": "Fechado"
+    },
+    "category": {
+      "none": "Não especificado",
+      "account_login": "Conta e Acesso",
+      "billing_subscription": "Faturação e Subscrição",
+      "social_connections": "Ligações Sociais",
+      "content_generation": "Geração de Conteúdo",
+      "publishing_issues": "Problemas de Publicação",
+      "technical_bug": "Erro Técnico",
+      "feature_request": "Pedido de Funcionalidade",
+      "general_question": "Questão Geral"
+    },
+    "priority": {
+      "none": "Não especificado",
+      "urgent": "Urgente – Sistema Bloqueado",
+      "high": "Alta – Problema Grave",
+      "normal": "Normal – Padrão",
+      "low": "Baixa – Menor / Sugestão"
+    },
+    "attachments": {
+      "uploading": "A enviar anexos...",
+      "uploadSuccess": "Anexos enviados com sucesso",
+      "uploadError": "Falha ao enviar alguns anexos",
+      "fileTypeError": "Apenas ficheiros PNG, JPG e WebP são permitidos",
+      "fileSizeError": "O tamanho do ficheiro deve ser inferior a 5MB",
+      "fileCountError": "Pode enviar até 3 ficheiros por comentário",
+      "viewFullSize": "Ver em tamanho completo"
+    },
+    "errors": {
+      "loadFailed": "Falha ao carregar pedidos de suporte",
+      "createFailed": "Falha ao criar pedido",
+      "commentFailed": "Falha ao adicionar comentário",
+      "unauthorized": "Não tem permissão para aceder a este pedido",
+      "networkError": "Erro de rede. Por favor verifique a sua ligação e tente novamente."
+    },
+    "validation": {
+      "subjectRequired": "O assunto é obrigatório",
+      "descriptionRequired": "A descrição é obrigatória",
+      "messageRequired": "A mensagem é obrigatória",
+      "emailRequired": "O email é obrigatório",
+      "invalidEmail": "Por favor introduza um endereço de email válido",
+      "noUpdatesProvided": "Nenhuma atualização fornecida",
+      "noFilesProvided": "Nenhum ficheiro fornecido",
+      "tooManyFiles": "Demasiados ficheiros. Máximo de {count} ficheiros permitido.",
+      "invalidFileType": "Tipo de ficheiro inválido para {name}. Apenas ficheiros PNG, JPG e WebP são permitidos.",
+      "fileTooLarge": "O ficheiro {name} é demasiado grande ({size}). O tamanho máximo é 5MB."
+    }
+  },
+  "onboarding": {
+    "title": "Configure o Seu ZARZOOM",
+    "subtitle": "Vamos configurar o piloto automático das suas redes sociais em poucos passos.",
+    "stepper": {
+      "step1": "Conta",
+      "step2": "Marca",
+      "step3": "Objetivos",
+      "step4": "Plano",
+      "step5": "Ligar"
+    },
+    "nav": {
+      "back": "Voltar",
+      "next": "Continuar",
+      "saveExit": "Guardar e Sair",
+      "skipForNow": "Saltar por agora",
+      "finish": "Lançar ZARZOOM",
+      "saving": "A guardar..."
+    },
+    "step1": {
+      "title": "Conta Criada",
+      "subtitle": "Está com sessão iniciada e pronto para começar.",
+      "signedInAs": "Sessão iniciada como",
+      "continue": "Vamos configurar a sua marca"
+    },
+    "step2": {
+      "title": "Dados da Marca",
+      "subtitle": "Conte-nos sobre o seu negócio para adaptarmos o conteúdo à sua marca.",
+      "businessName": {
+        "label": "Nome do Negócio",
+        "placeholder": "ex. Acme Corp",
+        "help": "O nome do seu negócio ou marca."
+      },
+      "description": {
+        "label": "Descrição",
+        "placeholder": "Descreva brevemente o que o seu negócio faz...",
+        "help": "Um resumo curto para a nossa IA compreender a voz da sua marca."
+      },
+      "websiteUrl": {
+        "label": "URL do Site",
+        "placeholder": "https://oseusite.com",
+        "help": "Analisaremos o seu site para adaptar o conteúdo."
+      },
+      "autofillFromWebsite": "Preencher automaticamente a partir do site",
+      "analysing": "A analisar...",
+      "importFromFile": "Importar de ficheiro",
+      "choosePdfOrWord": "Escolher documento PDF ou Word",
+      "investigate": {
+        "button": "Analisar Site",
+        "loading": "A analisar o seu site...",
+        "success": "Site analisado com sucesso!",
+        "error": "Não foi possível analisar o site. Por favor preencha os dados manualmente."
+      },
+      "contentLanguage": {
+        "label": "Idioma do Conteúdo",
+        "help": "O idioma principal para o conteúdo gerado."
+      },
+      "articleStyles": {
+        "label": "Estilos de Artigos",
+        "help": "Escolha os tipos de conteúdo que gostaria que o ZARZOOM criasse.",
+        "options": {
+          "let_zarzoom_decide": "Deixar o ZARZOOM Decidir",
+          "how_to_guides": "Guias Práticos",
+          "listicles": "Listas",
+          "tutorials": "Tutoriais",
+          "opinion_pieces": "Artigos de Opinião",
+          "case_studies": "Estudos de Caso",
+          "news_commentary": "Comentário de Notícias",
+          "interviews": "Entrevistas",
+          "product_reviews": "Análises de Produtos",
+          "explainer_articles": "Artigos Explicativos",
+          "comparisons_vs_articles": "Comparações e Artigos Vs",
+          "ultimate_guides_pillar": "Guias Definitivos / Conteúdo Pilar",
+          "checklists_cheat_sheets": "Listas de Verificação e Resumos",
+          "best_top_forecasts": "Melhores / Top Previsões",
+          "problem_solution_posts": "Publicações Problema/Solução",
+          "myth_busting": "Desmistificação / Equívocos",
+          "resource_roundups": "Recolhas de Recursos",
+          "faqs_qa_content": "FAQs / Conteúdo em Formato Q&A",
+          "personal_stories": "Histórias / Experiências Pessoais",
+          "research_summaries": "Resumos de Investigação / Insights de Dados",
+          "historical_timeline": "Histórico / Linhas do Tempo",
+          "satire_humor": "Sátira ou Conteúdo Humorístico",
+          "explained_in_minutes": "Explicado em X Minutos"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Deixe a nossa IA escolher o melhor formato para o seu conteúdo",
+          "how_to_guides": "Instruções passo a passo",
+          "listicles": "Listas numeradas (ex.: 10 Dicas para X)",
+          "tutorials": "Mais aprofundado que um guia prático",
+          "opinion_pieces": "Pontos de vista ou comentário de especialistas",
+          "case_studies": "Exemplos/resultados reais",
+          "news_commentary": "Contexto sobre acontecimentos atuais",
+          "interviews": "Perguntas e respostas com uma pessoa/autoridade",
+          "product_reviews": "Avaliação/classificações",
+          "explainer_articles": "Explicar conceitos complexos de forma simples",
+          "comparisons_vs_articles": "X vs Y, comparações de prós e contras",
+          "ultimate_guides_pillar": "Conteúdo longo, autoritativo, cobre todo um tema",
+          "checklists_cheat_sheets": "Referência rápida, listas acionáveis",
+          "best_top_forecasts": "Melhores Ferramentas para X, Top Tendências em 202X",
+          "problem_solution_posts": "Identificar um problema e depois resolvê-lo",
+          "myth_busting": "Esclarecer crenças erradas comuns",
+          "resource_roundups": "Melhores Artigos, Ferramentas, Ligações sobre um tema",
+          "faqs_qa_content": "Direcionar consultas de pesquisa de cauda longa",
+          "personal_stories": "Narrativa, impacto emocional",
+          "research_summaries": "Resumir inquéritos, resultados de investigação",
+          "historical_timeline": "Retrospetiva sobre evolução ou desenvolvimento",
+          "satire_humor": "Conteúdo divertido, com personalidade da marca",
+          "explained_in_minutes": "Pontos principais, consumo rápido"
+        }
+      },
+      "styleLinks": {
+        "label": "Ligações de Referência de Estilo",
+        "placeholder": "https://exemplo.com/artigo",
+        "help": "Adicione até 3 ligações a artigos cujo estilo gostaria de emular.",
+        "add": "Adicionar Ligação",
+        "max": "Máximo 3 ligações"
+      },
+      "brandColor": {
+        "label": "Cor da Marca",
+        "help": "A sua cor principal de marca para visuais gerados."
+      },
+      "logo": {
+        "label": "Logótipo",
+        "help": "Envie o logótipo da sua marca (formato JPG).",
+        "upload": "Enviar Logótipo",
+        "change": "Alterar Logótipo",
+        "uploading": "A enviar..."
+      }
+    },
+    "step3": {
+      "title": "Objetivos e Crescimento",
+      "subtitle": "O que pretende alcançar com o ZARZOOM?",
+      "goals": {
+        "label": "Selecione os Seus Objetivos",
+        "help": "Escolha um ou mais objetivos. Adaptaremos a sua estratégia em conformidade.",
+        "options": {
+          "increase_website_traffic": "Aumentar Tráfego do Site",
+          "get_more_subscribers_leads": "Obter Mais Subscritores e Leads",
+          "promote_product_or_service": "Promover um Produto ou Serviço",
+          "increase_sales": "Aumentar Vendas",
+          "build_brand_authority": "Construir Autoridade da Marca",
+          "improve_seo": "Melhorar SEO",
+          "educate_audience": "Educar a Sua Audiência",
+          "generate_social_content": "Gerar Conteúdo para Redes Sociais"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL do Site ou Página de Destino",
+        "placeholder": "https://oseusite.com/landing",
+        "help": "Obrigatório quando os seus objetivos incluem tráfego do site ou geração de leads."
+      },
+      "productUrl": {
+        "label": "URL do Produto ou Página de Vendas",
+        "placeholder": "https://oseusite.com/produto",
+        "help": "Obrigatório quando os seus objetivos incluem promoção de produto ou vendas."
+      }
+    },
+    "step4": {
+      "title": "Escolha o Seu Plano",
+      "subtitle": "Comece com um plano que corresponda às suas ambições de crescimento.",
+      "discount": {
+        "label": "Faturação anual",
+        "save": "Poupe {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Até 3 perfis sociais",
+          "postsPerMonth": "30 publicações por mês",
+          "aiGeneration": "Geração de conteúdo com IA básica",
+          "scheduling": "Agendamento de publicações",
+          "emailSupport": "Suporte por email"
+        },
+        "pro": {
+          "socialProfiles": "Até 10 perfis sociais",
+          "postsPerMonth": "150 publicações por mês",
+          "aiGeneration": "Geração de conteúdo com IA avançada",
+          "scheduling": "Agendamento inteligente com horários otimizados",
+          "analytics": "Painel de análises",
+          "prioritySupport": "Suporte prioritário"
+        },
+        "scale": {
+          "socialProfiles": "Perfis sociais ilimitados",
+          "postsPerMonth": "Publicações ilimitadas",
+          "aiGeneration": "IA premium com voz de marca personalizada",
+          "scheduling": "Auto-agendamento com IA",
+          "analytics": "Análises e relatórios avançados",
+          "customBranding": "Marca e white-label personalizados",
+          "dedicatedSupport": "Gestor de conta dedicado",
+          "apiAccess": "Acesso total à API"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Perfeito para começar com automação de redes sociais.",
+        "pro": "Para negócios em crescimento que precisam de mais potência e insights.",
+        "scale": "Tudo ilimitado para equipas e agências."
+      },
+      "popular": "Mais Popular",
+      "perMonth": "/mês",
+      "selectPlan": "Selecionar Plano",
+      "selected": "Selecionado",
+      "trialDays": "Teste grátis de {days} dias"
+    },
+    "step5": {
+      "title": "Ligar e Lançar",
+      "subtitle": "Ligue as suas contas sociais e defina as suas preferências.",
+      "connectSocials": {
+        "label": "Ligar Contas Sociais",
+        "help": "Associar as suas contas de redes sociais",
+        "button": "Ligar Contas",
+        "manage": "Gerir Ligações",
+        "connected": "Contas sociais ligadas",
+        "notConnected": "Ainda sem contas ligadas"
+      },
+      "approval": {
+        "label": "Aprovação de Conteúdo",
+        "help": "Escolha como o ZARZOOM publica o seu conteúdo.",
+        "auto": "Publicação automática",
+        "autoHelp": "O ZARZOOM publica conteúdo automaticamente conforme o calendário.",
+        "manual": "Aprovação manual",
+        "manualHelp": "Rever e aprovar cada publicação antes de ser publicada."
+      },
+      "notes": {
+        "label": "Notas Adicionais",
+        "placeholder": "Mais alguma coisa que gostaria que soubéssemos sobre a sua marca ou preferências de conteúdo...",
+        "help": "Notas opcionais para a nossa IA considerar."
+      }
+    },
+    "modal": {
+      "title": "Ligar Contas Sociais",
+      "loading": "A preparar conector social...",
+      "checking": "A verificar ligação...",
+      "close": "Concluído",
+      "openInNewTab": "Abrir em novo separador",
+      "skipConnect": "Saltar por agora",
+      "errorGeneric": "Não foi possível carregar o conector social. Por favor tente mais tarde.",
+      "errorNoUrl": "Não foi devolvido nenhum URL de ligação. Por favor tente novamente.",
+      "demoTitle": "Conector Social em Breve",
+      "demoDescription": "O conector social ainda não está configurado neste ambiente. As suas ligações de contas sociais estarão disponíveis assim que o prestador for configurado por um administrador."
+    },
+    "errors": {
+      "loadFailed": "Falha ao carregar os dados de configuração. Por favor tente novamente.",
+      "saveFailed": "Falha ao guardar. Por favor tente novamente.",
+      "completeFailed": "Não foi possível concluir a configuração. Por favor verifique todos os campos obrigatórios."
+    },
+    "banner": {
+      "skipped": "Saltou a configuração. Conclua-a para desbloquear todas as funcionalidades.",
+      "inProgress": "A sua configuração está incompleta. Conclua-a para começar.",
+      "cta": "Concluir Configuração"
+    },
+    "gate": {
+      "title": "Configuração Necessária",
+      "description": "Conclua a configuração inicial para desbloquear esta funcionalidade. Demora apenas uns minutos.",
+      "cta": "Concluir Configuração"
+    },
+    "a11y": {
+      "brandLogoAlt": "Logótipo da marca",
+      "socialConnectorTitle": "Conector Social",
+      "dismissBanner": "Dispensar banner",
+      "currency": "£",
+      "stepperLabel": "Progresso da configuração"
+    },
+    "validation": {
+      "invalidUrl": "Por favor introduza um URL válido (ex.: https://exemplo.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Histórico de Faturação"
+    },
+    "selectCurrencyLabel": "Selecionar Moeda",
+    "selectCurrencyHelp": "Escolha a sua moeda preferida para preços.",
+    "selectBillingInterval": "Selecionar intervalo de faturação",
+    "toggleDiscount": "Ativar/desativar desconto de parceria publicitária",
+    "discountPartnershipTitle": "Poupe {percent}% com Parceria Publicitária",
+    "discountActive": "Ativo",
+    "discountPartnershipDescription": "Permitir que o ZARZOOM publique conteúdo promocional no seu feed (máx. {maxFrequency}) e receba {percent}% de desconto na sua subscrição. Mantém controlo total e pode desativar a qualquer momento.",
+    "discountOncePerDay": "uma vez por dia",
+    "discountPerWeek": "{count}x por semana",
+    "discountPartnerApplied": "Desconto de parceiro aplicado",
+    "discountAdvertisingApplied": "Desconto de parceria publicitária aplicado",
+    "contactUs": "Contacte-nos",
+    "partnerDiscountEnable": "Ativar Desconto de Parceiro 50%",
+    "partnerDiscountStandardPrice": "Preço Standard",
+    "partnerDiscount50Off": "50% DE DESCONTO",
+    "partnerDiscountSubheading": "Poupe 50%. Podemos publicar até 1 pequena promo ZARZOOM por dia (máx. 3–7 por semana) — nunca nas suas próprias publicações.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Preços Simples e Transparentes",
+      "subtitle": "Escolha o plano que se adequa ao seu crescimento. Comece com teste grátis, faça upgrade quando quiser.",
+      "monthly": "Mensal",
+      "annual": "Anual",
+      "popular": "Mais Popular",
+      "getStarted": "Começar",
+      "savePercent": "Poupe {percent}% com faturação anual",
+      "trialDays": "Teste grátis de {days} dias",
+      "page": {
+        "title": "Preços Simples e Transparentes",
+        "subtitle": "Escolha o plano certo para si. Todos os planos incluem um teste grátis de 14 dias.",
+        "footer": "Todos os preços excluem IVA quando aplicável. Cancele ou altere o seu plano a qualquer momento.",
+        "contactCta": "Dúvidas? Contacte-nos e ajudá-lo-emos a encontrar o plano certo.",
+        "contactCtaPrefix": "Dúvidas? ",
+        "contactLink": "Contacte-nos",
+        "contactCtaSuffix": " e ajudá-lo-emos a encontrar o plano certo."
+      },
+      "fallback": {
+        "title": "Preços Temporariamente Indisponíveis",
+        "message": "Estamos a atualizar os nossos planos de preços. Por favor volte em breve ou contacte o suporte para assistência."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfeito para começar",
+        "description": "Funcionalidades essenciais para lançar a sua presença em redes sociais com criação e agendamento de conteúdo com IA.",
+        "bullets": [
+          "Até 3 perfis sociais",
+          "30 publicações por mês",
+          "Geração de conteúdo com IA básica",
+          "Agendamento de publicações",
+          "Suporte por email"
+        ],
+        "cta": "Iniciar Teste Grátis"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Ideal para negócios em crescimento",
+        "description": "Funcionalidades avançadas e análises para dimensionar a sua estratégia de redes sociais com automação inteligente.",
+        "bullets": [
+          "Até 10 perfis sociais",
+          "150 publicações por mês",
+          "Geração de conteúdo com IA avançada",
+          "Agendamento inteligente com horários otimizados",
+          "Painel de análises",
+          "Suporte prioritário"
+        ],
+        "cta": "Iniciar Teste Grátis"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Para equipas e agências",
+        "description": "Funcionalidades de nível empresarial com conteúdo ilimitado, marca personalizada e suporte dedicado para máximo impacto.",
+        "bullets": [
+          "Perfis sociais ilimitados",
+          "Publicações ilimitadas",
+          "IA premium com voz de marca personalizada",
+          "Auto-agendamento com IA",
+          "Análises e relatórios avançados",
+          "Marca e white-label personalizados",
+          "Gestor de conta dedicado",
+          "Acesso total à API"
+        ],
+        "cta": "Contactar Vendas"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Até 3 perfis sociais",
+        "postsPerMonth": "30 publicações por mês",
+        "aiGeneration": "Geração de conteúdo com IA básica",
+        "scheduling": "Agendamento de publicações",
+        "emailSupport": "Suporte por email"
+      },
+      "pro": {
+        "socialProfiles": "Até 10 perfis sociais",
+        "postsPerMonth": "150 publicações por mês",
+        "aiGeneration": "Geração de conteúdo com IA avançada",
+        "scheduling": "Agendamento inteligente com horários otimizados",
+        "analytics": "Painel de análises",
+        "prioritySupport": "Suporte prioritário"
+      },
+      "advanced": {
+        "socialProfiles": "Perfis sociais ilimitados",
+        "postsPerMonth": "Publicações ilimitadas",
+        "aiGeneration": "IA premium com voz de marca personalizada",
+        "scheduling": "Auto-agendamento com IA",
+        "analytics": "Análises e relatórios avançados",
+        "customBranding": "Marca e white-label personalizados",
+        "dedicatedSupport": "Gestor de conta dedicado",
+        "apiAccess": "Acesso total à API"
+      }
+    }
+  }
+}

@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Autopilot mediów społecznościowych",
+    "description": "Automatyzuj rozwój w social media dzięki generowaniu treści i planowaniu wspieranemu sztuczną inteligencją."
+  },
+  "nav": {
+    "about": "O nas",
+    "features": "Funkcje",
+    "pricing": "Cennik",
+    "contact": "Kontakt",
+    "getStarted": "Zaloguj się i start",
+    "support": "Pomoc",
+    "logout": "WYLOGUJ",
+    "dashboard": "PANEL",
+    "userTerms": "Regulamin użytkownika",
+    "websiteTerms": "Regulamin serwisu",
+    "privacy": "Prywatność",
+    "cookies": "Cookies",
+    "admin": "Admin",
+    "selectLanguage": "Wybierz język"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilot dla social mediów w kilka sekund",
+    "scrollToLaunch": "Przewiń, aby uruchomić"
+  },
+  "tagline": {
+    "heading": "Rozwój w social media z AI",
+    "subheading": "Twórz, planuj i publikuj — wszystko na autopilocie."
+  },
+  "feature": {
+    "heading": "Jeden klik. Eksplozywny wzrost."
+  },
+  "cta": {
+    "heading": "Gotowy, by zmienić swoją obecność w social media?",
+    "button": "Rozpocznij darmowy okres próbny"
+  },
+  "testimonials": {
+    "heading": "Zaufanie liderów branży",
+    "subheading": "Dołącz do ponad 10 000 marketerów, którzy rozwijają się z ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM podwoiło nasz zasięg w 30 dni. Generowanie treści przez AI nie odbiega od pisania przez człowieka."
+      },
+      {
+        "name": "David Chen",
+        "role": "Założyciel, GrowthStack",
+        "content": "Funkcja autopilota to przełom. Spędzam teraz 5 minut tygodniowo na social media."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Kierownik ds. influencerów",
+        "content": "Naprawdę eksplozywny wzrost. Nasze wskaźniki zaangażowania wzrosły o 400% na wszystkich platformach."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Gotowy do startu?",
+    "subheading": "Rozpocznij 14-dniowy darmowy okres próbny. Karta kredytowa nie jest wymagana.",
+    "button": "Zacznij teraz"
+  },
+  "loading": {
+    "text": "Ładowanie..."
+  },
+  "notFound": {
+    "title": "Houston, mamy problem",
+    "description": "Strona, której szukasz, zniknęła w głębi kosmosu. Wracamy na właściwy kurs.",
+    "backHome": "Powrót na stronę główną",
+    "support": "Pomoc"
+  },
+  "error": {
+    "title": "Coś poszło nie tak",
+    "description": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub wróć na stronę główną.",
+    "tryAgain": "Spróbuj ponownie",
+    "backHome": "Powrót na stronę główną"
+  },
+  "footer": {
+    "tagline": "Autopilot dla social mediów w kilka sekund",
+    "product": "Produkt",
+    "company": "Firma",
+    "legal": "Informacje prawne",
+    "about": "O nas",
+    "features": "Funkcje",
+    "pricing": "Cennik",
+    "contact": "Kontakt",
+    "support": "Pomoc",
+    "userTerms": "Regulamin użytkownika",
+    "websiteTerms": "Regulamin serwisu",
+    "privacy": "Polityka prywatności",
+    "cookies": "Polityka cookies",
+    "copyright": "ZARZOOM. Wszelkie prawa zastrzeżone."
+  },
+  "pages": {
+    "support": {
+      "title": "Centrum pomocy",
+      "subtitle": "Pomagamy w pełnym wykorzystaniu ZARZOOM.",
+      "faqTitle": "Najczęściej zadawane pytania",
+      "faq1q": "Jak podłączyć konta w social media?",
+      "faq1a": "Wejdź na Panel, kliknij „Połączone konta” i postępuj według wskazówek, aby autoryzować każdą platformę. Obsługujemy Facebook, Instagram, X (Twitter), LinkedIn i TikTok.",
+      "faq2q": "Czy mogę planować posty z wyprzedzeniem?",
+      "faq2a": "Tak. Widok kalendarza pozwala planować treści na tygodnie lub miesiące. Wystarczy utworzyć post, wybrać datę i godzinę — resztą zajmie się ZARZOOM.",
+      "faq3q": "Co się stanie, jeśli przekroczę limity planu?",
+      "faq3a": "Otrzymasz powiadomienie, gdy zbliżysz się do limitu. Możesz w dowolnym momencie zmienić plan w Ustawieniach konta; zmiana obowiązuje od razu.",
+      "faq4q": "Czy moje dane są bezpieczne?",
+      "faq4a": "Tak. Stosujemy standardowe szyfrowanie danych w spoczynku i w transmisji. Nie udostępniamy Twoich danych podmiotom trzecim. Szczegóły w Polityce prywatności.",
+      "contactTitle": "Nadal potrzebujesz pomocy?",
+      "contactText": "Nasz zespół wsparcia zwykle odpowiada w ciągu 24 godzin w dni robocze.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "O ZARZOOM - Automatyzacja social media z AI",
+        "description": "Poznaj misję ZARZOOM: rewolucja w zarządzaniu social media dzięki inteligentnej automatyzacji i tworzeniu treści z wykorzystaniem AI."
+      },
+      "badge": "O ZARZOOM",
+      "heroTitle": "Autopilot dla social mediów",
+      "heroTitleHighlight": "w kilka sekund.",
+      "heroDescription": "ZARZOOM to platforma oparta na AI, która pomaga firmom i twórcom automatycznie generować i publikować treści w social media — dzięki czemu możesz skupić się na tym, co robisz najlepiej.",
+      "hero": {
+        "title": "O ZARZOOM",
+        "subtitle": "Rewolucja w zarządzaniu social media dzięki inteligentnej automatyzacji i tworzeniu treści z AI."
+      },
+      "storySteps": [
+        {
+          "title": "Pomysł",
+          "text": "Powstaliśmy, by rozwiązać problem każdego twórcy — utrzymanie regularności w social media bez wypalenia."
+        },
+        {
+          "title": "Budowa platformy",
+          "text": "Połączyliśmy generowanie treści z AI z inteligentnym planowaniem, tworząc w pełni zautomatyzowany proces w social media."
+        },
+        {
+          "title": "Automatyzacja na skalę",
+          "text": "ZARZOOM pomaga dziś firmom i twórcom utrzymać silną obecność online — bez codziennego wysiłku."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Generowanie treści z AI",
+          "text": "Automatyczne tworzenie angażujących postów dopasowanych do głosu marki i odbiorców.",
+          "bullets": [
+            "Nauka głosu marki",
+            "Wykorzystanie trendów",
+            "Opisy i hashtagi"
+          ]
+        },
+        {
+          "title": "Inteligentne planowanie",
+          "text": "Planuj i publikuj treści na wszystkich platformach w optymalnym czasie.",
+          "bullets": [
+            "Analiza aktywności odbiorców",
+            "Optymalizacja stref czasowych",
+            "Automatyzacja kalendarza treści"
+          ]
+        },
+        {
+          "title": "Stała obecność online",
+          "text": "Utrzymuj widoczność i rozwijaj społeczność bez codziennej harówki.",
+          "bullets": [
+            "Publikacja na wielu platformach",
+            "Czasowanie na podstawie zaangażowania",
+            "Centralny panel"
+          ]
+        },
+        {
+          "title": "Automatyzacja oszczędzająca czas",
+          "text": "Skup się na biznesie, a ZARZOOM zajmie się całą ścieżką treści.",
+          "bullets": [
+            "Zero ręcznej pracy",
+            "Autopilot „ustaw i zapomnij”",
+            "Raportowanie na żywo"
+          ]
+        }
+      ],
+      "getStartedFree": "Zacznij za darmo",
+      "viewFeatures": "Zobacz funkcje",
+      "autopilotActive": "Autopilot aktywny",
+      "mission": {
+        "title": "Nasza misja",
+        "subtitle": "Usuwanie największej bariery w rozwoju social media",
+        "para1": "Nasza misja to usunięcie największej bariery w rozwoju social media — ciągłej potrzeby świeżych treści.",
+        "para2": "ZARZOOM wykorzystuje sztuczną inteligencję do automatyzacji tworzenia i publikacji treści, aby przedsiębiorcy i firmy mogli skupić się na tym, co robią najlepiej.",
+        "para3": "Zamiast spędzać godziny na planowaniu postów, pisaniu i zarządzaniu wieloma platformami, ZARZOOM pomaga utrzymać widoczność online — bez wysiłku."
+      },
+      "missionStats": {
+        "contentCreated": "Utworzone treści",
+        "hoursSaved": "Zaoszczędzone godziny",
+        "platformsActive": "Aktywne platformy"
+      },
+      "story": {
+        "sectionTitle": "Nasza historia",
+        "heading": "Stworzone, by rozwiązać realny problem",
+        "para1": "ZARZOOM powstało, by rozwiązać problem wielu założycieli i twórców — utrzymanie regularności w social media.",
+        "para2": "Social media to jedno z najpotężniejszych narzędzi budowania społeczności, ale utrzymanie stałego strumienia wartościowych treści jest trudne i czasochłonne.",
+        "para3": "Łącząc generowanie treści z AI z automatycznym planowaniem, ZARZOOM pozwala utrzymać silną obecność online bez codziennego wysiłku."
+      },
+      "platform": {
+        "badge": "Platforma",
+        "heading": "Jak ZARZOOM pomaga Ci rosnąć"
+      },
+      "lookingAhead": {
+        "badge": "Przyszłość",
+        "heading": "Przyszłość rozwoju w social media",
+        "para1": "Wierzymy, że przyszłość rozwoju w social media będzie oparta na inteligentnej automatyzacji.",
+        "para2": "ZARZOOM stale się rozwija, aby pomagać firmom i twórcom budować obecność online szybciej i skuteczniej.",
+        "para3": "Nasz cel jest prosty: udostępnić potężne narzędzia rozwoju w social media każdemu."
+      },
+      "intelligentAutomation": {
+        "title": "Inteligentna automatyzacja",
+        "subtitle": "Napędzana nowoczesną AI — rozwijaj społeczność, podczas gdy Ty skupiasz się na biznesie.",
+        "tags": [
+          "Generowanie AI",
+          "Auto-planowanie",
+          "Wiele platform",
+          "Analityka"
+        ]
+      },
+      "cta": {
+        "badge": "Zacznij dziś",
+        "title": "Uruchom autopilota dla social mediów już dziś",
+        "description": "Dołącz do tysięcy twórców i firm rozwijających się na autopilocie.",
+        "getStarted": "Zacznij",
+        "viewFeatures": "Zobacz funkcje"
+      },
+      "values": {
+        "title": "Nasze wartości",
+        "innovation": {
+          "title": "Innowacje na pierwszym miejscu",
+          "description": "Przesuwamy granice AI i automatyzacji, dostarczając rozwiązania niemożliwe jeszcze wczoraj. Dzięki zaangażowaniu w innowacje zawsze masz dostęp do najnowszych osiągnięć w technologii social media."
+        },
+        "authenticity": {
+          "title": "Autentyczne zaangażowanie",
+          "description": "Automatyzacja ma wspierać, nie zastępować, prawdziwą ludzką relację. Nasze narzędzia pomagają zachować własny głos i budować realne relacje z odbiorcami na skalę."
+        },
+        "simplicity": {
+          "title": "Prostota i moc",
+          "description": "Zaawansowana technologia nie musi być skomplikowana. Wierzymy w udostępnianie potężnych narzędzi każdemu, niezależnie od wiedzy technicznej."
+        },
+        "trust": {
+          "title": "Zaufanie i prywatność",
+          "description": "Twoje dane, Twoje treści, Twoja społeczność — traktujemy wszystko z najwyższą starannością i bezpieczeństwem. Nie sprzedajemy Twoich danych i utrzymujemy najwyższe standardy ochrony prywatności."
+        }
+      },
+      "team": {
+        "title": "Stworzone przez ekspertów",
+        "description": "Nasz zespół łączy dziesięciolecia doświadczenia w AI, marketingu social media i projektowaniu doświadczeń użytkownika. Tworzymy narzędzia, które naprawdę zmieniają sposób łączenia firm z odbiorcami."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Funkcje - Automatyzacja social media ZARZOOM",
+        "description": "Odkryj funkcje automatyzujące social media: generowanie treści z AI, inteligentne planowanie, publikacja na wielu platformach, analityka i więcej."
+      },
+      "hero": {
+        "title": "Potężne funkcje",
+        "subtitle": "Wszystko, czego potrzebujesz, by automatyzować, optymalizować i skalować obecność w social media — w jednej inteligentnej platformie."
+      },
+      "aiContent": {
+        "title": "Generowanie treści z AI",
+        "description": "Twórz angażujące posty w sekundach dzięki zaawansowanej AI, która rozumie głos marki, preferencje odbiorców i trendy. Generuj opisy, hashtagi i pomysły na posty trafiające do społeczności.",
+        "features": [
+          "Nauka i adaptacja głosu marki",
+          "Wykorzystanie trendów",
+          "Treści w wielu formatach (tekst, opisy, hashtagi)",
+          "Sugestie testów A/B"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Inteligentne planowanie i autopilot",
+        "description": "Pozwól AI wybrać optymalne godziny publikacji dla maksymalnego zaangażowania. Ustaw preferencje raz i obserwuj, jak Twoja obecność w social media rośnie na autopilocie.",
+        "features": [
+          "Analiza aktywności odbiorców",
+          "Optymalizacja stref czasowych",
+          "Automatyzacja kalendarza treści",
+          "Planowanie na podstawie zaangażowania"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Zarządzanie wieloma platformami",
+        "description": "Zarządzaj wszystkimi kontami w social media z jednego panelu. Publikuj na Twitterze, LinkedIn, Facebooku, Instagramie i innych jednym kliknięciem.",
+        "features": [
+          "Publikacja cross-platform",
+          "Optymalizacja pod platformę",
+          "Zunifikowana skrzynka",
+          "Centralna analityka"
+        ]
+      },
+      "analytics": {
+        "title": "Zaawansowana analityka i wnioski",
+        "description": "Śledź to, co ważne — kompleksowa analityka wykraczająca poza puste metryki. Poznaj odbiorców, mierz ROI i podejmuj decyzje w oparciu o dane.",
+        "features": [
+          "Śledzenie wyników na żywo",
+          "Demografia i zachowania odbiorców",
+          "Analiza wskaźnika zaangażowania",
+          "Benchmarking konkurencji"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Biblioteka treści i zasobów",
+        "description": "Buduj i porządkuj repozytorium treści dzięki inteligentnej bibliotece mediów. Przechowuj zdjęcia, wideo, szablony i fragmenty tekstów do szybkiego dostępu i ponownego użycia.",
+        "features": [
+          "Nieograniczona przestrzeń na media",
+          "Inteligentne tagowanie i wyszukiwanie",
+          "Biblioteka szablonów",
+          "Śledzenie skuteczności zasobów"
+        ]
+      },
+      "collaboration": {
+        "title": "Współpraca w zespole",
+        "description": "Pracuj płynnie z zespołem, klientami lub agencjami. Przypisuj role, zarządzaj uprawnieniami i usprawniaj zatwierdzanie — wszystko w platformie.",
+        "features": [
+          "Kontrola dostępu oparta na rolach",
+          "Ścieżki zatwierdzania",
+          "Dzienniki aktywności zespołu",
+          "Zarządzanie klientami"
+        ]
+      },
+      "integration": {
+        "title": "Integracje i API",
+        "description": "Połącz ZARZOOM z istniejącymi narzędziami i procesami. Solidne API i gotowe integracje zapewniają płynny przepływ danych w całym stosie technologicznym.",
+        "features": [
+          "Integracja z Zapier",
+          "Obsługa webhooków",
+          "Dostęp do REST API",
+          "Integracje niestandardowe"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API i integracje OpenClaw",
+        "description": "Wzmocnij workflow dzięki potężnej integracji ZARZOOM z OpenClaw — tworzenie i planowanie treści w social media na żądanie na 10 platformach. Uruchamiaj generowanie treści z AI bezpośrednio z własnych systemów przez REST API lub pozwól agentom OpenClaw zająć się wszystkim autonomicznie. Idealne dla agencji, developerów i firm szukających płynnej automatyzacji.",
+        "features": [
+          "Automatyzacja agentów OpenClaw (10+ platform)",
+          "Tworzenie treści z AI na żądanie przez API",
+          "Natychmiastowe wyzwalacze planowania",
+          "Niestandardowa automatyzacja workflow"
+        ]
+      },
+      "support": {
+        "title": "Wsparcie na najwyższym poziomie",
+        "description": "Uzyskaj pomoc, gdy jej potrzebujesz — dedykowany zespół wsparcia, dokumentacja, tutoriale wideo i responsywna obsługa klienta.",
+        "features": [
+          "Wsparcie e-mail 24/7",
+          "Czat na żywo (Pro+)",
+          "Tutoriale wideo",
+          "Baza wiedzy"
+        ]
+      },
+      "cta": {
+        "title": "Gotowy zmienić swoją obecność w social media?",
+        "description": "Rozpocznij darmowy okres próbny i przekonaj się o mocy inteligentnej automatyzacji.",
+        "button": "Zacznij za darmo"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Kontakt - ZARZOOM",
+        "description": "Skontaktuj się z zespołem ZARZOOM. Chętnie pomożemy w każdym pytaniu lub wątpliwości."
+      },
+      "title": "Skontaktuj się z nami",
+      "subtitle": "Masz pytanie lub potrzebujesz pomocy? Jesteśmy tu. Wyślij wiadomość — odpowiemy tak szybko, jak to możliwe.",
+      "info": {
+        "title": "Dane kontaktowe",
+        "email": {
+          "label": "E-mail"
+        },
+        "phone": {
+          "label": "Telefon"
+        },
+        "address": {
+          "label": "Biuro"
+        }
+      },
+      "hours": {
+        "title": "Godziny pracy",
+        "note": "Zazwyczaj odpowiadamy na zapytania w ciągu 24 godzin w dni robocze.",
+        "weekdays": "Poniedziałek - Piątek",
+        "weekdaysTime": "9:00 - 18:00",
+        "saturday": "Sobota",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Niedziela",
+        "closed": "Zamknięte"
+      },
+      "form": {
+        "title": "Wyślij wiadomość",
+        "name": "Imię i nazwisko",
+        "namePlaceholder": "Jan Kowalski",
+        "email": "E-mail",
+        "emailPlaceholder": "jan@example.com",
+        "subject": "Temat",
+        "subjectPlaceholder": "W czym możemy pomóc?",
+        "message": "Wiadomość",
+        "messagePlaceholder": "Opowiedz więcej o swoim zapytaniu...",
+        "messageHint": "Minimum 10 znaków",
+        "submit": "Wyślij wiadomość",
+        "sending": "Wysyłanie...",
+        "success": {
+          "title": "Wiadomość wysłana pomyślnie!",
+          "message": "Dziękujemy za kontakt. Odpowiemy tak szybko, jak to możliwe."
+        },
+        "error": {
+          "title": "Błąd"
+        },
+        "errors": {
+          "required": "Wypełnij wszystkie pola",
+          "failed": "Nie udało się wysłać wiadomości. Spróbuj ponownie."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Regulamin użytkownika",
+      "subtitle": "Przed korzystaniem z ZARZOOM zapoznaj się z niniejszym regulaminem.",
+      "lastUpdated": "Ostatnia aktualizacja: 1 lutego 2026",
+      "s1Title": "1. Akceptacja regulaminu",
+      "s1Text": "Tworząc konto lub korzystając z platformy ZARZOOM, akceptujesz niniejszy Regulamin użytkownika. W przypadku braku akceptacji nie wolno korzystać z usługi.",
+      "s2Title": "2. Rejestracja konta",
+      "s2Text": "Należy podać prawidłowe i kompletne dane przy rejestracji. Użytkownik odpowiada za poufność danych logowania oraz za wszelką aktywność na koncie.",
+      "s3Title": "3. Akceptowalne użycie",
+      "s3Text": "Zobowiązujesz się nie wykorzystywać ZARZOOM do publikowania treści niezgodnych z prawem, zniesławiających, obscenicznych lub naruszających prawa własności intelektualnej innych. Zastrzegamy sobie prawo do zawieszenia lub usunięcia kont łamiących te zasady.",
+      "s4Title": "4. Subskrypcja i rozliczenia",
+      "s4Text": "Plany płatne są rozliczane z góry miesięcznie lub rocznie. Możesz anulować w dowolnym momencie; anulowanie obowiązuje od końca bieżącego okresu rozliczeniowego. Zwroty za niepełne okresy nie są udzielane.",
+      "s5Title": "5. Własność intelektualna",
+      "s5Text": "Zachowujesz prawa do treści tworzonych i publikowanych przez ZARZOOM. Korzystając z platformy, udzielasz nam ograniczonej licencji na przetwarzanie, przechowywanie i wyświetlanie treści wyłącznie w celu świadczenia usługi.",
+      "s6Title": "6. Ograniczenie odpowiedzialności",
+      "s6Text": "ZARZOOM jest świadczone „w obecnej postaci”. W najszerszym dopuszczalnym przez prawo zakresie wyłączamy gwarancje i nie ponosimy odpowiedzialności za szkody pośrednie, przypadkowe lub wynikowe z korzystania z usługi.",
+      "s7Title": "7. Zmiany regulaminu",
+      "s7Text": "Regulamin może być od czasu do czasu aktualizowany. Dalsze korzystanie z usługi po opublikowaniu zmian oznacza akceptację zaktualizowanego regulaminu."
+    },
+    "termsWebsite": {
+      "title": "Regulamin serwisu",
+      "subtitle": "Warunki korzystania z serwisu zarzoom.com.",
+      "lastUpdated": "Ostatnia aktualizacja: 1 lutego 2026",
+      "s1Title": "1. Korzystanie z serwisu",
+      "s1Text": "Serwis jest prowadzony przez ZARZOOM Ltd. Korzystając z tej strony, akceptujesz niniejszy Regulamin serwisu w całości.",
+      "s2Title": "2. Własność intelektualna",
+      "s2Text": "Wszystkie treści na tej stronie, w tym teksty, grafiki, logo i oprogramowanie, są własnością ZARZOOM Ltd lub licencjodawców i są chronione prawem autorskim oraz znaków towarowych.",
+      "s3Title": "3. Rzetelność informacji",
+      "s3Text": "Dokładamy starań, aby informacje na stronie były aktualne i poprawne, nie gwarantujemy jednak ich kompletności ani dokładności.",
+      "s4Title": "4. Linki zewnętrzne",
+      "s4Text": "Serwis może zawierać linki do stron podmiotów trzecich. Nie ponosimy odpowiedzialności za treść ani praktyki prywatności tych stron.",
+      "s5Title": "5. Prawo właściwe",
+      "s5Text": "Regulamin podlega prawu Anglii i Walii. Spory rozstrzygane są wyłącznie przez sądy Anglii i Walii."
+    },
+    "privacy": {
+      "title": "Polityka prywatności",
+      "subtitle": "Jak zbieramy, wykorzystujemy i chronimy Twoje dane osobowe.",
+      "lastUpdated": "Ostatnia aktualizacja: 1 lutego 2026",
+      "s1Title": "1. Zbierane informacje",
+      "s1Text": "Zbieramy dane podane przez Ciebie (imię, e-mail, dane płatności) oraz dane generowane automatycznie (adres IP, typ przeglądarki, dane użytkowania) podczas korzystania z ZARZOOM.",
+      "s2Title": "2. Wykorzystanie informacji",
+      "s2Text": "Wykorzystujemy dane do świadczenia i ulepszania usługi, obsługi płatności, wysyłania komunikatów związanych z usługą oraz wypełniania obowiązków prawnych.",
+      "s3Title": "3. Udostępnianie danych",
+      "s3Text": "Nie sprzedajemy Twoich danych osobowych. Możemy udostępniać dane zaufanym dostawcom (operatorzy płatności, hosty) wspierającym działanie platformy, z zachowaniem ścisłych umów o poufności.",
+      "s4Title": "4. Przechowywanie danych",
+      "s4Text": "Przechowujemy Twoje dane osobowe tak długo, jak konto jest aktywne lub jak wymaga tego świadczenie usługi. Możesz w dowolnym momencie poprosić o usunięcie danych, kontaktując się z pomocą.",
+      "s5Title": "5. Twoje prawa",
+      "s5Text": "Masz prawo do dostępu, poprawiania lub usunięcia danych. Możesz też wnosić sprzeciw wobec przetwarzania lub żądać przenoszenia danych. Aby skorzystać z tych praw, napisz na privacy@zarzoom.com.",
+      "s6Title": "6. Bezpieczeństwo",
+      "s6Text": "Stosujemy odpowiednie środki techniczne i organizacyjne w celu ochrony danych, w tym szyfrowanie, kontrolę dostępu i regularne audyty bezpieczeństwa.",
+      "s7Title": "7. Zmiany polityki",
+      "s7Text": "Polityka może być aktualizowana. O istotnych zmianach poinformujemy e-mailem lub przez platformę."
+    },
+    "cookies": {
+      "title": "Polityka cookies",
+      "subtitle": "Jak używamy plików cookies i podobnych technologii.",
+      "lastUpdated": "Ostatnia aktualizacja: 1 lutego 2026",
+      "s1Title": "1. Czym są cookies",
+      "s1Text": "Cookies to małe pliki tekstowe zapisywane na urządzeniu podczas odwiedzania strony. Pomagają stronie zapamiętywać preferencje i analizować sposób korzystania z niej.",
+      "s2Title": "2. Używane przez nas cookies",
+      "s2Essential": "Cookies niezbędne",
+      "s2EssentialText": "Wymagane do prawidłowego działania strony. Nie można ich wyłączyć. Obejmują m.in. cookies sesji i tokeny uwierzytelniania.",
+      "s2Analytics": "Cookies analityczne",
+      "s2AnalyticsText": "Pomagają zrozumieć, jak odwiedzający korzystają ze strony, zbierając anonimowe dane użytkowania. Wykorzystujemy je do ulepszania usługi.",
+      "s2Preference": "Cookies preferencji",
+      "s2PreferenceText": "Zapamiętują ustawienia i preferencje (np. język), aby zapewnić bardziej spersonalizowane doświadczenie.",
+      "s3Title": "3. Zarządzanie cookies",
+      "s3Text": "Cookies można kontrolować w ustawieniach przeglądarki. Wyłączenie niektórych cookies może wpłynąć na działanie strony.",
+      "s4Title": "4. Cookies podmiotów trzecich",
+      "s4Text": "Niektóre cookies są umieszczane przez usługi zewnętrzne obecne na naszych stronach. Nie kontrolujemy tych cookies. Więcej informacji znajdziesz w politykach prywatności tych podmiotów.",
+      "s5Title": "5. Kontakt",
+      "s5Text": "W sprawach dotyczących używania cookies pisz na privacy@zarzoom.com."
+    }
+  }
+}

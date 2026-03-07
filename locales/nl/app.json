@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Welkom terug",
+    "loginSubtitle": "Log in op je ZARZOOM-account",
+    "registerTitle": "Maak je account aan",
+    "registerSubtitle": "Sluit je aan bij duizenden marketeers die hun social media automatiseren",
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "confirmPassword": "Bevestig wachtwoord",
+    "login": "Inloggen",
+    "register": "Account aanmaken",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "orContinueWith": "Of ga verder met",
+    "noAccount": "Nog geen account?",
+    "hasAccount": "Al een account?",
+    "signUpLink": "Registreren",
+    "signInLink": "Inloggen",
+    "passwordMinLength": "Wachtwoord moet minimaal 8 tekens zijn",
+    "passwordUppercase": "Moet een hoofdletter bevatten",
+    "passwordLowercase": "Moet een kleine letter bevatten",
+    "passwordNumber": "Moet een cijfer bevatten",
+    "passwordSpecial": "Moet een speciaal teken bevatten",
+    "passwordsNoMatch": "Wachtwoorden komen niet overeen",
+    "emailRequired": "E-mail is verplicht",
+    "emailInvalid": "Voer een geldig e-mailadres in",
+    "signUpSuccess": "Controleer je e-mail",
+    "signUpSuccessMessage": "We hebben een verificatielink naar je e-mailadres gestuurd. Controleer je inbox en klik op de link om je account te activeren.",
+    "backToLogin": "Terug naar inloggen",
+    "authError": "Authenticatiefout",
+    "authErrorMessage": "Er is iets misgegaan bij de authenticatie. Probeer het opnieuw.",
+    "tryAgain": "Opnieuw proberen",
+    "tabLogin": "Inloggen",
+    "tabCreateAccount": "Account aanmaken",
+    "continueWithGoogle": "Doorgaan met Google",
+    "continueWithFacebook": "Doorgaan met Facebook",
+    "continueWithLinkedIn": "Doorgaan met LinkedIn",
+    "continueWithX": "Doorgaan met X",
+    "rememberMe": "Onthoud mij",
+    "forgotLogin": "Inloggegevens vergeten?",
+    "verifyTitle": "Controleer je inbox",
+    "verifySubtitle": "We hebben een verificatielink naar je e-mailadres gestuurd. Controleer je inbox en klik op de link om je account te activeren.",
+    "verifyResend": "Verificatie-e-mail opnieuw versturen",
+    "verifyResent": "Verificatie-e-mail opnieuw verstuurd",
+    "verifyBack": "Terug naar inloggen",
+    "verifiedTitle": "E-mail geverifieerd",
+    "verifiedSubtitle": "Je e-mail is succesvol geverifieerd. Je kunt nu inloggen op je account.",
+    "verifiedContinue": "Doorgaan naar inloggen",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welkom terug",
+    "overview": "Overzicht",
+    "accountSettings": "Accountinstellingen",
+    "connectedAccounts": "Verbonden accounts",
+    "comingSoon": "Binnenkort — je social media commandocentrum.",
+    "emailVerified": "E-mail geverifieerd",
+    "memberSince": "Lid sinds",
+    "profile": "Merkinstellingen",
+    "supportDescription": "Krijg hulp van ons supportteam. Maak en beheer supporttickets.",
+    "restartSetup": "Setup herstarten",
+    "restarting": "Herstarten..."
+  },
+  "connect": {
+    "heading": "Koppel je accounts",
+    "subheading": "Verbind je socialmedia-accounts om automatisch te posten met ZARZOOM.",
+    "connectAccounts": "Accounts koppelen",
+    "back": "Terug"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Automatisch invullen vanuit bestand"
+  },
+  "apiKeys": {
+    "createKeyTitle": "API-sleutel aanmaken",
+    "keyCreated": "Sleutel aangemaakt",
+    "close": "Sluiten",
+    "keyName": "Sleutelnaam",
+    "keyNamePlaceholder": "bijv. Productie, Staging, CI/CD",
+    "keyNameRequired": "Naam is verplicht",
+    "active": "Actief",
+    "revoked": "Ingetrokken",
+    "created": "Aangemaakt",
+    "lastUsed": "Laatst gebruikt",
+    "revokedAt": "Ingetrokken",
+    "rotate": "Roteren",
+    "revoke": "Intrekken",
+    "revokeConfirm": "Deze sleutel intrekken?",
+    "rotateConfirm": "Sleutel roteren?",
+    "confirm": "Bevestigen",
+    "cancel": "Annuleren",
+    "revoking": "Intrekken...",
+    "rotating": "Roteren...",
+    "rotateTitle": "Roteren: trek deze sleutel in en maak een nieuwe aan"
+  },
+  "profile": {
+    "title": "Merkinstellingen",
+    "subtitle": "Beheer je merk, doelen, plan en social verbindingen.",
+    "saving": "Opslaan...",
+    "saved": "Wijzigingen succesvol opgeslagen.",
+    "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+    "loadFailed": "Profiel laden mislukt. Probeer het opnieuw.",
+    "save": "Wijzigingen opslaan",
+    "sections": {
+      "brand": "Merkbasis",
+      "brandDesc": "Je bedrijfsidentiteit en contentvoorkeuren.",
+      "goals": "Doelen en groei",
+      "goalsDesc": "Wat je wilt bereiken met ZARZOOM.",
+      "posting": "Postvoorkeuren",
+      "postingDesc": "Hoe ZARZOOM je content publiceert.",
+      "plan": "Je plan",
+      "planDesc": "Huidig abonnement en factureringsvoorkeuren.",
+      "social": "Social verbindingen",
+      "socialDesc": "Beheer je gekoppelde socialmedia-accounts."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Automatisch publiceren",
+        "help": "Sta ZARZOOM toe om automatisch content namens jou te publiceren."
+      }
+    },
+    "plan": {
+      "current": "Huidig plan",
+      "noPlan": "Geen plan geselecteerd",
+      "annualBilling": "Jaarlijkse facturering",
+      "changePlan": "Plan wijzigen"
+    },
+    "social": {
+      "username": "Social gebruikersnaam",
+      "noUsername": "Nog niet geconfigureerd",
+      "connected": "Social accounts gekoppeld",
+      "notConnected": "Nog geen accounts gekoppeld",
+      "connect": "Accounts koppelen",
+      "manage": "Verbindingen beheren"
+    },
+    "back": "Terug naar dashboard"
+  },
+  "support": {
+    "nav": {
+      "title": "Support",
+      "myTickets": "Mijn tickets",
+      "createTicket": "Ticket aanmaken",
+      "backToSupport": "Terug naar support",
+      "backToDashboard": "Terug naar dashboard"
+    },
+    "landing": {
+      "title": "Krijg support",
+      "subtitle": "We helpen je graag het maximale uit ZARZOOM te halen.",
+      "description": "Dien een supportticket in en ons team reageert binnen 24 uur op werkdagen.",
+      "createTicketBtn": "Ticket aanmaken",
+      "myTicketsBtn": "Mijn tickets"
+    },
+    "list": {
+      "title": "Mijn supporttickets",
+      "subtitle": "Bekijk en beheer je supportaanvragen.",
+      "empty": "Nog geen tickets",
+      "emptyDescription": "Je hebt nog geen supporttickets aangemaakt. Klik op de knop hieronder om te beginnen.",
+      "createFirstTicket": "Maak je eerste ticket aan",
+      "filterByStatus": "Filter op status",
+      "allTickets": "Alle tickets",
+      "showingTickets": "Toont {filtered} van {total} tickets",
+      "noMatchFilter": "Geen tickets komen overeen met het geselecteerde statusfilter.",
+      "clearFilter": "Filter wissen",
+      "table": {
+        "ticketId": "Ticket-ID",
+        "subject": "Onderwerp",
+        "status": "Status",
+        "lastUpdated": "Laatst bijgewerkt",
+        "created": "Aangemaakt"
+      }
+    },
+    "create": {
+      "title": "Supportticket aanmaken",
+      "subtitle": "Beschrijf je probleem en we helpen je het op te lossen.",
+      "form": {
+        "subject": "Onderwerp",
+        "subjectPlaceholder": "Korte omschrijving van je probleem",
+        "subjectHelp": "Verplicht. Houd het kort en duidelijk.",
+        "category": "Categorie",
+        "categoryHelp": "Optioneel. Kies de categorie die het beste bij je probleem past.",
+        "priority": "Prioriteit",
+        "priorityHelp": "Optioneel. Laat ons weten hoe urgent dit is.",
+        "description": "Omschrijving",
+        "descriptionPlaceholder": "Geef gedetailleerde informatie over je probleem...",
+        "descriptionHelp": "Verplicht. Vermeld stappen om te reproduceren, foutmeldingen of andere relevante details.",
+        "attachments": "Schermafbeeldingen bijvoegen",
+        "attachmentsHelp": "Optioneel. Upload maximaal 3 schermafbeeldingen (PNG, JPG of WebP). Max. 5 MB per bestand.",
+        "attachmentsBtn": "Bestanden kiezen",
+        "attachmentsSelected": "bestand(en) geselecteerd",
+        "removeAttachment": "Verwijderen",
+        "submit": "Ticket verzenden",
+        "submitting": "Ticket aanmaken...",
+        "cancel": "Annuleren"
+      },
+      "success": {
+        "title": "Ticket succesvol aangemaakt",
+        "message": "Je supportticket is aangemaakt. We reageren binnen 24 uur op werkdagen.",
+        "viewTicket": "Ticket bekijken",
+        "createAnother": "Nog een ticket aanmaken"
+      },
+      "error": {
+        "title": "Ticket aanmaken mislukt",
+        "message": "Er is iets misgegaan. Probeer het opnieuw.",
+        "retry": "Opnieuw proberen"
+      }
+    },
+    "detail": {
+      "title": "Ticketdetails",
+      "status": "Status",
+      "category": "Categorie",
+      "priority": "Prioriteit",
+      "created": "Aangemaakt",
+      "lastActivity": "Laatste activiteit",
+      "comments": "Reacties",
+      "addComment": "Reactie toevoegen",
+      "commentPlaceholder": "Typ je bericht...",
+      "attachScreenshots": "Schermafbeeldingen bijvoegen",
+      "sendComment": "Versturen",
+      "sending": "Versturen...",
+      "loadingTicket": "Ticket laden...",
+      "ticketNotFound": "Ticket niet gevonden",
+      "ticketNotFoundMessage": "Dit ticket bestaat niet of je hebt geen toestemming om het te bekijken.",
+      "noComments": "Nog geen reacties",
+      "userRole": "Jij",
+      "adminRole": "Supportteam",
+      "systemRole": "Systeem",
+      "attachmentPreview": "Klik voor volledige grootte",
+      "attachmentAlt": "Bijlage",
+      "closeModal": "Sluiten",
+      "closeTicketTitle": "Ticket sluiten",
+      "closeTicketMessage": "Weet je zeker dat je dit ticket wilt sluiten? Je kunt optioneel een reden geven.",
+      "closeTicketPlaceholder": "Optioneel: Waarom sluit je dit ticket?",
+      "closeTicketCancel": "Annuleren",
+      "closeTicketButton": "Ticket sluiten",
+      "closeTicketClosing": "Sluiten..."
+    },
+    "status": {
+      "open": "Open",
+      "investigating": "In onderzoek",
+      "waiting_on_user": "Wacht op jou",
+      "resolved": "Opgelost",
+      "closed": "Gesloten"
+    },
+    "category": {
+      "none": "Niet opgegeven",
+      "account_login": "Account en inloggen",
+      "billing_subscription": "Facturering en abonnement",
+      "social_connections": "Social verbindingen",
+      "content_generation": "Contentgeneratie",
+      "publishing_issues": "Publicatieproblemen",
+      "technical_bug": "Technische bug",
+      "feature_request": "Functieverzoek",
+      "general_question": "Algemene vraag"
+    },
+    "priority": {
+      "none": "Niet opgegeven",
+      "urgent": "Urgent – systeem blokkeert",
+      "high": "Hoog – groot probleem",
+      "normal": "Normaal – standaard",
+      "low": "Laag – klein / suggestie"
+    },
+    "attachments": {
+      "uploading": "Bijlagen uploaden...",
+      "uploadSuccess": "Bijlagen succesvol geüpload",
+      "uploadError": "Sommige bijlagen uploaden mislukt",
+      "fileTypeError": "Alleen PNG-, JPG- en WebP-bestanden zijn toegestaan",
+      "fileSizeError": "Bestandsgrootte moet minder dan 5 MB zijn",
+      "fileCountError": "Je kunt maximaal 3 bestanden per reactie uploaden",
+      "viewFullSize": "Volledige grootte bekijken"
+    },
+    "errors": {
+      "loadFailed": "Supporttickets laden mislukt",
+      "createFailed": "Ticket aanmaken mislukt",
+      "commentFailed": "Reactie toevoegen mislukt",
+      "unauthorized": "Je hebt geen toestemming om dit ticket te bekijken",
+      "networkError": "Netwerkfout. Controleer je verbinding en probeer het opnieuw."
+    },
+    "validation": {
+      "subjectRequired": "Onderwerp is verplicht",
+      "descriptionRequired": "Omschrijving is verplicht",
+      "messageRequired": "Bericht is verplicht",
+      "emailRequired": "E-mail is verplicht",
+      "invalidEmail": "Voer een geldig e-mailadres in",
+      "noUpdatesProvided": "Geen updates opgegeven",
+      "noFilesProvided": "Geen bestanden opgegeven",
+      "tooManyFiles": "Te veel bestanden. Maximaal {count} bestanden toegestaan.",
+      "invalidFileType": "Ongeldig bestandstype voor {name}. Alleen PNG-, JPG- en WebP-bestanden zijn toegestaan.",
+      "fileTooLarge": "Bestand {name} is te groot ({size}). Maximale grootte is 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Stel je ZARZOOM in",
+    "subtitle": "Laten we je social media autopilot in een paar stappen configureren.",
+    "stepper": {
+      "step1": "Account",
+      "step2": "Merk",
+      "step3": "Doelen",
+      "step4": "Plan",
+      "step5": "Koppelen"
+    },
+    "nav": {
+      "back": "Terug",
+      "next": "Doorgaan",
+      "saveExit": "Opslaan en afsluiten",
+      "skipForNow": "Nu overslaan",
+      "finish": "ZARZOOM starten",
+      "saving": "Opslaan..."
+    },
+    "step1": {
+      "title": "Account aangemaakt",
+      "subtitle": "Je bent ingelogd en klaar om te gaan.",
+      "signedInAs": "Ingelogd als",
+      "continue": "Laten we je merk instellen"
+    },
+    "step2": {
+      "title": "Merkbasis",
+      "subtitle": "Vertel ons over je bedrijf zodat we content op je merk kunnen afstemmen.",
+      "businessName": {
+        "label": "Bedrijfsnaam",
+        "placeholder": "bijv. Acme Corp",
+        "help": "De naam van je bedrijf of merk."
+      },
+      "description": {
+        "label": "Omschrijving",
+        "placeholder": "Beschrijf kort wat je bedrijf doet...",
+        "help": "Een korte samenvatting zodat onze AI je merkstem begrijpt."
+      },
+      "websiteUrl": {
+        "label": "Website-URL",
+        "placeholder": "https://jouwwebsite.nl",
+        "help": "We analyseren je site om content af te stemmen."
+      },
+      "autofillFromWebsite": "Automatisch invullen vanaf website",
+      "analysing": "Analyseren...",
+      "importFromFile": "Importeren vanuit bestand",
+      "choosePdfOrWord": "Kies PDF- of Word-document",
+      "investigate": {
+        "button": "Website onderzoeken",
+        "loading": "Je website analyseren...",
+        "success": "Website succesvol geanalyseerd!",
+        "error": "Website kon niet worden geanalyseerd. Vul de gegevens handmatig in."
+      },
+      "contentLanguage": {
+        "label": "Contenttaal",
+        "help": "De voertaal voor je gegenereerde content."
+      },
+      "articleStyles": {
+        "label": "Artikelstijlen",
+        "help": "Kies de soorten content die ZARZOOM voor je mag maken.",
+        "options": {
+          "let_zarzoom_decide": "Laat ZARZOOM beslissen",
+          "how_to_guides": "Hoe-gidsen",
+          "listicles": "Listicles",
+          "tutorials": "Tutorials",
+          "opinion_pieces": "Opinieartikelen",
+          "case_studies": "Casestudies",
+          "news_commentary": "Nieuwscommentaar",
+          "interviews": "Interviews",
+          "product_reviews": "Productreviews",
+          "explainer_articles": "Uitlegartikelen",
+          "comparisons_vs_articles": "Vergelijkingen en vs-artikelen",
+          "ultimate_guides_pillar": "Ultieme gidsen / pijlercontent",
+          "checklists_cheat_sheets": "Checklists en spiekbriefjes",
+          "best_top_forecasts": "Beste / top voorspellingen",
+          "problem_solution_posts": "Probleem/oplossing-posts",
+          "myth_busting": "Mythen ontkrachten / misvattingen",
+          "resource_roundups": "Resource-overzichten",
+          "faqs_qa_content": "FAQ's / Q&A-content",
+          "personal_stories": "Persoonlijke verhalen / ervaringen",
+          "research_summaries": "Onderzoekssamenvattingen / datainzichten",
+          "historical_timeline": "Historisch / tijdlijnstukken",
+          "satire_humor": "Satire of humorcontent",
+          "explained_in_minutes": "Uitgelegd in X minuten"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Laat onze AI het beste formaat voor je content kiezen",
+          "how_to_guides": "Stap-voor-stap instructies",
+          "listicles": "Genummerde lijsten (bijv. 10 tips voor X)",
+          "tutorials": "Uitgebreider dan een hoe-gids",
+          "opinion_pieces": "Expertstandpunten of commentaar",
+          "case_studies": "Echte voorbeelden en resultaten",
+          "news_commentary": "Context bij actuele gebeurtenissen",
+          "interviews": "Q&A met een persoon/autoriteit",
+          "product_reviews": "Evaluatie en beoordelingen",
+          "explainer_articles": "Leg complexe concepten eenvoudig uit",
+          "comparisons_vs_articles": "X vs Y, voor- en nadelen",
+          "ultimate_guides_pillar": "Langere, autoritaire content over een heel onderwerp",
+          "checklists_cheat_sheets": "Snelle referentie, actielijsten",
+          "best_top_forecasts": "Beste tools voor X, Top trends in 202X",
+          "problem_solution_posts": "Identificeer een pijnpunt en beantwoord het",
+          "myth_busting": "Veelvoorkomende misvattingen wegnemen",
+          "resource_roundups": "Beste artikelen, tools, links over een onderwerp",
+          "faqs_qa_content": "Richt je direct op long-tail zoekopdrachten",
+          "personal_stories": "Verhalend, emotionele impact",
+          "research_summaries": "Vat enquêtes en onderzoeksresultaten samen",
+          "historical_timeline": "Terugblik op ontwikkeling of evolutie",
+          "satire_humor": "Vermakelijk, passend bij merkpersoonlijkheid",
+          "explained_in_minutes": "Kernpunten, snel te consumeren"
+        }
+      },
+      "styleLinks": {
+        "label": "Stijlreferentielinks",
+        "placeholder": "https://voorbeeld.nl/artikel",
+        "help": "Voeg tot 3 links toe naar artikelen waarvan je de stijl wilt nabootsen.",
+        "add": "Link toevoegen",
+        "max": "Maximaal 3 links"
+      },
+      "brandColor": {
+        "label": "Merkkleur",
+        "help": "Je primaire merkkleur voor gegenereerde visuals."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Upload je merklogo (JPG-formaat).",
+        "upload": "Logo uploaden",
+        "change": "Logo wijzigen",
+        "uploading": "Uploaden..."
+      }
+    },
+    "step3": {
+      "title": "Doelen en groei",
+      "subtitle": "Wat wil je bereiken met ZARZOOM?",
+      "goals": {
+        "label": "Selecteer je doelen",
+        "help": "Kies een of meer doelen. We stemmen je strategie daarop af.",
+        "options": {
+          "increase_website_traffic": "Meer websiteverkeer",
+          "get_more_subscribers_leads": "Meer abonnees en leads",
+          "promote_product_or_service": "Product of dienst promoten",
+          "increase_sales": "Meer verkopen",
+          "build_brand_authority": "Merkautoriteit opbouwen",
+          "improve_seo": "SEO verbeteren",
+          "educate_audience": "Je doelgroep informeren",
+          "generate_social_content": "Social content genereren"
+        }
+      },
+      "websiteUrl": {
+        "label": "Website- of landingspagina-URL",
+        "placeholder": "https://jousite.nl/landing",
+        "help": "Verplicht wanneer je doelen websiteverkeer of leadgeneratie omvatten."
+      },
+      "productUrl": {
+        "label": "Product- of verkooppagina-URL",
+        "placeholder": "https://jousite.nl/product",
+        "help": "Verplicht wanneer je doelen productpromotie of verkoop omvatten."
+      }
+    },
+    "step4": {
+      "title": "Kies je plan",
+      "subtitle": "Begin met een plan dat past bij je groeiambities.",
+      "discount": {
+        "label": "Jaarlijkse facturering",
+        "save": "Bespaar {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Tot 3 social profielen",
+          "postsPerMonth": "30 posts per maand",
+          "aiGeneration": "Basis AI-contentgeneratie",
+          "scheduling": "Postplanning",
+          "emailSupport": "E-mailsupport"
+        },
+        "pro": {
+          "socialProfiles": "Tot 10 social profielen",
+          "postsPerMonth": "150 posts per maand",
+          "aiGeneration": "Geavanceerde AI-contentgeneratie",
+          "scheduling": "Slimme planning met optimale tijden",
+          "analytics": "Analytics-dashboard",
+          "prioritySupport": "Prioriteitsupport"
+        },
+        "scale": {
+          "socialProfiles": "Onbeperkt social profielen",
+          "postsPerMonth": "Onbeperkt posts",
+          "aiGeneration": "Premium AI met aangepaste merkstem",
+          "scheduling": "AI-gestuurde auto-planning",
+          "analytics": "Geavanceerde analytics en rapportage",
+          "customBranding": "Aangepaste branding en white-label",
+          "dedicatedSupport": "Toegewijde accountmanager",
+          "apiAccess": "Volledige API-toegang"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Ideaal om te starten met social media-automatisering.",
+        "pro": "Voor groeiende bedrijven die meer kracht en inzichten nodig hebben.",
+        "scale": "Onbeperkt alles voor teams en bureaus."
+      },
+      "popular": "Meest populair",
+      "perMonth": "/maand",
+      "selectPlan": "Plan selecteren",
+      "selected": "Geselecteerd",
+      "trialDays": "{days} dagen gratis proefperiode"
+    },
+    "step5": {
+      "title": "Koppelen en starten",
+      "subtitle": "Koppel je social accounts en stel je voorkeuren in.",
+      "connectSocials": {
+        "label": "Social accounts koppelen",
+        "help": "Verbind je socialmedia-accounts",
+        "button": "Accounts koppelen",
+        "manage": "Verbindingen beheren",
+        "connected": "Social accounts gekoppeld",
+        "notConnected": "Nog geen accounts gekoppeld"
+      },
+      "approval": {
+        "label": "Contentgoedkeuring",
+        "help": "Kies hoe ZARZOOM je content publiceert.",
+        "auto": "Automatisch publiceren",
+        "autoHelp": "ZARZOOM publiceert content automatisch volgens planning.",
+        "manual": "Handmatige goedkeuring",
+        "manualHelp": "Bekijk en keur elke post goed voordat deze live gaat."
+      },
+      "notes": {
+        "label": "Aanvullende opmerkingen",
+        "placeholder": "Iets anders dat je ons wilt laten weten over je merk of contentvoorkeuren...",
+        "help": "Optionele opmerkingen voor onze AI."
+      }
+    },
+    "modal": {
+      "title": "Social accounts koppelen",
+      "loading": "Social connector voorbereiden...",
+      "checking": "Verbinding controleren...",
+      "close": "Klaar",
+      "openInNewTab": "Openen in nieuw tabblad",
+      "skipConnect": "Nu overslaan",
+      "errorGeneric": "Social connector kon niet worden geladen. Probeer het later opnieuw.",
+      "errorNoUrl": "Geen koppel-URL ontvangen. Probeer het opnieuw.",
+      "demoTitle": "Social connector binnenkort beschikbaar",
+      "demoDescription": "De social connector is nog niet geconfigureerd voor deze omgeving. Je social accountverbindingen zijn beschikbaar zodra een beheerder de provider heeft ingesteld."
+    },
+    "errors": {
+      "loadFailed": "Onboardinggegevens laden mislukt. Probeer het opnieuw.",
+      "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+      "completeFailed": "Onboarding kon niet worden voltooid. Controleer alle verplichte velden."
+    },
+    "banner": {
+      "skipped": "Je hebt de setup overgeslagen. Voltooi deze om alle functies te ontgrendelen.",
+      "inProgress": "Je setup is niet voltooid. Rond deze af om te beginnen.",
+      "cta": "Setup voltooien"
+    },
+    "gate": {
+      "title": "Setup vereist",
+      "description": "Voltooi je onboarding om deze functie te ontgrendelen. Het duurt maar een paar minuten.",
+      "cta": "Setup voltooien"
+    },
+    "a11y": {
+      "brandLogoAlt": "Merklogo",
+      "socialConnectorTitle": "Social connector",
+      "dismissBanner": "Banner sluiten",
+      "currency": "€",
+      "stepperLabel": "Voortgang onboarding"
+    },
+    "validation": {
+      "invalidUrl": "Voer een geldige URL in (bijv. https://voorbeeld.nl)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Factuurgeschiedenis"
+    },
+    "selectCurrencyLabel": "Valuta selecteren",
+    "selectCurrencyHelp": "Kies je voorkeursvaluta voor prijzen.",
+    "selectBillingInterval": "Factureringsinterval selecteren",
+    "toggleDiscount": "Kortingsregeling advertentiepartnerschap in-/uitschakelen",
+    "discountPartnershipTitle": "Bespaar {percent}% met advertentiepartnerschap",
+    "discountActive": "Actief",
+    "discountPartnershipDescription": "Sta ZARZOOM toe promotionele content op je feed te plaatsen (max. {maxFrequency}) en ontvang {percent}% korting op je abonnement. Je houdt de volledige controle en kunt dit altijd uitschakelen.",
+    "discountOncePerDay": "eenmaal per dag",
+    "discountPerWeek": "{count}x per week",
+    "discountPartnerApplied": "Partnerskorting toegepast",
+    "discountAdvertisingApplied": "Korting advertentiepartnerschap toegepast",
+    "contactUs": "Neem contact op",
+    "partnerDiscountEnable": "50% partnerskorting inschakelen",
+    "partnerDiscountStandardPrice": "Standaardprijs",
+    "partnerDiscount50Off": "50% KORTING",
+    "partnerDiscountSubheading": "Bespaar 50%. We plaatsen maximaal 1 kleine ZARZOOM-promo per dag (max. 3–7 per week) — nooit op je eigen posts.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Eenvoudige, transparante prijzen",
+      "subtitle": "Kies het plan dat past bij je groei. Start met een gratis proefperiode, upgrade wanneer je wilt.",
+      "monthly": "Maandelijks",
+      "annual": "Jaarlijks",
+      "popular": "Meest populair",
+      "getStarted": "Beginnen",
+      "savePercent": "Bespaar {percent}% met jaarlijkse facturering",
+      "trialDays": "{days} dagen gratis proefperiode",
+      "page": {
+        "title": "Eenvoudige, transparante prijzen",
+        "subtitle": "Kies het plan dat bij je past. Alle plannen bevatten een 14 dagen gratis proefperiode.",
+        "footer": "Alle prijzen zijn exclusief btw waar van toepassing. Zeg je abonnement op of wijzig je plan wanneer je wilt.",
+        "contactCta": "Vragen? Neem contact op en we helpen je het juiste plan te vinden.",
+        "contactCtaPrefix": "Vragen? ",
+        "contactLink": "Neem contact op",
+        "contactCtaSuffix": " en we helpen je het juiste plan te vinden."
+      },
+      "fallback": {
+        "title": "Prijzen tijdelijk niet beschikbaar",
+        "message": "We werken momenteel onze prijsplannen bij. Kom binnenkort terug of neem contact op met support."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Ideaal om te starten",
+        "description": "Essentiële functies om je social media-aanwezigheid te lanceren met AI-gestuurde contentcreatie en planning.",
+        "bullets": [
+          "Tot 3 social profielen",
+          "30 posts per maand",
+          "Basis AI-contentgeneratie",
+          "Postplanning",
+          "E-mailsupport"
+        ],
+        "cta": "Start gratis proefperiode"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Het beste voor groeiende bedrijven",
+        "description": "Geavanceerde functies en analytics om je social media-strategie te schalen met intelligente automatisering.",
+        "bullets": [
+          "Tot 10 social profielen",
+          "150 posts per maand",
+          "Geavanceerde AI-contentgeneratie",
+          "Slimme planning met optimale tijden",
+          "Analytics-dashboard",
+          "Prioriteitsupport"
+        ],
+        "cta": "Start gratis proefperiode"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Voor teams en bureaus",
+        "description": "Enterprise-functies met onbeperkte content, aangepaste branding en toegewijde support voor maximaal resultaat.",
+        "bullets": [
+          "Onbeperkt social profielen",
+          "Onbeperkt posts",
+          "Premium AI met aangepaste merkstem",
+          "AI-gestuurde auto-planning",
+          "Geavanceerde analytics en rapportage",
+          "Aangepaste branding en white-label",
+          "Toegewijde accountmanager",
+          "Volledige API-toegang"
+        ],
+        "cta": "Neem contact op met verkoop"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Tot 3 social profielen",
+        "postsPerMonth": "30 posts per maand",
+        "aiGeneration": "Basis AI-contentgeneratie",
+        "scheduling": "Postplanning",
+        "emailSupport": "E-mailsupport"
+      },
+      "pro": {
+        "socialProfiles": "Tot 10 social profielen",
+        "postsPerMonth": "150 posts per maand",
+        "aiGeneration": "Geavanceerde AI-contentgeneratie",
+        "scheduling": "Slimme planning met optimale tijden",
+        "analytics": "Analytics-dashboard",
+        "prioritySupport": "Prioriteitsupport"
+      },
+      "advanced": {
+        "socialProfiles": "Onbeperkt social profielen",
+        "postsPerMonth": "Onbeperkt posts",
+        "aiGeneration": "Premium AI met aangepaste merkstem",
+        "scheduling": "AI-gestuurde auto-planning",
+        "analytics": "Geavanceerde analytics en rapportage",
+        "customBranding": "Aangepaste branding en white-label",
+        "dedicatedSupport": "Toegewijde accountmanager",
+        "apiAccess": "Volledige API-toegang"
+      }
+    }
+  }
+}

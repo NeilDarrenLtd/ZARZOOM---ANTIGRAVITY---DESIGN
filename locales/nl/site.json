@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Social Media Autopilot",
+    "description": "Automatiseer je groei op social media met AI-gestuurde contentcreatie en planning."
+  },
+  "nav": {
+    "about": "Over ons",
+    "features": "Functies",
+    "pricing": "Prijzen",
+    "contact": "Contact",
+    "getStarted": "Inloggen-Lanceren",
+    "support": "Support",
+    "logout": "UITLOGGEN",
+    "dashboard": "DASHBOARD",
+    "userTerms": "Gebruikersvoorwaarden",
+    "websiteTerms": "Websitevoorwaarden",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "admin": "Admin",
+    "selectLanguage": "Taal kiezen"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Je socials op autopilot in seconden",
+    "scrollToLaunch": "Scroll om te starten"
+  },
+  "tagline": {
+    "heading": "AI-gestuurde groei op social media",
+    "subheading": "Genereren, plannen en posten — alles op autopilot."
+  },
+  "feature": {
+    "heading": "Eén klik. Explosieve groei."
+  },
+  "cta": {
+    "heading": "Klaar om je social presence te transformeren?",
+    "button": "Start gratis proefperiode"
+  },
+  "testimonials": {
+    "heading": "Vertrouwd door brancheleiders",
+    "subheading": "Sluit je aan bij 10.000+ marketeers die schalen met ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM verdubbelde ons bereik in 30 dagen. De AI-content is niet te onderscheiden van menselijk geschreven teksten."
+      },
+      {
+        "name": "David Chen",
+        "role": "Oprichter, GrowthStack",
+        "content": "De autopilotfunctie is een game changer. Ik besteed nu 5 minuten per week aan social media."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Influence Lead",
+        "content": "Echt explosieve groei. Onze engagementcijfers zijn met 400% gestegen op alle platformen."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Klaar voor de lancering?",
+    "subheading": "Start je 14 dagen gratis proefperiode. Geen creditcard vereist.",
+    "button": "Nu beginnen"
+  },
+  "loading": {
+    "text": "Beleving laden..."
+  },
+  "notFound": {
+    "title": "Houston, we have a problem",
+    "description": "De pagina die je zoekt is de ruimte in gedreven. Laten we je weer op koers brengen.",
+    "backHome": "Terug naar start",
+    "support": "Support"
+  },
+  "error": {
+    "title": "Er is iets misgegaan",
+    "description": "We hebben een onverwachte fout tegengekomen. Probeer het opnieuw of ga terug naar de startpagina.",
+    "tryAgain": "Opnieuw proberen",
+    "backHome": "Terug naar start"
+  },
+  "footer": {
+    "tagline": "Je socials op autopilot in seconden",
+    "product": "Product",
+    "company": "Bedrijf",
+    "legal": "Juridisch",
+    "about": "Over ons",
+    "features": "Functies",
+    "pricing": "Prijzen",
+    "contact": "Contact",
+    "support": "Support",
+    "userTerms": "Gebruikersvoorwaarden",
+    "websiteTerms": "Websitevoorwaarden",
+    "privacy": "Privacybeleid",
+    "cookies": "Cookiebeleid",
+    "copyright": "ZARZOOM. Alle rechten voorbehouden."
+  },
+  "pages": {
+    "support": {
+      "title": "Supportcentrum",
+      "subtitle": "We helpen je graag het maximale uit ZARZOOM te halen.",
+      "faqTitle": "Veelgestelde vragen",
+      "faq1q": "Hoe koppel ik mijn socialmedia-accounts?",
+      "faq1a": "Ga naar je Dashboard, klik op 'Verbonden accounts' en volg de stappen om elk platform te autoriseren. We ondersteunen Facebook, Instagram, X (Twitter), LinkedIn en TikTok.",
+      "faq2q": "Kan ik berichten vooruit plannen?",
+      "faq2a": "Absoluut. Onze kalenderweergave laat je content weken of zelfs maanden vooruit plannen. Maak je bericht, kies datum en tijd, en ZARZOOM regelt de rest.",
+      "faq3q": "Wat gebeurt er als ik mijn planlimieten overschrijd?",
+      "faq3a": "Je ontvangt een melding wanneer je je limiet nadert. Je kunt je plan op elk moment upgraden via de pagina Accountinstellingen; de wijziging gaat direct in.",
+      "faq4q": "Zijn mijn gegevens veilig?",
+      "faq4a": "Ja. We gebruiken standaardversleuteling voor data in rust en onderweg. We delen je gegevens nooit met derden. Zie ons privacybeleid voor details.",
+      "contactTitle": "Nog hulp nodig?",
+      "contactText": "Ons supportteam reageert doorgaans binnen 24 uur op werkdagen.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "Over ZARZOOM - AI-gestuurde social media-automatisering",
+        "description": "Leer over de missie van ZARZOOM om social media-beheer te revolutioneren met intelligente automatisering en AI-gestuurde contentcreatie."
+      },
+      "badge": "Over ZARZOOM",
+      "heroTitle": "Je socials op autopilot",
+      "heroTitleHighlight": "in seconden.",
+      "heroDescription": "ZARZOOM is een AI-gestuurde tool waarmee bedrijven en creators automatisch social media-content kunnen genereren en publiceren — zodat jij je kunt richten op waar je goed in bent.",
+      "hero": {
+        "title": "Over ZARZOOM",
+        "subtitle": "Social media-beheer revolutioneren door intelligente automatisering en AI-gestuurde contentcreatie."
+      },
+      "storySteps": [
+        {
+          "title": "Het idee",
+          "text": "Opgericht om een probleem op te lossen dat elke creator kent — consistent zijn op social media zonder uit te branden."
+        },
+        {
+          "title": "Het platform bouwen",
+          "text": "We combineerden AI-gestuurde contentcreatie met slimme planning voor een volledig geautomatiseerde social media-pipeline."
+        },
+        {
+          "title": "Automatisering op schaal",
+          "text": "ZARZOOM helpt bedrijven en creators nu een sterke online aanwezigheid te behouden — zonder het dagelijkse werk dat normaal nodig is."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "AI-contentcreatie",
+          "text": "Genereer automatisch pakkende posts afgestemd op je merkstem en doelgroep.",
+          "bullets": [
+            "Leren van merkstem",
+            "Integratie van trending onderwerpen",
+            "Bijschriften en hashtags"
+          ]
+        },
+        {
+          "title": "Slimme planning",
+          "text": "Plan en publiceer content op al je social platformen op het optimale moment.",
+          "bullets": [
+            "Analyse van activiteit doelgroep",
+            "Optimalisatie tijdzone",
+            "Geautomatiseerde contentkalender"
+          ]
+        },
+        {
+          "title": "Consistente online aanwezigheid",
+          "text": "Blijf zichtbaar en groei je publiek zonder dagelijkse inspanning.",
+          "bullets": [
+            "Posten op meerdere platformen",
+            "Timing op basis van engagement",
+            "Gecentraliseerd dashboard"
+          ]
+        },
+        {
+          "title": "Tijdbesparende automatisering",
+          "text": "Richt je op je bedrijf terwijl ZARZOOM je volledige contentpipeline verzorgt.",
+          "bullets": [
+            "Geen handmatig werk",
+            "Set-and-forget autopilot",
+            "Real-time rapportage"
+          ]
+        }
+      ],
+      "getStartedFree": "Gratis beginnen",
+      "viewFeatures": "Bekijk functies",
+      "autopilotActive": "Autopilot actief",
+      "mission": {
+        "title": "Onze missie",
+        "subtitle": "De grootste drempel voor groei op social media wegnemen",
+        "para1": "Onze missie is de grootste drempel voor groei op social media weg te nemen — de constante behoefte aan verse content.",
+        "para2": "ZARZOOM gebruikt kunstmatige intelligentie om contentcreatie en publicatie te automatiseren, zodat ondernemers en bedrijven zich kunnen richten op waar ze goed in zijn.",
+        "para3": "In plaats van uren te besteden aan het plannen van posts, schrijven van content en beheren van meerdere platformen, helpt ZARZOOM je moeiteloos zichtbaar te blijven online."
+      },
+      "missionStats": {
+        "contentCreated": "Content gecreëerd",
+        "hoursSaved": "Uren bespaard",
+        "platformsActive": "Platforms actief"
+      },
+      "story": {
+        "sectionTitle": "Ons verhaal",
+        "heading": "Gebouwd om een echt probleem op te lossen",
+        "para1": "ZARZOOM is ontstaan om een probleem op te lossen dat veel oprichters en creators kennen — consistent zijn op social media.",
+        "para2": "Hoewel social media een van de krachtigste tools is om een publiek op te bouwen, is het onderhouden van een constante stroom hoogwaardige content lastig en tijdrovend.",
+        "para3": "Door AI-gestuurde contentcreatie te combineren met geautomatiseerde planning, stelt ZARZOOM gebruikers in staat een sterke online aanwezigheid te behouden zonder het gebruikelijke dagelijkse werk."
+      },
+      "platform": {
+        "badge": "Het platform",
+        "heading": "Hoe ZARZOOM je helpt groeien"
+      },
+      "lookingAhead": {
+        "badge": "Vooruitkijken",
+        "heading": "De toekomst van groei op social media",
+        "para1": "Wij geloven dat de toekomst van groei op social media wordt gedreven door intelligente automatisering.",
+        "para2": "ZARZOOM ontwikkelt zich continu om bedrijven en creators sneller en effectiever hun online aanwezigheid te laten opbouwen.",
+        "para3": "Ons doel is simpel: krachtige tools voor groei op social media voor iedereen toegankelijk maken."
+      },
+      "intelligentAutomation": {
+        "title": "Intelligente automatisering",
+        "subtitle": "Aangedreven door geavanceerde AI om je bereik te vergroten terwijl jij je op je bedrijf richt.",
+        "tags": [
+          "AI-generatie",
+          "Auto-planning",
+          "Multi-platform",
+          "Analytics"
+        ]
+      },
+      "cta": {
+        "badge": "Vandaag beginnen",
+        "title": "Zet vandaag je socials op autopilot",
+        "description": "Sluit je aan bij duizenden creators en bedrijven die op autopilot groeien.",
+        "getStarted": "Beginnen",
+        "viewFeatures": "Bekijk functies"
+      },
+      "values": {
+        "title": "Onze kernwaarden",
+        "innovation": {
+          "title": "Innovatie eerst",
+          "description": "We verleggen de grenzen van AI en automatisering om oplossingen te leveren die gisteren nog onmogelijk waren. Onze toewijding aan innovatie betekent dat je altijd toegang hebt tot de nieuwste ontwikkelingen in social media-technologie."
+        },
+        "authenticity": {
+          "title": "Authentieke betrokkenheid",
+          "description": "Automatisering moet echte menselijke verbinding versterken, niet vervangen. Onze tools helpen je je unieke stem te behouden en op schaal echte relaties met je publiek op te bouwen."
+        },
+        "simplicity": {
+          "title": "Eenvoud en kracht",
+          "description": "Geavanceerde technologie hoeft niet ingewikkeld te zijn. Wij geloven in krachtige tools die voor iedereen toegankelijk zijn, ongeacht technische kennis."
+        },
+        "trust": {
+          "title": "Vertrouwen en privacy",
+          "description": "Jouw data, jouw content, jouw community — we gaan met alles met het grootste respect en de hoogste beveiliging om. We verkopen nooit je data en handhaven de hoogste standaarden voor privacybescherming."
+        }
+      },
+      "team": {
+        "title": "Gebouwd door experts",
+        "description": "Ons team combineert decennia ervaring in AI, social media marketing en user experience design. We zijn gepassioneerd over tools die echt het verschil maken in hoe bedrijven zich verbinden met hun publiek."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Functies - ZARZOOM Social Media Automatisering",
+        "description": "Ontdek krachtige functies die je social media automatiseren: AI-contentcreatie, slimme planning, multi-platform posten, analytics en meer."
+      },
+      "hero": {
+        "title": "Krachtige functies",
+        "subtitle": "Alles wat je nodig hebt om je social media-aanwezigheid te automatiseren, optimaliseren en schalen — in één intelligent platform."
+      },
+      "aiContent": {
+        "title": "AI-gestuurde contentcreatie",
+        "description": "Maak in seconden pakkende posts met onze geavanceerde AI die je merkstem, doelgroepvoorkeuren en trending onderwerpen begrijpt. Genereer bijschriften, hashtags en volledige postideeën die aansluiten bij je community.",
+        "features": [
+          "Leren en aanpassen van merkstem",
+          "Integratie van trending onderwerpen",
+          "Content in meerdere formaten (tekst, bijschriften, hashtags)",
+          "A/B-test suggesties"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Slimme planning en autopilot",
+        "description": "Laat onze AI het optimale postmoment bepalen voor maximale engagement. Stel je voorkeuren eenmalig in en zie je social aanwezigheid op autopilot groeien terwijl jij je op je bedrijf richt.",
+        "features": [
+          "Analyse van activiteit doelgroep",
+          "Optimalisatie tijdzone",
+          "Geautomatiseerde contentkalender",
+          "Planning op basis van engagement"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Beheer van meerdere platformen",
+        "description": "Beheer al je socialmedia-accounts vanuit één dashboard. Post met één klik naar Twitter, LinkedIn, Facebook, Instagram en meer.",
+        "features": [
+          "Posten cross-platform",
+          "Platformspecifieke optimalisatie",
+          "Unified inbox",
+          "Gecentraliseerde analytics"
+        ]
+      },
+      "analytics": {
+        "title": "Geavanceerde analytics en inzichten",
+        "description": "Volg wat ertoe doet met uitgebreide analytics die verder gaan dan vanity metrics. Begrijp je doelgroep, meet ROI en neem datagedreven beslissingen om je strategie te verbeteren.",
+        "features": [
+          "Real-time prestatievolging",
+          "Demografie en gedrag doelgroep",
+          "Analyse engagementpercentage",
+          "Concurrentiebenchmarks"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Contentbibliotheek en assets",
+        "description": "Bouw en organiseer je contentrepository met onze intelligente mediabibliotheek. Sla afbeeldingen, video's, sjablonen en copyfragmenten op voor snelle toegang en hergebruik.",
+        "features": [
+          "Onbeperkte media-opslag",
+          "Slimme tags en zoeken",
+          "Sjablonenbibliotheek",
+          "Prestatievolging per asset"
+        ]
+      },
+      "collaboration": {
+        "title": "Team samenwerking",
+        "description": "Werk naadloos samen met je team, klanten of bureaus. Wijs rollen toe, beheer rechten en stroomlijn goedkeuringsworkflows binnen het platform.",
+        "features": [
+          "Toegangsbeheer op basis van rollen",
+          "Goedkeuringsworkflows",
+          "Teamactiviteitenlogs",
+          "Klantbeheer"
+        ]
+      },
+      "integration": {
+        "title": "Integraties en API",
+        "description": "Verbind ZARZOOM met je bestaande tools en workflows. Onze robuuste API en kant-en-klare integraties zorgen voor naadloze gegevensstroom in je tech stack.",
+        "features": [
+          "Zapier-integratie",
+          "Webhook-ondersteuning",
+          "REST API-toegang",
+          "Aangepaste integraties"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API & OpenClaw-integraties",
+        "description": "Geef je workflow een boost met de krachtige OpenClaw-integratie van ZARZOOM voor on-demand geautomatiseerde social media-creatie en planning op 10 platformen. Activeer AI-gestuurde contentcreatie direct vanuit je bestaande systemen via onze REST API, of laat OpenClaw-agents alles autonoom afhandelen. Ideaal voor bureaus, ontwikkelaars en bedrijven die naadloze automatisering willen.",
+        "features": [
+          "OpenClaw-agent automatisering (10+ platformen)",
+          "On-demand AI-contentcreatie via API",
+          "Directe planningstriggers",
+          "Aangepaste workflow-automatisering"
+        ]
+      },
+      "support": {
+        "title": "Wereldklasse support",
+        "description": "Krijg hulp wanneer je die nodig hebt met ons toegewijde supportteam. Toegang tot uitgebreide documentatie, videotutorials en responsieve klantenservice.",
+        "features": [
+          "24/7 e-mailsupport",
+          "Live chat (Pro+)",
+          "Videotutorials",
+          "Kennisbank"
+        ]
+      },
+      "cta": {
+        "title": "Klaar om je social media te transformeren?",
+        "description": "Start je gratis proefperiode en ervaar de kracht van intelligente automatisering.",
+        "button": "Gratis beginnen"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Contact - ZARZOOM",
+        "description": "Neem contact op met het ZARZOOM-team. We helpen je graag met vragen of opmerkingen."
+      },
+      "title": "Neem contact op",
+      "subtitle": "Een vraag of hulp nodig? We staan voor je klaar. Stuur een bericht en we reageren zo snel mogelijk.",
+      "info": {
+        "title": "Contactgegevens",
+        "email": {
+          "label": "E-mail"
+        },
+        "phone": {
+          "label": "Telefoon"
+        },
+        "address": {
+          "label": "Kantoor"
+        }
+      },
+      "hours": {
+        "title": "Openingstijden",
+        "note": "We reageren doorgaans binnen 24 uur op alle aanvragen tijdens werkdagen.",
+        "weekdays": "Maandag - Vrijdag",
+        "weekdaysTime": "09:00 - 18:00",
+        "saturday": "Zaterdag",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Zondag",
+        "closed": "Gesloten"
+      },
+      "form": {
+        "title": "Stuur ons een bericht",
+        "name": "Je naam",
+        "namePlaceholder": "Jan Jansen",
+        "email": "Je e-mail",
+        "emailPlaceholder": "jan@voorbeeld.nl",
+        "subject": "Onderwerp",
+        "subjectPlaceholder": "Waarmee kunnen we je helpen?",
+        "message": "Bericht",
+        "messagePlaceholder": "Vertel ons meer over je vraag...",
+        "messageHint": "Minimaal 10 tekens",
+        "submit": "Bericht versturen",
+        "sending": "Versturen...",
+        "success": {
+          "title": "Bericht succesvol verzonden!",
+          "message": "Bedankt voor je bericht. We nemen zo snel mogelijk contact met je op."
+        },
+        "error": {
+          "title": "Fout"
+        },
+        "errors": {
+          "required": "Vul alle velden in",
+          "failed": "Bericht verzenden mislukt. Probeer het opnieuw."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Gebruikersvoorwaarden",
+      "subtitle": "Lees deze voorwaarden zorgvuldig door voordat je ZARZOOM gebruikt.",
+      "lastUpdated": "Laatst bijgewerkt: 1 februari 2026",
+      "s1Title": "1. Acceptatie van de voorwaarden",
+      "s1Text": "Door een account aan te maken of het ZARZOOM-platform te gebruiken, ga je akkoord met deze Gebruikersvoorwaarden. Als je niet akkoord gaat, mag je de dienst niet gebruiken.",
+      "s2Title": "2. Accountregistratie",
+      "s2Text": "Je moet bij registratie correcte en volledige gegevens verstrekken. Je bent verantwoordelijk voor de vertrouwelijkheid van je accountgegevens en voor alle activiteit onder je account.",
+      "s3Title": "3. Acceptabel gebruik",
+      "s3Text": "Je gaat ermee akkoord ZARZOOM niet te gebruiken voor content die onwettig, lasterlijk, obsceen is of inbreuk maakt op intellectuele eigendomsrechten van anderen. We behouden ons het recht voor accounts die dit beleid schenden te schorsen of beëindigen.",
+      "s4Title": "4. Abonnement en facturering",
+      "s4Text": "Betaalde abonnementen worden vooruit betaald op maand- of jaarbasis. Je kunt op elk moment opzeggen; opzegging gaat in aan het einde van de lopende factureringsperiode. Er worden geen restituties verleend voor gedeeltelijke periodes.",
+      "s5Title": "5. Intellectueel eigendom",
+      "s5Text": "Je behoudt het eigendom van content die je via ZARZOOM creëert en publiceert. Door het platform te gebruiken verleen je ons een beperkte licentie om je content te verwerken, op te slaan en weer te geven uitsluitend voor het leveren van de dienst.",
+      "s6Title": "6. Beperking van aansprakelijkheid",
+      "s6Text": "ZARZOOM wordt geleverd 'as-is'. Voor zover de wet toestaat, sluiten we alle garanties uit en zijn we niet aansprakelijk voor indirecte, incidentele of gevolgschade door je gebruik van de dienst.",
+      "s7Title": "7. Wijzigingen in de voorwaarden",
+      "s7Text": "We kunnen deze voorwaarden van tijd tot tijd bijwerken. Voortgezet gebruik van de dienst na publicatie van wijzigingen geldt als acceptatie van de gewijzigde voorwaarden."
+    },
+    "termsWebsite": {
+      "title": "Websitevoorwaarden",
+      "subtitle": "Voorwaarden voor het gebruik van de website zarzoom.com.",
+      "lastUpdated": "Laatst bijgewerkt: 1 februari 2026",
+      "s1Title": "1. Gebruik van de website",
+      "s1Text": "Deze website wordt beheerd door ZARZOOM Ltd. Door deze site te bezoeken en te doorbladeren, accepteer je deze Websitevoorwaarden volledig.",
+      "s2Title": "2. Intellectueel eigendom",
+      "s2Text": "Alle content op deze website, inclusief tekst, afbeeldingen, logo's en software, is eigendom van ZARZOOM Ltd of haar licentiegevers en wordt beschermd door auteursrecht- en handelsmerk wetgeving.",
+      "s3Title": "3. Juistheid van informatie",
+      "s3Text": "Hoewel we ernaar streven de informatie op deze site accuraat en actueel te houden, geven we geen garanties of verklaringen over volledigheid of juistheid.",
+      "s4Title": "4. Links naar derden",
+      "s4Text": "Deze website kan links bevatten naar sites van derden. We zijn niet verantwoordelijk voor de content of het privacybeleid van die sites.",
+      "s5Title": "5. Toepasselijk recht",
+      "s5Text": "Deze voorwaarden vallen onder het recht van Engeland en Wales. Geschillen vallen onder de exclusieve bevoegdheid van de rechtbanken van Engeland en Wales."
+    },
+    "privacy": {
+      "title": "Privacybeleid",
+      "subtitle": "Hoe we je persoonsgegevens verzamelen, gebruiken en beschermen.",
+      "lastUpdated": "Laatst bijgewerkt: 1 februari 2026",
+      "s1Title": "1. Informatie die we verzamelen",
+      "s1Text": "We verzamelen informatie die je direct verstrekt (naam, e-mail, betalingsgegevens) en automatisch gegenereerde informatie (IP-adres, browsertype, gebruiksdata) wanneer je ZARZOOM gebruikt.",
+      "s2Title": "2. Hoe we je informatie gebruiken",
+      "s2Text": "We gebruiken je informatie om de dienst te leveren en te verbeteren, betalingen te verwerken, dienstgerelateerde communicatie te versturen en aan wettelijke verplichtingen te voldoen.",
+      "s3Title": "3. Delen van gegevens",
+      "s3Text": "We verkopen je persoonsgegevens niet. We kunnen gegevens delen met vertrouwde dienstverleners (betalingsverwerkers, hostingproviders) die ons helpen het platform te exploiteren, onder strikte geheimhoudingsverplichtingen.",
+      "s4Title": "4. Bewaring van gegevens",
+      "s4Text": "We bewaren je persoonsgegevens zolang je account actief is of zolang nodig om de dienst te leveren. Je kunt op elk moment verwijdering van je gegevens aanvragen door contact op te nemen met support.",
+      "s5Title": "5. Je rechten",
+      "s5Text": "Je hebt het recht je persoonsgegevens in te zien, te corrigeren of te laten verwijderen. Je kunt ook bezwaar maken tegen verwerking of gegevensoverdraagbaarheid aanvragen. Neem contact op via privacy@zarzoom.com om deze rechten uit te oefenen.",
+      "s6Title": "6. Beveiliging",
+      "s6Text": "We nemen passende technische en organisatorische maatregelen om je gegevens te beschermen, waaronder versleuteling, toegangsbeheer en regelmatige beveiligingsbeoordelingen.",
+      "s7Title": "7. Wijzigingen in dit beleid",
+      "s7Text": "We kunnen dit beleid van tijd tot tijd bijwerken. We informeren je over inhoudelijke wijzigingen per e-mail of via het platform."
+    },
+    "cookies": {
+      "title": "Cookiebeleid",
+      "subtitle": "Hoe we cookies en vergelijkbare technologieën gebruiken.",
+      "lastUpdated": "Laatst bijgewerkt: 1 februari 2026",
+      "s1Title": "1. Wat zijn cookies",
+      "s1Text": "Cookies zijn kleine tekstbestanden die op je apparaat worden geplaatst wanneer je een website bezoekt. Ze helpen de site je voorkeuren te onthouden en te begrijpen hoe je deze gebruikt.",
+      "s2Title": "2. Cookies die we gebruiken",
+      "s2Essential": "Essentiële cookies",
+      "s2EssentialText": "Nodig voor het correct functioneren van de website. Deze kunnen niet worden uitgeschakeld. Ze omvatten sessiecookies en authenticatietokens.",
+      "s2Analytics": "Analytics-cookies",
+      "s2AnalyticsText": "Helpen ons te begrijpen hoe bezoekers met onze website omgaan door anonieme gebruiksdata te verzamelen. We gebruiken dit om onze dienst te verbeteren.",
+      "s2Preference": "Voorkeurcookies",
+      "s2PreferenceText": "Onthouden je instellingen en voorkeuren (zoals taal) voor een meer persoonlijke ervaring.",
+      "s3Title": "3. Cookies beheren",
+      "s3Text": "Je kunt cookies beheren via je browserinstellingen. Houd er rekening mee dat het uitschakelen van bepaalde cookies de functionaliteit van de website kan beïnvloeden.",
+      "s4Title": "4. Cookies van derden",
+      "s4Text": "Sommige cookies worden geplaatst door diensten van derden op onze pagina's. We hebben geen controle over deze cookies. Raadpleeg het privacybeleid van de betreffende derde partij voor meer informatie.",
+      "s5Title": "5. Contact",
+      "s5Text": "Bij vragen over ons cookiegebruik kun je contact opnemen via privacy@zarzoom.com."
+    }
+  }
+}

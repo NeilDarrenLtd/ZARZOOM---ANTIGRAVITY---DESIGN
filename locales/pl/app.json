@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Witaj ponownie",
+    "loginSubtitle": "Zaloguj się do konta ZARZOOM",
+    "registerTitle": "Utwórz konto",
+    "registerSubtitle": "Dołącz do tysięcy marketerów automatyzujących social media",
+    "email": "Adres e-mail",
+    "password": "Hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "login": "Zaloguj się",
+    "register": "Utwórz konto",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "orContinueWith": "Lub kontynuuj przez",
+    "noAccount": "Nie masz konta?",
+    "hasAccount": "Masz już konto?",
+    "signUpLink": "Zarejestruj się",
+    "signInLink": "Zaloguj się",
+    "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+    "passwordUppercase": "Musi zawierać wielką literę",
+    "passwordLowercase": "Musi zawierać małą literę",
+    "passwordNumber": "Musi zawierać cyfrę",
+    "passwordSpecial": "Musi zawierać znak specjalny",
+    "passwordsNoMatch": "Hasła nie są identyczne",
+    "emailRequired": "E-mail jest wymagany",
+    "emailInvalid": "Wprowadź prawidłowy adres e-mail",
+    "signUpSuccess": "Sprawdź swoją skrzynkę",
+    "signUpSuccessMessage": "Wysłaliśmy link weryfikacyjny na Twój adres e-mail. Sprawdź skrzynkę i kliknij link, aby aktywować konto.",
+    "backToLogin": "Powrót do logowania",
+    "authError": "Błąd uwierzytelniania",
+    "authErrorMessage": "Wystąpił błąd podczas uwierzytelniania. Spróbuj ponownie.",
+    "tryAgain": "Spróbuj ponownie",
+    "tabLogin": "Zaloguj się",
+    "tabCreateAccount": "Utwórz konto",
+    "continueWithGoogle": "Kontynuuj przez Google",
+    "continueWithFacebook": "Kontynuuj przez Facebook",
+    "continueWithLinkedIn": "Kontynuuj przez LinkedIn",
+    "continueWithX": "Kontynuuj przez X",
+    "rememberMe": "Zapamiętaj mnie",
+    "forgotLogin": "Zapomniałeś danych logowania?",
+    "verifyTitle": "Sprawdź skrzynkę",
+    "verifySubtitle": "Wysłaliśmy link weryfikacyjny na Twój adres e-mail. Sprawdź skrzynkę i kliknij link, aby aktywować konto.",
+    "verifyResend": "Wyślij ponownie e-mail weryfikacyjny",
+    "verifyResent": "E-mail weryfikacyjny wysłany ponownie",
+    "verifyBack": "Powrót do logowania",
+    "verifiedTitle": "E-mail zweryfikowany",
+    "verifiedSubtitle": "Twój adres e-mail został pomyślnie zweryfikowany. Możesz się teraz zalogować.",
+    "verifiedContinue": "Przejdź do logowania",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "welcome": "Witaj ponownie",
+    "overview": "Przegląd",
+    "accountSettings": "Ustawienia konta",
+    "connectedAccounts": "Połączone konta",
+    "comingSoon": "Wkrótce — centrum dowodzenia social media.",
+    "emailVerified": "E-mail zweryfikowany",
+    "memberSince": "Członek od",
+    "profile": "Ustawienia marki",
+    "supportDescription": "Uzyskaj pomoc od zespołu wsparcia. Twórz i zarządzaj zgłoszeniami.",
+    "restartSetup": "Uruchom konfigurację ponownie",
+    "restarting": "Uruchamianie..."
+  },
+  "connect": {
+    "heading": "Połącz swoje konta",
+    "subheading": "Połącz konta w social media, aby zacząć publikować automatycznie z ZARZOOM.",
+    "connectAccounts": "Połącz konta",
+    "back": "Wstecz"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Uzupełnij z pliku"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Utwórz klucz API",
+    "keyCreated": "Klucz utworzony",
+    "close": "Zamknij",
+    "keyName": "Nazwa klucza",
+    "keyNamePlaceholder": "np. Produkcja, Staging, CI/CD",
+    "keyNameRequired": "Nazwa jest wymagana",
+    "active": "Aktywny",
+    "revoked": "Unieważniony",
+    "created": "Utworzono",
+    "lastUsed": "Ostatnie użycie",
+    "revokedAt": "Unieważniono",
+    "rotate": "Obróć",
+    "revoke": "Unieważnij",
+    "revokeConfirm": "Unieważnić ten klucz?",
+    "rotateConfirm": "Obrócić klucz?",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "revoking": "Unieważnianie...",
+    "rotating": "Obrót...",
+    "rotateTitle": "Obrót: unieważnij ten klucz i utwórz nowy"
+  },
+  "profile": {
+    "title": "Ustawienia marki",
+    "subtitle": "Zarządzaj marką, celami, planem i połączeniami w social media.",
+    "saving": "Zapisywanie...",
+    "saved": "Zmiany zapisane pomyślnie.",
+    "saveFailed": "Nie udało się zapisać zmian. Spróbuj ponownie.",
+    "loadFailed": "Nie udało się załadować profilu. Spróbuj ponownie.",
+    "save": "Zapisz zmiany",
+    "sections": {
+      "brand": "Podstawy marki",
+      "brandDesc": "Tożsamość firmy i preferencje treści.",
+      "goals": "Cele i rozwój",
+      "goalsDesc": "Co chcesz osiągnąć z ZARZOOM.",
+      "posting": "Preferencje publikacji",
+      "postingDesc": "Jak ZARZOOM publikuje Twoje treści.",
+      "plan": "Twój plan",
+      "planDesc": "Aktualna subskrypcja i preferencje rozliczeń.",
+      "social": "Połączenia społecznościowe",
+      "socialDesc": "Zarządzaj połączonymi kontami w social media."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publikacja",
+        "help": "Pozwól ZARZOOM automatycznie publikować treści w Twoim imieniu."
+      }
+    },
+    "plan": {
+      "current": "Aktualny plan",
+      "noPlan": "Nie wybrano planu",
+      "annualBilling": "Rozliczenie roczne",
+      "changePlan": "Zmień plan"
+    },
+    "social": {
+      "username": "Nazwa w social media",
+      "noUsername": "Jeszcze nie skonfigurowano",
+      "connected": "Połączone konta",
+      "notConnected": "Brak połączonych kont",
+      "connect": "Połącz konta",
+      "manage": "Zarządzaj połączeniami"
+    },
+    "back": "Powrót do panelu"
+  },
+  "support": {
+    "nav": {
+      "title": "Pomoc",
+      "myTickets": "Moje zgłoszenia",
+      "createTicket": "Utwórz zgłoszenie",
+      "backToSupport": "Powrót do pomocy",
+      "backToDashboard": "Powrót do panelu"
+    },
+    "landing": {
+      "title": "Uzyskaj pomoc",
+      "subtitle": "Pomagamy w pełnym wykorzystaniu ZARZOOM.",
+      "description": "Utwórz zgłoszenie — nasz zespół odpowie w ciągu 24 godzin w dni robocze.",
+      "createTicketBtn": "Utwórz zgłoszenie",
+      "myTicketsBtn": "Moje zgłoszenia"
+    },
+    "list": {
+      "title": "Moje zgłoszenia",
+      "subtitle": "Przeglądaj i zarządzaj zgłoszeniami.",
+      "empty": "Brak zgłoszeń",
+      "emptyDescription": "Nie utworzyłeś jeszcze żadnego zgłoszenia. Kliknij przycisk poniżej.",
+      "createFirstTicket": "Utwórz pierwsze zgłoszenie",
+      "filterByStatus": "Filtruj według statusu",
+      "allTickets": "Wszystkie zgłoszenia",
+      "showingTickets": "Wyświetlanie {filtered} z {total} zgłoszeń",
+      "noMatchFilter": "Żadne zgłoszenie nie pasuje do wybranego filtra statusu.",
+      "clearFilter": "Wyczyść filtr",
+      "table": {
+        "ticketId": "ID zgłoszenia",
+        "subject": "Temat",
+        "status": "Status",
+        "lastUpdated": "Ostatnia aktualizacja",
+        "created": "Utworzono"
+      }
+    },
+    "create": {
+      "title": "Utwórz zgłoszenie",
+      "subtitle": "Opisz problem — pomożemy go rozwiązać.",
+      "form": {
+        "subject": "Temat",
+        "subjectPlaceholder": "Krótki opis problemu",
+        "subjectHelp": "Wymagane. Krótko i zwięźle.",
+        "category": "Kategoria",
+        "categoryHelp": "Opcjonalnie. Wybierz kategorię najlepiej pasującą do problemu.",
+        "priority": "Priorytet",
+        "priorityHelp": "Opcjonalnie. Wskaż, jak pilna jest sprawa.",
+        "description": "Opis",
+        "descriptionPlaceholder": "Podaj szczegóły dotyczące problemu...",
+        "descriptionHelp": "Wymagane. Uwzględnij kroki do odtworzenia, komunikaty błędów lub inne istotne informacje.",
+        "attachments": "Załącz zrzuty ekranu",
+        "attachmentsHelp": "Opcjonalnie. Do 3 zrzutów (PNG, JPG lub WebP). Maks. 5 MB każdy.",
+        "attachmentsBtn": "Wybierz pliki",
+        "attachmentsSelected": "wybranych plików",
+        "removeAttachment": "Usuń",
+        "submit": "Wyślij zgłoszenie",
+        "submitting": "Tworzenie zgłoszenia...",
+        "cancel": "Anuluj"
+      },
+      "success": {
+        "title": "Zgłoszenie utworzone pomyślnie",
+        "message": "Zgłoszenie zostało utworzone. Odpowiemy w ciągu 24 godzin w dni robocze.",
+        "viewTicket": "Zobacz zgłoszenie",
+        "createAnother": "Utwórz kolejne zgłoszenie"
+      },
+      "error": {
+        "title": "Nie udało się utworzyć zgłoszenia",
+        "message": "Wystąpił błąd. Spróbuj ponownie.",
+        "retry": "Spróbuj ponownie"
+      }
+    },
+    "detail": {
+      "title": "Szczegóły zgłoszenia",
+      "status": "Status",
+      "category": "Kategoria",
+      "priority": "Priorytet",
+      "created": "Utworzono",
+      "lastActivity": "Ostatnia aktywność",
+      "comments": "Komentarze",
+      "addComment": "Dodaj komentarz",
+      "commentPlaceholder": "Wpisz wiadomość...",
+      "attachScreenshots": "Załącz zrzuty ekranu",
+      "sendComment": "Wyślij",
+      "sending": "Wysyłanie...",
+      "loadingTicket": "Ładowanie zgłoszenia...",
+      "ticketNotFound": "Zgłoszenie nie znalezione",
+      "ticketNotFoundMessage": "To zgłoszenie nie istnieje lub nie masz uprawnień do jego przeglądania.",
+      "noComments": "Brak komentarzy",
+      "userRole": "Ty",
+      "adminRole": "Zespół wsparcia",
+      "systemRole": "System",
+      "attachmentPreview": "Kliknij, aby zobaczyć w pełnym rozmiarze",
+      "attachmentAlt": "Załącznik",
+      "closeModal": "Zamknij",
+      "closeTicketTitle": "Zamknij zgłoszenie",
+      "closeTicketMessage": "Czy na pewno chcesz zamknąć to zgłoszenie? Możesz opcjonalnie podać powód.",
+      "closeTicketPlaceholder": "Opcjonalnie: Dlaczego zamykasz to zgłoszenie?",
+      "closeTicketCancel": "Anuluj",
+      "closeTicketButton": "Zamknij zgłoszenie",
+      "closeTicketClosing": "Zamykanie..."
+    },
+    "status": {
+      "open": "Otwarte",
+      "investigating": "W toku",
+      "waiting_on_user": "Oczekiwanie na Ciebie",
+      "resolved": "Rozwiązane",
+      "closed": "Zamknięte"
+    },
+    "category": {
+      "none": "Nie określono",
+      "account_login": "Konto i logowanie",
+      "billing_subscription": "Rozliczenia i subskrypcja",
+      "social_connections": "Połączenia społecznościowe",
+      "content_generation": "Generowanie treści",
+      "publishing_issues": "Problemy z publikacją",
+      "technical_bug": "Błąd techniczny",
+      "feature_request": "Prośba o funkcję",
+      "general_question": "Pytanie ogólne"
+    },
+    "priority": {
+      "none": "Nie określono",
+      "urgent": "Pilne – system blokuje",
+      "high": "Wysoki – poważny problem",
+      "normal": "Normalny – standardowy",
+      "low": "Niski – drobna sprawa / sugestia"
+    },
+    "attachments": {
+      "uploading": "Przesyłanie załączników...",
+      "uploadSuccess": "Załączniki przesłane pomyślnie",
+      "uploadError": "Nie udało się przesłać niektórych załączników",
+      "fileTypeError": "Dozwolone są tylko pliki PNG, JPG i WebP",
+      "fileSizeError": "Rozmiar pliku musi być mniejszy niż 5 MB",
+      "fileCountError": "Można przesłać do 3 plików na komentarz",
+      "viewFullSize": "Zobacz w pełnym rozmiarze"
+    },
+    "errors": {
+      "loadFailed": "Nie udało się załadować zgłoszeń",
+      "createFailed": "Nie udało się utworzyć zgłoszenia",
+      "commentFailed": "Nie udało się dodać komentarza",
+      "unauthorized": "Nie masz uprawnień do tego zgłoszenia",
+      "networkError": "Błąd sieci. Sprawdź połączenie i spróbuj ponownie."
+    },
+    "validation": {
+      "subjectRequired": "Temat jest wymagany",
+      "descriptionRequired": "Opis jest wymagany",
+      "messageRequired": "Wiadomość jest wymagana",
+      "emailRequired": "E-mail jest wymagany",
+      "invalidEmail": "Wprowadź prawidłowy adres e-mail",
+      "noUpdatesProvided": "Nie podano aktualizacji",
+      "noFilesProvided": "Nie podano plików",
+      "tooManyFiles": "Za dużo plików. Maksymalnie dozwolone {count} plików.",
+      "invalidFileType": "Nieprawidłowy typ pliku {name}. Dozwolone są tylko PNG, JPG i WebP.",
+      "fileTooLarge": "Plik {name} jest za duży ({size}). Maksymalny rozmiar to 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Skonfiguruj ZARZOOM",
+    "subtitle": "Skonfigurujmy autopilota social media w kilku krokach.",
+    "stepper": {
+      "step1": "Konto",
+      "step2": "Marka",
+      "step3": "Cele",
+      "step4": "Plan",
+      "step5": "Połączenie"
+    },
+    "nav": {
+      "back": "Wstecz",
+      "next": "Dalej",
+      "saveExit": "Zapisz i wyjdź",
+      "skipForNow": "Pomiń na razie",
+      "finish": "Uruchom ZARZOOM",
+      "saving": "Zapisywanie..."
+    },
+    "step1": {
+      "title": "Konto utworzone",
+      "subtitle": "Jesteś zalogowany i gotowy do startu.",
+      "signedInAs": "Zalogowano jako",
+      "continue": "Skonfigurujmy Twoją markę"
+    },
+    "step2": {
+      "title": "Podstawy marki",
+      "subtitle": "Opowiedz o swojej firmie — dopasujemy treści do marki.",
+      "businessName": {
+        "label": "Nazwa firmy",
+        "placeholder": "np. Acme Corp",
+        "help": "Nazwa firmy lub marki."
+      },
+      "description": {
+        "label": "Opis",
+        "placeholder": "Krótko opisz, czym zajmuje się firma...",
+        "help": "Krótkie podsumowanie, aby nasza AI zrozumiała głos marki."
+      },
+      "websiteUrl": {
+        "label": "Adres strony",
+        "placeholder": "https://twojastrona.pl",
+        "help": "Przeanalizujemy stronę, aby dopasować treści."
+      },
+      "autofillFromWebsite": "Uzupełnij ze strony",
+      "analysing": "Analizowanie...",
+      "importFromFile": "Import z pliku",
+      "choosePdfOrWord": "Wybierz dokument PDF lub Word",
+      "investigate": {
+        "button": "Analizuj stronę",
+        "loading": "Analizowanie Twojej strony...",
+        "success": "Strona przeanalizowana pomyślnie!",
+        "error": "Nie udało się przeanalizować strony. Wypełnij dane ręcznie."
+      },
+      "contentLanguage": {
+        "label": "Język treści",
+        "help": "Główny język generowanych treści."
+      },
+      "articleStyles": {
+        "label": "Style artykułów",
+        "help": "Wybierz typy treści, które ma tworzyć ZARZOOM.",
+        "options": {
+          "let_zarzoom_decide": "Niech ZARZOOM zdecyduje",
+          "how_to_guides": "Poradniki krok po kroku",
+          "listicles": "Listy (np. 10 porad dla X)",
+          "tutorials": "Tutoriale",
+          "opinion_pieces": "Teksty opinii",
+          "case_studies": "Studia przypadków",
+          "news_commentary": "Komentarze do wiadomości",
+          "interviews": "Wywiady",
+          "product_reviews": "Recenzje produktów",
+          "explainer_articles": "Artykuły wyjaśniające",
+          "comparisons_vs_articles": "Porównania X vs Y",
+          "ultimate_guides_pillar": "Przewodniki / treści filarowe",
+          "checklists_cheat_sheets": "Checklisty i ściągawki",
+          "best_top_forecasts": "Najlepsze / Top / Prognozy",
+          "problem_solution_posts": "Posty problem–rozwiązanie",
+          "myth_busting": "Obalamy mity",
+          "resource_roundups": "Zestawienia zasobów",
+          "faqs_qa_content": "FAQ / treści Q&A",
+          "personal_stories": "Historie osobiste",
+          "research_summaries": "Podsumowania badań",
+          "historical_timeline": "Historia / oś czasu",
+          "satire_humor": "Satyna lub humor",
+          "explained_in_minutes": "Wyjaśnione w X minut"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Niech AI wybierze najlepszy format treści",
+          "how_to_guides": "Instrukcje krok po kroku",
+          "listicles": "Listy numerowane (np. 10 porad dla X)",
+          "tutorials": "Bardziej szczegółowe niż poradnik",
+          "opinion_pieces": "Eksperckie opinie lub komentarze",
+          "case_studies": "Przykłady i wyniki z praktyki",
+          "news_commentary": "Kontekst aktualnych wydarzeń",
+          "interviews": "Q&A z osobą/autorytetem",
+          "product_reviews": "Oceny i recenzje",
+          "explainer_articles": "Proste wyjaśnienie złożonych tematów",
+          "comparisons_vs_articles": "X vs Y, porównania zalet i wad",
+          "ultimate_guides_pillar": "Długie, merytoryczne treści obejmujące cały temat",
+          "checklists_cheat_sheets": "Szybka ściągawka, listy do działania",
+          "best_top_forecasts": "Najlepsze narzędzia do X, Top trendy 202X",
+          "problem_solution_posts": "Wskaż problem i przedstaw rozwiązanie",
+          "myth_busting": "Obalamy popularne mity",
+          "resource_roundups": "Najlepsze artykuły, narzędzia, linki",
+          "faqs_qa_content": "Bezpośrednie odpowiedzi na długie zapytania",
+          "personal_stories": "Narracja, emocje",
+          "research_summaries": "Podsumowania badań i ankiet",
+          "historical_timeline": "Przegląd rozwoju lub ewolucji",
+          "satire_humor": "Rozrywkowe treści w stylu marki",
+          "explained_in_minutes": "Najważniejsze punkty, szybka konsumpcja"
+        }
+      },
+      "styleLinks": {
+        "label": "Linki referencyjne stylu",
+        "placeholder": "https://example.com/artykul",
+        "help": "Dodaj do 3 linków do artykułów, których styl chcesz naśladować.",
+        "add": "Dodaj link",
+        "max": "Maksymalnie 3 linki"
+      },
+      "brandColor": {
+        "label": "Kolor marki",
+        "help": "Główny kolor marki do generowanych grafik."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Prześlij logo marki (format JPG).",
+        "upload": "Prześlij logo",
+        "change": "Zmień logo",
+        "uploading": "Przesyłanie..."
+      }
+    },
+    "step3": {
+      "title": "Cele i rozwój",
+      "subtitle": "Co chcesz osiągnąć z ZARZOOM?",
+      "goals": {
+        "label": "Wybierz cele",
+        "help": "Wybierz jeden lub więcej celów. Dostosujemy strategię.",
+        "options": {
+          "increase_website_traffic": "Zwiększyć ruch na stronie",
+          "get_more_subscribers_leads": "Pozyskać więcej subskrybentów i leadów",
+          "promote_product_or_service": "Promować produkt lub usługę",
+          "increase_sales": "Zwiększyć sprzedaż",
+          "build_brand_authority": "Budować autorytet marki",
+          "improve_seo": "Poprawić SEO",
+          "educate_audience": "Edukować odbiorców",
+          "generate_social_content": "Generować treści do social media"
+        }
+      },
+      "websiteUrl": {
+        "label": "Adres strony lub landing page",
+        "placeholder": "https://twojastrona.pl/landing",
+        "help": "Wymagane, gdy cele obejmują ruch na stronie lub pozyskiwanie leadów."
+      },
+      "productUrl": {
+        "label": "Adres strony produktu lub sprzedaży",
+        "placeholder": "https://twojastrona.pl/produkt",
+        "help": "Wymagane, gdy cele obejmują promocję produktu lub sprzedaż."
+      }
+    },
+    "step4": {
+      "title": "Wybierz plan",
+      "subtitle": "Zacznij od planu dopasowanego do Twoich ambicji.",
+      "discount": {
+        "label": "Rozliczenie roczne",
+        "save": "Oszczędź {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Do 3 profili w social media",
+          "postsPerMonth": "30 postów miesięcznie",
+          "aiGeneration": "Podstawowe generowanie treści z AI",
+          "scheduling": "Planowanie postów",
+          "emailSupport": "Wsparcie e-mail"
+        },
+        "pro": {
+          "socialProfiles": "Do 10 profili w social media",
+          "postsPerMonth": "150 postów miesięcznie",
+          "aiGeneration": "Zaawansowane generowanie treści z AI",
+          "scheduling": "Inteligentne planowanie w optymalnych godzinach",
+          "analytics": "Panel analityki",
+          "prioritySupport": "Wsparcie priorytetowe"
+        },
+        "scale": {
+          "socialProfiles": "Nieograniczona liczba profili",
+          "postsPerMonth": "Nieograniczona liczba postów",
+          "aiGeneration": "Premium AI z własnym głosem marki",
+          "scheduling": "Auto-planowanie z AI",
+          "analytics": "Zaawansowana analityka i raporty",
+          "customBranding": "Własna marka i white-label",
+          "dedicatedSupport": "Dedykowany opiekun konta",
+          "apiAccess": "Pełny dostęp do API"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Idealny na start z automatyzacją social media.",
+        "pro": "Dla rosnących firm potrzebujących większej mocy i analityki.",
+        "scale": "Nieograniczone możliwości dla zespołów i agencji."
+      },
+      "popular": "Najpopularniejszy",
+      "perMonth": "/mies.",
+      "selectPlan": "Wybierz plan",
+      "selected": "Wybrano",
+      "trialDays": "{days}-dniowy darmowy okres próbny"
+    },
+    "step5": {
+      "title": "Połącz i uruchom",
+      "subtitle": "Połącz konta w social media i ustaw preferencje.",
+      "connectSocials": {
+        "label": "Połącz konta w social media",
+        "help": "Połącz swoje konta",
+        "button": "Połącz konta",
+        "manage": "Zarządzaj połączeniami",
+        "connected": "Konta połączone",
+        "notConnected": "Brak połączonych kont"
+      },
+      "approval": {
+        "label": "Zatwierdzanie treści",
+        "help": "Wybierz, jak ZARZOOM publikuje Twoje treści.",
+        "auto": "Auto-publikacja",
+        "autoHelp": "ZARZOOM publikuje treści automatycznie według harmonogramu.",
+        "manual": "Zatwierdzanie ręczne",
+        "manualHelp": "Przeglądaj i zatwierdzaj każdy post przed publikacją."
+      },
+      "notes": {
+        "label": "Dodatkowe uwagi",
+        "placeholder": "Wszystko, co chciałbyś nam przekazać o marce lub preferencjach treści...",
+        "help": "Opcjonalne uwagi dla naszej AI."
+      }
+    },
+    "modal": {
+      "title": "Połącz konta w social media",
+      "loading": "Przygotowywanie łącznika...",
+      "checking": "Sprawdzanie połączenia...",
+      "close": "Gotowe",
+      "openInNewTab": "Otwórz w nowej karcie",
+      "skipConnect": "Pomiń na razie",
+      "errorGeneric": "Nie udało się załadować łącznika. Spróbuj później.",
+      "errorNoUrl": "Nie zwrócono adresu połączenia. Spróbuj ponownie.",
+      "demoTitle": "Łącznik social media wkrótce",
+      "demoDescription": "Łącznik nie jest jeszcze skonfigurowany w tym środowisku. Połączenia kont będą dostępne po konfiguracji przez administratora."
+    },
+    "errors": {
+      "loadFailed": "Nie udało się załadować danych konfiguracji. Spróbuj ponownie.",
+      "saveFailed": "Nie udało się zapisać. Spróbuj ponownie.",
+      "completeFailed": "Nie udało się dokończyć konfiguracji. Sprawdź wymagane pola."
+    },
+    "banner": {
+      "skipped": "Pominąłeś konfigurację. Dokończ ją, aby odblokować wszystkie funkcje.",
+      "inProgress": "Konfiguracja nieukończona. Dokończ ją, aby zacząć.",
+      "cta": "Dokończ konfigurację"
+    },
+    "gate": {
+      "title": "Wymagana konfiguracja",
+      "description": "Dokończ konfigurację, aby odblokować tę funkcję. Zajmuje to tylko kilka minut.",
+      "cta": "Dokończ konfigurację"
+    },
+    "a11y": {
+      "brandLogoAlt": "Logo marki",
+      "socialConnectorTitle": "Łącznik social media",
+      "dismissBanner": "Zamknij baner",
+      "currency": "zł",
+      "stepperLabel": "Postęp konfiguracji"
+    },
+    "validation": {
+      "invalidUrl": "Wprowadź prawidłowy adres URL (np. https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Historia rozliczeń"
+    },
+    "selectCurrencyLabel": "Wybierz walutę",
+    "selectCurrencyHelp": "Wybierz preferowaną walutę do wyświetlania cen.",
+    "selectBillingInterval": "Wybierz okres rozliczeniowy",
+    "toggleDiscount": "Włącz/wyłącz zniżkę partnerską reklamową",
+    "discountPartnershipTitle": "Oszczędź {percent}% z partnerstwem reklamowym",
+    "discountActive": "Aktywna",
+    "discountPartnershipDescription": "Pozwól ZARZOOM publikować treści promocyjne na Twoim kanale (maks. {maxFrequency}) i otrzymaj {percent}% zniżki na subskrypcję. Zachowujesz pełną kontrolę i możesz wyłączyć to w dowolnym momencie.",
+    "discountOncePerDay": "raz dziennie",
+    "discountPerWeek": "{count}x tygodniowo",
+    "discountPartnerApplied": "Zastosowano zniżkę partnerską",
+    "discountAdvertisingApplied": "Zastosowano zniżkę partnerstwa reklamowego",
+    "contactUs": "Skontaktuj się z nami",
+    "partnerDiscountEnable": "Włącz zniżkę partnerską 50%",
+    "partnerDiscountStandardPrice": "Cena standardowa",
+    "partnerDiscount50Off": "50% TANIEJ",
+    "partnerDiscountSubheading": "Oszczędź 50%. Możemy publikować do 1 małej promocji ZARZOOM dziennie (maks. 3–7 tygodniowo) — nigdy na Twoich postach.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Prosty, przejrzysty cennik",
+      "subtitle": "Wybierz plan dopasowany do rozwoju. Zacznij od darmowego okresu próbnego, zmień plan w dowolnym momencie.",
+      "monthly": "Miesięcznie",
+      "annual": "Rocznie",
+      "popular": "Najpopularniejszy",
+      "getStarted": "Rozpocznij",
+      "savePercent": "Oszczędź {percent}% przy rozliczeniu rocznym",
+      "trialDays": "{days}-dniowy darmowy okres próbny",
+      "page": {
+        "title": "Prosty, przejrzysty cennik",
+        "subtitle": "Wybierz plan dla siebie. Wszystkie plany obejmują 14-dniowy darmowy okres próbny.",
+        "footer": "Ceny nie zawierają VAT tam, gdzie ma zastosowanie. Anuluj lub zmień plan w dowolnym momencie.",
+        "contactCta": "Pytania? Skontaktuj się z nami — pomożemy wybrać odpowiedni plan.",
+        "contactCtaPrefix": "Pytania? ",
+        "contactLink": "Skontaktuj się z nami",
+        "contactCtaSuffix": " — pomożemy wybrać odpowiedni plan."
+      },
+      "fallback": {
+        "title": "Cennik tymczasowo niedostępny",
+        "message": "Aktualizujemy plany cenowe. Sprawdź za chwilę lub skontaktuj się z pomocą."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Idealny na start",
+        "description": "Niezbędne funkcje do uruchomienia obecności w social media z tworzeniem treści i planowaniem z AI.",
+        "bullets": [
+          "Do 3 profili w social media",
+          "30 postów miesięcznie",
+          "Podstawowe generowanie treści z AI",
+          "Planowanie postów",
+          "Wsparcie e-mail"
+        ],
+        "cta": "Rozpocznij darmowy okres próbny"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Dla rosnących firm",
+        "description": "Zaawansowane funkcje i analityka do skalowania strategii w social media z inteligentną automatyzacją.",
+        "bullets": [
+          "Do 10 profili w social media",
+          "150 postów miesięcznie",
+          "Zaawansowane generowanie treści z AI",
+          "Inteligentne planowanie w optymalnych godzinach",
+          "Panel analityki",
+          "Wsparcie priorytetowe"
+        ],
+        "cta": "Rozpocznij darmowy okres próbny"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Dla zespołów i agencji",
+        "description": "Funkcje klasy enterprise: nieograniczone treści, własna marka i dedykowane wsparcie dla maksymalnego efektu.",
+        "bullets": [
+          "Nieograniczona liczba profili",
+          "Nieograniczona liczba postów",
+          "Premium AI z własnym głosem marki",
+          "Auto-planowanie z AI",
+          "Zaawansowana analityka i raporty",
+          "Własna marka i white-label",
+          "Dedykowany opiekun konta",
+          "Pełny dostęp do API"
+        ],
+        "cta": "Skontaktuj się ze sprzedażą"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Do 3 profili w social media",
+        "postsPerMonth": "30 postów miesięcznie",
+        "aiGeneration": "Podstawowe generowanie treści z AI",
+        "scheduling": "Planowanie postów",
+        "emailSupport": "Wsparcie e-mail"
+      },
+      "pro": {
+        "socialProfiles": "Do 10 profili w social media",
+        "postsPerMonth": "150 postów miesięcznie",
+        "aiGeneration": "Zaawansowane generowanie treści z AI",
+        "scheduling": "Inteligentne planowanie w optymalnych godzinach",
+        "analytics": "Panel analityki",
+        "prioritySupport": "Wsparcie priorytetowe"
+      },
+      "advanced": {
+        "socialProfiles": "Nieograniczona liczba profili",
+        "postsPerMonth": "Nieograniczona liczba postów",
+        "aiGeneration": "Premium AI z własnym głosem marki",
+        "scheduling": "Auto-planowanie z AI",
+        "analytics": "Zaawansowana analityka i raporty",
+        "customBranding": "Własna marka i white-label",
+        "dedicatedSupport": "Dedykowany opiekun konta",
+        "apiAccess": "Pełny dostęp do API"
+      }
+    }
+  }
+}
