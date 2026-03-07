@@ -7,6 +7,8 @@ import { ApiKeyRow, type ApiKeyItem } from "@/components/dashboard/api-key-row";
 import { CreateKeyModal } from "@/components/dashboard/create-key-modal";
 import { cn } from "@/lib/utils";
 import { useWorkspaceFetch, useWorkspaceFetcher } from "@/lib/workspace/context";
+import SiteNavbar from "@/components/SiteNavbar";
+import Footer from "@/components/Footer";
 
 type TabType = "api" | "openclaw" | "skills";
 
@@ -67,7 +69,9 @@ export default function ApiIntegrationsPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <main className="bg-gray-50 min-h-screen flex flex-col">
+      <SiteNavbar />
+      <div className="flex-1 mx-auto max-w-5xl w-full px-4 py-10 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -283,6 +287,8 @@ export default function ApiIntegrationsPage() {
         }}
         onCreated={() => mutate()}
       />
-    </div>
+      </div>
+      <Footer />
+    </main>
   );
 }
