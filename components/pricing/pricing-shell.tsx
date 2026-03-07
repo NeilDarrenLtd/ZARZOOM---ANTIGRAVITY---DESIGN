@@ -13,6 +13,7 @@ import {
   saveDiscountPreference,
   getDiscountPreference,
 } from "@/lib/pricing/geolocation";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 import { useI18n } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
@@ -103,9 +104,12 @@ export function PricingShell({
     async (priceId: string) => {
       setCheckoutLoading(priceId);
       try {
+        const tenantId = getActiveWorkspaceIdFromCookie();
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (tenantId) headers["X-Tenant-Id"] = tenantId;
         const res = await fetch("/api/v1/billing/checkout", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ price_id: priceId }),
         });
 

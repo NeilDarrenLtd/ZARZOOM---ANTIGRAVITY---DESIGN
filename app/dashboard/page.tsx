@@ -57,14 +57,41 @@ export default function DashboardPage() {
     if (activeWorkspaceId) setCurrentWorkspaceId(activeWorkspaceId);
   }, [activeWorkspaceId]);
 
-  function handleSwitchWorkspace(workspaceId: string) {
+  async function handleSwitchWorkspace(workspaceId: string) {
+    if (workspaceId === currentWorkspaceId) return;
+    try {
+      const res = await workspaceFetch("/api/v1/workspace/switch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ workspace_id: workspaceId }),
+      });
+      if (res.ok) {
+        window.location.href = "/dashboard";
+        return;
+      }
+    } catch {
+      // fallback: set cookie client-side and reload
+    }
     setCurrentWorkspaceId(workspaceId);
-    // Persist to cookie so the server picks it up on next navigation
     document.cookie = `active_workspace_id=${workspaceId}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    window.location.href = "/dashboard";
   }
 
-  function handleAddWorkspace() {
-    window.location.href = "/onboarding?new_workspace=true";
+  async function handleAddWorkspace() {
+    try {
+      const res = await workspaceFetch("/api/v1/workspaces", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "My Workspace" }),
+      });
+      if (res.ok) {
+        window.location.href = "/dashboard";
+        return;
+      }
+    } catch {
+      // fallback
+    }
+    window.location.href = "/dashboard";
   }
 
 

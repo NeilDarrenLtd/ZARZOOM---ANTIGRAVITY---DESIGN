@@ -67,3 +67,14 @@ export async function getActiveWorkspaceId(
 export function getActiveWorkspaceCookieOptions() {
   return COOKIE_OPTIONS;
 }
+
+/**
+ * Client-only: read active_workspace_id from document.cookie.
+ * Use when calling billing/API from pages that don't use workspaceFetch (e.g. public pricing)
+ * so checkout/portal apply to the user's current workspace when set.
+ */
+export function getActiveWorkspaceIdFromCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/active_workspace_id=([^;]+)/);
+  return match ? decodeURIComponent(match[1].trim()) : null;
+}

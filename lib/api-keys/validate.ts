@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import { timingSafeEqual, createHash } from "node:crypto";
+import { createHash } from "node:crypto";
 import { env } from "@/lib/api/env";
 
 /* ------------------------------------------------------------------ */
@@ -41,19 +41,6 @@ function hashKey(rawKey: string): string {
     .digest("hex");
 }
 
-/**
- * Constant-time comparison of two hex-encoded hashes.
- *
- * Prevents timing attacks that could leak information about
- * valid key prefixes or partial hash matches.
- */
-function safeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  const bufA = Buffer.from(a, "hex");
-  const bufB = Buffer.from(b, "hex");
-  return timingSafeEqual(bufA, bufB);
-}
-
 /* ------------------------------------------------------------------ */
 /*  Core validator                                                     */
 /* ------------------------------------------------------------------ */
@@ -62,16 +49,13 @@ function safeCompare(a: string, b: string): boolean {
  * Validate a ZARZOOM API key (`zarz_live_...`).
  *
  * Steps:
- *   1. Extract the raw token from the Authorization header.
- *   2. Verify the `zarz_live_` prefix.
- *   3. Hash the token and look up matching rows by `key_prefix`.
- *   4. Constant-time compare the stored hash to prevent timing attacks.
- *   5. Ensure the key is not revoked.
- *   6. Fire-and-forget update to `last_used_at`.
+ *   1. Verify the `zarz_live_` prefix.
+ *   2. Hash the token (pepper + rawKey) and look up by key_hash (indexed).
+ *   3. Ensure the key is not revoked.
+ *   4. Fire-and-forget update to `last_used_at`.
  *
- * Returns `null` if the token is not a ZARZOOM API key (so the caller
- * can fall back to session auth).  Throws `AuthError` if the key is
- * a ZARZOOM key but invalid/revoked.
+ * Lookup by key_hash is O(1) and scales regardless of total key count.
+ * Returns `null` if the token is not a ZARZOOM key or invalid/revoked.
  */
 export async function validateZarzApiKey(
   rawToken: string
@@ -91,42 +75,20 @@ export async function validateZarzApiKey(
 
   const candidateHash = hashKey(rawToken);
 
-  // Look up by key_prefix (all ZARZOOM keys share the same prefix)
-  const { data: rows, error } = await admin
+  // Look up by key_hash (indexed). Single row; no limit(100) so production-safe at scale.
+  const { data: matched, error } = await admin
     .from("api_keys")
     .select("id, tenant_id, user_id, name, key_hash, scopes_json, revoked_at")
-    .eq("key_prefix", "zarz_live_")
+    .eq("key_hash", candidateHash)
     .is("revoked_at", null)
-    .limit(100); // Reasonable upper bound per prefix
+    .maybeSingle();
 
   if (error) {
     console.error("[ApiKey] DB lookup error:", error);
     return null; // Fail open to session auth
   }
 
-  if (!rows || rows.length === 0) {
-    // No keys in DB -- could be invalid key; return null for AuthError later
-    return null;
-  }
-
-  // Find the matching key via constant-time comparison
-  const matched = rows.find((row) => {
-    try {
-      return safeCompare(candidateHash, row.key_hash);
-    } catch {
-      return false;
-    }
-  });
-
   if (!matched) {
-    // Token looks like a ZARZOOM key but didn't match any hash
-    // Return null -- the handler will throw AuthError since session auth
-    // also won't work for a zarz_live_ token
-    return null;
-  }
-
-  // Key matched -- check revocation (belt + suspenders)
-  if (matched.revoked_at) {
     return null;
   }
 

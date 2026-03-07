@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { DisplayablePlan } from "@/lib/pricing";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 import { PricingClient } from "./PricingClient";
 
 interface PricingPageClientProps {
@@ -36,10 +37,13 @@ export function PricingPageClient({ plans }: PricingPageClientProps) {
         return;
       }
 
-      // Call checkout endpoint
+      // Call checkout endpoint (send active workspace so billing is workspace-scoped)
+      const tenantId = getActiveWorkspaceIdFromCookie();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (tenantId) headers["X-Tenant-Id"] = tenantId;
       const response = await fetch("/api/v1/billing/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           plan_code: planKey,
           currency: price.currency,

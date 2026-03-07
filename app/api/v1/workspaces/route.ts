@@ -1,84 +1,91 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import {
+  createApiHandler,
+  badRequest,
+  ok,
+  serverError,
+} from "@/lib/api";
+import {
+  ACTIVE_WORKSPACE_COOKIE,
+  getActiveWorkspaceCookieOptions,
+} from "@/lib/workspace/active";
+
+/** Map tenant DB status to UI workspace status */
+function toWorkspaceStatus(
+  tenantStatus: string,
+  subStatus: string | undefined
+): "active" | "setup_incomplete" | "payment_required" {
+  if (subStatus === "past_due" || subStatus === "unpaid") return "payment_required";
+  if (subStatus === "active" || subStatus === "trialing") return "active";
+  switch (tenantStatus) {
+    case "active":
+      return "active";
+    case "payment_required":
+      return "payment_required";
+    case "draft":
+    case "inactive":
+    default:
+      return "setup_incomplete";
+  }
+}
 
 // ──────────────────────────────────────────────
 // GET /api/v1/workspaces
-// Returns all workspaces the authenticated user belongs to,
-// with their subscription status and the user's role.
+// Returns all workspaces the authenticated user belongs to (from tenants + memberships),
+// with status and role. Optional X-Tenant-Id for tenant-scoped auth.
 // ──────────────────────────────────────────────
 
-export async function GET() {
-  try {
-    const supabase = await createClient();
+export const GET = createApiHandler({
+  auth: true,
+  tenantOptional: true,
+  rateLimit: { maxRequests: 60, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const supabase = ctx.supabase!;
+    const userId = ctx.user!.id;
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Fetch all memberships for this user
     const { data: memberships, error: membershipError } = await supabase
       .from("tenant_memberships")
       .select("tenant_id, role, created_at")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .order("created_at", { ascending: true });
 
     if (membershipError) {
-      return NextResponse.json(
-        { error: "Failed to fetch workspaces", details: membershipError.message },
-        { status: 500 }
-      );
+      return serverError(ctx.requestId, "Failed to fetch workspaces");
     }
 
     if (!memberships || memberships.length === 0) {
-      return NextResponse.json({ workspaces: [] });
+      return ok({ workspaces: [] }, ctx.requestId);
     }
 
     const tenantIds = memberships.map((m) => m.tenant_id);
 
-    // Fetch subscription status for these tenants
+    const { data: tenants, error: tenantsError } = await supabase
+      .from("tenants")
+      .select("id, name, status")
+      .in("id", tenantIds);
+
+    if (tenantsError || !tenants) {
+      return serverError(ctx.requestId, "Failed to fetch workspace details");
+    }
+
+    const tenantMap = new Map(tenants.map((t) => [t.id, t]));
+
     const { data: subscriptions } = await supabase
       .from("tenant_subscriptions")
       .select("tenant_id, status")
       .in("tenant_id", tenantIds);
 
-    const subscriptionMap = new Map<string, string>(
+    const subMap = new Map(
       (subscriptions ?? []).map((s) => [s.tenant_id, s.status])
     );
 
-    // Fetch onboarding profiles to get business name per tenant
-    // The onboarding_profiles table is user-scoped, so we use the user's profile
-    // for the primary workspace name. For additional workspaces we fall back to the tenant_id.
-    const { data: onboarding } = await supabase
-      .from("onboarding_profiles")
-      .select("business_name")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    const primaryTenantId = memberships[0]?.tenant_id;
-
-    const workspaces = memberships.map((m, index) => {
-      const subStatus = subscriptionMap.get(m.tenant_id);
-
-      // Derive a display status
-      let status: "active" | "setup_incomplete" | "payment_required";
-      if (subStatus === "active" || subStatus === "trialing") {
-        status = "active";
-      } else if (subStatus === "past_due" || subStatus === "unpaid") {
-        status = "payment_required";
-      } else {
-        status = "setup_incomplete";
-      }
-
-      // Use business name for primary workspace, generic label for others
-      const name =
-        m.tenant_id === primaryTenantId && onboarding?.business_name
-          ? onboarding.business_name
-          : `Workspace ${index + 1}`;
+    const workspaces = memberships.map((m) => {
+      const tenant = tenantMap.get(m.tenant_id);
+      const name = tenant?.name ?? "Workspace";
+      const tenantStatus = tenant?.status ?? "draft";
+      const subStatus = subMap.get(m.tenant_id);
+      const status = toWorkspaceStatus(tenantStatus, subStatus);
 
       return {
         id: m.tenant_id,
@@ -89,9 +96,75 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ workspaces });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
+    return ok({ workspaces }, ctx.requestId);
+  },
+});
+
+// ──────────────────────────────────────────────
+// POST /api/v1/workspaces
+// Create a new draft workspace and add the current user as owner.
+// Sets active_workspace_id cookie to the new workspace so dashboard reloads in context.
+// Body: { name?: string } (optional display name).
+// ──────────────────────────────────────────────
+
+export const POST = createApiHandler({
+  auth: true,
+  tenantOptional: true,
+  rateLimit: { maxRequests: 10, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const supabase = ctx.supabase!;
+    const userId = ctx.user!.id;
+
+    let name = "My Workspace";
+    try {
+      const body = await ctx.req.json().catch(() => ({}));
+      if (body?.name && typeof body.name === "string" && body.name.trim()) {
+        name = body.name.trim().slice(0, 200);
+      }
+    } catch {
+      // use default name
+    }
+
+    const { data: tenant, error: tenantError } = await supabase
+      .from("tenants")
+      .insert({
+        name,
+        status: "draft",
+      })
+      .select("id, name, status, created_at")
+      .single();
+
+    if (tenantError || !tenant) {
+      return serverError(ctx.requestId, "Failed to create workspace");
+    }
+
+    const { error: membershipError } = await supabase
+      .from("tenant_memberships")
+      .insert({
+        tenant_id: tenant.id,
+        user_id: userId,
+        role: "owner",
+      });
+
+    if (membershipError) {
+      return serverError(ctx.requestId, "Failed to add workspace membership");
+    }
+
+    const response = ok(
+      {
+        workspace: {
+          id: tenant.id,
+          name: tenant.name,
+          status: "setup_incomplete" as const,
+          role: "owner" as const,
+          created_at: tenant.created_at,
+        },
+      },
+      ctx.requestId
+    );
+
+    const opts = getActiveWorkspaceCookieOptions();
+    response.cookies.set(ACTIVE_WORKSPACE_COOKIE, tenant.id, opts);
+    return response;
+  },
+});
