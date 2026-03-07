@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { X, Copy, Check, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 
 interface CreateKeyModalProps {
   open: boolean;
@@ -15,6 +16,7 @@ type Step = "form" | "loading" | "reveal";
 
 export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps) {
   const { t } = useI18n();
+  const workspaceFetch = useWorkspaceFetch();
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
   const [rawKey, setRawKey] = useState("");
@@ -51,7 +53,7 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
     setStep("loading");
 
     try {
-      const res = await fetch("/api/v1/api-keys", {
+      const res = await workspaceFetch("/api/v1/api-keys", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +77,7 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
       setStep("form");
       setError("Network error. Please try again.");
     }
-  }, [name, onCreated]);
+  }, [name, onCreated, workspaceFetch, t]);
 
   const handleCopy = useCallback(async () => {
     try {

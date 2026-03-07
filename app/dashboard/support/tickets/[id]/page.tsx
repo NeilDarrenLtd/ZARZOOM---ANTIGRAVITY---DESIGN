@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef, ChangeEvent, FormEvent } from "react";
+import { useEffect, useState, useRef, useCallback, ChangeEvent, FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useParams } from "next/navigation";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -40,6 +41,7 @@ export default function TicketDetailPage() {
   const { t } = useI18n();
   const params = useParams();
   const ticketId = params.id as string;
+  const workspaceFetch = useWorkspaceFetch();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [ticket, setTicket] = useState<Ticket | null>(null);
@@ -53,13 +55,9 @@ export default function TicketDetailPage() {
   const [closeReason, setCloseReason] = useState("");
   const [closingTicket, setClosingTicket] = useState(false);
 
-  useEffect(() => {
-    fetchTicket();
-  }, [ticketId]);
-
-  const fetchTicket = async () => {
+  const fetchTicket = useCallback(async () => {
     try {
-      const res = await fetch(`/api/v1/support/tickets/${ticketId}`);
+      const res = await workspaceFetch(`/api/v1/support/tickets/${ticketId}`);
       if (!res.ok) {
         if (res.status === 404) {
           setError(t("support.detail.ticketNotFound"));
@@ -84,7 +82,11 @@ export default function TicketDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [ticketId, workspaceFetch, t]);
+
+  useEffect(() => {
+    fetchTicket();
+  }, [fetchTicket]);
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -122,7 +124,7 @@ export default function TicketDetailPage() {
     setSendingComment(true);
     try {
       // Create comment
-      const commentRes = await fetch(`/api/v1/support/tickets/${ticketId}/comments`, {
+      const commentRes = await workspaceFetch(`/api/v1/support/tickets/${ticketId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: commentMessage }),
@@ -138,7 +140,7 @@ export default function TicketDetailPage() {
         const formData = new FormData();
         commentFiles.forEach((file) => formData.append("files", file));
 
-        await fetch(
+        await workspaceFetch(
           `/api/v1/support/tickets/${ticketId}/comments/${newCommentId}/attachments`,
           {
             method: "POST",
@@ -162,7 +164,7 @@ export default function TicketDetailPage() {
 
   const loadSignedUrl = async (attachmentId: string) => {
     try {
-      const res = await fetch(`/api/v1/support/attachments/${attachmentId}/signed-url`);
+      const res = await workspaceFetch(`/api/v1/support/attachments/${attachmentId}/signed-url`);
       if (!res.ok) throw new Error("Failed to load image");
       const body = await res.json();
       // The ok() wrapper nests data under body.data
@@ -177,7 +179,7 @@ export default function TicketDetailPage() {
     setClosingTicket(true);
 
     try {
-      const res = await fetch(`/api/v1/support/tickets/${ticketId}`, {
+      const res = await workspaceFetch(`/api/v1/support/tickets/${ticketId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -3,6 +3,7 @@
 import { useState, useRef, ChangeEvent, FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -12,6 +13,7 @@ import { Upload, X, Check, AlertCircle } from "lucide-react";
 export default function CreateTicketPage() {
   const { t } = useI18n();
   const router = useRouter();
+  const workspaceFetch = useWorkspaceFetch();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -83,7 +85,7 @@ export default function CreateTicketPage() {
       });
       
       // Step 1: Create ticket with initial comment
-      const ticketRes = await fetch("/api/v1/support/tickets", {
+      const ticketRes = await workspaceFetch("/api/v1/support/tickets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,7 +115,7 @@ export default function CreateTicketPage() {
         const formData = new FormData();
         files.forEach((file) => formData.append("files", file));
 
-        const uploadRes = await fetch(
+        const uploadRes = await workspaceFetch(
           `/api/v1/support/tickets/${ticketId}/comments/${firstCommentId}/attachments`,
           {
             method: "POST",

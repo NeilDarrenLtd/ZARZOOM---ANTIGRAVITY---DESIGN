@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
@@ -14,6 +15,7 @@ import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 
 export default function DashboardPage() {
   const { t } = useI18n();
+  const workspaceFetch = useWorkspaceFetch();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [restarting, setRestarting] = useState(false);
@@ -45,7 +47,7 @@ export default function DashboardPage() {
   async function handleRestartOnboarding() {
     setRestarting(true);
     try {
-      const res = await fetch("/api/v1/onboarding/restart", { method: "POST" });
+      const res = await workspaceFetch("/api/v1/onboarding/restart", { method: "POST" });
       if (res.ok) {
         window.location.href = "/onboarding";
       } else {

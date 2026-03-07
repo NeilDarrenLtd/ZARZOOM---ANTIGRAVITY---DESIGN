@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useI18n, languages } from "@/lib/i18n";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
 import {
   ARTICLE_STYLE_OPTIONS,
@@ -62,6 +63,7 @@ const inputClass =
 
 export default function ProfilePage() {
   const { t } = useI18n();
+  const workspaceFetch = useWorkspaceFetch();
   const showSuccessBanner = useUploadPostSuccess();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -96,7 +98,7 @@ export default function ProfilePage() {
     async function load() {
       try {
         // Load profile data
-        const profileRes = await fetch("/api/v1/onboarding");
+        const profileRes = await workspaceFetch("/api/v1/onboarding");
         if (!profileRes.ok) throw new Error("load failed");
         const profileBody = await profileRes.json();
         setData(profileBody.data ?? {});
@@ -108,7 +110,7 @@ export default function ProfilePage() {
       }
     }
     load();
-  }, [t]);
+  }, [t, workspaceFetch]);
 
   function showToast(type: "success" | "error", message: string) {
     setToast({ type, message });
@@ -123,7 +125,7 @@ export default function ProfilePage() {
   async function handleSave() {
     setSaving(true);
     try {
-      const res = await fetch("/api/v1/onboarding", {
+      const res = await workspaceFetch("/api/v1/onboarding", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -145,7 +147,7 @@ export default function ProfilePage() {
   // ── Reload data from server ─────────────────────────────
   async function reloadProfileData() {
     try {
-      const res = await fetch("/api/v1/onboarding");
+      const res = await workspaceFetch("/api/v1/onboarding");
       if (!res.ok) throw new Error("reload failed");
       const body = await res.json();
       setData(body.data ?? {});
@@ -161,7 +163,7 @@ export default function ProfilePage() {
     setWebsiteStatus("loading");
 
     try {
-      const res = await fetch("/api/v1/onboarding/autofill/website", {
+      const res = await workspaceFetch("/api/v1/onboarding/autofill/website", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: data.website_url }),
@@ -233,7 +235,7 @@ export default function ProfilePage() {
         // For PDFs, send the file via FormData to the upload-file endpoint for server-side extraction
         const formData = new FormData();
         formData.append("file", selectedFile);
-        const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
+        const uploadRes = await workspaceFetch("/api/v1/onboarding/upload-file", {
           method: "POST",
           body: formData,
         });
@@ -255,7 +257,7 @@ export default function ProfilePage() {
       }
 
       // Step 2: Send extracted text directly to the autofill/file endpoint
-      const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
+      const analyzeRes = await workspaceFetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -18,6 +19,7 @@ interface TicketItem {
 
 export default function TicketsListPage() {
   const { t } = useI18n();
+  const workspaceFetch = useWorkspaceFetch();
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<TicketItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,7 @@ export default function TicketsListPage() {
   useEffect(() => {
     async function fetchTickets() {
       try {
-        const res = await fetch("/api/v1/support/tickets");
+        const res = await workspaceFetch("/api/v1/support/tickets");
         if (!res.ok) throw new Error("Failed to fetch tickets");
         const data = await res.json();
         setTickets(data.tickets || []);
@@ -39,7 +41,7 @@ export default function TicketsListPage() {
       }
     }
     fetchTickets();
-  }, [t]);
+  }, [t, workspaceFetch]);
 
   // Filter tickets when status filter changes
   useEffect(() => {

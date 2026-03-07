@@ -2,6 +2,7 @@
 
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useWorkspaceFetch } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -9,6 +10,7 @@ import { Mail, Phone, MapPin, Send, Check, AlertCircle } from "lucide-react";
 
 export default function ContactPage() {
   const { t } = useI18n();
+  const workspaceFetch = useWorkspaceFetch();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -42,7 +44,7 @@ export default function ContactPage() {
     try {
       console.log("[v0] Submitting contact form");
       
-      const res = await fetch("/api/v1/contact", {
+      const res = await workspaceFetch("/api/v1/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

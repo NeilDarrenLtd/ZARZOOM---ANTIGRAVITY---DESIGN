@@ -6,25 +6,18 @@ import { Plus, Key, Terminal, ExternalLink } from "lucide-react";
 import { ApiKeyRow, type ApiKeyItem } from "@/components/dashboard/api-key-row";
 import { CreateKeyModal } from "@/components/dashboard/create-key-modal";
 import { cn } from "@/lib/utils";
-
-/* ------------------------------------------------------------------ */
-/*  Fetcher                                                            */
-/* ------------------------------------------------------------------ */
-
-async function fetcher(url: string) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch");
-  return res.json();
-}
+import { useWorkspaceFetch, useWorkspaceFetcher } from "@/lib/workspace/context";
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
 
 export default function ApiKeysPage() {
+  const workspaceFetcher = useWorkspaceFetcher();
+  const workspaceFetch = useWorkspaceFetch();
   const { data, error, isLoading, mutate } = useSWR<{ keys: ApiKeyItem[] }>(
     "/api/v1/api-keys",
-    fetcher
+    workspaceFetcher
   );
 
   const [showCreate, setShowCreate] = useState(false);
@@ -38,7 +31,7 @@ export default function ApiKeysPage() {
   /* -- Revoke handler -------------------------------------------- */
   const handleRevoke = useCallback(
     async (keyId: string) => {
-      const res = await fetch("/api/v1/api-keys", {
+      const res = await workspaceFetch("/api/v1/api-keys", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key_id: keyId }),
@@ -51,7 +44,7 @@ export default function ApiKeysPage() {
 
       await mutate();
     },
-    [mutate]
+    [mutate, workspaceFetch]
   );
 
   /* -- Rotate handler: revoke old, then open create modal -------- */
