@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Välkommen tillbaka",
+    "loginSubtitle": "Logga in på ditt ZARZOOM-konto",
+    "registerTitle": "Skapa ditt konto",
+    "registerSubtitle": "Följ tusentals marknadsförare som automatiserar sina sociala medier",
+    "email": "E-postadress",
+    "password": "Lösenord",
+    "confirmPassword": "Bekräfta lösenord",
+    "login": "Logga in",
+    "register": "Skapa konto",
+    "forgotPassword": "Glömt lösenord?",
+    "orContinueWith": "Eller fortsätt med",
+    "noAccount": "Har du inget konto?",
+    "hasAccount": "Har du redan ett konto?",
+    "signUpLink": "Registrera dig",
+    "signInLink": "Logga in",
+    "passwordMinLength": "Lösenordet måste vara minst 8 tecken",
+    "passwordUppercase": "Måste innehålla en stor bokstav",
+    "passwordLowercase": "Måste innehålla en liten bokstav",
+    "passwordNumber": "Måste innehålla en siffra",
+    "passwordSpecial": "Måste innehålla ett specialtecken",
+    "passwordsNoMatch": "Lösenorden matchar inte",
+    "emailRequired": "E-post krävs",
+    "emailInvalid": "Ange en giltig e-postadress",
+    "signUpSuccess": "Kolla din e-post",
+    "signUpSuccessMessage": "Vi har skickat en verifieringslänk till din e-postadress. Kolla din inkorg och klicka på länken för att aktivera ditt konto.",
+    "backToLogin": "Tillbaka till inloggning",
+    "authError": "Autentiseringsfel",
+    "authErrorMessage": "Något gick fel under autentiseringen. Försök igen.",
+    "tryAgain": "Försök igen",
+    "tabLogin": "Logga in",
+    "tabCreateAccount": "Skapa konto",
+    "continueWithGoogle": "Fortsätt med Google",
+    "continueWithFacebook": "Fortsätt med Facebook",
+    "continueWithLinkedIn": "Fortsätt med LinkedIn",
+    "continueWithX": "Fortsätt med X",
+    "rememberMe": "Kom ihåg mig",
+    "forgotLogin": "Glömt din inloggning?",
+    "verifyTitle": "Kolla din inkorg",
+    "verifySubtitle": "Vi har skickat en verifieringslänk till din e-postadress. Kolla din inkorg och klicka på länken för att aktivera ditt konto.",
+    "verifyResend": "Skicka verifieringsmail igen",
+    "verifyResent": "Verifieringsmail skickat igen",
+    "verifyBack": "Tillbaka till inloggning",
+    "verifiedTitle": "E-post verifierad",
+    "verifiedSubtitle": "Din e-post har verifierats. Du kan nu logga in på ditt konto.",
+    "verifiedContinue": "Fortsätt till inloggning",
+    "adminLogin": "Admin-inloggning",
+    "adminLoginSubtitle": "Begränsat område. Endast behörig personal.",
+    "adminSignIn": "Logga in som admin"
+  },
+  "dashboard": {
+    "title": "Instrumentpanel",
+    "welcome": "Välkommen tillbaka",
+    "overview": "Översikt",
+    "accountSettings": "Kontoinställningar",
+    "connectedAccounts": "Anslutna konton",
+    "comingSoon": "Kommer snart – ditt centrum för sociala medier.",
+    "emailVerified": "E-post verifierad",
+    "memberSince": "Medlem sedan",
+    "profile": "Varumärkesinställningar",
+    "supportDescription": "Få hjälp av vårt supportteam. Skapa och hantera supportärenden.",
+    "restartSetup": "Starta om konfiguration",
+    "restarting": "Startar om..."
+  },
+  "connect": {
+    "heading": "Anslut dina konton",
+    "subheading": "Koppla dina konton på sociala medier för att börja publicera automatiskt med ZARZOOM.",
+    "connectAccounts": "Anslut konton",
+    "back": "Tillbaka"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Fyll i automatiskt från fil"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Skapa API-nyckel",
+    "keyCreated": "Nyckel skapad",
+    "close": "Stäng",
+    "keyName": "Nyckelnamn",
+    "keyNamePlaceholder": "t.ex. Produktion, Staging, CI/CD",
+    "keyNameRequired": "Namn krävs",
+    "active": "Aktiv",
+    "revoked": "Återkallad",
+    "created": "Skapad",
+    "lastUsed": "Senast använd",
+    "revokedAt": "Återkallad",
+    "rotate": "Rotera",
+    "revoke": "Återkalla",
+    "revokeConfirm": "Återkalla denna nyckel?",
+    "rotateConfirm": "Rotera nyckel?",
+    "confirm": "Bekräfta",
+    "cancel": "Avbryt",
+    "revoking": "Återkallar...",
+    "rotating": "Roterar...",
+    "rotateTitle": "Rotera: återkalla denna nyckel och skapa en ny"
+  },
+  "profile": {
+    "title": "Varumärkesinställningar",
+    "subtitle": "Hantera ditt varumärke, mål, plan och sociala kopplingar.",
+    "saving": "Sparar...",
+    "saved": "Ändringar sparade.",
+    "saveFailed": "Kunde inte spara ändringar. Försök igen.",
+    "loadFailed": "Kunde inte ladda din profil. Försök igen.",
+    "save": "Spara ändringar",
+    "sections": {
+      "brand": "Varumärkesgrunder",
+      "brandDesc": "Din företagsidentitet och innehållspreferenser.",
+      "goals": "Mål och tillväxt",
+      "goalsDesc": "Vad du vill uppnå med ZARZOOM.",
+      "posting": "Publiceringspreferenser",
+      "postingDesc": "Hur ZARZOOM publicerar ditt innehåll.",
+      "plan": "Din plan",
+      "planDesc": "Aktuell prenumeration och faktureringspreferenser.",
+      "social": "Sociala kopplingar",
+      "socialDesc": "Hantera dina anslutna konton på sociala medier."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publicering",
+        "help": "Tillåt ZARZOOM att automatiskt publicera innehåll å dina vägnar."
+      }
+    },
+    "plan": {
+      "current": "Aktuell plan",
+      "noPlan": "Ingen plan vald",
+      "annualBilling": "Årsfakturering",
+      "changePlan": "Byt plan"
+    },
+    "social": {
+      "username": "Användarnamn sociala medier",
+      "noUsername": "Inte konfigurerat än",
+      "connected": "Sociala konton anslutna",
+      "notConnected": "Inga konton anslutna än",
+      "connect": "Anslut konton",
+      "manage": "Hantera kopplingar"
+    },
+    "back": "Tillbaka till instrumentpanelen"
+  },
+  "support": {
+    "nav": {
+      "title": "Support",
+      "myTickets": "Mina ärenden",
+      "createTicket": "Skapa ärende",
+      "backToSupport": "Tillbaka till support",
+      "backToDashboard": "Tillbaka till instrumentpanelen"
+    },
+    "landing": {
+      "title": "Få support",
+      "subtitle": "Vi hjälper dig att få ut det mesta av ZARZOOM.",
+      "description": "Skicka in ett supportärende så svarar vårt team inom 24 timmar på vardagar.",
+      "createTicketBtn": "Skapa ärende",
+      "myTicketsBtn": "Mina ärenden"
+    },
+    "list": {
+      "title": "Mina supportärenden",
+      "subtitle": "Visa och hantera dina supportförfrågningar.",
+      "empty": "Inga ärenden än",
+      "emptyDescription": "Du har inte skapat några supportärenden. Klicka på knappen nedan för att komma igång.",
+      "createFirstTicket": "Skapa ditt första ärende",
+      "filterByStatus": "Filtrera på status",
+      "allTickets": "Alla ärenden",
+      "showingTickets": "Visar {filtered} av {total} ärenden",
+      "noMatchFilter": "Inga ärenden matchar den valda statusfiltret.",
+      "clearFilter": "Rensa filter",
+      "table": {
+        "ticketId": "Ärende-ID",
+        "subject": "Ämne",
+        "status": "Status",
+        "lastUpdated": "Senast uppdaterad",
+        "created": "Skapad"
+      }
+    },
+    "create": {
+      "title": "Skapa supportärende",
+      "subtitle": "Beskriv ditt problem så hjälper vi dig lösa det.",
+      "form": {
+        "subject": "Ämne",
+        "subjectPlaceholder": "Kort beskrivning av ditt problem",
+        "subjectHelp": "Obligatoriskt. Håll det kort och tydligt.",
+        "category": "Kategori",
+        "categoryHelp": "Valfritt. Välj den kategori som bäst passar ditt problem.",
+        "priority": "Prioritet",
+        "priorityHelp": "Valfritt. Berätta hur brådskande detta är.",
+        "description": "Beskrivning",
+        "descriptionPlaceholder": "Ange detaljerad information om ditt problem...",
+        "descriptionHelp": "Obligatoriskt. Inkludera steg för att återskapa, felmeddelanden eller andra relevanta detaljer.",
+        "attachments": "Bifoga skärmdumpar",
+        "attachmentsHelp": "Valfritt. Ladda upp upp till 3 skärmdumpar (PNG, JPG eller WebP). Max 5 MB vardera.",
+        "attachmentsBtn": "Välj filer",
+        "attachmentsSelected": "fil(er) valda",
+        "removeAttachment": "Ta bort",
+        "submit": "Skicka ärende",
+        "submitting": "Skapar ärende...",
+        "cancel": "Avbryt"
+      },
+      "success": {
+        "title": "Ärende skapat",
+        "message": "Ditt supportärende har skapats. Vi svarar inom 24 timmar på vardagar.",
+        "viewTicket": "Visa ärende",
+        "createAnother": "Skapa ett till ärende"
+      },
+      "error": {
+        "title": "Kunde inte skapa ärende",
+        "message": "Något gick fel. Försök igen.",
+        "retry": "Försök igen"
+      }
+    },
+    "detail": {
+      "title": "Ärendedetaljer",
+      "status": "Status",
+      "category": "Kategori",
+      "priority": "Prioritet",
+      "created": "Skapad",
+      "lastActivity": "Senast aktivitet",
+      "comments": "Kommentarer",
+      "addComment": "Lägg till kommentar",
+      "commentPlaceholder": "Skriv ditt meddelande...",
+      "attachScreenshots": "Bifoga skärmdumpar",
+      "sendComment": "Skicka",
+      "sending": "Skickar...",
+      "loadingTicket": "Laddar ärende...",
+      "ticketNotFound": "Ärende hittades inte",
+      "ticketNotFoundMessage": "Detta ärende finns inte eller så har du inte behörighet att visa det.",
+      "noComments": "Inga kommentarer än",
+      "userRole": "Du",
+      "adminRole": "Supportteam",
+      "systemRole": "System",
+      "attachmentPreview": "Klicka för att visa i full storlek",
+      "attachmentAlt": "Bilaga",
+      "closeModal": "Stäng",
+      "closeTicketTitle": "Stäng ärende",
+      "closeTicketMessage": "Är du säker på att du vill stänga detta ärende? Du kan eventuellt ange en anledning.",
+      "closeTicketPlaceholder": "Valfritt: Varför stänger du detta ärende?",
+      "closeTicketCancel": "Avbryt",
+      "closeTicketButton": "Stäng ärende",
+      "closeTicketClosing": "Stänger..."
+    },
+    "status": {
+      "open": "Öppen",
+      "investigating": "Undersöker",
+      "waiting_on_user": "Väntar på dig",
+      "resolved": "Löst",
+      "closed": "Stängd"
+    },
+    "category": {
+      "none": "Ej angiven",
+      "account_login": "Konto och inloggning",
+      "billing_subscription": "Fakturering och prenumeration",
+      "social_connections": "Sociala kopplingar",
+      "content_generation": "Innehållsgenerering",
+      "publishing_issues": "Publiceringsproblem",
+      "technical_bug": "Tekniskt fel",
+      "feature_request": "Funktionsförfrågan",
+      "general_question": "Allmän fråga"
+    },
+    "priority": {
+      "none": "Ej angiven",
+      "urgent": "Brådskande – system blockerat",
+      "high": "Hög – allvarligt problem",
+      "normal": "Normal – standard",
+      "low": "Låg – mindre / förslag"
+    },
+    "attachments": {
+      "uploading": "Laddar upp bilagor...",
+      "uploadSuccess": "Bilagor uppladdade",
+      "uploadError": "Kunde inte ladda upp alla bilagor",
+      "fileTypeError": "Endast PNG-, JPG- och WebP-filer tillåtna",
+      "fileSizeError": "Filstorleken måste vara mindre än 5 MB",
+      "fileCountError": "Du kan ladda upp upp till 3 filer per kommentar",
+      "viewFullSize": "Visa i full storlek"
+    },
+    "errors": {
+      "loadFailed": "Kunde inte ladda supportärenden",
+      "createFailed": "Kunde inte skapa ärende",
+      "commentFailed": "Kunde inte lägga till kommentar",
+      "unauthorized": "Du har inte behörighet att öppna detta ärende",
+      "networkError": "Nätverksfel. Kontrollera din anslutning och försök igen."
+    },
+    "validation": {
+      "subjectRequired": "Ämne krävs",
+      "descriptionRequired": "Beskrivning krävs",
+      "messageRequired": "Meddelande krävs",
+      "emailRequired": "E-post krävs",
+      "invalidEmail": "Ange en giltig e-postadress",
+      "noUpdatesProvided": "Inga uppdateringar angivna",
+      "noFilesProvided": "Inga filer angivna",
+      "tooManyFiles": "För många filer. Högst {count} filer tillåtna.",
+      "invalidFileType": "Ogiltig filtyp för {name}. Endast PNG-, JPG- och WebP-filer tillåtna.",
+      "fileTooLarge": "Filen {name} är för stor ({size}). Maximal storlek är 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Konfigurera din ZARZOOM",
+    "subtitle": "Låt oss få din autopilot för sociala medier på plats i några enkla steg.",
+    "stepper": {
+      "step1": "Konto",
+      "step2": "Varumärke",
+      "step3": "Mål",
+      "step4": "Plan",
+      "step5": "Anslut"
+    },
+    "nav": {
+      "back": "Tillbaka",
+      "next": "Fortsätt",
+      "saveExit": "Spara och avsluta",
+      "skipForNow": "Hoppa över nu",
+      "finish": "Starta ZARZOOM",
+      "saving": "Sparar..."
+    },
+    "step1": {
+      "title": "Konto skapat",
+      "subtitle": "Du är inloggad och redo att köra.",
+      "signedInAs": "Inloggad som",
+      "continue": "Låt oss konfigurera ditt varumärke"
+    },
+    "step2": {
+      "title": "Varumärkesgrunder",
+      "subtitle": "Berätta om ditt företag så vi kan anpassa innehållet till ditt varumärke.",
+      "businessName": {
+        "label": "Företagsnamn",
+        "placeholder": "t.ex. Acme AB",
+        "help": "Namnet på ditt företag eller varumärke."
+      },
+      "description": {
+        "label": "Beskrivning",
+        "placeholder": "Beskriv kort vad ditt företag gör...",
+        "help": "En kort sammanfattning så vår AI förstår din varumärkesröst."
+      },
+      "websiteUrl": {
+        "label": "Webbplats-URL",
+        "placeholder": "https://dinwebbplats.se",
+        "help": "Vi analyserar din webbplats för att anpassa innehållet."
+      },
+      "autofillFromWebsite": "Fyll i automatiskt från webbplats",
+      "analysing": "Analyserar...",
+      "importFromFile": "Importera från fil",
+      "choosePdfOrWord": "Välj PDF- eller Word-dokument",
+      "investigate": {
+        "button": "Analysera webbplats",
+        "loading": "Analyserar din webbplats...",
+        "success": "Webbplatsen analyserad!",
+        "error": "Kunde inte analysera webbplatsen. Fyll i uppgifterna manuellt."
+      },
+      "contentLanguage": {
+        "label": "Innehållsspråk",
+        "help": "Huvudspråket för ditt genererade innehåll."
+      },
+      "articleStyles": {
+        "label": "Artikelstilar",
+        "help": "Välj vilka typer av innehåll du vill att ZARZOOM ska skapa.",
+        "options": {
+          "let_zarzoom_decide": "Låt ZARZOOM bestämma",
+          "how_to_guides": "Guider",
+          "listicles": "Listor",
+          "tutorials": "Tutorials",
+          "opinion_pieces": "Opinionsinlägg",
+          "case_studies": "Fallstudier",
+          "news_commentary": "Nyhetskommentarer",
+          "interviews": "Intervjuer",
+          "product_reviews": "Produktrecensioner",
+          "explainer_articles": "Förklarande artiklar",
+          "comparisons_vs_articles": "Jämförelser och vs-artiklar",
+          "ultimate_guides_pillar": "Ultimata guider / stödjinnehåll",
+          "checklists_cheat_sheets": "Checklistor och minnesanteckningar",
+          "best_top_forecasts": "Bästa / toppprognoser",
+          "problem_solution_posts": "Problem-/lösningsinlägg",
+          "myth_busting": "Myter och missuppfattningar",
+          "resource_roundups": "Resursöversikter",
+          "faqs_qa_content": "Vanliga frågor / frågor och svar",
+          "personal_stories": "Personliga berättelser",
+          "research_summaries": "Forskningssammanfattningar",
+          "historical_timeline": "Historik och tidslinjer",
+          "satire_humor": "Satir eller humor",
+          "explained_in_minutes": "Förklarat på X minuter"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Låt vår AI välja bästa format för ditt innehåll",
+          "how_to_guides": "Steg-för-steg-instruktioner",
+          "listicles": "Numrerade listor (t.ex. 10 tips för X)",
+          "tutorials": "Mer djupgående än en guide",
+          "opinion_pieces": "Expertåsikter eller kommentarer",
+          "case_studies": "Verkliga exempel och resultat",
+          "news_commentary": "Kontext kring aktuella händelser",
+          "interviews": "Frågor och svar med person/auktoritet",
+          "product_reviews": "Utvärdering och betyg",
+          "explainer_articles": "Förklara komplexa begrepp enkelt",
+          "comparisons_vs_articles": "X mot Y, för- och nackdelar",
+          "ultimate_guides_pillar": "Långt, auktoritativt, täcker ett helt ämne",
+          "checklists_cheat_sheets": "Snabbreferens, åtgärdslistor",
+          "best_top_forecasts": "Bästa verktyg för X, topptrender 202X",
+          "problem_solution_posts": "Identifiera ett problem och besvara det",
+          "myth_busting": "Rensa upp vanliga missuppfattningar",
+          "resource_roundups": "Bästa artiklar, verktyg, länkar inom ett ämne",
+          "faqs_qa_content": "Rikta in dig på långa sökfrågor",
+          "personal_stories": "Berättande, känslomässig effekt",
+          "research_summaries": "Sammanfatta undersökningar och resultat",
+          "historical_timeline": "Tillbaka över utveckling eller evolution",
+          "satire_humor": "Underhållande inlägg med varumärkespersonlighet",
+          "explained_in_minutes": "Huvudpunkter, snabb konsumtion"
+        }
+      },
+      "styleLinks": {
+        "label": "Stilreferenslänkar",
+        "placeholder": "https://exempel.se/artikel",
+        "help": "Lägg till upp till 3 länkar till artiklar vars stil du vill efterlikna.",
+        "add": "Lägg till länk",
+        "max": "Högst 3 länkar"
+      },
+      "brandColor": {
+        "label": "Varumärkesfärg",
+        "help": "Din primära varumärkesfärg för genererade bilder."
+      },
+      "logo": {
+        "label": "Logotyp",
+        "help": "Ladda upp din varumärkeslogotyp (JPG-format).",
+        "upload": "Ladda upp logotyp",
+        "change": "Byt logotyp",
+        "uploading": "Laddar upp..."
+      }
+    },
+    "step3": {
+      "title": "Mål och tillväxt",
+      "subtitle": "Vad vill du uppnå med ZARZOOM?",
+      "goals": {
+        "label": "Välj dina mål",
+        "help": "Välj ett eller flera mål. Vi anpassar din strategi därefter.",
+        "options": {
+          "increase_website_traffic": "Öka webbplatstrafik",
+          "get_more_subscribers_leads": "Få fler prenumeranter och leads",
+          "promote_product_or_service": "Marknadsföra en produkt eller tjänst",
+          "increase_sales": "Öka försäljningen",
+          "build_brand_authority": "Bygga varumärkesauktoritet",
+          "improve_seo": "Förbättra SEO",
+          "educate_audience": "Utbilda din målgrupp",
+          "generate_social_content": "Generera innehåll för sociala medier"
+        }
+      },
+      "websiteUrl": {
+        "label": "Webbplats- eller landningssidans URL",
+        "placeholder": "https://dinsida.se/landning",
+        "help": "Krävs när dina mål inkluderar webbtrafik eller leadgenerering."
+      },
+      "productUrl": {
+        "label": "Produkt- eller försäljningssidans URL",
+        "placeholder": "https://dinsida.se/produkt",
+        "help": "Krävs när dina mål inkluderar produktmarknadsföring eller försäljning."
+      }
+    },
+    "step4": {
+      "title": "Välj din plan",
+      "subtitle": "Börja med en plan som matchar din tillväxtambition.",
+      "discount": {
+        "label": "Årsfakturering",
+        "save": "Spara {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Upp till 3 sociala profiler",
+          "postsPerMonth": "30 inlägg per månad",
+          "aiGeneration": "Grundläggande AI-innehållsgenerering",
+          "scheduling": "Schemaläggning av inlägg",
+          "emailSupport": "E-postsupport"
+        },
+        "pro": {
+          "socialProfiles": "Upp till 10 sociala profiler",
+          "postsPerMonth": "150 inlägg per månad",
+          "aiGeneration": "Avancerad AI-innehållsgenerering",
+          "scheduling": "Smart schemaläggning med optimala tider",
+          "analytics": "Analysinstrumentpanel",
+          "prioritySupport": "Prioriterad support"
+        },
+        "scale": {
+          "socialProfiles": "Obegränsat antal sociala profiler",
+          "postsPerMonth": "Obegränsat antal inlägg",
+          "aiGeneration": "Premium-AI med anpassad varumärkesröst",
+          "scheduling": "AI-driven auto-schemaläggning",
+          "analytics": "Avancerad analys och rapportering",
+          "customBranding": "Anpassad profil och white-label",
+          "dedicatedSupport": "Dedikerad kontoansvarig",
+          "apiAccess": "Full API-åtkomst"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Perfekt för att komma igång med automatisering av sociala medier.",
+        "pro": "För växande företag som behöver mer kraft och insikter.",
+        "scale": "Obegränsat allt för team och byråer."
+      },
+      "popular": "Mest populär",
+      "perMonth": "/mån",
+      "selectPlan": "Välj plan",
+      "selected": "Vald",
+      "trialDays": "{days} dagars gratis provperiod"
+    },
+    "step5": {
+      "title": "Anslut och starta",
+      "subtitle": "Anslut dina sociala konton och ställ in dina preferenser.",
+      "connectSocials": {
+        "label": "Anslut sociala konton",
+        "help": "Koppla dina konton på sociala medier",
+        "button": "Anslut konton",
+        "manage": "Hantera kopplingar",
+        "connected": "Sociala konton anslutna",
+        "notConnected": "Inga konton anslutna än"
+      },
+      "approval": {
+        "label": "Innehållsgodkännande",
+        "help": "Välj hur ZARZOOM publicerar ditt innehåll.",
+        "auto": "Auto-publicering",
+        "autoHelp": "ZARZOOM publicerar innehåll automatiskt enligt schema.",
+        "manual": "Manuellt godkännande",
+        "manualHelp": "Granska och godkänn varje inlägg innan det publiceras."
+      },
+      "notes": {
+        "label": "Övriga anteckningar",
+        "placeholder": "Något mer du vill att vi ska veta om ditt varumärke eller innehållspreferenser...",
+        "help": "Valfria anteckningar för vår AI att ta hänsyn till."
+      }
+    },
+    "modal": {
+      "title": "Anslut sociala konton",
+      "loading": "Förbereder social connector...",
+      "checking": "Kontrollerar anslutning...",
+      "close": "Klart",
+      "openInNewTab": "Öppna i ny flik",
+      "skipConnect": "Hoppa över nu",
+      "errorGeneric": "Kunde inte ladda social connector. Försök igen senare.",
+      "errorNoUrl": "Ingen anslutnings-URL returnerades. Försök igen.",
+      "demoTitle": "Social connector kommer snart",
+      "demoDescription": "Social connector är inte konfigurerad för denna miljö än. Dina anslutna sociala konton blir tillgängliga när en administratör har konfigurerat leverantören."
+    },
+    "errors": {
+      "loadFailed": "Kunde inte ladda din konfigurationsdata. Försök igen.",
+      "saveFailed": "Kunde inte spara. Försök igen.",
+      "completeFailed": "Kunde inte slutföra konfigurationen. Kontrollera alla obligatoriska fält."
+    },
+    "banner": {
+      "skipped": "Du hoppade över konfigurationen. Slutför den för att låsa upp alla funktioner.",
+      "inProgress": "Din konfiguration är ofullständig. Slutför den för att komma igång.",
+      "cta": "Slutför konfiguration"
+    },
+    "gate": {
+      "title": "Konfiguration krävs",
+      "description": "Slutför din konfiguration för att låsa upp denna funktion. Det tar bara några minuter.",
+      "cta": "Slutför konfiguration"
+    },
+    "a11y": {
+      "brandLogoAlt": "Varumärkeslogotyp",
+      "socialConnectorTitle": "Social connector",
+      "dismissBanner": "Stäng banner",
+      "currency": "£",
+      "stepperLabel": "Konfigurationsframsteg"
+    },
+    "validation": {
+      "invalidUrl": "Ange en giltig URL (t.ex. https://exempel.se)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Faktureringshistorik"
+    },
+    "selectCurrencyLabel": "Välj valuta",
+    "selectCurrencyHelp": "Välj din föredragna valuta för prissättning.",
+    "selectBillingInterval": "Välj faktureringsintervall",
+    "toggleDiscount": "Växla rabatt för reklampartnerskap",
+    "discountPartnershipTitle": "Spara {percent}% med reklampartnerskap",
+    "discountActive": "Aktiv",
+    "discountPartnershipDescription": "Tillåt ZARZOOM att publicera reklaminnehåll i din flöde (max {maxFrequency}) och få {percent}% rabatt på din prenumeration. Du behåller full kontroll och kan stänga av detta när som helst.",
+    "discountOncePerDay": "en gång per dag",
+    "discountPerWeek": "{count}x per vecka",
+    "discountPartnerApplied": "Partnerrabatt tillämpad",
+    "discountAdvertisingApplied": "Reklampartnerskapsrabatt tillämpad",
+    "contactUs": "Kontakta oss",
+    "partnerDiscountEnable": "Aktivera 50 % partnerrabatt",
+    "partnerDiscountStandardPrice": "Ordinarie pris",
+    "partnerDiscount50Off": "50 % RABATT",
+    "partnerDiscountSubheading": "Spara 50 %. Vi kan publicera upp till 1 mindre ZARZOOM-reklam per dag (max 3–7 per vecka) – aldrig på dina egna inlägg.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Enkla, transparenta priser",
+      "subtitle": "Välj den plan som passar din tillväxt. Börja med gratis provperiod, uppgradera när som helst.",
+      "monthly": "Månadsvis",
+      "annual": "Årlig",
+      "popular": "Mest populär",
+      "getStarted": "Kom igång",
+      "savePercent": "Spara {percent}% med årsfakturering",
+      "trialDays": "{days} dagars gratis provperiod",
+      "page": {
+        "title": "Enkla, transparenta priser",
+        "subtitle": "Välj den plan som passar dig. Alla planer inkluderar 14 dagars gratis provperiod.",
+        "footer": "Alla priser exkl. moms där tillämpligt. Avsluta eller byt plan när som helst.",
+        "contactCta": "Frågor? Kontakta oss så hjälper vi dig hitta rätt plan.",
+        "contactCtaPrefix": "Frågor? ",
+        "contactLink": "Kontakta oss",
+        "contactCtaSuffix": " så hjälper vi dig hitta rätt plan."
+      },
+      "fallback": {
+        "title": "Priser tillfälligt otillgängliga",
+        "message": "Vi uppdaterar våra prisplaner. Kom tillbaka om en stund eller kontakta support."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfekt för att komma igång",
+        "description": "Grundläggande funktioner för att lansera din närvaro på sociala medier med AI-drivet innehåll och schemaläggning.",
+        "bullets": [
+          "Upp till 3 sociala profiler",
+          "30 inlägg per månad",
+          "Grundläggande AI-innehållsgenerering",
+          "Schemaläggning av inlägg",
+          "E-postsupport"
+        ],
+        "cta": "Starta gratis provperiod"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Bäst för växande företag",
+        "description": "Avancerade funktioner och analys för att skala din strategi på sociala medier med intelligent automatisering.",
+        "bullets": [
+          "Upp till 10 sociala profiler",
+          "150 inlägg per månad",
+          "Avancerad AI-innehållsgenerering",
+          "Smart schemaläggning med optimala tider",
+          "Analysinstrumentpanel",
+          "Prioriterad support"
+        ],
+        "cta": "Starta gratis provperiod"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "För team och byråer",
+        "description": "Enterprise-funktioner med obegränsat innehåll, anpassad profil och dedikerad support för maximal effekt.",
+        "bullets": [
+          "Obegränsat antal sociala profiler",
+          "Obegränsat antal inlägg",
+          "Premium-AI med anpassad varumärkesröst",
+          "AI-driven auto-schemaläggning",
+          "Avancerad analys och rapportering",
+          "Anpassad profil och white-label",
+          "Dedikerad kontoansvarig",
+          "Full API-åtkomst"
+        ],
+        "cta": "Kontakta försäljning"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Upp till 3 sociala profiler",
+        "postsPerMonth": "30 inlägg per månad",
+        "aiGeneration": "Grundläggande AI-innehållsgenerering",
+        "scheduling": "Schemaläggning av inlägg",
+        "emailSupport": "E-postsupport"
+      },
+      "pro": {
+        "socialProfiles": "Upp till 10 sociala profiler",
+        "postsPerMonth": "150 inlägg per månad",
+        "aiGeneration": "Avancerad AI-innehållsgenerering",
+        "scheduling": "Smart schemaläggning med optimala tider",
+        "analytics": "Analysinstrumentpanel",
+        "prioritySupport": "Prioriterad support"
+      },
+      "advanced": {
+        "socialProfiles": "Obegränsat antal sociala profiler",
+        "postsPerMonth": "Obegränsat antal inlägg",
+        "aiGeneration": "Premium-AI med anpassad varumärkesröst",
+        "scheduling": "AI-driven auto-schemaläggning",
+        "analytics": "Avancerad analys och rapportering",
+        "customBranding": "Anpassad profil och white-label",
+        "dedicatedSupport": "Dedikerad kontoansvarig",
+        "apiAccess": "Full API-åtkomst"
+      }
+    }
+  }
+}

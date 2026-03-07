@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Velkommen tilbake",
+    "loginSubtitle": "Logg inn på ZARZOOM-kontoen din",
+    "registerTitle": "Opprett konto",
+    "registerSubtitle": "Bli en av tusenvis av markedsførere som automatiserer sosiale medier",
+    "email": "E-postadresse",
+    "password": "Passord",
+    "confirmPassword": "Bekreft passord",
+    "login": "Logg inn",
+    "register": "Opprett konto",
+    "forgotPassword": "Glemt passord?",
+    "orContinueWith": "Eller fortsett med",
+    "noAccount": "Har du ikke konto?",
+    "hasAccount": "Har du allerede konto?",
+    "signUpLink": "Registrer deg",
+    "signInLink": "Logg inn",
+    "passwordMinLength": "Passordet må være minst 8 tegn",
+    "passwordUppercase": "Må inneholde stor bokstav",
+    "passwordLowercase": "Må inneholde liten bokstav",
+    "passwordNumber": "Må inneholde et tall",
+    "passwordSpecial": "Må inneholde et spesialtegn",
+    "passwordsNoMatch": "Passordene stemmer ikke",
+    "emailRequired": "E-post er påkrevd",
+    "emailInvalid": "Vennligst oppgi en gyldig e-postadresse",
+    "signUpSuccess": "Sjekk e-posten din",
+    "signUpSuccessMessage": "Vi har sendt en verifiseringslenke til e-postadressen din. Sjekk innboksen og klikk på lenken for å aktivere kontoen.",
+    "backToLogin": "Tilbake til innlogging",
+    "authError": "Autentiseringsfeil",
+    "authErrorMessage": "Noe gikk galt under autentisering. Vennligst prøv igjen.",
+    "tryAgain": "Prøv igjen",
+    "tabLogin": "Logg inn",
+    "tabCreateAccount": "Opprett konto",
+    "continueWithGoogle": "Fortsett med Google",
+    "continueWithFacebook": "Fortsett med Facebook",
+    "continueWithLinkedIn": "Fortsett med LinkedIn",
+    "continueWithX": "Fortsett med X",
+    "rememberMe": "Husk meg",
+    "forgotLogin": "Glemt innlogging?",
+    "verifyTitle": "Sjekk innboksen",
+    "verifySubtitle": "Vi har sendt en verifiseringslenke til e-postadressen din. Sjekk innboksen og klikk på lenken for å aktivere kontoen.",
+    "verifyResend": "Send verifiserings-e-post på nytt",
+    "verifyResent": "Verifiserings-e-post sendt på nytt",
+    "verifyBack": "Tilbake til innlogging",
+    "verifiedTitle": "E-post verifisert",
+    "verifiedSubtitle": "E-posten din er bekreftet. Du kan nå logge inn på kontoen din.",
+    "verifiedContinue": "Fortsett til innlogging",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Velkommen tilbake",
+    "overview": "Oversikt",
+    "accountSettings": "Kontoinnstillinger",
+    "connectedAccounts": "Tilkoblede kontoer",
+    "comingSoon": "Kommer snart – ditt kommandosenter for sosiale medier.",
+    "emailVerified": "E-post verifisert",
+    "memberSince": "Medlem siden",
+    "profile": "Merkevareinnstillinger",
+    "supportDescription": "Få hjelp fra supportteamet vårt. Opprett og administrer supportsaker.",
+    "restartSetup": "Start oppsett på nytt",
+    "restarting": "Starter på nytt..."
+  },
+  "connect": {
+    "heading": "Koble til kontoene dine",
+    "subheading": "Koble til kontoene dine på sosiale medier for å begynne å publisere automatisk med ZARZOOM.",
+    "connectAccounts": "Koble til kontoer",
+    "back": "Tilbake"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Fyll ut automatisk fra fil"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Opprett API-nøkkel",
+    "keyCreated": "Nøkkel opprettet",
+    "close": "Lukk",
+    "keyName": "Nøkkelnavn",
+    "keyNamePlaceholder": "f.eks. Produksjon, Staging, CI/CD",
+    "keyNameRequired": "Navn er påkrevd",
+    "active": "Aktiv",
+    "revoked": "Tilbakekalt",
+    "created": "Opprettet",
+    "lastUsed": "Sist brukt",
+    "revokedAt": "Tilbakekalt",
+    "rotate": "Roter",
+    "revoke": "Tilbakekall",
+    "revokeConfirm": "Tilbakekalle denne nøkkelen?",
+    "rotateConfirm": "Rotere nøkkel?",
+    "confirm": "Bekreft",
+    "cancel": "Avbryt",
+    "revoking": "Tilbakekaller...",
+    "rotating": "Roterer...",
+    "rotateTitle": "Roter: tilbakekall denne nøkkelen og opprett en ny"
+  },
+  "profile": {
+    "title": "Merkevareinnstillinger",
+    "subtitle": "Administrer merkevaren, målene, planen og tilkoblingene til sosiale medier.",
+    "saving": "Lagrer...",
+    "saved": "Endringer lagret.",
+    "saveFailed": "Kunne ikke lagre endringer. Vennligst prøv igjen.",
+    "loadFailed": "Kunne ikke laste profilen din. Vennligst prøv igjen.",
+    "save": "Lagre endringer",
+    "sections": {
+      "brand": "Merkevaregrunnlag",
+      "brandDesc": "Virksomhetsidentiteten din og innholdspreferanser.",
+      "goals": "Mål og vekst",
+      "goalsDesc": "Hva du vil oppnå med ZARZOOM.",
+      "posting": "Publiseringspreferanser",
+      "postingDesc": "Hvordan ZARZOOM publiserer innholdet ditt.",
+      "plan": "Din plan",
+      "planDesc": "Nåværende abonnement og faktureringspreferanser.",
+      "social": "Tilkoblinger til sosiale medier",
+      "socialDesc": "Administrer tilkoblede kontoer på sosiale medier."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publiser",
+        "help": "Tillat ZARZOOM å automatisk publisere innhold på dine vegne."
+      }
+    },
+    "plan": {
+      "current": "Nåværende plan",
+      "noPlan": "Ingen plan valgt",
+      "annualBilling": "Årlig fakturering",
+      "changePlan": "Bytt plan"
+    },
+    "social": {
+      "username": "Brukernavn på sosiale medier",
+      "noUsername": "Ikke konfigurert ennå",
+      "connected": "Kontoer på sosiale medier tilkoblet",
+      "notConnected": "Ingen kontoer tilkoblet ennå",
+      "connect": "Koble til kontoer",
+      "manage": "Administrer tilkoblinger"
+    },
+    "back": "Tilbake til dashboard"
+  },
+  "support": {
+    "nav": {
+      "title": "Support",
+      "myTickets": "Mine saker",
+      "createTicket": "Opprett sak",
+      "backToSupport": "Tilbake til support",
+      "backToDashboard": "Tilbake til dashboard"
+    },
+    "landing": {
+      "title": "Få support",
+      "subtitle": "Vi er her for å hjelpe deg å få mest mulig ut av ZARZOOM.",
+      "description": "Send inn en supportsak, så svarer teamet vårt innen 24 timer på virkedager.",
+      "createTicketBtn": "Opprett sak",
+      "myTicketsBtn": "Mine saker"
+    },
+    "list": {
+      "title": "Mine supportsaker",
+      "subtitle": "Se og administrer supportforespørslene dine.",
+      "empty": "Ingen saker ennå",
+      "emptyDescription": "Du har ikke opprettet noen supportsaker. Klikk på knappen nedenfor for å komme i gang.",
+      "createFirstTicket": "Opprett din første sak",
+      "filterByStatus": "Filtrer på status",
+      "allTickets": "Alle saker",
+      "showingTickets": "Viser {filtered} av {total} saker",
+      "noMatchFilter": "Ingen saker matcher valgt statusfilter.",
+      "clearFilter": "Fjern filter",
+      "table": {
+        "ticketId": "Saks-ID",
+        "subject": "Emne",
+        "status": "Status",
+        "lastUpdated": "Sist oppdatert",
+        "created": "Opprettet"
+      }
+    },
+    "create": {
+      "title": "Opprett supportsak",
+      "subtitle": "Beskriv problemet, så hjelper vi deg med å løse det.",
+      "form": {
+        "subject": "Emne",
+        "subjectPlaceholder": "Kort beskrivelse av problemet",
+        "subjectHelp": "Påkrevd. Hold det kort og tydelig.",
+        "category": "Kategori",
+        "categoryHelp": "Valgfritt. Velg kategorien som passer best.",
+        "priority": "Prioritet",
+        "priorityHelp": "Valgfritt. Gi oss beskjed om hvor presserende dette er.",
+        "description": "Beskrivelse",
+        "descriptionPlaceholder": "Oppgi detaljert informasjon om problemet...",
+        "descriptionHelp": "Påkrevd. Inkluder fremgangsmåte for å gjenskape, feilmeldinger eller andre relevante detaljer.",
+        "attachments": "Vedlegg skjermbilder",
+        "attachmentsHelp": "Valgfritt. Last opp inntil 3 skjermbilder (PNG, JPG eller WebP). Maks 5 MB hver.",
+        "attachmentsBtn": "Velg filer",
+        "attachmentsSelected": "fil(er) valgt",
+        "removeAttachment": "Fjern",
+        "submit": "Send inn sak",
+        "submitting": "Oppretter sak...",
+        "cancel": "Avbryt"
+      },
+      "success": {
+        "title": "Sak opprettet",
+        "message": "Supportsaken din er opprettet. Vi svarer innen 24 timer på virkedager.",
+        "viewTicket": "Se sak",
+        "createAnother": "Opprett ny sak"
+      },
+      "error": {
+        "title": "Kunne ikke opprette sak",
+        "message": "Noe gikk galt. Vennligst prøv igjen.",
+        "retry": "Prøv igjen"
+      }
+    },
+    "detail": {
+      "title": "Saksdetaljer",
+      "status": "Status",
+      "category": "Kategori",
+      "priority": "Prioritet",
+      "created": "Opprettet",
+      "lastActivity": "Sist aktivitet",
+      "comments": "Kommentarer",
+      "addComment": "Legg til kommentar",
+      "commentPlaceholder": "Skriv meldingen din...",
+      "attachScreenshots": "Vedlegg skjermbilder",
+      "sendComment": "Send",
+      "sending": "Sender...",
+      "loadingTicket": "Laster sak...",
+      "ticketNotFound": "Sak ikke funnet",
+      "ticketNotFoundMessage": "Denne saken finnes ikke, eller du har ikke tilgang til å se den.",
+      "noComments": "Ingen kommentarer ennå",
+      "userRole": "Deg",
+      "adminRole": "Supportteam",
+      "systemRole": "System",
+      "attachmentPreview": "Klikk for å se full størrelse",
+      "attachmentAlt": "Vedlegg",
+      "closeModal": "Lukk",
+      "closeTicketTitle": "Lukk sak",
+      "closeTicketMessage": "Er du sikker på at du vil lukke denne saken? Du kan valgfritt oppgi en grunn.",
+      "closeTicketPlaceholder": "Valgfritt: Hvorfor lukker du denne saken?",
+      "closeTicketCancel": "Avbryt",
+      "closeTicketButton": "Lukk sak",
+      "closeTicketClosing": "Lukker..."
+    },
+    "status": {
+      "open": "Åpen",
+      "investigating": "Undersøkes",
+      "waiting_on_user": "Venter på deg",
+      "resolved": "Løst",
+      "closed": "Lukket"
+    },
+    "category": {
+      "none": "Ikke angitt",
+      "account_login": "Konto og innlogging",
+      "billing_subscription": "Fakturering og abonnement",
+      "social_connections": "Tilkoblinger til sosiale medier",
+      "content_generation": "Innholdsgenerering",
+      "publishing_issues": "Publiseringsproblemer",
+      "technical_bug": "Teknisk feil",
+      "feature_request": "Funksjonsønsker",
+      "general_question": "Generelt spørsmål"
+    },
+    "priority": {
+      "none": "Ikke angitt",
+      "urgent": "Haster – blokkerer system",
+      "high": "Høy – alvorlig problem",
+      "normal": "Normal – vanlig",
+      "low": "Lav – mindre / forslag"
+    },
+    "attachments": {
+      "uploading": "Laster opp vedlegg...",
+      "uploadSuccess": "Vedlegg lastet opp",
+      "uploadError": "Kunne ikke laste opp noen vedlegg",
+      "fileTypeError": "Kun PNG-, JPG- og WebP-filer er tillatt",
+      "fileSizeError": "Filstørrelsen må være under 5 MB",
+      "fileCountError": "Du kan laste opp inntil 3 filer per kommentar",
+      "viewFullSize": "Se full størrelse"
+    },
+    "errors": {
+      "loadFailed": "Kunne ikke laste supportsaker",
+      "createFailed": "Kunne ikke opprette sak",
+      "commentFailed": "Kunne ikke legge til kommentar",
+      "unauthorized": "Du har ikke tilgang til denne saken",
+      "networkError": "Nettverksfeil. Sjekk tilkoblingen og prøv igjen."
+    },
+    "validation": {
+      "subjectRequired": "Emne er påkrevd",
+      "descriptionRequired": "Beskrivelse er påkrevd",
+      "messageRequired": "Melding er påkrevd",
+      "emailRequired": "E-post er påkrevd",
+      "invalidEmail": "Vennligst oppgi en gyldig e-postadresse",
+      "noUpdatesProvided": "Ingen oppdateringer oppgitt",
+      "noFilesProvided": "Ingen filer oppgitt",
+      "tooManyFiles": "For mange filer. Maks {count} filer tillatt.",
+      "invalidFileType": "Ugyldig filtype for {name}. Kun PNG-, JPG- og WebP-filer er tillatt.",
+      "fileTooLarge": "Filen {name} er for stor ({size}). Maksimal størrelse er 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Sett opp ZARZOOM",
+    "subtitle": "La oss få autopiloten for sosiale medier konfigurert i noen få steg.",
+    "stepper": {
+      "step1": "Konto",
+      "step2": "Merkevare",
+      "step3": "Mål",
+      "step4": "Plan",
+      "step5": "Koble til"
+    },
+    "nav": {
+      "back": "Tilbake",
+      "next": "Fortsett",
+      "saveExit": "Lagre og avslutt",
+      "skipForNow": "Hopp over foreløpig",
+      "finish": "Start ZARZOOM",
+      "saving": "Lagrer..."
+    },
+    "step1": {
+      "title": "Konto opprettet",
+      "subtitle": "Du er logget inn og klar.",
+      "signedInAs": "Logget inn som",
+      "continue": "La oss sette opp merkevaren"
+    },
+    "step2": {
+      "title": "Merkevaregrunnlag",
+      "subtitle": "Fortell oss om virksomheten din, så vi kan tilpasse innholdet til merkevaren din.",
+      "businessName": {
+        "label": "Virksomhetsnavn",
+        "placeholder": "f.eks. Acme AS",
+        "help": "Navnet på virksomheten eller merkevaren din."
+      },
+      "description": {
+        "label": "Beskrivelse",
+        "placeholder": "Beskriv kort hva virksomheten din gjør...",
+        "help": "En kort oppsummering slik at AI-en forstår merkevarestemmen din."
+      },
+      "websiteUrl": {
+        "label": "Nettsted-URL",
+        "placeholder": "https://dittnettsted.no",
+        "help": "Vi analyserer nettstedet for å tilpasse innholdet."
+      },
+      "autofillFromWebsite": "Fyll ut automatisk fra nettsted",
+      "analysing": "Analyserer...",
+      "importFromFile": "Importer fra fil",
+      "choosePdfOrWord": "Velg PDF- eller Word-dokument",
+      "investigate": {
+        "button": "Analyser nettsted",
+        "loading": "Analyserer nettstedet ditt...",
+        "success": "Nettsted analysert!",
+        "error": "Kunne ikke analysere nettsted. Vennligst fyll inn detaljene manuelt."
+      },
+      "contentLanguage": {
+        "label": "Innholdsspråk",
+        "help": "Hovedspråket for det genererte innholdet."
+      },
+      "articleStyles": {
+        "label": "Artikkelstiler",
+        "help": "Velg hvilke typer innhold du vil at ZARZOOM skal lage.",
+        "options": {
+          "let_zarzoom_decide": "La ZARZOOM bestemme",
+          "how_to_guides": "Slik-gjør-du-guider",
+          "listicles": "Listeartikler",
+          "tutorials": "Veiledninger",
+          "opinion_pieces": "Meninger og kommentarer",
+          "case_studies": "Casestudier",
+          "news_commentary": "Nyhetskommentarer",
+          "interviews": "Intervjuer",
+          "product_reviews": "Produktanmeldelser",
+          "explainer_articles": "Forklaringsartikler",
+          "comparisons_vs_articles": "Sammenligninger og «X vs Y»",
+          "ultimate_guides_pillar": "Ultimate-guider / søyleinnhold",
+          "checklists_cheat_sheets": "Sjekklister og jukseark",
+          "best_top_forecasts": "Beste / topplister og prognoser",
+          "problem_solution_posts": "Problem/løsning-innlegg",
+          "myth_busting": "Mytebryting / misoppfatninger",
+          "resource_roundups": "Ressursoversikter",
+          "faqs_qa_content": "Ofte stilte spørsmål / Q&A",
+          "personal_stories": "Personlige historier og erfaringer",
+          "research_summaries": "Forskningsoppsummeringer og data",
+          "historical_timeline": "Historisk / tidslinje",
+          "satire_humor": "Satire eller humor",
+          "explained_in_minutes": "Forklart på X minutter"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "La AI-en velge best format for innholdet ditt",
+          "how_to_guides": "Steg-for-steg-instruksjoner",
+          "listicles": "Nummerlister (f.eks. 10 tips for X)",
+          "tutorials": "Mer detaljert enn en slik-gjør-du",
+          "opinion_pieces": "Ekspertstandpunkter eller kommentarer",
+          "case_studies": "Virkelige eksempler og resultater",
+          "news_commentary": "Kontekst rundt aktuelle hendelser",
+          "interviews": "Spørsmål og svar med person/ekspert",
+          "product_reviews": "Vurdering og rangering",
+          "explainer_articles": "Forklar komplekse konsepter enkelt",
+          "comparisons_vs_articles": "X vs Y, fordeler og ulemper",
+          "ultimate_guides_pillar": "Lang form, autoritativ, dekker et helt emne",
+          "checklists_cheat_sheets": "Rask referanse, handlingslister",
+          "best_top_forecasts": "Beste verktøy for X, topptrender 202X",
+          "problem_solution_posts": "Identifiser et problem og løs det",
+          "myth_busting": "Rydde opp i vanlige misoppfatninger",
+          "resource_roundups": "Beste artikler, verktøy og lenker om et emne",
+          "faqs_qa_content": "Mål lange søkeord direkte",
+          "personal_stories": "Fortelling, emosjonell effekt",
+          "research_summaries": "Oppsummer undersøkelser og forskning",
+          "historical_timeline": "Se tilbake på utvikling eller evolusjon",
+          "satire_humor": "Underholdende innhold med merkevarepersonlighet",
+          "explained_in_minutes": "Hovedpoeng, rask konsum"
+        }
+      },
+      "styleLinks": {
+        "label": "Stilreferanselenker",
+        "placeholder": "https://eksempel.no/artikkel",
+        "help": "Legg til inntil 3 lenker til artikler du vil at stilen skal ligne på.",
+        "add": "Legg til lenke",
+        "max": "Maksimalt 3 lenker"
+      },
+      "brandColor": {
+        "label": "Merkevarefarge",
+        "help": "Din primære merkevarefarge for generert visuelt innhold."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Last opp merkevarelogoen din (JPG-format).",
+        "upload": "Last opp logo",
+        "change": "Bytt logo",
+        "uploading": "Laster opp..."
+      }
+    },
+    "step3": {
+      "title": "Mål og vekst",
+      "subtitle": "Hva vil du oppnå med ZARZOOM?",
+      "goals": {
+        "label": "Velg målene dine",
+        "help": "Velg ett eller flere mål. Vi tilpasser strategien deretter.",
+        "options": {
+          "increase_website_traffic": "Øke nettstedstrafikk",
+          "get_more_subscribers_leads": "Få flere abonnenter og leads",
+          "promote_product_or_service": "Markedsføre produkt eller tjeneste",
+          "increase_sales": "Øke salget",
+          "build_brand_authority": "Bygge merkevareautoritet",
+          "improve_seo": "Forbedre SEO",
+          "educate_audience": "Utdanne målgruppen",
+          "generate_social_content": "Generere innhold til sosiale medier"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL til nettsted eller landingsside",
+        "placeholder": "https://dittnettsted.no/landing",
+        "help": "Påkrevd når målene inkluderer nettstedstrafikk eller leadgenerering."
+      },
+      "productUrl": {
+        "label": "URL til produkt eller salgsside",
+        "placeholder": "https://dittnettsted.no/produkt",
+        "help": "Påkrevd når målene inkluderer produktpromotering eller salg."
+      }
+    },
+    "step4": {
+      "title": "Velg plan",
+      "subtitle": "Start med en plan som matcher ambisjonene dine.",
+      "discount": {
+        "label": "Årlig fakturering",
+        "save": "Spar {percent} %"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Inntil 3 profiler på sosiale medier",
+          "postsPerMonth": "30 innlegg per måned",
+          "aiGeneration": "Grunnleggende AI-innholdsgenerering",
+          "scheduling": "Planlegging av innlegg",
+          "emailSupport": "E-postsupport"
+        },
+        "pro": {
+          "socialProfiles": "Inntil 10 profiler på sosiale medier",
+          "postsPerMonth": "150 innlegg per måned",
+          "aiGeneration": "Avansert AI-innholdsgenerering",
+          "scheduling": "Smart planlegging med optimale tidspunkter",
+          "analytics": "Analysedashboard",
+          "prioritySupport": "Prioritert support"
+        },
+        "scale": {
+          "socialProfiles": "Ubegrenset antall profiler",
+          "postsPerMonth": "Ubegrenset antall innlegg",
+          "aiGeneration": "Premium AI med tilpasset merkevarestemme",
+          "scheduling": "AI-drevet auto-planlegging",
+          "analytics": "Avansert analyse og rapportering",
+          "customBranding": "Tilpasset merkevare og white-label",
+          "dedicatedSupport": "Dedikert account manager",
+          "apiAccess": "Full API-tilgang"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Perfekt for å komme i gang med automatisering av sosiale medier.",
+        "pro": "For voksende bedrifter som trenger mer kraft og innsikt.",
+        "scale": "Ubegrenset alt for team og byråer."
+      },
+      "popular": "Mest populær",
+      "perMonth": "/mnd",
+      "selectPlan": "Velg plan",
+      "selected": "Valgt",
+      "trialDays": "{days} dagers gratis prøveperiode"
+    },
+    "step5": {
+      "title": "Koble til og start",
+      "subtitle": "Koble til kontoene på sosiale medier og sett preferansene dine.",
+      "connectSocials": {
+        "label": "Koble til kontoer på sosiale medier",
+        "help": "Koble til kontoene dine på sosiale medier",
+        "button": "Koble til kontoer",
+        "manage": "Administrer tilkoblinger",
+        "connected": "Kontoer på sosiale medier tilkoblet",
+        "notConnected": "Ingen kontoer tilkoblet ennå"
+      },
+      "approval": {
+        "label": "Innholdsgodkjenning",
+        "help": "Velg hvordan ZARZOOM publiserer innholdet ditt.",
+        "auto": "Auto-publiser",
+        "autoHelp": "ZARZOOM publiserer innhold automatisk etter plan.",
+        "manual": "Manuell godkjenning",
+        "manualHelp": "Gjennomgå og godkjenn hvert innlegg før det publiseres."
+      },
+      "notes": {
+        "label": "Tilleggsnotater",
+        "placeholder": "Noe annet du vil at vi skal vite om merkevaren eller innholdspreferansene dine...",
+        "help": "Valgfrie notater for AI-en å ta hensyn til."
+      }
+    },
+    "modal": {
+      "title": "Koble til kontoer på sosiale medier",
+      "loading": "Forbereder tilkobling...",
+      "checking": "Sjekker tilkobling...",
+      "close": "Ferdig",
+      "openInNewTab": "Åpne i ny fane",
+      "skipConnect": "Hopp over foreløpig",
+      "errorGeneric": "Kunne ikke laste tilkoblingen. Vennligst prøv igjen senere.",
+      "errorNoUrl": "Ingen tilkoblings-URL ble returnert. Vennligst prøv igjen.",
+      "demoTitle": "Tilkobling kommer snart",
+      "demoDescription": "Tilkoblingen er ikke konfigurert for dette miljøet ennå. Tilkobling av kontoer på sosiale medier blir tilgjengelig når en administrator har satt det opp."
+    },
+    "errors": {
+      "loadFailed": "Kunne ikke laste oppsettdata. Vennligst prøv igjen.",
+      "saveFailed": "Kunne ikke lagre. Vennligst prøv igjen.",
+      "completeFailed": "Kunne ikke fullføre oppsett. Sjekk at alle påkrevde felt er fylt ut."
+    },
+    "banner": {
+      "skipped": "Du hoppet over oppsett. Fullfør for å låse opp alle funksjoner.",
+      "inProgress": "Oppsettet er ufullstendig. Fullfør for å komme i gang.",
+      "cta": "Fullfør oppsett"
+    },
+    "gate": {
+      "title": "Oppsett påkrevd",
+      "description": "Fullfør oppsettet for å låse opp denne funksjonen. Det tar bare noen minutter.",
+      "cta": "Fullfør oppsett"
+    },
+    "a11y": {
+      "brandLogoAlt": "Merkevarelogo",
+      "socialConnectorTitle": "Tilkobling til sosiale medier",
+      "dismissBanner": "Lukk banner",
+      "currency": "kr",
+      "stepperLabel": "Oppsettframgang"
+    },
+    "validation": {
+      "invalidUrl": "Vennligst oppgi en gyldig URL (f.eks. https://eksempel.no)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Faktureringshistorikk"
+    },
+    "selectCurrencyLabel": "Velg valuta",
+    "selectCurrencyHelp": "Velg foretrukket valuta for priser.",
+    "selectBillingInterval": "Velg faktureringsintervall",
+    "toggleDiscount": "Slå av/på rabatt for reklamepartnerskap",
+    "discountPartnershipTitle": "Spar {percent} % med reklamepartnerskap",
+    "discountActive": "Aktiv",
+    "discountPartnershipDescription": "Tillat ZARZOOM å publisere promotering innhold i feeden din (maks {maxFrequency}) og få {percent} % rabatt på abonnementet. Du beholder full kontroll og kan deaktivere når som helst.",
+    "discountOncePerDay": "én gang per dag",
+    "discountPerWeek": "{count}x per uke",
+    "discountPartnerApplied": "Partnerrabatt aktiv",
+    "discountAdvertisingApplied": "Reklamepartnerskapsrabatt aktiv",
+    "contactUs": "Kontakt oss",
+    "partnerDiscountEnable": "Aktiver 50 % partnerrabatt",
+    "partnerDiscountStandardPrice": "Standardpris",
+    "partnerDiscount50Off": "50 % RABATT",
+    "partnerDiscountSubheading": "Spar 50 %. Vi kan publisere inntil 1 liten ZARZOOM-promo per dag (maks 3–7 per uke) — aldri på dine egne innlegg.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Enkle, transparente priser",
+      "subtitle": "Velg planen som passer veksten din. Start med gratis prøveperiode, oppgrader når som helst.",
+      "monthly": "Månedlig",
+      "annual": "Årlig",
+      "popular": "Mest populær",
+      "getStarted": "Kom i gang",
+      "savePercent": "Spar {percent} % med årlig fakturering",
+      "trialDays": "{days} dagers gratis prøveperiode",
+      "page": {
+        "title": "Enkle, transparente priser",
+        "subtitle": "Velg planen som passer deg. Alle planer inkluderer 14 dagers gratis prøveperiode.",
+        "footer": "Alle priser er ekskl. mva der aktuelt. Kanseller eller bytt plan når som helst.",
+        "contactCta": "Spørsmål? Kontakt oss, så hjelper vi deg med å finne riktig plan.",
+        "contactCtaPrefix": "Spørsmål? ",
+        "contactLink": "Kontakt oss",
+        "contactCtaSuffix": " så hjelper vi deg med å finne riktig plan."
+      },
+      "fallback": {
+        "title": "Priser midlertidig utilgjengelige",
+        "message": "Vi oppdaterer prisplanene våre. Vennligst sjekk igjen om kort tid eller kontakt support."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfekt for å komme i gang",
+        "description": "Grunnleggende funksjoner for å lansere tilstedeværelsen på sosiale medier med AI-drevet innholdsproduksjon og planlegging.",
+        "bullets": [
+          "Inntil 3 profiler på sosiale medier",
+          "30 innlegg per måned",
+          "Grunnleggende AI-innholdsgenerering",
+          "Planlegging av innlegg",
+          "E-postsupport"
+        ],
+        "cta": "Start gratis prøveperiode"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Best for voksende bedrifter",
+        "description": "Avanserte funksjoner og analyse for å skalerer strategien på sosiale medier med intelligent automatisering.",
+        "bullets": [
+          "Inntil 10 profiler på sosiale medier",
+          "150 innlegg per måned",
+          "Avansert AI-innholdsgenerering",
+          "Smart planlegging med optimale tidspunkter",
+          "Analysedashboard",
+          "Prioritert support"
+        ],
+        "cta": "Start gratis prøveperiode"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "For team og byråer",
+        "description": "Funksjoner i bedriftsklasse med ubegrenset innhold, tilpasset merkevare og dedikert support for maksimal effekt.",
+        "bullets": [
+          "Ubegrenset antall profiler på sosiale medier",
+          "Ubegrenset antall innlegg",
+          "Premium AI med tilpasset merkevarestemme",
+          "AI-drevet auto-planlegging",
+          "Avansert analyse og rapportering",
+          "Tilpasset merkevare og white-label",
+          "Dedikert account manager",
+          "Full API-tilgang"
+        ],
+        "cta": "Kontakt salg"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Inntil 3 profiler på sosiale medier",
+        "postsPerMonth": "30 innlegg per måned",
+        "aiGeneration": "Grunnleggende AI-innholdsgenerering",
+        "scheduling": "Planlegging av innlegg",
+        "emailSupport": "E-postsupport"
+      },
+      "pro": {
+        "socialProfiles": "Inntil 10 profiler på sosiale medier",
+        "postsPerMonth": "150 innlegg per måned",
+        "aiGeneration": "Avansert AI-innholdsgenerering",
+        "scheduling": "Smart planlegging med optimale tidspunkter",
+        "analytics": "Analysedashboard",
+        "prioritySupport": "Prioritert support"
+      },
+      "advanced": {
+        "socialProfiles": "Ubegrenset antall profiler",
+        "postsPerMonth": "Ubegrenset antall innlegg",
+        "aiGeneration": "Premium AI med tilpasset merkevarestemme",
+        "scheduling": "AI-drevet auto-planlegging",
+        "analytics": "Avansert analyse og rapportering",
+        "customBranding": "Tilpasset merkevare og white-label",
+        "dedicatedSupport": "Dedikert account manager",
+        "apiAccess": "Full API-tilgang"
+      }
+    }
+  }
+}

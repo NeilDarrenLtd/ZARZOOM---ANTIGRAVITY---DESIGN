@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Velkommen tilbage",
+    "loginSubtitle": "Log ind på din ZARZOOM-konto",
+    "registerTitle": "Opret din konto",
+    "registerSubtitle": "Slut dig til tusindvis af markedsførere, der automatiserer deres sociale medier",
+    "email": "E-mailadresse",
+    "password": "Adgangskode",
+    "confirmPassword": "Bekræft adgangskode",
+    "login": "Log ind",
+    "register": "Opret konto",
+    "forgotPassword": "Glemt adgangskode?",
+    "orContinueWith": "Eller fortsæt med",
+    "noAccount": "Har du ikke en konto?",
+    "hasAccount": "Har du allerede en konto?",
+    "signUpLink": "Tilmeld dig",
+    "signInLink": "Log ind",
+    "passwordMinLength": "Adgangskoden skal være mindst 8 tegn",
+    "passwordUppercase": "Skal indeholde et stort bogstav",
+    "passwordLowercase": "Skal indeholde et lille bogstav",
+    "passwordNumber": "Skal indeholde et tal",
+    "passwordSpecial": "Skal indeholde et specialtegn",
+    "passwordsNoMatch": "Adgangskoderne matcher ikke",
+    "emailRequired": "E-mail er påkrævet",
+    "emailInvalid": "Indtast venligst en gyldig e-mail",
+    "signUpSuccess": "Tjek din e-mail",
+    "signUpSuccessMessage": "Vi har sendt et bekræftelseslink til din e-mailadresse. Tjek din indbakke og klik på linket for at aktivere din konto.",
+    "backToLogin": "Tilbage til login",
+    "authError": "Godkendelsesfejl",
+    "authErrorMessage": "Noget gik galt under godkendelsen. Prøv venligst igen.",
+    "tryAgain": "Prøv igen",
+    "tabLogin": "Log ind",
+    "tabCreateAccount": "Opret konto",
+    "continueWithGoogle": "Fortsæt med Google",
+    "continueWithFacebook": "Fortsæt med Facebook",
+    "continueWithLinkedIn": "Fortsæt med LinkedIn",
+    "continueWithX": "Fortsæt med X",
+    "rememberMe": "Husk mig",
+    "forgotLogin": "Glemt din login?",
+    "verifyTitle": "Tjek din indbakke",
+    "verifySubtitle": "Vi har sendt et bekræftelseslink til din e-mailadresse. Tjek din indbakke og klik på linket for at aktivere din konto.",
+    "verifyResend": "Send bekræftelsesmail igen",
+    "verifyResent": "Bekræftelsesmail sendt igen",
+    "verifyBack": "Tilbage til login",
+    "verifiedTitle": "E-mail bekræftet",
+    "verifiedSubtitle": "Din e-mail er blevet bekræftet. Du kan nu logge ind på din konto.",
+    "verifiedContinue": "Fortsæt til login",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Velkommen tilbage",
+    "overview": "Overblik",
+    "accountSettings": "Kontoindstillinger",
+    "connectedAccounts": "Tilsluttede konti",
+    "comingSoon": "Kommer snart – dit kommandocentral for sociale medier.",
+    "emailVerified": "E-mail bekræftet",
+    "memberSince": "Medlem siden",
+    "profile": "Brandindstillinger",
+    "supportDescription": "Få hjælp fra vores supportteam. Opret og administrer supportbilletter.",
+    "restartSetup": "Genstart opsætning",
+    "restarting": "Genstarter..."
+  },
+  "connect": {
+    "heading": "Forbind dine konti",
+    "subheading": "Tilslut dine konti på de sociale medier for at begynde at publicere automatisk med ZARZOOM.",
+    "connectAccounts": "Forbind konti",
+    "back": "Tilbage"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Auto-udfyld fra fil"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Opret API-nøgle",
+    "keyCreated": "Nøgle oprettet",
+    "close": "Luk",
+    "keyName": "Nøglenavn",
+    "keyNamePlaceholder": "f.eks. Produktion, Staging, CI/CD",
+    "keyNameRequired": "Navn er påkrævet",
+    "active": "Aktiv",
+    "revoked": "Tilbagekaldt",
+    "created": "Oprettet",
+    "lastUsed": "Sidst brugt",
+    "revokedAt": "Tilbagekaldt",
+    "rotate": "Rotér",
+    "revoke": "Tilbagekald",
+    "revokeConfirm": "Tilbagekald denne nøgle?",
+    "rotateConfirm": "Rotér nøgle?",
+    "confirm": "Bekræft",
+    "cancel": "Annuller",
+    "revoking": "Tilbagekalder...",
+    "rotating": "Rotérer...",
+    "rotateTitle": "Rotér: tilbagekald denne nøgle og opret en ny"
+  },
+  "profile": {
+    "title": "Brandindstillinger",
+    "subtitle": "Administrer dit brand, mål, plan og sociale forbindelser.",
+    "saving": "Gemmer...",
+    "saved": "Ændringer gemt.",
+    "saveFailed": "Kunne ikke gemme ændringer. Prøv igen.",
+    "loadFailed": "Kunne ikke indlæse din profil. Prøv igen.",
+    "save": "Gem ændringer",
+    "sections": {
+      "brand": "Brandgrundlag",
+      "brandDesc": "Din virksomhedsidentitet og indholdspræferencer.",
+      "goals": "Mål og vækst",
+      "goalsDesc": "Hvad du vil opnå med ZARZOOM.",
+      "posting": "Publiceringspræferencer",
+      "postingDesc": "Sådan publicerer ZARZOOM dit indhold.",
+      "plan": "Din plan",
+      "planDesc": "Nuværende abonnement og faktureringspræferencer.",
+      "social": "Sociale forbindelser",
+      "socialDesc": "Administrer dine tilsluttede konti på de sociale medier."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Auto-publicer",
+        "help": "Tillad ZARZOOM at publicere indhold automatisk på dine vegne."
+      }
+    },
+    "plan": {
+      "current": "Nuværende plan",
+      "noPlan": "Ingen plan valgt",
+      "annualBilling": "Årlig fakturering",
+      "changePlan": "Skift plan"
+    },
+    "social": {
+      "username": "Socialt brugernavn",
+      "noUsername": "Ikke konfigureret endnu",
+      "connected": "Sociale konti tilsluttet",
+      "notConnected": "Ingen konti tilsluttet endnu",
+      "connect": "Forbind konti",
+      "manage": "Administrer forbindelser"
+    },
+    "back": "Tilbage til dashboard"
+  },
+  "support": {
+    "nav": {
+      "title": "Support",
+      "myTickets": "Mine billetter",
+      "createTicket": "Opret billet",
+      "backToSupport": "Tilbage til support",
+      "backToDashboard": "Tilbage til dashboard"
+    },
+    "landing": {
+      "title": "Få support",
+      "subtitle": "Vi er her for at hjælpe dig med at få mest muligt ud af ZARZOOM.",
+      "description": "Send en supportbillet, og vores team svarer inden for 24 timer på hverdage.",
+      "createTicketBtn": "Opret billet",
+      "myTicketsBtn": "Mine billetter"
+    },
+    "list": {
+      "title": "Mine supportbilletter",
+      "subtitle": "Se og administrer dine supportanmodninger.",
+      "empty": "Ingen billetter endnu",
+      "emptyDescription": "Du har ikke oprettet nogen supportbilletter. Klik på knappen nedenfor for at komme i gang.",
+      "createFirstTicket": "Opret din første billet",
+      "filterByStatus": "Filtrer efter status",
+      "allTickets": "Alle billetter",
+      "showingTickets": "Viser {filtered} af {total} billetter",
+      "noMatchFilter": "Ingen billetter matcher den valgte statusfilter.",
+      "clearFilter": "Ryd filter",
+      "table": {
+        "ticketId": "Billet-ID",
+        "subject": "Emne",
+        "status": "Status",
+        "lastUpdated": "Sidst opdateret",
+        "created": "Oprettet"
+      }
+    },
+    "create": {
+      "title": "Opret supportbillet",
+      "subtitle": "Beskriv dit problem, så hjælper vi med at løse det.",
+      "form": {
+        "subject": "Emne",
+        "subjectPlaceholder": "Kort beskrivelse af dit problem",
+        "subjectHelp": "Påkrævet. Hold det kort og klart.",
+        "category": "Kategori",
+        "categoryHelp": "Valgfrit. Vælg den kategori der bedst passer til dit problem.",
+        "priority": "Prioritet",
+        "priorityHelp": "Valgfrit. Fortæl os hvor presserende dette er.",
+        "description": "Beskrivelse",
+        "descriptionPlaceholder": "Giv detaljerede oplysninger om dit problem...",
+        "descriptionHelp": "Påkrævet. Inkluder trin til at reproducere, fejlmeddelelser eller andre relevante detaljer.",
+        "attachments": "Vedhæft skærmbilleder",
+        "attachmentsHelp": "Valgfrit. Upload op til 3 skærmbilleder (PNG, JPG eller WebP). Maks 5 MB hver.",
+        "attachmentsBtn": "Vælg filer",
+        "attachmentsSelected": "fil(er) valgt",
+        "removeAttachment": "Fjern",
+        "submit": "Send billet",
+        "submitting": "Opretter billet...",
+        "cancel": "Annuller"
+      },
+      "success": {
+        "title": "Billet oprettet",
+        "message": "Din supportbillet er oprettet. Vi svarer inden for 24 timer på hverdage.",
+        "viewTicket": "Se billet",
+        "createAnother": "Opret endnu en billet"
+      },
+      "error": {
+        "title": "Kunne ikke oprette billet",
+        "message": "Noget gik galt. Prøv igen.",
+        "retry": "Prøv igen"
+      }
+    },
+    "detail": {
+      "title": "Billetdetaljer",
+      "status": "Status",
+      "category": "Kategori",
+      "priority": "Prioritet",
+      "created": "Oprettet",
+      "lastActivity": "Sidste aktivitet",
+      "comments": "Kommentarer",
+      "addComment": "Tilføj kommentar",
+      "commentPlaceholder": "Skriv din besked...",
+      "attachScreenshots": "Vedhæft skærmbilleder",
+      "sendComment": "Send",
+      "sending": "Sender...",
+      "loadingTicket": "Indlæser billet...",
+      "ticketNotFound": "Billet ikke fundet",
+      "ticketNotFoundMessage": "Denne billet findes ikke, eller du har ikke tilladelse til at se den.",
+      "noComments": "Ingen kommentarer endnu",
+      "userRole": "Dig",
+      "adminRole": "Supportteam",
+      "systemRole": "System",
+      "attachmentPreview": "Klik for at se fuld størrelse",
+      "attachmentAlt": "Vedhæftet fil",
+      "closeModal": "Luk",
+      "closeTicketTitle": "Luk billet",
+      "closeTicketMessage": "Er du sikker på, at du vil lukke denne billet? Du kan valgfrit angive en årsag.",
+      "closeTicketPlaceholder": "Valgfrit: Hvorfor lukker du denne billet?",
+      "closeTicketCancel": "Annuller",
+      "closeTicketButton": "Luk billet",
+      "closeTicketClosing": "Lukker..."
+    },
+    "status": {
+      "open": "Åben",
+      "investigating": "Undersøger",
+      "waiting_on_user": "Venter på dig",
+      "resolved": "Løst",
+      "closed": "Lukket"
+    },
+    "category": {
+      "none": "Ikke angivet",
+      "account_login": "Konto og login",
+      "billing_subscription": "Fakturering og abonnement",
+      "social_connections": "Sociale forbindelser",
+      "content_generation": "Indholdsgenerering",
+      "publishing_issues": "Publiceringsproblemer",
+      "technical_bug": "Teknisk fejl",
+      "feature_request": "Funktionsønsker",
+      "general_question": "Generelt spørgsmål"
+    },
+    "priority": {
+      "none": "Ikke angivet",
+      "urgent": "Presserende – system blokerer",
+      "high": "Høj – større problem",
+      "normal": "Normal – standard",
+      "low": "Lav – mindre / forslag"
+    },
+    "attachments": {
+      "uploading": "Uploader vedhæftede filer...",
+      "uploadSuccess": "Vedhæftede filer uploadet",
+      "uploadError": "Kunne ikke uploade nogle vedhæftede filer",
+      "fileTypeError": "Kun PNG-, JPG- og WebP-filer er tilladt",
+      "fileSizeError": "Filstørrelsen skal være under 5 MB",
+      "fileCountError": "Du kan uploade op til 3 filer per kommentar",
+      "viewFullSize": "Se fuld størrelse"
+    },
+    "errors": {
+      "loadFailed": "Kunne ikke indlæse supportbilletter",
+      "createFailed": "Kunne ikke oprette billet",
+      "commentFailed": "Kunne ikke tilføje kommentar",
+      "unauthorized": "Du har ikke tilladelse til at tilgå denne billet",
+      "networkError": "Netværksfejl. Tjek din forbindelse og prøv igen."
+    },
+    "validation": {
+      "subjectRequired": "Emne er påkrævet",
+      "descriptionRequired": "Beskrivelse er påkrævet",
+      "messageRequired": "Besked er påkrævet",
+      "emailRequired": "E-mail er påkrævet",
+      "invalidEmail": "Indtast venligst en gyldig e-mailadresse",
+      "noUpdatesProvided": "Ingen opdateringer angivet",
+      "noFilesProvided": "Ingen filer angivet",
+      "tooManyFiles": "For mange filer. Maksimum {count} filer tilladt.",
+      "invalidFileType": "Ugyldig filtype for {name}. Kun PNG-, JPG- og WebP-filer er tilladt.",
+      "fileTooLarge": "Filen {name} er for stor ({size}). Maksimal størrelse er 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Sæt din ZARZOOM op",
+    "subtitle": "Lad os få din autopilot for sociale medier konfigureret i få trin.",
+    "stepper": {
+      "step1": "Konto",
+      "step2": "Brand",
+      "step3": "Mål",
+      "step4": "Plan",
+      "step5": "Forbind"
+    },
+    "nav": {
+      "back": "Tilbage",
+      "next": "Fortsæt",
+      "saveExit": "Gem og afslut",
+      "skipForNow": "Spring over for nu",
+      "finish": "Start ZARZOOM",
+      "saving": "Gemmer..."
+    },
+    "step1": {
+      "title": "Konto oprettet",
+      "subtitle": "Du er logget ind og klar.",
+      "signedInAs": "Logget ind som",
+      "continue": "Lad os sætte dit brand op"
+    },
+    "step2": {
+      "title": "Brandgrundlag",
+      "subtitle": "Fortæl os om din virksomhed, så vi kan skræddersy indhold til dit brand.",
+      "businessName": {
+        "label": "Virksomhedsnavn",
+        "placeholder": "f.eks. Acme Corp",
+        "help": "Navnet på din virksomhed eller dit brand."
+      },
+      "description": {
+        "label": "Beskrivelse",
+        "placeholder": "Beskriv kort hvad din virksomhed laver...",
+        "help": "En kort opsummering, så vores AI forstår din brandstemme."
+      },
+      "websiteUrl": {
+        "label": "Websted-URL",
+        "placeholder": "https://ditwebsted.dk",
+        "help": "Vi analyserer dit websted for at skræddersy indhold."
+      },
+      "autofillFromWebsite": "Auto-udfyld fra websted",
+      "analysing": "Analyserer...",
+      "importFromFile": "Importer fra fil",
+      "choosePdfOrWord": "Vælg PDF- eller Word-dokument",
+      "investigate": {
+        "button": "Analysér websted",
+        "loading": "Analyserer dit websted...",
+        "success": "Websted analyseret!",
+        "error": "Kunne ikke analysere websted. Udfyld venligst detaljer manuelt."
+      },
+      "contentLanguage": {
+        "label": "Indholdssprog",
+        "help": "Hovedsproget for dit genererede indhold."
+      },
+      "articleStyles": {
+        "label": "Artikelstile",
+        "help": "Vælg de typer indhold, du gerne vil have ZARZOOM til at oprette.",
+        "options": {
+          "let_zarzoom_decide": "Lad ZARZOOM bestemme",
+          "how_to_guides": "Sådan-gør-du-guider",
+          "listicles": "Listeartikler",
+          "tutorials": "Tutorials",
+          "opinion_pieces": "Holdningsartikler",
+          "case_studies": "Casestudier",
+          "news_commentary": "Nyhedskommentarer",
+          "interviews": "Interview",
+          "product_reviews": "Produktanmeldelser",
+          "explainer_articles": "Forklaringsartikler",
+          "comparisons_vs_articles": "Sammenligninger og vs-artikler",
+          "ultimate_guides_pillar": "Ultimative guider / pillerindhold",
+          "checklists_cheat_sheets": "Tjeklister og huskelister",
+          "best_top_forecasts": "Bedste / top prognoser",
+          "problem_solution_posts": "Problem/løsningsopslag",
+          "myth_busting": "Mytebusting / misforståelser",
+          "resource_roundups": "Ressourceoversigter",
+          "faqs_qa_content": "Ofte stillede spørgsmål / Q&A-indhold",
+          "personal_stories": "Personlige historier / erfaringer",
+          "research_summaries": "Forskningsopsummeringer / dataindsigt",
+          "historical_timeline": "Historisk / tidslinje",
+          "satire_humor": "Satire eller humorindhold",
+          "explained_in_minutes": "Forklaret på X minutter"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Lad vores AI vælge det bedste format til dit indhold",
+          "how_to_guides": "Trin-for-trin instruktioner",
+          "listicles": "Nummererede lister (f.eks. 10 tips til X)",
+          "tutorials": "Mere dybdegående end en sådan-guide",
+          "opinion_pieces": "Ekspertperspektiver eller kommentarer",
+          "case_studies": "Virkelige eksempler/resultater",
+          "news_commentary": "Kontekst om aktuelle begivenheder",
+          "interviews": "Q&A med en person/autoritet",
+          "product_reviews": "Evaluering/bedømmelser",
+          "explainer_articles": "Bryd komplekse begreber ned enkelt",
+          "comparisons_vs_articles": "X vs Y, fordele/ulemper",
+          "ultimate_guides_pillar": "Lang form, autoritativ, dækker et helt emne",
+          "checklists_cheat_sheets": "Hurtig reference, handlingsorienterede lister",
+          "best_top_forecasts": "Bedste værktøjer til X, Top trends i 202X",
+          "problem_solution_posts": "Identificer et smertepunkt og besvar det",
+          "myth_busting": "Ryd op i almindelige misforståelser",
+          "resource_roundups": "Bedste artikler, værktøjer, links om et emne",
+          "faqs_qa_content": "Mål lange haler-søgninger direkte",
+          "personal_stories": "Narrativ, følelsesmæssig effekt",
+          "research_summaries": "Opsummer undersøgelser, forskningsresultater",
+          "historical_timeline": "Se tilbage på udvikling eller evolution",
+          "satire_humor": "Underholdende, brand-personlighedsstykker",
+          "explained_in_minutes": "Hovedpunkter, hurtig forbrug"
+        }
+      },
+      "styleLinks": {
+        "label": "Stilreferencelinks",
+        "placeholder": "https://eksempel.dk/artikel",
+        "help": "Tilføj op til 3 links til artikler, hvis stil du gerne vil efterligne.",
+        "add": "Tilføj link",
+        "max": "Maksimum 3 links"
+      },
+      "brandColor": {
+        "label": "Brandfarve",
+        "help": "Din primære brandfarve til genererede visuelle."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Upload dit brandlogo (JPG-format).",
+        "upload": "Upload logo",
+        "change": "Skift logo",
+        "uploading": "Uploader..."
+      }
+    },
+    "step3": {
+      "title": "Mål og vækst",
+      "subtitle": "Hvad vil du opnå med ZARZOOM?",
+      "goals": {
+        "label": "Vælg dine mål",
+        "help": "Vælg et eller flere mål. Vi skræddersyr din strategi derefter.",
+        "options": {
+          "increase_website_traffic": "Øg webstedstrafik",
+          "get_more_subscribers_leads": "Få flere abonnenter og leads",
+          "promote_product_or_service": "Fremme et produkt eller en tjeneste",
+          "increase_sales": "Øg salget",
+          "build_brand_authority": "Opbyg brandautoritet",
+          "improve_seo": "Forbedre SEO",
+          "educate_audience": "Uddan din målgruppe",
+          "generate_social_content": "Generer indhold til sociale medier"
+        }
+      },
+      "websiteUrl": {
+        "label": "Websted- eller landingsside-URL",
+        "placeholder": "https://ditsite.dk/landing",
+        "help": "Påkrævet når dine mål inkluderer webstedstrafik eller leadgenerering."
+      },
+      "productUrl": {
+        "label": "Produkt- eller salgsside-URL",
+        "placeholder": "https://ditsite.dk/produkt",
+        "help": "Påkrævet når dine mål inkluderer produktfremme eller salg."
+      }
+    },
+    "step4": {
+      "title": "Vælg din plan",
+      "subtitle": "Start med en plan der matcher dine vækstambitioner.",
+      "discount": {
+        "label": "Årlig fakturering",
+        "save": "Spar {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Op til 3 sociale profiler",
+          "postsPerMonth": "30 opslag per måned",
+          "aiGeneration": "Basis AI-indholdsgenerering",
+          "scheduling": "Planlægning af opslag",
+          "emailSupport": "E-mail-support"
+        },
+        "pro": {
+          "socialProfiles": "Op til 10 sociale profiler",
+          "postsPerMonth": "150 opslag per måned",
+          "aiGeneration": "Avanceret AI-indholdsgenerering",
+          "scheduling": "Smart planlægning med optimale tidspunkter",
+          "analytics": "Analysedashboard",
+          "prioritySupport": "Prioriteret support"
+        },
+        "scale": {
+          "socialProfiles": "Ubegrænsede sociale profiler",
+          "postsPerMonth": "Ubegrænsede opslag",
+          "aiGeneration": "Premium AI med tilpasset brandstemme",
+          "scheduling": "AI-drevet auto-planlægning",
+          "analytics": "Avancerede analyser og rapportering",
+          "customBranding": "Tilpasset branding og white-label",
+          "dedicatedSupport": "Dedikeret account manager",
+          "apiAccess": "Fuld API-adgang"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Perfekt til at komme i gang med automatisering af sociale medier.",
+        "pro": "Til vækstvirksomheder der har brug for mere kraft og indsigt.",
+        "scale": "Ubegrænset alt til teams og bureauer."
+      },
+      "popular": "Mest populær",
+      "perMonth": "/måned",
+      "selectPlan": "Vælg plan",
+      "selected": "Valgt",
+      "trialDays": "{days} dages gratis prøveperiode"
+    },
+    "step5": {
+      "title": "Forbind og start",
+      "subtitle": "Forbind dine sociale konti og indstil dine præferencer.",
+      "connectSocials": {
+        "label": "Forbind sociale konti",
+        "help": "Tilslut dine konti på de sociale medier",
+        "button": "Forbind konti",
+        "manage": "Administrer forbindelser",
+        "connected": "Sociale konti tilsluttet",
+        "notConnected": "Ingen konti tilsluttet endnu"
+      },
+      "approval": {
+        "label": "Indholdsgodkendelse",
+        "help": "Vælg hvordan ZARZOOM publicerer dit indhold.",
+        "auto": "Auto-publicer",
+        "autoHelp": "ZARZOOM publicerer indhold automatisk efter plan.",
+        "manual": "Manuel godkendelse",
+        "manualHelp": "Gennemgå og godkend hvert opslag før det går live."
+      },
+      "notes": {
+        "label": "Yderligere bemærkninger",
+        "placeholder": "Noget andet du vil fortælle os om dit brand eller indholdspræferencer...",
+        "help": "Valgfrie bemærkninger til vores AI at tage i betragtning."
+      }
+    },
+    "modal": {
+      "title": "Forbind sociale konti",
+      "loading": "Forbereder social connector...",
+      "checking": "Tjekker forbindelse...",
+      "close": "Færdig",
+      "openInNewTab": "Åbn i nyt faneblad",
+      "skipConnect": "Spring over for nu",
+      "errorGeneric": "Kunne ikke indlæse social connector. Prøv igen senere.",
+      "errorNoUrl": "Ingen forbindelses-URL blev returneret. Prøv igen.",
+      "demoTitle": "Social connector kommer snart",
+      "demoDescription": "Social connector er endnu ikke konfigureret i dette miljø. Dine forbindelser til sociale konti vil være tilgængelige, når udbyderen er sat op af en administrator."
+    },
+    "errors": {
+      "loadFailed": "Kunne ikke indlæse dine onboarding-data. Prøv igen.",
+      "saveFailed": "Kunne ikke gemme. Prøv igen.",
+      "completeFailed": "Kunne ikke fuldføre onboarding. Tjek alle påkrævede felter."
+    },
+    "banner": {
+      "skipped": "Du sprang opsætningen over. Fuldfør den for at låse alle funktioner op.",
+      "inProgress": "Din opsætning er ufuldstændig. Afslut den for at komme i gang.",
+      "cta": "Fuldfør opsætning"
+    },
+    "gate": {
+      "title": "Opsætning påkrævet",
+      "description": "Fuldfør din onboarding-opsætning for at låse denne funktion op. Det tager kun få minutter.",
+      "cta": "Fuldfør opsætning"
+    },
+    "a11y": {
+      "brandLogoAlt": "Brandlogo",
+      "socialConnectorTitle": "Social connector",
+      "dismissBanner": "Luk banner",
+      "currency": "kr.",
+      "stepperLabel": "Onboarding-fremskridt"
+    },
+    "validation": {
+      "invalidUrl": "Indtast venligst en gyldig URL (f.eks. https://eksempel.dk)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Faktureringshistorik"
+    },
+    "selectCurrencyLabel": "Vælg valuta",
+    "selectCurrencyHelp": "Vælg din foretrukne valuta til priser.",
+    "selectBillingInterval": "Vælg faktureringsinterval",
+    "toggleDiscount": "Slå reklamepartnerskabsrabat til/fra",
+    "discountPartnershipTitle": "Spar {percent}% med reklamepartnerskab",
+    "discountActive": "Aktiv",
+    "discountPartnershipDescription": "Tillad ZARZOOM at publicere reklameindhold i din feed (maks {maxFrequency}) og modtag {percent}% rabat på dit abonnement. Du beholder fuld kontrol og kan deaktivere dette når som helst.",
+    "discountOncePerDay": "én gang om dagen",
+    "discountPerWeek": "{count}x per uge",
+    "discountPartnerApplied": "Partnerrabat anvendt",
+    "discountAdvertisingApplied": "Reklamepartnerskabsrabat anvendt",
+    "contactUs": "Kontakt os",
+    "partnerDiscountEnable": "Aktiver 50% partnerrabat",
+    "partnerDiscountStandardPrice": "Standardpris",
+    "partnerDiscount50Off": "50% RABAT",
+    "partnerDiscountSubheading": "Spar 50%. Vi kan publicere op til 1 lille ZARZOOM-reklame om dagen (maks 3–7 ugentligt) — aldrig på dine egne opslag.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Enkle, gennemsigtige priser",
+      "subtitle": "Vælg den plan der passer til din vækst. Start med gratis prøveperiode, opgrader når som helst.",
+      "monthly": "Månedlig",
+      "annual": "Årlig",
+      "popular": "Mest populær",
+      "getStarted": "Kom i gang",
+      "savePercent": "Spar {percent}% med årlig fakturering",
+      "trialDays": "{days} dages gratis prøveperiode",
+      "page": {
+        "title": "Enkle, gennemsigtige priser",
+        "subtitle": "Vælg den plan der passer til dig. Alle planer inkluderer 14 dages gratis prøveperiode.",
+        "footer": "Alle priser er ekskl. moms hvor gældende. Annuller eller skift plan når som helst.",
+        "contactCta": "Spørgsmål? Kontakt os, så finder vi den rigtige plan.",
+        "contactCtaPrefix": "Spørgsmål? ",
+        "contactLink": "Kontakt os",
+        "contactCtaSuffix": " og vi hjælper med at finde den rigtige plan."
+      },
+      "fallback": {
+        "title": "Priser midlertidigt utilgængelige",
+        "message": "Vi opdaterer vores prisplaner. Tjek tilbage om kort tid eller kontakt support for assistance."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Perfekt til at komme i gang",
+        "description": "Væsentlige funktioner til at lancere din tilstedeværelse på de sociale medier med AI-drevet indholdsproduktion og planlægning.",
+        "bullets": [
+          "Op til 3 sociale profiler",
+          "30 opslag per måned",
+          "Basis AI-indholdsgenerering",
+          "Planlægning af opslag",
+          "E-mail-support"
+        ],
+        "cta": "Start gratis prøveperiode"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Bedst til vækstvirksomheder",
+        "description": "Avancerede funktioner og analyser til at skalerer din strategi for sociale medier med intelligent automatisering.",
+        "bullets": [
+          "Op til 10 sociale profiler",
+          "150 opslag per måned",
+          "Avanceret AI-indholdsgenerering",
+          "Smart planlægning med optimale tidspunkter",
+          "Analysedashboard",
+          "Prioriteret support"
+        ],
+        "cta": "Start gratis prøveperiode"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Til teams og bureauer",
+        "description": "Enterprise-funktioner med ubegrænset indhold, tilpasset branding og dedikeret support for maksimal effekt.",
+        "bullets": [
+          "Ubegrænsede sociale profiler",
+          "Ubegrænsede opslag",
+          "Premium AI med tilpasset brandstemme",
+          "AI-drevet auto-planlægning",
+          "Avancerede analyser og rapportering",
+          "Tilpasset branding og white-label",
+          "Dedikeret account manager",
+          "Fuld API-adgang"
+        ],
+        "cta": "Kontakt salg"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Op til 3 sociale profiler",
+        "postsPerMonth": "30 opslag per måned",
+        "aiGeneration": "Basis AI-indholdsgenerering",
+        "scheduling": "Planlægning af opslag",
+        "emailSupport": "E-mail-support"
+      },
+      "pro": {
+        "socialProfiles": "Op til 10 sociale profiler",
+        "postsPerMonth": "150 opslag per måned",
+        "aiGeneration": "Avanceret AI-indholdsgenerering",
+        "scheduling": "Smart planlægning med optimale tidspunkter",
+        "analytics": "Analysedashboard",
+        "prioritySupport": "Prioriteret support"
+      },
+      "advanced": {
+        "socialProfiles": "Ubegrænsede sociale profiler",
+        "postsPerMonth": "Ubegrænsede opslag",
+        "aiGeneration": "Premium AI med tilpasset brandstemme",
+        "scheduling": "AI-drevet auto-planlægning",
+        "analytics": "Avancerede analyser og rapportering",
+        "customBranding": "Tilpasset branding og white-label",
+        "dedicatedSupport": "Dedikeret account manager",
+        "apiAccess": "Fuld API-adgang"
+      }
+    }
+  }
+}

@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Sosiaalisen median autopilotti",
+    "description": "Automatisoi sosiaalisen median kasvusi tekoälyllä tuotetulla sisällöllä ja aikataulutuksella."
+  },
+  "nav": {
+    "about": "Tietoa",
+    "features": "Ominaisuudet",
+    "pricing": "Hinnat",
+    "contact": "Ota yhteyttä",
+    "getStarted": "Kirjaudu ja käynnistä",
+    "support": "Tuki",
+    "logout": "KIRJAUDU ULOS",
+    "dashboard": "HALLINTA",
+    "userTerms": "Käyttöehdot",
+    "websiteTerms": "Sivuston käyttöehdot",
+    "privacy": "Tietosuoja",
+    "cookies": "Evästeet",
+    "admin": "Admin",
+    "selectLanguage": "Valitse kieli"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilotti someesi sekunneissa",
+    "scrollToLaunch": "Vieritä käynnistykseen"
+  },
+  "tagline": {
+    "heading": "Tekoälyllä vauhditettu sosiaalisen median kasvu",
+    "subheading": "Luo, aikatauluta ja julkaise — kaikki autopilotilla."
+  },
+  "feature": {
+    "heading": "Yksi klikkaus. Räjähdysmäinen kasvu."
+  },
+  "cta": {
+    "heading": "Valmis muuttamaan someesi?",
+    "button": "Aloita ilmainen kokeilu"
+  },
+  "testimonials": {
+    "heading": "Luottavat alan johtajat",
+    "subheading": "Liity yli 10 000 markkinoijaan, jotka skaalaavat ZARZOOMilla.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM kaksinkertaisti saavutettavuutemme 30 päivässä. Tekoälysisällön erottaminen ihmisten kirjoituksesta on mahdotonta."
+      },
+      {
+        "name": "David Chen",
+        "role": "Perustaja, GrowthStack",
+        "content": "Autopilotti-ominaisuus on pelin muuttaja. Vietän someen nyt 5 minuuttia viikossa."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Vaikuttaja-johtaja",
+        "content": "Todella räjähdysmäinen kasvu. Engagement-mittarimme nousivat 400 % kaikilla alustoilla."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Valmis lähtöön?",
+    "subheading": "Aloita 14 päivän ilmainen kokeilu. Luottokorttia ei tarvita.",
+    "button": "Aloita nyt"
+  },
+  "loading": {
+    "text": "Ladataan kokemusta..."
+  },
+  "notFound": {
+    "title": "Houston, meillä on ongelma",
+    "description": "Etsimäsi sivu on ajautunut syvälle avaruuteen. Palaamme sinut takaisin kurssille.",
+    "backHome": "Takaisin etusivulle",
+    "support": "Tuki"
+  },
+  "error": {
+    "title": "Jotain meni pieleen",
+    "description": "Kohdattiin odottamaton virhe. Yritä uudelleen tai palaa etusivulle.",
+    "tryAgain": "Yritä uudelleen",
+    "backHome": "Takaisin etusivulle"
+  },
+  "footer": {
+    "tagline": "Autopilotti someesi sekunneissa",
+    "product": "Tuote",
+    "company": "Yritys",
+    "legal": "Oikeudellinen",
+    "about": "Tietoa",
+    "features": "Ominaisuudet",
+    "pricing": "Hinnat",
+    "contact": "Ota yhteyttä",
+    "support": "Tuki",
+    "userTerms": "Käyttöehdot",
+    "websiteTerms": "Sivuston käyttöehdot",
+    "privacy": "Tietosuojakäytäntö",
+    "cookies": "Evästekäytäntö",
+    "copyright": "ZARZOOM. Kaikki oikeudet pidätetään."
+  },
+  "pages": {
+    "support": {
+      "title": "Tukikeskus",
+      "subtitle": "Olemme täällä auttamassa sinua saamaan ZARZOOMista kaiken irti.",
+      "faqTitle": "Usein kysytyt kysymykset",
+      "faq1q": "Miten yhdistän sosiaalisen median tilini?",
+      "faq1a": "Siirry hallintapaneeliin, napsauta 'Yhdistetyt tilit' ja noudata ohjeita jokaisen alustan valtuuttamiseksi. Tuemme Facebookia, Instagramia, X (Twitter), LinkedInia ja TikTokia.",
+      "faq2q": "Voinko aikatauluttaa julkaisuja etukäteen?",
+      "faq2a": "Ehdottomasti. Kalenterinäkymämme mahdollistaa sisällön aikataulutuksen viikkoja tai kuukausia etukäteen. Luo julkaisu, valitse päivämäärä ja kellonaika, ja ZARZOOM hoitaa loput.",
+      "faq3q": "Mitä tapahtuu, jos ylitän suunnitelmani rajat?",
+      "faq3a": "Saat ilmoituksen lähestyessäsi rajaasi. Voit päivittää suunnitelmasi milloin tahansa Tilin asetukset -sivulta, ja muutos tulee voimaan heti.",
+      "faq4q": "Onko tietoni turvassa?",
+      "faq4a": "Kyllä. Käytämme alan standardin mukaisia salausmenetelmiä levossa ja siirrossa oleville tiedoille. Emme koskaan jaa tietojasi kolmansille osapuolille. Lisätiedot löytyvät tietosuojakäytännöstämme.",
+      "contactTitle": "Tarvitsetko vielä apua?",
+      "contactText": "Tukitiimimme vastaa yleensä 24 tunnin kuluessa arkipäivinä.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "Tietoa ZARZOOMista - Tekoälyllä vauhditettu sosiaalisen median automatisointi",
+        "description": "Tutustu ZARZOOMin missioon mullistaa sosiaalisen median hallinta älykkään automatisointiin ja tekoälyyn perustuvan sisällöntuotannon kautta."
+      },
+      "badge": "Tietoa ZARZOOMista",
+      "heroTitle": "Autopilotti someesi",
+      "heroTitleHighlight": "sekunneissa.",
+      "heroDescription": "ZARZOOM on tekoälyyn perustuva alusta, joka on suunniteltu auttamaan yrityksiä ja sisällöntuottajia luomaan ja julkaisemaan sosiaalisen median sisältöä automaattisesti — jotta voit keskittyä siihen, mitä osaat parhaiten.",
+      "hero": {
+        "title": "Tietoa ZARZOOMista",
+        "subtitle": "Mullistamassa sosiaalisen median hallintaa älykkään automatisointiin ja tekoälyyn perustuvan sisällöntuotannon kautta."
+      },
+      "storySteps": [
+        {
+          "title": "Ideasta",
+          "text": "Perustettu ratkaisemaan ongelma, johon jokainen sisällöntuottaja törmää — pysyä johdonmukaisena somessa uupumatta."
+        },
+        {
+          "title": "Alustan rakentaminen",
+          "text": "Yhdistimme tekoälyyn perustuvan sisällöntuotannon älykkään aikataulutuksen kanssa luodaksemme täysin automatisoitu sosiaalisen median putken."
+        },
+        {
+          "title": "Automatisointi mittakaavassa",
+          "text": "ZARZOOM auttaa nyt yrityksiä ja sisällöntuottajia ylläpitämään vahvaa verkko-esiintymistä — ilman normaalisti vaadittua päivittäistä vaivaa."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Tekoälyllä tuotettu sisältö",
+          "text": "Luo automaattisesti sitouttavia julkaisuja, jotka on räätälöity brändiäänesi ja yleisösi mukaan.",
+          "bullets": [
+            "Brändiäänen oppiminen",
+            "Trendaavien aiheiden integrointi",
+            "Kuvatekstit ja hashtagit"
+          ]
+        },
+        {
+          "title": "Älykäs aikataulutus",
+          "text": "Aikatauluta ja julkaise sisältöä sosiaalisen median alustillesi optimaaliseen aikaan.",
+          "bullets": [
+            "Yleisön aktiivisuusanalyysi",
+            "Aikavyöhykkeiden optimointi",
+            "Sisältökalenterin automatisointi"
+          ]
+        },
+        {
+          "title": "Johdonmukainen verkko-esiintyminen",
+          "text": "Ylläpidä näkyvyyttä ja kasvata yleisöäsi ilman päivittäistä raskasta työtä.",
+          "bullets": [
+            "Monialustainen julkaisu",
+            "Engagementiin perustuva ajoitus",
+            "Keskitetty hallintapaneeli"
+          ]
+        },
+        {
+          "title": "Aikaa säästävä automatisointi",
+          "text": "Keskity liiketoimintaasi, kun ZARZOOM hoitaa koko sisältöputkesi.",
+          "bullets": [
+            "Nolla manuaalista vaivaa",
+            "Aseta ja unohda -autopilotti",
+            "Reaaliaikainen raportointi"
+          ]
+        }
+      ],
+      "getStartedFree": "Aloita ilmaiseksi",
+      "viewFeatures": "Näytä ominaisuudet",
+      "autopilotActive": "Autopilotti aktiivinen",
+      "mission": {
+        "title": "Missiomme",
+        "subtitle": "Suurimman esteen poistaminen sosiaalisen median kasvulle",
+        "para1": "Missiomme on poistaa suurin este sosiaalisen median kasvulle — jatkuva tarve tuoreelle sisällölle.",
+        "para2": "ZARZOOM käyttää tekoälyä automatisoimaan sisällön luomisen ja julkaisemisen, jotta yrittäjät ja yritykset voivat keskittyä siihen, mitä osaavat parhaiten.",
+        "para3": "Sen sijaan että käyttäisit tunteja julkaisujen suunnitteluun, sisällön kirjoittamiseen ja useiden alustojen hallintaan, ZARZOOM auttaa sinua pysymään näkyvänä verkossa — vaivattomasti."
+      },
+      "missionStats": {
+        "contentCreated": "Luotu sisältöä",
+        "hoursSaved": "Säästetty tunteja",
+        "platformsActive": "Aktiivisia alustoja"
+      },
+      "story": {
+        "sectionTitle": "Tarinamme",
+        "heading": "Rakennettu ratkaisemaan todellinen ongelma",
+        "para1": "ZARZOOM luotiin ratkaisemaan ongelman, johon monet perustajat ja sisällöntuottajat törmäävät — pysyä johdonmukaisena somessa.",
+        "para2": "Sosiaalinen media on yksi tehokkaimmista työkaluista yleisön rakentamiseen, mutta tasaisen, laadukkaan sisällön ylläpito on vaikeaa ja aikaa vievää.",
+        "para3": "Yhdistämällä tekoälyyn perustuvan sisällöntuotannon automaattiseen aikataulutukseen ZARZOOM mahdollistaa vahvan verkko-esiintymisen ylläpitämisen ilman normaalisti vaadittua päivittäistä vaivaa."
+      },
+      "platform": {
+        "badge": "Alusta",
+        "heading": "Miten ZARZOOM auttaa sinua kasvamaan"
+      },
+      "lookingAhead": {
+        "badge": "Tulevaisuuteen",
+        "heading": "Sosiaalisen median kasvun tulevaisuus",
+        "para1": "Uskomme, että sosiaalisen median kasvun tulevaisuus perustuu älykkääseen automatisointiin.",
+        "para2": "ZARZOOM kehittyy jatkuvasti auttamaan yrityksiä ja sisällöntuottajia rakentamaan verkko-esiintymistään nopeammin ja tehokkaammin.",
+        "para3": "Tavoitteemme on yksinkertainen: tehdä tehokkaat sosiaalisen median kasvutyökalut kaikkien saataville."
+      },
+      "intelligentAutomation": {
+        "title": "Älykäs automatisointi",
+        "subtitle": "Huipputeknologian tekoälyllä kasvattaen yleisöäsi, kun keskittyät liiketoimintaasi.",
+        "tags": [
+          "Tekoälytuotanto",
+          "Automaattinen aikataulutus",
+          "Monialustainen",
+          "Analytiikka"
+        ]
+      },
+      "cta": {
+        "badge": "Aloita tänään",
+        "title": "Aloita someesi autopilotilla tänään",
+        "description": "Liity tuhansiin sisällöntuottajiin ja yrityksiin, jotka kasvavat autopilotilla.",
+        "getStarted": "Aloita",
+        "viewFeatures": "Näytä ominaisuudet"
+      },
+      "values": {
+        "title": "Ydinarvomme",
+        "innovation": {
+          "title": "Innovointi ensin",
+          "description": "Työnnamme tekoälyn ja automatisointiin liittyviä rajoja tarjotaksemme ratkaisuja, jotka olivat mahdottomia vielä eilen. Sitoutumisemme innovointiin tarkoittaa, että sinulla on aina pääsy sosiaalisen median teknologian uusimpiin edistysaskeleisiin."
+        },
+        "authenticity": {
+          "title": "Aito vuorovaikutus",
+          "description": "Automatisoinnin tulisi vahvistaa, ei korvata, aitoa ihmisten välistä yhteyttä. Työkalumme on suunniteltu auttamaan ylläpitämään ainutlaatuista ääntäsi ja rakentamaan oikeita suhteita yleisöösi mittakaavassa."
+        },
+        "simplicity": {
+          "title": "Yksinkertaisuus ja voima",
+          "description": "Hienostuneen teknologian ei tarvitse olla monimutkaista. Uskomme tehokkaiden työkalujen saattamiseen kaikkien saataville riippumatta teknisestä osaamisesta."
+        },
+        "trust": {
+          "title": "Luottamus ja tietosuoja",
+          "description": "Tietosi, sisältösi, yhteisösi — kohtelemme kaikkea suurimmalla kunnioituksella ja turvallisuudella. Emme koskaan myy tietojasi ja noudatamme korkeimpia tietosuojan standardeja."
+        }
+      },
+      "team": {
+        "title": "Asiantuntijoiden rakentama",
+        "description": "Tiimimme yhdistää vuosikymmenien kokemuksen tekoälystä, sosiaalisen median markkinoinnista ja käyttökokemuksen suunnittelusta. Olemme intohimoisia luomaan työkaluja, jotka todella tekevät eron siinä, miten yritykset yhteytyvät yleisöihinsä."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Ominaisuudet - ZARZOOM sosiaalisen median automatisointi",
+        "description": "Löydä tehokkaita ominaisuuksia, jotka automatisoivat someesi: tekoälyllä tuotettu sisältö, älykäs aikataulutus, monialustainen julkaisu, analytiikka ja paljon muuta."
+      },
+      "hero": {
+        "title": "Tehokkaat ominaisuudet",
+        "subtitle": "Kaikki tarvitsemasi sosiaalisen median esiintymisesi automatisointiin, optimointiin ja skaalaamiseen — yhdessä älykkäässä alustassa."
+      },
+      "aiContent": {
+        "title": "Tekoälyllä tuotettu sisältö",
+        "description": "Luo sitouttavia julkaisuja sekunneissa edistyneellä tekoälyllämme, joka ymmärtää brändiäänesi, yleisön mieltymykset ja trendaavat aiheet. Luo kuvatekstejä, hashtageja ja kokonaisia julkaisuideoita, jotka resonoi yhteisösi kanssa.",
+        "features": [
+          "Brändiäänen oppiminen ja mukautuminen",
+          "Trendaavien aiheiden integrointi",
+          "Monimuotoinen sisältö (teksti, kuvatekstit, hashtagit)",
+          "A/B-testaussuositukset"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Älykäs aikataulutus ja autopilotti",
+        "description": "Anna tekoälymme määrittää optimaaliset julkaisuajat maksimaalisen engagementin saavuttamiseksi. Aseta mieltymyksesi kerran ja seuraa some-esiintymisesi kasvua autopilotilla, kun keskittyt liiketoimintaasi.",
+        "features": [
+          "Yleisön aktiivisuusanalyysi",
+          "Aikavyöhykkeiden optimointi",
+          "Sisältökalenterin automatisointi",
+          "Engagementiin perustuva aikataulutus"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Monialustainen hallinta",
+        "description": "Hallitse kaikkia sosiaalisen median tilejäsi yhdestä yhtenäisestä hallintapaneelista. Julkaise Twitteriin, LinkedIniin, Facebookiin, Instagramiin ja muihin yhdellä klikkauksella.",
+        "features": [
+          "Alustojen yli julkaisu",
+          "Alustakohtainen optimointi",
+          "Yhtenäinen postilaatikko",
+          "Keskitetty analytiikka"
+        ]
+      },
+      "analytics": {
+        "title": "Edistynyt analytiikka ja oivallukset",
+        "description": "Seuraa olennaista kattavalla analytiikalla, joka ylittää pinnalliset mittarit. Ymmärrä yleisösi, mitaa ROI ja tee datapohjaisia päätöksiä strategian parantamiseksi.",
+        "features": [
+          "Reaaliaikainen suorituskyvyn seuranta",
+          "Yleisön demografia ja käyttäytyminen",
+          "Engagement-asteanalyysi",
+          "Kilpailijavertailu"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Sisältökirjasto ja materiaalit",
+        "description": "Rakenna ja järjestä sisältövarastosi älykkään median kirjastomme avulla. Tallenna kuvia, videoita, malleja ja tekstipätkiä nopeaa käyttöä ja uudelleenkäyttöä varten.",
+        "features": [
+          "Rajaton median tallennustila",
+          "Älykäs taggaus ja haku",
+          "Mallikirjasto",
+          "Materiaalien suorituskyvyn seuranta"
+        ]
+      },
+      "collaboration": {
+        "title": "Tiimiyhteistyö",
+        "description": "Työskentele saumattomasti tiimisi, asiakkaidesi tai toimistojen kanssa. Määritä roolit, hallitse oikeuksia ja virtaviivaista hyväksyntätyönkulut kaikki alustan sisällä.",
+        "features": [
+          "Roolipohjainen käyttöoikeuksien hallinta",
+          "Hyväksyntätyönkulut",
+          "Tiimin aktiviteettilokit",
+          "Asiakashallinta"
+        ]
+      },
+      "integration": {
+        "title": "Integraatiot ja API",
+        "description": "Yhdistä ZARZOOM olemassa oleviin työkaluihisi ja työnkuluihisi. Kattava API-mme ja valmiit integraatiot varmistavat saumattoman tiedonkulun koko teknologiapinoasi läpi.",
+        "features": [
+          "Zapier-integraatio",
+          "Webhook-tuki",
+          "REST API -pääsy",
+          "Mukautetut integraatiot"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API- ja OpenClaw-integraatiot",
+        "description": "Tehosta työnkuluasi ZARZOOMin tehokkaan OpenClaw-integraation avulla tarvittaessa automatisoituun sosiaalisen median luontiin ja aikataulutukseen yli 10 alustalla. Käynnistä tekoälyyn perustuva sisällöntuotanto suoraan olemassa olevista järjestelmistäsi REST API-mme kautta tai anna OpenClaw-agenttien hoitaa kaikki autonomisesti. Ihanteellinen toimistoille, kehittäjille ja yrityksille, jotka haluavat saumattoman automatisointiin.",
+        "features": [
+          "OpenClaw-agenttiautomatisointi (yli 10 alustaa)",
+          "Tarvittaessa tekoälyllä tuotettu sisältö API:n kautta",
+          "Välittömät aikataulutuslaukaisut",
+          "Mukautettu työnkulkuautomatisointi"
+        ]
+      },
+      "support": {
+        "title": "Maailmanluokan tuki",
+        "description": "Saa apua tarvitsessasi omistautuneelta tukitiimiltämme. Pääsy kattavaan dokumentaatioon, video-oppaisiin ja reagoivaan asiakaspalveluun.",
+        "features": [
+          "24/7 sähköpostituki",
+          "Live-chatti (Pro+)",
+          "Video-oppaat",
+          "Tietokanta"
+        ]
+      },
+      "cta": {
+        "title": "Valmis muuttamaan someasi?",
+        "description": "Aloita ilmainen kokeilu ja koe älykkään automatisointiin voima.",
+        "button": "Aloita ilmaiseksi"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Ota yhteyttä - ZARZOOM",
+        "description": "Ota yhteyttä ZARZOOM-tiimiin. Olemme täällä auttamassa kaikissa kysymyksissä tai huolissa."
+      },
+      "title": "Ota yhteyttä",
+      "subtitle": "Onko sinulla kysymys tai tarvitsetko tukea? Olemme täällä auttamassa. Lähetä viesti ja vastaamme mahdollisimman pian.",
+      "info": {
+        "title": "Yhteystiedot",
+        "email": {
+          "label": "Sähköposti"
+        },
+        "phone": {
+          "label": "Puhelin"
+        },
+        "address": {
+          "label": "Toimisto"
+        }
+      },
+      "hours": {
+        "title": "Aukioloajat",
+        "note": "Vastaamme yleensä kaikkiin yhteydenottoihin 24 tunnin kuluessa arkipäivinä.",
+        "weekdays": "Maanantai - Perjantai",
+        "weekdaysTime": "9:00 - 18:00",
+        "saturday": "Lauantai",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Sunnuntai",
+        "closed": "Suljettu"
+      },
+      "form": {
+        "title": "Lähetä viesti",
+        "name": "Nimesi",
+        "namePlaceholder": "Matti Meikäläinen",
+        "email": "Sähköpostisi",
+        "emailPlaceholder": "matti@esimerkki.fi",
+        "subject": "Aihe",
+        "subjectPlaceholder": "Miten voimme auttaa sinua?",
+        "message": "Viesti",
+        "messagePlaceholder": "Kerro lisää yhteydenottostasi...",
+        "messageHint": "Vähintään 10 merkkiä",
+        "submit": "Lähetä viesti",
+        "sending": "Lähetetään...",
+        "success": {
+          "title": "Viesti lähetetty onnistuneesti!",
+          "message": "Kiitos yhteydenotostasi. Palaamme asiaan mahdollisimman pian."
+        },
+        "error": {
+          "title": "Virhe"
+        },
+        "errors": {
+          "required": "Täytä kaikki kentät",
+          "failed": "Viestin lähetys epäonnistui. Yritä uudelleen."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Käyttöehdot",
+      "subtitle": "Lue nämä ehdot huolellisesti ennen ZARZOOMin käyttöä.",
+      "lastUpdated": "Viimeksi päivitetty: 1. helmikuuta 2026",
+      "s1Title": "1. Ehtojen hyväksyminen",
+      "s1Text": "Luomalla tilin tai käyttämällä ZARZOOM-alustaa hyväksyt nämä käyttöehdot. Jos et hyväksy ehtoja, et saa käyttää palvelua.",
+      "s2Title": "2. Tilin rekisteröinti",
+      "s2Text": "Sinun on annettava oikeat ja täydelliset tiedot rekisteröityessäsi. Olet vastuussa tilisi kirjautumistietojen luottamuksellisuudesta ja kaikesta tilisi alla tapahtuvasta toiminnasta.",
+      "s3Title": "3. Hyväksyttävä käyttö",
+      "s3Text": "Sitoudut olemaan käyttämättä ZARZOOMia lainvastaiseen, herjaavaan, säädyttömään tai muiden immateriaalioikeuksia loukkaavaan sisältöön. Pidätämme oikeuden keskeyttää tai päättää tilit, jotka rikkovat tätä käytäntöä.",
+      "s4Title": "4. Tilaus ja laskutus",
+      "s4Text": "Maksulliset suunnitelmat laskutetaan etukäteen kuukausittain tai vuosittain. Voit peruuttaa milloin tahansa; peruutus tulee voimaan nykyisen laskutusjakson lopussa. Osajaksoista ei hyvitetä.",
+      "s5Title": "5. Immateriaalioikeudet",
+      "s5Text": "Säilytät luomasi ja ZARZOOMin kautta julkaisemasi sisällön omistusoikeuden. Käyttämällä alustaa myönnät meille rajoitetun lisenssin käsitellä, tallentaa ja näyttää sisältösi yksinomaan palvelun tarjoamiseksi.",
+      "s6Title": "6. Vastuun rajoitus",
+      "s6Text": "ZARZOOM tarjotaan 'sellaisenaan'. Laissa sallitun laajimmassa määrin luovumme kaikista takuista emmekä ole vastuussa epäsuorista, satunnaisista tai seurauksena syntyvistä vahingoista palvelun käytöstä.",
+      "s7Title": "7. Muutokset ehtoihin",
+      "s7Text": "Voimme päivittää näitä ehtoja ajoittain. Palvelun käytön jatkaminen muutosten julkaisemisen jälkeen tulkitaan päivitettyjen ehtojen hyväksymiseksi."
+    },
+    "termsWebsite": {
+      "title": "Sivuston käyttöehdot",
+      "subtitle": "Ehdot zarzoom.com-sivuston käytöstä.",
+      "lastUpdated": "Viimeksi päivitetty: 1. helmikuuta 2026",
+      "s1Title": "1. Sivuston käyttö",
+      "s1Text": "Tätä sivustoa ylläpitää ZARZOOM Ltd. Käyttämällä ja selaamalla tätä sivustoa hyväksyt nämä sivuston käyttöehdot kokonaisuudessaan.",
+      "s2Title": "2. Immateriaalioikeudet",
+      "s2Text": "Kaikki tämän sivuston sisältö, mukaan lukien teksti, grafiikka, logot ja ohjelmistot, on ZARZOOM Ltd:n tai sen lisenssinantajien omaisuutta ja suojattu tekijänoikeus- ja tavaramerkkilakeilla.",
+      "s3Title": "3. Tietojen tarkkuus",
+      "s3Text": "Pyrimme pitämään sivuston tiedot tarkkoina ja ajan tasalla, emme kuitenkaan anna takuita tai esityksiä niiden täydellisyydestä tai tarkkuudesta.",
+      "s4Title": "4. Kolmansien osapuolten linkit",
+      "s4Text": "Tämä sivusto voi sisältää linkkejä kolmansien osapuolten sivustoille. Emme ole vastuussa näiden sivustojen sisällöstä tai tietosuojakäytännöistä.",
+      "s5Title": "5. Sovellettava laki",
+      "s5Text": "Näitä ehtoja sovelletaan Englannin ja Walesin lakeja. Kaikki riidat kuuluvat Englannin ja Walesin tuomioistuinten yksinoikeudelliselle toimivalta-alueelle."
+    },
+    "privacy": {
+      "title": "Tietosuojakäytäntö",
+      "subtitle": "Miten keräämme, käytämme ja suojataan henkilötietojasi.",
+      "lastUpdated": "Viimeksi päivitetty: 1. helmikuuta 2026",
+      "s1Title": "1. Keräämämme tiedot",
+      "s1Text": "Keräämme suoraan antamasi tiedot (nimi, sähköposti, maksutiedot) ja automaattisesti syntyvät tiedot (IP-osoite, selaintyyppi, käyttötiedot), kun käytät ZARZOOMia.",
+      "s2Title": "2. Miten käytämme tietojasi",
+      "s2Text": "Käytämme tietojasi palvelun tarjoamiseen ja parantamiseen, maksujen käsittelyyn, palveluun liittyviin viesteihin ja lakisääteisten velvoitteiden noudattamiseen.",
+      "s3Title": "3. Tietojen jakaminen",
+      "s3Text": "Emme myy henkilötietojasi. Voimme jakaa tietoja luotettavien palveluntarjoajien (maksunvälittäjät, isännöitsijät) kanssa, jotka auttavat alustan ylläpidossa tiukkojen luottamuksellisuussopimusten nojalla.",
+      "s4Title": "4. Tietojen säilytys",
+      "s4Text": "Säilytämme henkilötietojasi niin kauan kuin tilisi on aktiivinen tai palvelun tarjoamiseksi tarpeen. Voit pyytää tietojesi poistamista milloin tahansa ottamalla yhteyttä tukeen.",
+      "s5Title": "5. Oikeutesi",
+      "s5Text": "Sinulla on oikeus käyttää, korjata tai poistaa henkilötietojasi. Voit myös vastustaa käsittelyä tai pyytää tietojen siirrettävyyttä. Oikeuksiesi käyttämiseksi ota yhteyttä osoitteeseen privacy@zarzoom.com.",
+      "s6Title": "6. Turvallisuus",
+      "s6Text": "Toteutamme asianmukaiset tekniset ja organisatoriset toimenpiteet tietojesi suojaamiseksi, mukaan lukien salaus, käyttöoikeudet ja säännölliset turvallisuusarvioinnit.",
+      "s7Title": "7. Muutokset tähän käytäntöön",
+      "s7Text": "Voimme päivittää tätä käytäntöä ajoittain. Ilmoitamme olennaisista muutoksista sähköpostitse tai alustan kautta."
+    },
+    "cookies": {
+      "title": "Evästekäytäntö",
+      "subtitle": "Miten käytämme evästeitä ja vastaavia tekniikoita.",
+      "lastUpdated": "Viimeksi päivitetty: 1. helmikuuta 2026",
+      "s1Title": "1. Mitä evästeet ovat",
+      "s1Text": "Evästeet ovat pieniä tekstitiedostoja, jotka asetetaan laitteellesi vieraillessasi verkkosivustolla. Ne auttavat sivustoa muistamaan mieltymyksesi ja ymmärtämään, miten käytät sitä.",
+      "s2Title": "2. Käyttämämme evästeet",
+      "s2Essential": "Välttämättömät evästeet",
+      "s2EssentialText": "Välttämättömiä sivuston toiminnan kannalta. Näitä ei voi poistaa käytöstä. Niihin kuuluvat istuntoevästeet ja tunnistusmerkit.",
+      "s2Analytics": "Analytiikkaevästeet",
+      "s2AnalyticsText": "Auttavat ymmärtämään, miten kävijät käyttävät sivustoamme keräämällä anonymisoituja käyttötietoja. Käytämme näitä palvelun parantamiseen.",
+      "s2Preference": "Asetusevästeet",
+      "s2PreferenceText": "Muistavat asetuksesi ja mieltymyksesi (kuten kielivalinta) tarjotakseen henkilökohtaisemman kokemuksen.",
+      "s3Title": "3. Evästeiden hallinta",
+      "s3Text": "Voit hallita evästeitä selimen asetuksissasi. Huomaa, että joidenkin evästeiden poistaminen käytöstä voi vaikuttaa sivuston toiminnallisuuteen.",
+      "s4Title": "4. Kolmansien osapuolten evästeet",
+      "s4Text": "Osa evästeistä tulee kolmansien osapuolten palveluista, jotka näkyvät sivuillamme. Emme hallitse näitä evästeitä. Lisätietoja saat vastaavien kolmansien osapuolten tietosuojakäytännöistä.",
+      "s5Title": "5. Ota yhteyttä",
+      "s5Text": "Jos sinulla on kysymyksiä evästeiden käytöstämme, ota yhteyttä osoitteeseen privacy@zarzoom.com."
+    }
+  }
+}

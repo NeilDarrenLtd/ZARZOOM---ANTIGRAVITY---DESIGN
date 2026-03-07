@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Sociala medier på autopilot",
+    "description": "Automatisera din tillväxt på sociala medier med AI-drivet innehåll och schemaläggning."
+  },
+  "nav": {
+    "about": "Om oss",
+    "features": "Funktioner",
+    "pricing": "Priser",
+    "contact": "Kontakt",
+    "getStarted": "Logga in – kom igång",
+    "support": "Support",
+    "logout": "LOGA UT",
+    "dashboard": "INSTRUMENTPANEL",
+    "userTerms": "Användarvillkor",
+    "websiteTerms": "Webbplatsvillkor",
+    "privacy": "Integritet",
+    "cookies": "Cookies",
+    "admin": "Admin",
+    "selectLanguage": "Välj språk"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilot för dina sociala medier på sekunder",
+    "scrollToLaunch": "Scrolla för att starta"
+  },
+  "tagline": {
+    "heading": "AI-driven tillväxt på sociala medier",
+    "subheading": "Skapa, schemalägg och publicera – allt på autopilot."
+  },
+  "feature": {
+    "heading": "Ett klick. Explosiv tillväxt."
+  },
+  "cta": {
+    "heading": "Redo att förvandla din närvaro på sociala medier?",
+    "button": "Starta gratis provperiod"
+  },
+  "testimonials": {
+    "heading": "Betrodd av branschledare",
+    "subheading": "Följ 10 000+ marknadsförare som skalar med ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM fördubblade vår räckvidd på 30 dagar. AI-innehållet går inte att skilja från mänsklig text."
+      },
+      {
+        "name": "David Chen",
+        "role": "Grundare, GrowthStack",
+        "content": "Autopilot-funktionen är en game changer. Jag lägger nu 5 minuter i veckan på sociala medier."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Influence Lead",
+        "content": "Verkligen explosiv tillväxt. Våra engagemangsmått är upp 400 % på alla plattformar."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Redo att lyfta?",
+    "subheading": "Starta din 14-dagars gratis provperiod. Inget kreditkort krävs.",
+    "button": "Kom igång nu"
+  },
+  "loading": {
+    "text": "Laddar upplevelsen..."
+  },
+  "notFound": {
+    "title": "Houston, vi har ett problem",
+    "description": "Sidan du söker har drivit ut i rymden. Låt oss få dig tillbaka på rätt kurs.",
+    "backHome": "Tillbaka till startsidan",
+    "support": "Support"
+  },
+  "error": {
+    "title": "Något gick fel",
+    "description": "Ett oväntat fel inträffade. Försök igen eller återgå till startsidan.",
+    "tryAgain": "Försök igen",
+    "backHome": "Tillbaka till startsidan"
+  },
+  "footer": {
+    "tagline": "Autopilot för dina sociala medier på sekunder",
+    "product": "Produkt",
+    "company": "Företag",
+    "legal": "Juridiskt",
+    "about": "Om oss",
+    "features": "Funktioner",
+    "pricing": "Priser",
+    "contact": "Kontakt",
+    "support": "Support",
+    "userTerms": "Användarvillkor",
+    "websiteTerms": "Webbplatsvillkor",
+    "privacy": "Integritetspolicy",
+    "cookies": "Cookiepolicy",
+    "copyright": "ZARZOOM. Alla rättigheter förbehållna."
+  },
+  "pages": {
+    "support": {
+      "title": "Supportcenter",
+      "subtitle": "Vi hjälper dig att få ut det mesta av ZARZOOM.",
+      "faqTitle": "Vanliga frågor",
+      "faq1q": "Hur kopplar jag mina konton på sociala medier?",
+      "faq1a": "Gå till din instrumentpanel, klicka på 'Anslutna konton' och följ anvisningarna för att auktorisera varje plattform. Vi stöder Facebook, Instagram, X (Twitter), LinkedIn och TikTok.",
+      "faq2q": "Kan jag schemalägga inlägg i förväg?",
+      "faq2a": "Absolut. Vår kalendervy låter dig schemalägga innehåll veckor eller till och med månader i förväg. Skapa ditt inlägg, välj datum och tid – ZARZOOM sköter resten.",
+      "faq3q": "Vad händer om jag överskrider min planrätt?",
+      "faq3a": "Du får en notifiering när du närmar dig din gräns. Du kan uppgradera din plan när som helst från sidan Kontoinställningar, och ändringen träder i kraft direkt.",
+      "faq4q": "Är mina data säkra?",
+      "faq4a": "Ja. Vi använder branschstandard för kryptering av data i vila och under överföring. Vi delar aldrig dina data med tredje part. Se vår integritetspolicy för fullständiga detaljer.",
+      "contactTitle": "Behöver du fortfarande hjälp?",
+      "contactText": "Vårt supportteam svarar vanligtvis inom 24 timmar på vardagar.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "Om ZARZOOM - AI-driven automatisering av sociala medier",
+        "description": "Läs om ZARZOOMs uppdrag att revolutionera hanteringen av sociala medier genom intelligent automatisering och AI-drivet innehåll."
+      },
+      "badge": "Om ZARZOOM",
+      "heroTitle": "Autopilot för dina sociala medier",
+      "heroTitleHighlight": "på sekunder.",
+      "heroDescription": "ZARZOOM är en AI-driven plattform som hjälper företag och skapare att generera och publicera innehåll på sociala medier automatiskt – så du kan fokusera på det du gör bäst.",
+      "hero": {
+        "title": "Om ZARZOOM",
+        "subtitle": "Revolutionerar hanteringen av sociala medier genom intelligent automatisering och AI-drivet innehåll."
+      },
+      "storySteps": [
+        {
+          "title": "Idén",
+          "text": "Grundad för att lösa ett problem varje skapare möter – att hålla sig konsekvent på sociala medier utan att bränna ut sig."
+        },
+        {
+          "title": "Byggandet av plattformen",
+          "text": "Vi kombinerade AI-drivet innehåll med smart schemaläggning för en helt automatiserad pipeline för sociala medier."
+        },
+        {
+          "title": "Automatisering i skala",
+          "text": "ZARZOOM hjälper nu företag och skapare att upprätthålla en stark närvaro online – utan det dagliga arbete som normalt krävs."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "AI-innehållsgenerering",
+          "text": "Generera automatiskt engagerande inlägg anpassade till din varumärkesröst och målgrupp.",
+          "bullets": [
+            "Inlärning av varumärkesröst",
+            "Integration av trendande ämnen",
+            "Rubriker och hashtaggar"
+          ]
+        },
+        {
+          "title": "Smart schemaläggning",
+          "text": "Schemalägg och publicera innehåll på dina sociala plattformar vid optimal tid.",
+          "bullets": [
+            "Analys av målgruppens aktivitet",
+            "Optimering av tidszoner",
+            "Automatisering av innehållskalender"
+          ]
+        },
+        {
+          "title": "Konsekvent närvaro online",
+          "text": "Behåll synlighet och väx din målgrupp utan det dagliga slitandet.",
+          "bullets": [
+            "Publicering på flera plattformar",
+            "Tidsstyrning baserad på engagemang",
+            "Centraliserad instrumentpanel"
+          ]
+        },
+        {
+          "title": "Tidsbesparande automatisering",
+          "text": "Fokusera på ditt företag medan ZARZOOM sköter hela din innehållspipeline.",
+          "bullets": [
+            "Noll manuellt arbete",
+            "Autopilot – ställ in och glöm",
+            "Rapportering i realtid"
+          ]
+        }
+      ],
+      "getStartedFree": "Kom igång gratis",
+      "viewFeatures": "Se funktioner",
+      "autopilotActive": "Autopilot aktiv",
+      "mission": {
+        "title": "Vårt uppdrag",
+        "subtitle": "Tar bort det största hindret för tillväxt på sociala medier",
+        "para1": "Vårt uppdrag är att ta bort det största hindret för tillväxt på sociala medier – den ständiga efterfrågan på färskt innehåll.",
+        "para2": "ZARZOOM använder artificiell intelligens för att automatisera skapande och publicering av innehåll så att entreprenörer och företag kan fokusera på det de gör bäst.",
+        "para3": "Istället för att lägga timmar på att planera inlägg, skriva innehåll och hantera flera plattformar hjälper ZARZOOM dig att hålla dig synlig online – utan ansträngning."
+      },
+      "missionStats": {
+        "contentCreated": "Innehåll skapat",
+        "hoursSaved": "Timmar sparade",
+        "platformsActive": "Aktiva plattformar"
+      },
+      "story": {
+        "sectionTitle": "Vår historia",
+        "heading": "Byggd för att lösa ett verkligt problem",
+        "para1": "ZARZOOM skapades för att lösa ett problem många grundare och skapare möter – att hålla sig konsekvent på sociala medier.",
+        "para2": "Sociala medier är ett av de kraftfullaste verktygen för att bygga en målgrupp, men att upprätthålla en jämn ström av högkvalitativt innehåll är svårt och tidskrävande.",
+        "para3": "Genom att kombinera AI-drivet innehåll med automatiserad schemaläggning gör ZARZOOM att användare kan upprätthålla en stark närvaro online utan det dagliga arbete som normalt krävs."
+      },
+      "platform": {
+        "badge": "Plattformen",
+        "heading": "Hur ZARZOOM hjälper dig att växa"
+      },
+      "lookingAhead": {
+        "badge": "Framåt",
+        "heading": "Framtiden för tillväxt på sociala medier",
+        "para1": "Vi tror att framtiden för tillväxt på sociala medier drivs av intelligent automatisering.",
+        "para2": "ZARZOOM utvecklas ständigt för att hjälpa företag och skapare att bygga sin närvaro online snabbare och mer effektivt.",
+        "para3": "Vårt mål är enkelt: göra kraftfulla verktyg för tillväxt på sociala medier tillgängliga för alla."
+      },
+      "intelligentAutomation": {
+        "title": "Intelligent automatisering",
+        "subtitle": "Driven av avancerad AI för att växa din målgrupp medan du fokuserar på ditt företag.",
+        "tags": [
+          "AI-generering",
+          "Auto-schemaläggning",
+          "Flera plattformar",
+          "Analys"
+        ]
+      },
+      "cta": {
+        "badge": "Kom igång idag",
+        "title": "Börja köra dina sociala medier på autopilot idag",
+        "description": "Följ tusentals skapare och företag som växer på autopilot.",
+        "getStarted": "Kom igång",
+        "viewFeatures": "Se funktioner"
+      },
+      "values": {
+        "title": "Våra kärnvärden",
+        "innovation": {
+          "title": "Innovation först",
+          "description": "Vi skjuter gränserna för AI och automatisering för att leverera lösningar som var omöjliga igår. Vårt engagemang för innovation innebär att du alltid har tillgång till de senaste framstegen inom sociala medier."
+        },
+        "authenticity": {
+          "title": "Äkta engagemang",
+          "description": "Automatisering ska förstärka, inte ersätta, genuint mänskligt samspel. Våra verktyg är utformade för att hjälpa dig behålla din unika röst och bygga verkliga relationer med din målgrupp i skala."
+        },
+        "simplicity": {
+          "title": "Enkelhet och kraft",
+          "description": "Raffinerad teknik behöver inte vara komplicerad. Vi tror på att göra kraftfulla verktyg tillgängliga för alla, oavsett teknisk expertis."
+        },
+        "trust": {
+          "title": "Förtroende och integritet",
+          "description": "Dina data, ditt innehåll, din community – vi behandlar allt med största respekt och säkerhet. Vi säljer aldrig dina data och upprätthåller högsta standarder för integritetsskydd."
+        }
+      },
+      "team": {
+        "title": "Byggd av experter",
+        "description": "Vårt team kombinerar decennier av erfarenhet inom AI, marknadsföring på sociala medier och användarupplevelsedesign. Vi brinner för att skapa verktyg som verkligen gör skillnad för hur företag når sina målgrupper."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Funktioner - ZARZOOM automatisering av sociala medier",
+        "description": "Upptäck kraftfulla funktioner som automatiserar dina sociala medier: AI-innehåll, smart schemaläggning, publicering på flera plattformar, analys med mera."
+      },
+      "hero": {
+        "title": "Kraftfulla funktioner",
+        "subtitle": "Allt du behöver för att automatisera, optimera och skala din närvaro på sociala medier – i en intelligent plattform."
+      },
+      "aiContent": {
+        "title": "AI-driven innehållsgenerering",
+        "description": "Skapa engagerande inlägg på sekunder med vår avancerade AI som förstår din varumärkesröst, målgruppens preferenser och trendande ämnen. Generera rubriker, hashtaggar och fullständiga inläggsideer som når din community.",
+        "features": [
+          "Inlärning och anpassning av varumärkesröst",
+          "Integration av trendande ämnen",
+          "Innehåll i flera format (text, rubriker, hashtaggar)",
+          "Förslag för A/B-tester"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Smart schemaläggning och autopilot",
+        "description": "Låt vår AI bestämma optimala publiceringstider för maximalt engagemang. Ställ in dina preferenser en gång och se din närvaro på sociala medier växa på autopilot medan du fokuserar på företaget.",
+        "features": [
+          "Analys av målgruppens aktivitet",
+          "Optimering av tidszoner",
+          "Automatisering av innehållskalender",
+          "Schemaläggning baserad på engagemang"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Hantering av flera plattformar",
+        "description": "Hantera alla dina konton på sociala medier från en samlad instrumentpanel. Publicera till Twitter, LinkedIn, Facebook, Instagram med mera med ett klick.",
+        "features": [
+          "Publicering över plattformar",
+          "Plattformsspecifik optimering",
+          "Samlad inkorg",
+          "Centraliserad analys"
+        ]
+      },
+      "analytics": {
+        "title": "Avancerad analys och insikter",
+        "description": "Följ det som spelar roll med omfattande analys som går bortom ytliga mätvärden. Förstå din målgrupp, mät ROI och fatta datadrivna beslut för att förbättra din strategi.",
+        "features": [
+          "Spårning av prestanda i realtid",
+          "Demografi och beteende hos målgrupp",
+          "Analys av engagemangsgrad",
+          "Jämförelse med konkurrenter"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Innehållsbibliotek och tillgångar",
+        "description": "Bygg och organisera din innehållsdatabas med vårt intelligenta mediebibliotek. Lagra bilder, videor, mallar och textutdrag för snabb åtkomst och återanvändning.",
+        "features": [
+          "Obegränsad medielagring",
+          "Smart taggning och sökning",
+          "Mallbibliotek",
+          "Spårning av tillgångars prestanda"
+        ]
+      },
+      "collaboration": {
+        "title": "Teamarbete",
+        "description": "Arbeta sömlöst med ditt team, kunder eller byråer. Tilldela roller, hantera behörigheter och effektivisera godkännandeflöden – allt inom plattformen.",
+        "features": [
+          "Rollbaserad åtkomstkontroll",
+          "Godkännandeflöden",
+          "Aktivitetsloggar för team",
+          "Kundhantering"
+        ]
+      },
+      "integration": {
+        "title": "Integrationer och API",
+        "description": "Koppla ZARZOOM till dina befintliga verktyg och arbetsflöden. Vårt robusta API och färdiga integrationer säkerställer smidig dataflöde i din tech-stack.",
+        "features": [
+          "Zapier-integration",
+          "Webhook-stöd",
+          "REST API-åtkomst",
+          "Anpassade integrationer"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API och OpenClaw-integrationer",
+        "description": "Ladda upp ditt arbetsflöde med ZARZOOMs kraftfulla OpenClaw-integration för på begäran automatiserad skapande och schemaläggning av sociala medier över 10 plattformar. Utlös AI-driven innehållsgenerering direkt från dina befintliga system via vårt REST API, eller låt OpenClaw-agenter sköta allt autonomt. Perfekt för byråer, utvecklare och företag som vill ha sömlös automatisering.",
+        "features": [
+          "OpenClaw-agentautomatisering (10+ plattformar)",
+          "AI-innehåll på begäran via API",
+          "Omedelbara schemaläggningsutlösare",
+          "Anpassat arbetsflöde"
+        ]
+      },
+      "support": {
+        "title": "Support i världsklass",
+        "description": "Få hjälp när du behöver det med vårt dedikerade supportteam. Tillgång till dokumentation, videoguider och responsiv kundservice.",
+        "features": [
+          "E-postsupport 24/7",
+          "Livechatt (Pro+)",
+          "Videoguider",
+          "Kunskapsbas"
+        ]
+      },
+      "cta": {
+        "title": "Redo att förvandla dina sociala medier?",
+        "description": "Starta din gratis provperiod och upplev kraften i intelligent automatisering.",
+        "button": "Kom igång gratis"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Kontakta oss - ZARZOOM",
+        "description": "Kontakta ZARZOOM-teamet. Vi hjälper dig gärna med frågor eller funderingar."
+      },
+      "title": "Kontakta oss",
+      "subtitle": "Har du en fråga eller behöver support? Vi hjälper dig. Skicka ett meddelande så svarar vi så snart som möjligt.",
+      "info": {
+        "title": "Kontaktinformation",
+        "email": {
+          "label": "E-post"
+        },
+        "phone": {
+          "label": "Telefon"
+        },
+        "address": {
+          "label": "Kontor"
+        }
+      },
+      "hours": {
+        "title": "Öppettider",
+        "note": "Vi svarar vanligtvis på alla förfrågningar inom 24 timmar på vardagar.",
+        "weekdays": "Måndag – fredag",
+        "weekdaysTime": "09:00 – 18:00",
+        "saturday": "Lördag",
+        "saturdayTime": "10:00 – 16:00",
+        "sunday": "Söndag",
+        "closed": "Stängt"
+      },
+      "form": {
+        "title": "Skicka ett meddelande",
+        "name": "Ditt namn",
+        "namePlaceholder": "Erik Andersson",
+        "email": "Din e-post",
+        "emailPlaceholder": "erik@exempel.se",
+        "subject": "Ämne",
+        "subjectPlaceholder": "Hur kan vi hjälpa dig?",
+        "message": "Meddelande",
+        "messagePlaceholder": "Berätta mer om din förfrågan...",
+        "messageHint": "Minst 10 tecken",
+        "submit": "Skicka meddelande",
+        "sending": "Skickar...",
+        "success": {
+          "title": "Meddelandet skickat!",
+          "message": "Tack för att du kontaktade oss. Vi återkommer så snart som möjligt."
+        },
+        "error": {
+          "title": "Fel"
+        },
+        "errors": {
+          "required": "Fyll i alla fält",
+          "failed": "Kunde inte skicka meddelandet. Försök igen."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Användarvillkor",
+      "subtitle": "Läs dessa villkor noggrant innan du använder ZARZOOM.",
+      "lastUpdated": "Senast uppdaterad: 1 februari 2026",
+      "s1Title": "1. Godkännande av villkor",
+      "s1Text": "Genom att skapa ett konto eller använda ZARZOOM-plattformen godkänner du dessa användarvillkor. Om du inte godkänner får du inte använda tjänsten.",
+      "s2Title": "2. Kontoregistrering",
+      "s2Text": "Du måste ange korrekt och fullständig information vid registrering. Du ansvarar för att hålla dina inloggningsuppgifter konfidentiella och för all aktivitet som sker under ditt konto.",
+      "s3Title": "3. Godtagbar användning",
+      "s3Text": "Du godkänner att inte använda ZARZOOM för att publicera innehåll som är olagligt, ärekränkande, obscent eller kränker andras immateriella rättigheter. Vi förbehåller oss rätten att stänga av eller avsluta konton som bryter mot denna policy.",
+      "s4Title": "4. Prenumeration och fakturering",
+      "s4Text": "Betaldplaner faktureras i förskott månads- eller årsvis. Du kan avsluta när som helst; avslut träder i kraft vid slutet av den löpande faktureringsperioden. Återbetalning ges inte för delperioder.",
+      "s5Title": "5. Immateriella rättigheter",
+      "s5Text": "Du behåller äganderätten till innehåll du skapar och publicerar via ZARZOOM. Genom att använda plattformen ger du oss en begränsad licens att behandla, lagra och visa ditt innehåll enbart för att tillhandahålla tjänsten.",
+      "s6Title": "6. Ansvarsbegränsning",
+      "s6Text": "ZARZOOM tillhandahålls 'i befintligt skick'. I den utsträckning lagen tillåter frånsäger vi oss alla garantier och ska inte vara ansvariga för indirekta, tillfälliga eller följdskador som uppstår genom din användning av tjänsten.",
+      "s7Title": "7. Ändringar av villkor",
+      "s7Text": "Vi kan uppdatera dessa villkor då och då. Fortsatt användning av tjänsten efter att ändringar publicerats innebär godkännande av de reviderade villkoren."
+    },
+    "termsWebsite": {
+      "title": "Webbplatsvillkor",
+      "subtitle": "Villkor som styr din användning av webbplatsen zarzoom.com.",
+      "lastUpdated": "Senast uppdaterad: 1 februari 2026",
+      "s1Title": "1. Användning av webbplatsen",
+      "s1Text": "Denna webbplats drivs av ZARZOOM Ltd. Genom att gå in på och bläddra på denna webbplats accepterar du dessa webbplatsvillkor i sin helhet.",
+      "s2Title": "2. Immateriella rättigheter",
+      "s2Text": "Allt innehåll på denna webbplats, inklusive text, grafik, logotyper och programvara, tillhör ZARZOOM Ltd eller dess licensgivare och skyddas av upphovsrätt och varumärkeslagar.",
+      "s3Title": "3. Informationens riktighet",
+      "s3Text": "Vi strävar efter att hålla informationen på webbplatsen korrekt och uppdaterad men lämnar inga garantier eller försäkran om dess fullständighet eller riktighet.",
+      "s4Title": "4. Länkar till tredje part",
+      "s4Text": "Webbplatsen kan innehålla länkar till webbplatser som drivs av tredje part. Vi ansvarar inte för innehållet eller integritetspraxis på dessa webbplatser.",
+      "s5Title": "5. Tillämplig lag",
+      "s5Text": "Dessa villkor styrs av engelsk och walesisk rätt. Eventuella tvister ska underläggas de engelska och walesiska domstolarnas exklusiva behörighet."
+    },
+    "privacy": {
+      "title": "Integritetspolicy",
+      "subtitle": "Hur vi samlar in, använder och skyddar dina personuppgifter.",
+      "lastUpdated": "Senast uppdaterad: 1 februari 2026",
+      "s1Title": "1. Information vi samlar in",
+      "s1Text": "Vi samlar in information du lämnar direkt (namn, e-post, betalningsuppgifter) och information som genereras automatiskt (IP-adress, webbläsartyp, användningsdata) när du använder ZARZOOM.",
+      "s2Title": "2. Hur vi använder din information",
+      "s2Text": "Vi använder din information för att tillhandahålla och förbättra tjänsten, behandla betalningar, skicka tjänsterelaterad kommunikation och uppfylla juridiska förpliktelser.",
+      "s3Title": "3. Delning av data",
+      "s3Text": "Vi säljer inte dina personuppgifter. Vi kan dela data med pålitliga tjänsteleverantörer (betalningsprocessorer, hostingleverantörer) som hjälper oss att driva plattformen, under strikta sekretessavtal.",
+      "s4Title": "4. Kvarhållande av data",
+      "s4Text": "Vi behåller dina personuppgifter så länge ditt konto är aktivt eller så länge det behövs för att tillhandahålla tjänsten. Du kan när som helst begära radering av dina data genom att kontakta support.",
+      "s5Title": "5. Dina rättigheter",
+      "s5Text": "Du har rätt att få tillgång till, rätta eller radera dina personuppgifter. Du kan också invända mot behandling eller begära dataportabilitet. Kontakta oss på privacy@zarzoom.com för att utöva dessa rättigheter.",
+      "s6Title": "6. Säkerhet",
+      "s6Text": "Vi tillämpar lämpliga tekniska och organisatoriska åtgärder för att skydda dina data, inklusive kryptering, åtkomstkontroller och regelbundna säkerhetsutvärderingar.",
+      "s7Title": "7. Ändringar av denna policy",
+      "s7Text": "Vi kan uppdatera denna policy då och då. Vi meddelar dig om väsentliga ändringar via e-post eller via plattformen."
+    },
+    "cookies": {
+      "title": "Cookiepolicy",
+      "subtitle": "Hur vi använder cookies och liknande tekniker.",
+      "lastUpdated": "Senast uppdaterad: 1 februari 2026",
+      "s1Title": "1. Vad är cookies",
+      "s1Text": "Cookies är små textfiler som placeras på din enhet när du besöker en webbplats. De hjälper webbplatsen att komma ihåg dina preferenser och förstå hur du använder den.",
+      "s2Title": "2. Cookies vi använder",
+      "s2Essential": "Nödvändiga cookies",
+      "s2EssentialText": "Krävs för att webbplatsen ska fungera korrekt. Dessa kan inte stängas av. De inkluderar sessionscookies och autentiseringstokens.",
+      "s2Analytics": "Analyscookies",
+      "s2AnalyticsText": "Hjälper oss att förstå hur besökare interagerar med vår webbplats genom att samla in anonym användningsdata. Vi använder detta för att förbättra vår tjänst.",
+      "s2Preference": "Preferenscookies",
+      "s2PreferenceText": "Kommer ihåg dina inställningar och preferenser (t.ex. språkval) för en mer personlig upplevelse.",
+      "s3Title": "3. Hantera cookies",
+      "s3Text": "Du kan styra cookies via webbläsarens inställningar. Observera att inaktivering av vissa cookies kan påverka webbplatsens funktionalitet.",
+      "s4Title": "4. Cookies från tredje part",
+      "s4Text": "Vissa cookies placeras av tjänster från tredje part som visas på våra sidor. Vi kontrollerar inte dessa cookies. Se respektive tredje parts integritetspolicy för mer information.",
+      "s5Title": "5. Kontakta oss",
+      "s5Text": "Om du har frågor om vår användning av cookies, kontakta oss på privacy@zarzoom.com."
+    }
+  }
+}

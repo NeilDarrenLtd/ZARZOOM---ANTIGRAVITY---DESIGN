@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Tervetuloa takaisin",
+    "loginSubtitle": "Kirjaudu ZARZOOM-tilillesi",
+    "registerTitle": "Luo tilisi",
+    "registerSubtitle": "Liity tuhansiin markkinoijaan, jotka automatisoivat someaan",
+    "email": "Sähköpostiosoite",
+    "password": "Salasana",
+    "confirmPassword": "Vahvista salasana",
+    "login": "Kirjaudu sisään",
+    "register": "Luo tili",
+    "forgotPassword": "Unohtuiko salasana?",
+    "orContinueWith": "Tai jatka",
+    "noAccount": "Eikö sinulla ole tiliä?",
+    "hasAccount": "Onko sinulla jo tili?",
+    "signUpLink": "Rekisteröidy",
+    "signInLink": "Kirjaudu sisään",
+    "passwordMinLength": "Salasanan tulee olla vähintään 8 merkkiä",
+    "passwordUppercase": "Sisältää ison kirjaimen",
+    "passwordLowercase": "Sisältää pienen kirjaimen",
+    "passwordNumber": "Sisältää numeron",
+    "passwordSpecial": "Sisältää erikoismerkin",
+    "passwordsNoMatch": "Salasanat eivät täsmää",
+    "emailRequired": "Sähköposti vaaditaan",
+    "emailInvalid": "Syötä kelvollinen sähköpostiosoite",
+    "signUpSuccess": "Tarkista sähköpostisi",
+    "signUpSuccessMessage": "Lähetimme vahvistuslinkin sähköpostiisi. Tarkista postilaatikkosi ja napsauta linkkiä aktivoidaksesi tilisi.",
+    "backToLogin": "Takaisin kirjautumiseen",
+    "authError": "Todentamisvirhe",
+    "authErrorMessage": "Jotain meni pieleen todentamisen aikana. Yritä uudelleen.",
+    "tryAgain": "Yritä uudelleen",
+    "tabLogin": "Kirjaudu sisään",
+    "tabCreateAccount": "Luo tili",
+    "continueWithGoogle": "Jatka Googlella",
+    "continueWithFacebook": "Jatka Facebookilla",
+    "continueWithLinkedIn": "Jatka LinkedInillä",
+    "continueWithX": "Jatka X:llä",
+    "rememberMe": "Muista minut",
+    "forgotLogin": "Unohtuiko kirjautuminen?",
+    "verifyTitle": "Tarkista postilaatikkosi",
+    "verifySubtitle": "Lähetimme vahvistuslinkin sähköpostiisi. Tarkista postilaatikkosi ja napsauta linkkiä aktivoidaksesi tilisi.",
+    "verifyResend": "Lähetä vahvistussähköposti uudelleen",
+    "verifyResent": "Vahvistussähköposti lähetetty uudelleen",
+    "verifyBack": "Takaisin kirjautumiseen",
+    "verifiedTitle": "Sähköposti vahvistettu",
+    "verifiedSubtitle": "Sähköpostisi on vahvistettu onnistuneesti. Voit nyt kirjautua tilillesi.",
+    "verifiedContinue": "Jatka kirjautumiseen",
+    "adminLogin": "Admin-kirjautuminen",
+    "adminLoginSubtitle": "Rajoitettu alue. Vain valtuutetut henkilöt.",
+    "adminSignIn": "Kirjaudu sisään adminina"
+  },
+  "dashboard": {
+    "title": "Hallintapaneeli",
+    "welcome": "Tervetuloa takaisin",
+    "overview": "Yleiskatsaus",
+    "accountSettings": "Tilin asetukset",
+    "connectedAccounts": "Yhdistetyt tilit",
+    "comingSoon": "Tulossa pian – some-komentokeskuksesi.",
+    "emailVerified": "Sähköposti vahvistettu",
+    "memberSince": "Liittynyt",
+    "profile": "Brändiasetukset",
+    "supportDescription": "Saa apua tukitiimiltämme. Luo ja hallitse tukilippuja.",
+    "restartSetup": "Käynnistä asennus uudelleen",
+    "restarting": "Käynnistetään uudelleen..."
+  },
+  "connect": {
+    "heading": "Yhdistä tilisi",
+    "subheading": "Linkitä sosiaalisen median tilisi aloittaaksesi ZARZOOMilla automaattisen julkaisemisen.",
+    "connectAccounts": "Yhdistä tilit",
+    "back": "Takaisin"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Täytä automaattisesti tiedostosta"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Luo API-avain",
+    "keyCreated": "Avain luotu",
+    "close": "Sulje",
+    "keyName": "Avaimen nimi",
+    "keyNamePlaceholder": "esim. Tuotanto, Vaihe, CI/CD",
+    "keyNameRequired": "Nimi vaaditaan",
+    "active": "Aktiivinen",
+    "revoked": "Peruutettu",
+    "created": "Luotu",
+    "lastUsed": "Viimeksi käytetty",
+    "revokedAt": "Peruutettu",
+    "rotate": "Kierrä",
+    "revoke": "Peruuta",
+    "revokeConfirm": "Peruutetaanko tämä avain?",
+    "rotateConfirm": "Kierretäänkö avain?",
+    "confirm": "Vahvista",
+    "cancel": "Peruuta",
+    "revoking": "Peruutetaan...",
+    "rotating": "Kierretään...",
+    "rotateTitle": "Kierrä: peruuta tämä avain ja luo uusi"
+  },
+  "profile": {
+    "title": "Brändiasetukset",
+    "subtitle": "Hallitse brändiäsi, tavoitteitasi, suunnitelmaasi ja some-yhteyksiäsi.",
+    "saving": "Tallennetaan...",
+    "saved": "Muutokset tallennettu onnistuneesti.",
+    "saveFailed": "Muutosten tallennus epäonnistui. Yritä uudelleen.",
+    "loadFailed": "Profiilin lataus epäonnistui. Yritä uudelleen.",
+    "save": "Tallenna muutokset",
+    "sections": {
+      "brand": "Brändin perusteet",
+      "brandDesc": "Yritysidentiteettisi ja sisältömieltymyksesi.",
+      "goals": "Tavoitteet ja kasvu",
+      "goalsDesc": "Mitä haluat saavuttaa ZARZOOMilla.",
+      "posting": "Julkaisumieltymykset",
+      "postingDesc": "Miten ZARZOOM julkaisee sisältösi.",
+      "plan": "Suunnitelmasi",
+      "planDesc": "Nykyinen tilaus ja laskutusmieltymykset.",
+      "social": "Some-yhteydet",
+      "socialDesc": "Hallitse yhdistettyjä sosiaalisen median tilejäsi."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Automaattinen julkaisu",
+        "help": "Salli ZARZOOMin julkaista sisältöä puolestasi automaattisesti."
+      }
+    },
+    "plan": {
+      "current": "Nykyinen suunnitelma",
+      "noPlan": "Suunnitelmaa ei valittu",
+      "annualBilling": "Vuosilaskutus",
+      "changePlan": "Vaihda suunnitelma"
+    },
+    "social": {
+      "username": "Some-käyttäjänimi",
+      "noUsername": "Ei vielä määritelty",
+      "connected": "Some-tilit yhdistetty",
+      "notConnected": "Tilejä ei ole vielä yhdistetty",
+      "connect": "Yhdistä tilit",
+      "manage": "Hallitse yhteyksiä"
+    },
+    "back": "Takaisin hallintapaneeliin"
+  },
+  "support": {
+    "nav": {
+      "title": "Tuki",
+      "myTickets": "Omat liput",
+      "createTicket": "Luo lippu",
+      "backToSupport": "Takaisin tukiin",
+      "backToDashboard": "Takaisin hallintapaneeliin"
+    },
+    "landing": {
+      "title": "Hae tukea",
+      "subtitle": "Olemme täällä auttamassa sinua saamaan ZARZOOMista kaiken irti.",
+      "description": "Lähetä tukilippu ja tiimimme vastaa 24 tunnin kuluessa arkipäivinä.",
+      "createTicketBtn": "Luo lippu",
+      "myTicketsBtn": "Omat liput"
+    },
+    "list": {
+      "title": "Omat tukiliput",
+      "subtitle": "Tarkastele ja hallitse tukipyyntöjäsi.",
+      "empty": "Lippuja ei vielä ole",
+      "emptyDescription": "Et ole luonut tukilippuja. Napsauta alla olevaa painiketta aloittaaksesi.",
+      "createFirstTicket": "Luo ensimmäinen lippusi",
+      "filterByStatus": "Suodata tilan mukaan",
+      "allTickets": "Kaikki liput",
+      "showingTickets": "Näytetään {filtered} / {total} lipusta",
+      "noMatchFilter": "Yhtään lippua ei vastaa valittua tilasuodatinta.",
+      "clearFilter": "Tyhjennä suodatin",
+      "table": {
+        "ticketId": "Lipun tunnus",
+        "subject": "Aihe",
+        "status": "Tila",
+        "lastUpdated": "Viimeksi päivitetty",
+        "created": "Luotu"
+      }
+    },
+    "create": {
+      "title": "Luo tukilippu",
+      "subtitle": "Kuvaile ongelmasi ja autamme ratkaisemaan sen.",
+      "form": {
+        "subject": "Aihe",
+        "subjectPlaceholder": "Lyhyt kuvaus ongelmastasi",
+        "subjectHelp": "Pakollinen. Pidä lyhyenä ja selkeänä.",
+        "category": "Kategoria",
+        "categoryHelp": "Valinnainen. Valitse ongelmaasi parhaiten vastaava kategoria.",
+        "priority": "Prioriteetti",
+        "priorityHelp": "Valinnainen. Kerro kuinka kiireellinen asia on.",
+        "description": "Kuvaus",
+        "descriptionPlaceholder": "Anna tarkat tiedot ongelmastasi...",
+        "descriptionHelp": "Pakollinen. Sisällytä toistovaiheet, virheilmoitukset tai muut asiaan liittyvät tiedot.",
+        "attachments": "Liitä kuvakaappauksia",
+        "attachmentsHelp": "Valinnainen. Lataa enintään 3 kuvakaappausta (PNG, JPG tai WebP). Enintään 5 MB per tiedosto.",
+        "attachmentsBtn": "Valitse tiedostot",
+        "attachmentsSelected": "tiedosto(a) valittu",
+        "removeAttachment": "Poista",
+        "submit": "Lähetä lippu",
+        "submitting": "Luodaan lippua...",
+        "cancel": "Peruuta"
+      },
+      "success": {
+        "title": "Lippu luotu onnistuneesti",
+        "message": "Tukilippusi on luotu. Vastaamme 24 tunnin kuluessa arkipäivinä.",
+        "viewTicket": "Näytä lippu",
+        "createAnother": "Luo toinen lippu"
+      },
+      "error": {
+        "title": "Lipun luonti epäonnistui",
+        "message": "Jotain meni pieleen. Yritä uudelleen.",
+        "retry": "Yritä uudelleen"
+      }
+    },
+    "detail": {
+      "title": "Lipun tiedot",
+      "status": "Tila",
+      "category": "Kategoria",
+      "priority": "Prioriteetti",
+      "created": "Luotu",
+      "lastActivity": "Viimeisin toiminta",
+      "comments": "Kommentit",
+      "addComment": "Lisää kommentti",
+      "commentPlaceholder": "Kirjoita viestisi...",
+      "attachScreenshots": "Liitä kuvakaappauksia",
+      "sendComment": "Lähetä",
+      "sending": "Lähetetään...",
+      "loadingTicket": "Ladataan lippua...",
+      "ticketNotFound": "Lippua ei löydy",
+      "ticketNotFoundMessage": "Tätä lippua ei ole tai sinulla ei ole oikeutta tarkastella sitä.",
+      "noComments": "Kommentteja ei vielä ole",
+      "userRole": "Sinä",
+      "adminRole": "Tukitiimi",
+      "systemRole": "Järjestelmä",
+      "attachmentPreview": "Napsauta nähdäksesi koko koon",
+      "attachmentAlt": "Liite",
+      "closeModal": "Sulje",
+      "closeTicketTitle": "Sulje lippu",
+      "closeTicketMessage": "Haluatko varmasti sulkea tämän lipun? Voit halutessasi kertoa syyn.",
+      "closeTicketPlaceholder": "Valinnainen: Miksi suljet tämän lipun?",
+      "closeTicketCancel": "Peruuta",
+      "closeTicketButton": "Sulje lippu",
+      "closeTicketClosing": "Suljetaan..."
+    },
+    "status": {
+      "open": "Avoin",
+      "investigating": "Tutkitaan",
+      "waiting_on_user": "Odottaa sinua",
+      "resolved": "Ratkaistu",
+      "closed": "Suljettu"
+    },
+    "category": {
+      "none": "Ei määritelty",
+      "account_login": "Tili ja kirjautuminen",
+      "billing_subscription": "Laskutus ja tilaus",
+      "social_connections": "Some-yhteydet",
+      "content_generation": "Sisällöntuotanto",
+      "publishing_issues": "Julkaisuongelmat",
+      "technical_bug": "Tekninen virhe",
+      "feature_request": "Ominaisuuspyyntö",
+      "general_question": "Yleinen kysymys"
+    },
+    "priority": {
+      "none": "Ei määritelty",
+      "urgent": "Kiireellinen – järjestelmä estää",
+      "high": "Korkea – vakava ongelma",
+      "normal": "Normaali – tavallinen",
+      "low": "Matala – pieni / ehdotus"
+    },
+    "attachments": {
+      "uploading": "Ladataan liitteitä...",
+      "uploadSuccess": "Liitteet ladattu onnistuneesti",
+      "uploadError": "Joidenkin liitteiden lataus epäonnistui",
+      "fileTypeError": "Vain PNG-, JPG- ja WebP-tiedostot sallitaan",
+      "fileSizeError": "Tiedoston koon tulee olla alle 5 MB",
+      "fileCountError": "Voit ladata enintään 3 tiedostoa per kommentti",
+      "viewFullSize": "Näytä täysikokoisena"
+    },
+    "errors": {
+      "loadFailed": "Tukilippujen lataus epäonnistui",
+      "createFailed": "Lipun luonti epäonnistui",
+      "commentFailed": "Kommentin lisäys epäonnistui",
+      "unauthorized": "Sinulla ei ole oikeutta tarkastella tätä lippua",
+      "networkError": "Verkkovirhe. Tarkista yhteys ja yritä uudelleen."
+    },
+    "validation": {
+      "subjectRequired": "Aihe vaaditaan",
+      "descriptionRequired": "Kuvaus vaaditaan",
+      "messageRequired": "Viesti vaaditaan",
+      "emailRequired": "Sähköposti vaaditaan",
+      "invalidEmail": "Syötä kelvollinen sähköpostiosoite",
+      "noUpdatesProvided": "Päivityksiä ei annettu",
+      "noFilesProvided": "Tiedostoja ei annettu",
+      "tooManyFiles": "Liikaa tiedostoja. Enintään {count} tiedostoa sallittu.",
+      "invalidFileType": "Virheellinen tiedostotyyppi tiedostolle {name}. Vain PNG-, JPG- ja WebP-tiedostot sallitaan.",
+      "fileTooLarge": "Tiedosto {name} on liian suuri ({size}). Enimmäiskoko on 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Aseta ZARZOOM käyttöösi",
+    "subtitle": "Konfiguroidaan some-autopilottisi muutamassa nopeassa vaiheessa.",
+    "stepper": {
+      "step1": "Tili",
+      "step2": "Brändi",
+      "step3": "Tavoitteet",
+      "step4": "Suunnitelma",
+      "step5": "Yhdistä"
+    },
+    "nav": {
+      "back": "Takaisin",
+      "next": "Jatka",
+      "saveExit": "Tallenna ja poistu",
+      "skipForNow": "Ohita toistaiseksi",
+      "finish": "Käynnistä ZARZOOM",
+      "saving": "Tallennetaan..."
+    },
+    "step1": {
+      "title": "Tili luotu",
+      "subtitle": "Olet kirjautunut ja valmis.",
+      "signedInAs": "Kirjautuneena",
+      "continue": "Asetetaan brändisi"
+    },
+    "step2": {
+      "title": "Brändin perusteet",
+      "subtitle": "Kerro yrityksestäsi, jotta voimme räätälöidä sisällön brändiisi.",
+      "businessName": {
+        "label": "Yrityksen nimi",
+        "placeholder": "esim. Acme Oy",
+        "help": "Yrityksesi tai brändisi nimi."
+      },
+      "description": {
+        "label": "Kuvaus",
+        "placeholder": "Kuvaile lyhyesti, mitä yrityksesi tekee...",
+        "help": "Lyhyt yhteenveto, jotta tekoälymme ymmärtää brändiäänesi."
+      },
+      "websiteUrl": {
+        "label": "Verkkosivuston URL",
+        "placeholder": "https://verkkosivustosi.fi",
+        "help": "Analysoimme sivustosi sisällön räätälöimiseksi."
+      },
+      "autofillFromWebsite": "Täytä automaattisesti verkkosivustolta",
+      "analysing": "Analysoidaan...",
+      "importFromFile": "Tuo tiedostosta",
+      "choosePdfOrWord": "Valitse PDF- tai Word-tiedosto",
+      "investigate": {
+        "button": "Tutki verkkosivustoa",
+        "loading": "Analysoidaan verkkosivustoasi...",
+        "success": "Verkkosivusto analysoitu onnistuneesti!",
+        "error": "Verkkosivuston analyysi epäonnistui. Täytä tiedot manuaalisesti."
+      },
+      "contentLanguage": {
+        "label": "Sisällön kieli",
+        "help": "Pääkieli luodulle sisällölle."
+      },
+      "articleStyles": {
+        "label": "Artikkelityylit",
+        "help": "Valitse ZARZOOMin luomat sisältötyypit.",
+        "options": {
+          "let_zarzoom_decide": "Anna ZARZOOMin päättää",
+          "how_to_guides": "Ohjeet",
+          "listicles": "Listat (esim. 10 vinkkiä X:ään)",
+          "tutorials": "Tutorialit",
+          "opinion_pieces": "Mielipidekirjoitukset",
+          "case_studies": "Tapaustutkimukset",
+          "news_commentary": "Uutiskommentit",
+          "interviews": "Haastattelut",
+          "product_reviews": "Tuotearvostelut",
+          "explainer_articles": "Selittävä sisältö",
+          "comparisons_vs_articles": "X vs Y, vertailut",
+          "ultimate_guides_pillar": "Kattavat oppaat / pilarisisältö",
+          "checklists_cheat_sheets": "Tarkistuslistat ja pikaohjeet",
+          "best_top_forecasts": "Parhaat / Top-ennusteet",
+          "problem_solution_posts": "Ongelma/ratkaisu-julkaisut",
+          "myth_busting": "Myyttien murtaminen / väärinkäsitykset",
+          "resource_roundups": "Resurssiyhteenvedot",
+          "faqs_qa_content": "UKK / Kysymys-vastaus -sisältö",
+          "personal_stories": "Henkilökohtaiset tarinat / kokemukset",
+          "research_summaries": "Tutkimusyhteenvedot / dataoivallukset",
+          "historical_timeline": "Historiallinen / aikajana-sisältö",
+          "satire_humor": "Satiiri tai huumori",
+          "explained_in_minutes": "Selitetty X minuutissa"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Anna tekoälymme valita parhaan muodon sisällölle",
+          "how_to_guides": "Vaiheittaiset ohjeet",
+          "listicles": "Numeroidut listat (esim. 10 vinkkiä X:ään)",
+          "tutorials": "Syvällisempi kuin ohje",
+          "opinion_pieces": "Asiantuntijanäkemykset tai kommentit",
+          "case_studies": "Todelliset esimerkit ja tulokset",
+          "news_commentary": "Konteksti ajankohtaisille tapahtumille",
+          "interviews": "Kysymys-vastaus henkilön/asiantuntijan kanssa",
+          "product_reviews": "Arviointi ja luokitukset",
+          "explainer_articles": "Selitä monimutkaiset käsitteet yksinkertaisesti",
+          "comparisons_vs_articles": "X vs Y, edut/haitat-vertailut",
+          "ultimate_guides_pillar": "Pitkä, auktoriteettinen, kattaa kokonaisen aiheen",
+          "checklists_cheat_sheets": "Pikaviite, toimenpidelistat",
+          "best_top_forecasts": "Parhaat työkalut X:ään, Top-trendit 202X",
+          "problem_solution_posts": "Tunnista ongelma ja vastaa siihen",
+          "myth_busting": "Yleisten virheellisten uskomusten korjaus",
+          "resource_roundups": "Parhaat artikkelit, työkalut, linkit aiheesta",
+          "faqs_qa_content": "Kohdenna pitkähäntäisiä hakuja suoraan",
+          "personal_stories": "Kerronta, emotionaalinen vaikutus",
+          "research_summaries": "Yhteenvedot kyselyistä ja tutkimuksista",
+          "historical_timeline": "Kehityksen tai evoluution tarkastelu",
+          "satire_humor": "Viihdyttävä, brändipersonallisuuteen perustuva sisältö",
+          "explained_in_minutes": "Pääkohdat, nopea kulutus"
+        }
+      },
+      "styleLinks": {
+        "label": "Tyyliviittaukset",
+        "placeholder": "https://esimerkki.fi/artikkeli",
+        "help": "Lisää enintään 3 linkkiä artikkeleihin, joiden tyyliä haluat matkia.",
+        "add": "Lisää linkki",
+        "max": "Enintään 3 linkkiä"
+      },
+      "brandColor": {
+        "label": "Brändiväri",
+        "help": "Ensisijainen brändivärisi luotaville visuaaleille."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Lataa brändilogosi (JPG-muoto).",
+        "upload": "Lataa logo",
+        "change": "Vaihda logo",
+        "uploading": "Ladataan..."
+      }
+    },
+    "step3": {
+      "title": "Tavoitteet ja kasvu",
+      "subtitle": "Mitä haluat saavuttaa ZARZOOMilla?",
+      "goals": {
+        "label": "Valitse tavoitteesi",
+        "help": "Valitse yksi tai useampi tavoite. Räätälöimme strategian sen mukaan.",
+        "options": {
+          "increase_website_traffic": "Lisää verkkosivuston liikennettä",
+          "get_more_subscribers_leads": "Lisää tilaajia ja liidejä",
+          "promote_product_or_service": "Mainosta tuotetta tai palvelua",
+          "increase_sales": "Lisää myyntiä",
+          "build_brand_authority": "Rakenna brändin auktoriteettia",
+          "improve_seo": "Paranna SEO:ta",
+          "educate_audience": "Kouluta yleisöäsi",
+          "generate_social_content": "Luo some-sisältöä"
+        }
+      },
+      "websiteUrl": {
+        "label": "Verkkosivuston tai kohdesivun URL",
+        "placeholder": "https://sivustosi.fi/kohdesivu",
+        "help": "Vaaditaan, kun tavoitteisiin kuuluu verkkoliikenne tai liidien hankinta."
+      },
+      "productUrl": {
+        "label": "Tuote- tai myyntisivun URL",
+        "placeholder": "https://sivustosi.fi/tuote",
+        "help": "Vaaditaan, kun tavoitteisiin kuuluu tuotemainostus tai myynti."
+      }
+    },
+    "step4": {
+      "title": "Valitse suunnitelmasi",
+      "subtitle": "Aloita suunnitelmalla, joka vastaa kasvuambitioitasi.",
+      "discount": {
+        "label": "Vuosilaskutus",
+        "save": "Säästä {percent} %"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Enintään 3 some-profiilia",
+          "postsPerMonth": "30 julkaisua kuukaudessa",
+          "aiGeneration": "Perus tekoälyllä tuotettu sisältö",
+          "scheduling": "Julkaisun aikataulutus",
+          "emailSupport": "Sähköpostituki"
+        },
+        "pro": {
+          "socialProfiles": "Enintään 10 some-profiilia",
+          "postsPerMonth": "150 julkaisua kuukaudessa",
+          "aiGeneration": "Edistynyt tekoälyllä tuotettu sisältö",
+          "scheduling": "Älykäs aikataulutus optimaalisilla ajoilla",
+          "analytics": "Analytiikkahallintapaneeli",
+          "prioritySupport": "Prioriteettituki"
+        },
+        "scale": {
+          "socialProfiles": "Rajaton määrä some-profiileja",
+          "postsPerMonth": "Rajaton määrä julkaisuja",
+          "aiGeneration": "Premium-tekoäly mukautetulla brändiäänellä",
+          "scheduling": "Tekoälyllä vauhditettu automaattinen aikataulutus",
+          "analytics": "Edistynyt analytiikka ja raportointi",
+          "customBranding": "Mukautettu brändäys ja white-label",
+          "dedicatedSupport": "Oma tilinhoitaja",
+          "apiAccess": "Täysi API-pääsy"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Ihanteellinen some-automatoinnin aloittamiseen.",
+        "pro": "Kasvaville yrityksille, jotka tarvitsevat enemmän tehoa ja oivalluksia.",
+        "scale": "Rajaton kaikki tiimeille ja toimistoille."
+      },
+      "popular": "Suosituin",
+      "perMonth": "/kk",
+      "selectPlan": "Valitse suunnitelma",
+      "selected": "Valittu",
+      "trialDays": "{days} päivän ilmainen kokeilu"
+    },
+    "step5": {
+      "title": "Yhdistä ja käynnistä",
+      "subtitle": "Yhdistä some-tilisi ja aseta mieltymyksesi.",
+      "connectSocials": {
+        "label": "Yhdistä some-tilit",
+        "help": "Linkitä sosiaalisen median tilisi",
+        "button": "Yhdistä tilit",
+        "manage": "Hallitse yhteyksiä",
+        "connected": "Some-tilit yhdistetty",
+        "notConnected": "Tilejä ei ole vielä yhdistetty"
+      },
+      "approval": {
+        "label": "Sisällön hyväksyntä",
+        "help": "Valitse, miten ZARZOOM julkaisee sisältösi.",
+        "auto": "Automaattinen julkaisu",
+        "autoHelp": "ZARZOOM julkaisee sisältöä automaattisesti aikataulun mukaan.",
+        "manual": "Manuaalinen hyväksyntä",
+        "manualHelp": "Tarkasta ja hyväksy jokainen julkaisu ennen julkaisua."
+      },
+      "notes": {
+        "label": "Lisähuomiot",
+        "placeholder": "Mitä muuta haluaisit kertoa brändistäsi tai sisältömieltymyksistäsi...",
+        "help": "Valinnaiset huomiot tekoälymme huomioon otettavaksi."
+      }
+    },
+    "modal": {
+      "title": "Yhdistä some-tilit",
+      "loading": "Valmistellaan some-yhdistäjää...",
+      "checking": "Tarkistetaan yhteyttä...",
+      "close": "Valmis",
+      "openInNewTab": "Avaa uudessa välilehdessä",
+      "skipConnect": "Ohita toistaiseksi",
+      "errorGeneric": "Some-yhdistäjän lataus epäonnistui. Yritä myöhemmin uudelleen.",
+      "errorNoUrl": "Yhteyden URLia ei palautettu. Yritä uudelleen.",
+      "demoTitle": "Some-yhdistäjä tulossa pian",
+      "demoDescription": "Some-yhdistäjää ei ole vielä konfiguroitu tähän ympäristöön. Some-tiliyhteytesi tulevat saataville, kun ylläpitäjä on konfiguroinut palvelun."
+    },
+    "errors": {
+      "loadFailed": "Onboarding-tietojen lataus epäonnistui. Yritä uudelleen.",
+      "saveFailed": "Tallennus epäonnistui. Yritä uudelleen.",
+      "completeFailed": "Onboardingia ei voitu viimeistellä. Tarkista kaikki pakolliset kentät."
+    },
+    "banner": {
+      "skipped": "Ohitit asennuksen. Viimeistele se avataksesi kaikki ominaisuudet.",
+      "inProgress": "Asennus on kesken. Viimeistele se aloittaaksesi.",
+      "cta": "Viimeistele asennus"
+    },
+    "gate": {
+      "title": "Asennus vaaditaan",
+      "description": "Viimeistele onboarding-asennus avataksesi tämän ominaisuuden. Se kestää vain muutaman minuutin.",
+      "cta": "Viimeistele asennus"
+    },
+    "a11y": {
+      "brandLogoAlt": "Brändilogo",
+      "socialConnectorTitle": "Some-yhdistäjä",
+      "dismissBanner": "Hylkää banneri",
+      "currency": "€",
+      "stepperLabel": "Onboarding-edistyminen"
+    },
+    "validation": {
+      "invalidUrl": "Syötä kelvollinen URL (esim. https://esimerkki.fi)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Laskuhistoria"
+    },
+    "selectCurrencyLabel": "Valitse valuutta",
+    "selectCurrencyHelp": "Valitse haluamasi valuutta hinnoittelulle.",
+    "selectBillingInterval": "Valitse laskutusväli",
+    "toggleDiscount": "Vaihda mainostuskumppanialennus",
+    "discountPartnershipTitle": "Säästä {percent} % mainostuskumppanuudella",
+    "discountActive": "Aktiivinen",
+    "discountPartnershipDescription": "Salli ZARZOOMin julkaista mainossisältöä syötteeseesi (enintään {maxFrequency}) ja saat {percent} % alennuksen tilauksestasi. Säilytät täyden hallinnan ja voit poistaa tämän käytöstä milloin tahansa.",
+    "discountOncePerDay": "kerran päivässä",
+    "discountPerWeek": "{count} kertaa viikossa",
+    "discountPartnerApplied": "Kumppanialennus käytössä",
+    "discountAdvertisingApplied": "Mainostuskumppanialennus käytössä",
+    "contactUs": "Ota yhteyttä",
+    "partnerDiscountEnable": "Ota 50 % kumppanialennus käyttöön",
+    "partnerDiscountStandardPrice": "Normaali hinta",
+    "partnerDiscount50Off": "50 % ALE",
+    "partnerDiscountSubheading": "Säästä 50 %. Voimme julkaista enintään yhden pienen ZARZOOM-mainoksen päivässä (enintään 3–7 viikossa) — ei koskaan omiin julkaisuihisi.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Yksinkertaiset, läpinäkyvät hinnat",
+      "subtitle": "Valitse kasvusi mukainen suunnitelma. Aloita ilmaisella kokeilulla, päivitä milloin tahansa.",
+      "monthly": "Kuukausittain",
+      "annual": "Vuosittain",
+      "popular": "Suosituin",
+      "getStarted": "Aloita",
+      "savePercent": "Säästä {percent} % vuosilaskutuksella",
+      "trialDays": "{days} päivän ilmainen kokeilu",
+      "page": {
+        "title": "Yksinkertaiset, läpinäkyvät hinnat",
+        "subtitle": "Valitse sinulle sopiva suunnitelma. Kaikkiin suunnitelmiin kuuluu 14 päivän ilmainen kokeilu.",
+        "footer": "Kaikki hinnat ilman arvonlisäveroa, jossa sovellettavaa. Peruuta tai vaihda suunnitelmaasi milloin tahansa.",
+        "contactCta": "Kysymyksiä? Ota yhteyttä ja autamme löytämään oikean suunnitelman.",
+        "contactCtaPrefix": "Kysymyksiä? ",
+        "contactLink": "Ota yhteyttä",
+        "contactCtaSuffix": " ja autamme löytämään oikean suunnitelman."
+      },
+      "fallback": {
+        "title": "Hinnat väliaikaisesti pois käytöstä",
+        "message": "Päivitämme hinnoittelusuunnitelmiamme. Tarkista pian uudelleen tai ota yhteyttä tukeen."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Ihanteellinen aloittamiseen",
+        "description": "Olennaiset ominaisuudet some-esiintymisesi käynnistämiseen tekoälyllä tuotetulla sisällöllä ja aikataulutuksella.",
+        "bullets": [
+          "Enintään 3 some-profiilia",
+          "30 julkaisua kuukaudessa",
+          "Perus tekoälyllä tuotettu sisältö",
+          "Julkaisun aikataulutus",
+          "Sähköpostituki"
+        ],
+        "cta": "Aloita ilmainen kokeilu"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Paras kasvaville yrityksille",
+        "description": "Edistyneet ominaisuudet ja analytiikka some-strategiasi skaalaamiseen älykkään automatisointiin.",
+        "bullets": [
+          "Enintään 10 some-profiilia",
+          "150 julkaisua kuukaudessa",
+          "Edistynyt tekoälyllä tuotettu sisältö",
+          "Älykäs aikataulutus optimaalisilla ajoilla",
+          "Analytiikkahallintapaneeli",
+          "Prioriteettituki"
+        ],
+        "cta": "Aloita ilmainen kokeilu"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Tiimeille ja toimistoille",
+        "description": "Yritystason ominaisuudet rajattomalla sisällöllä, mukautetulla brändäyksellä ja omalla tilinhoitajalla maksimaaliseen vaikutukseen.",
+        "bullets": [
+          "Rajaton määrä some-profiileja",
+          "Rajaton määrä julkaisuja",
+          "Premium-tekoäly mukautetulla brändiäänellä",
+          "Tekoälyllä vauhditettu automaattinen aikataulutus",
+          "Edistynyt analytiikka ja raportointi",
+          "Mukautettu brändäys ja white-label",
+          "Oma tilinhoitaja",
+          "Täysi API-pääsy"
+        ],
+        "cta": "Ota yhteyttä myyntiin"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Enintään 3 some-profiilia",
+        "postsPerMonth": "30 julkaisua kuukaudessa",
+        "aiGeneration": "Perus tekoälyllä tuotettu sisältö",
+        "scheduling": "Julkaisun aikataulutus",
+        "emailSupport": "Sähköpostituki"
+      },
+      "pro": {
+        "socialProfiles": "Enintään 10 some-profiilia",
+        "postsPerMonth": "150 julkaisua kuukaudessa",
+        "aiGeneration": "Edistynyt tekoälyllä tuotettu sisältö",
+        "scheduling": "Älykäs aikataulutus optimaalisilla ajoilla",
+        "analytics": "Analytiikkahallintapaneeli",
+        "prioritySupport": "Prioriteettituki"
+      },
+      "advanced": {
+        "socialProfiles": "Rajaton määrä some-profiileja",
+        "postsPerMonth": "Rajaton määrä julkaisuja",
+        "aiGeneration": "Premium-tekoäly mukautetulla brändiäänellä",
+        "scheduling": "Tekoälyllä vauhditettu automaattinen aikataulutus",
+        "analytics": "Edistynyt analytiikka ja raportointi",
+        "customBranding": "Mukautettu brändäys ja white-label",
+        "dedicatedSupport": "Oma tilinhoitaja",
+        "apiAccess": "Täysi API-pääsy"
+      }
+    }
+  }
+}
