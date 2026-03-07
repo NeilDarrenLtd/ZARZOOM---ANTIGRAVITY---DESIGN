@@ -184,6 +184,11 @@ export default function DashboardPage() {
               </button>
             </div>
 
+            <p className="text-sm text-gray-500 leading-relaxed mb-5">
+              Manage multiple brands, businesses, or projects from a single ZARZOOM account.{" "}
+              Each workspace has its own social accounts, content, analytics, API access, and billing.
+            </p>
+
             {workspaces.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-4">
                 No workspaces found. Click &quot;Add Workspace&quot; to get started.
