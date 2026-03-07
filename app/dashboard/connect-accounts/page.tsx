@@ -1,16 +1,23 @@
+import { cookies } from "next/headers";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import HybridUploadPostConnect from "@/components/connect/HybridUploadPostConnect";
 import { sanitizeReturnTo } from "@/lib/upload-post/returnTo";
+import { getServerTranslations } from "@/lib/i18n/server";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export const metadata = {
-  title: "Connect Accounts",
-  description: "Link your social media accounts.",
-};
+export async function generateMetadata() {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("locale")?.value ?? "en";
+  const t = await getServerTranslations(locale);
+  return {
+    title: t("connect.connectAccounts"),
+    description: t("connect.subheading"),
+  };
+}
 
 export default async function ConnectAccountsPage({ searchParams }: PageProps) {
   const params = await searchParams;

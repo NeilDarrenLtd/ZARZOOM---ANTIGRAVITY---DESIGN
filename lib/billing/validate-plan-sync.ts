@@ -60,7 +60,7 @@ export function validatePlanSync(
         "color: #f59e0b; font-size: 12px;"
       );
       console.warn(
-        `%c  Fix: Add plans.${planKey}.{displayName,shortTagline,description,bullets} to locales/en.json`,
+        `%c  Fix: Add billing.plans.${planKey}.{displayName,shortTagline,description,bullets} to locales/en/app.json`,
         "color: #6b7280; font-size: 11px; font-style: italic;"
       );
     });
@@ -91,7 +91,7 @@ export function validatePlanSync(
         "color: #f59e0b; font-size: 12px;"
       );
       console.warn(
-        `%c  Fix: Either create the plan in DB or remove plans.${planKey} from locales/en.json`,
+        `%c  Fix: Either create the plan in DB or remove billing.plans.${planKey} from locales/en/app.json`,
         "color: #6b7280; font-size: 11px; font-style: italic;"
       );
     });

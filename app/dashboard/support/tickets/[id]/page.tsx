@@ -479,14 +479,14 @@ export default function TicketDetailPage() {
             className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Close Ticket</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">{t("support.detail.closeTicketTitle")}</h3>
             <p className="text-gray-600 mb-4">
-              Are you sure you want to close this ticket? You can optionally provide a reason.
+              {t("support.detail.closeTicketMessage")}
             </p>
             <textarea
               value={closeReason}
               onChange={(e) => setCloseReason(e.target.value)}
-              placeholder="Optional: Why are you closing this ticket?"
+              placeholder={t("support.detail.closeTicketPlaceholder")}
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4 resize-none"
               rows={3}
               maxLength={500}
@@ -498,14 +498,14 @@ export default function TicketDetailPage() {
                 disabled={closingTicket}
                 className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
               >
-                Cancel
+                {t("support.detail.closeTicketCancel")}
               </button>
               <button
                 onClick={handleCloseTicket}
                 disabled={closingTicket}
                 className="flex-1 px-4 py-2 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
               >
-                {closingTicket ? "Closing..." : "Close Ticket"}
+                {closingTicket ? t("support.detail.closeTicketClosing") : t("support.detail.closeTicketButton")}
               </button>
             </div>
           </div>
@@ -528,7 +528,7 @@ export default function TicketDetailPage() {
             </button>
             <img
               src={imageModalUrl}
-              alt="Attachment"
+              alt={t("support.detail.attachmentAlt")}
               className="max-w-full max-h-[90vh] rounded-lg"
               onClick={(e) => e.stopPropagation()}
             />

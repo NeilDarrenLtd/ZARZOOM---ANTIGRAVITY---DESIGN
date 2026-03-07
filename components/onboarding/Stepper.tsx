@@ -20,7 +20,7 @@ export default function Stepper({ currentStep, totalSteps }: StepperProps) {
   const { t } = useI18n();
 
   return (
-    <nav aria-label="Onboarding progress" className="w-full">
+    <nav aria-label={t("onboarding.a11y.stepperLabel")} className="w-full">
       {/* Desktop stepper */}
       <ol className="hidden sm:flex items-center gap-0">
         {Array.from({ length: totalSteps }, (_, i) => {

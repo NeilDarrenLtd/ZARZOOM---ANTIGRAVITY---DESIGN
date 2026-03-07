@@ -2,6 +2,7 @@
 
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface DiscountToggleProps {
   value: boolean;
@@ -16,6 +17,10 @@ export function DiscountToggle({
   discountPercent,
   maxAdsPerWeek,
 }: DiscountToggleProps) {
+  const { t } = useI18n();
+  const maxFrequency = maxAdsPerWeek === 7 ? t("billing.discountOncePerDay") : t("billing.discountPerWeek").replace("{count}", String(maxAdsPerWeek));
+  const description = t("billing.discountPartnershipDescription").replace("{maxFrequency}", maxFrequency).replace("{percent}", String(discountPercent));
+  const title = t("billing.discountPartnershipTitle").replace("{percent}", String(discountPercent));
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl border border-green-200 bg-green-50 p-4">
       <div className="flex items-start gap-3 flex-1">
@@ -25,19 +30,16 @@ export function DiscountToggle({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="text-sm font-semibold text-gray-900">
-              Save {discountPercent}% with Advertising Partnership
+              {title}
             </h3>
             {value && (
               <span className="inline-flex items-center rounded-full bg-green-600 px-2 py-0.5 text-xs font-semibold text-white">
-                Active
+                {t("billing.discountActive")}
               </span>
             )}
           </div>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Allow ZARZOOM to post promotional content to your feed (max{" "}
-            {maxAdsPerWeek === 7 ? "once per day" : `${maxAdsPerWeek}x per week`}) and receive a{" "}
-            {discountPercent}% discount on your subscription. You retain full control and can
-            disable this anytime.
+            {description}
           </p>
         </div>
       </div>
@@ -50,7 +52,7 @@ export function DiscountToggle({
         )}
         role="switch"
         aria-checked={value}
-        aria-label="Toggle advertising partnership discount"
+        aria-label={t("billing.toggleDiscount")}
       >
         <span
           aria-hidden="true"

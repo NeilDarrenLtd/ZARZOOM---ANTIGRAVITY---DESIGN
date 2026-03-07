@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Key, Trash2, RotateCcw, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export interface ApiKeyItem {
   id: string;
@@ -40,6 +41,7 @@ function formatDateTime(iso: string): string {
 }
 
 export function ApiKeyRow({ apiKey, onRevoke, onRotate }: ApiKeyRowProps) {
+  const { t } = useI18n();
   const [confirming, setConfirming] = useState<"revoke" | "rotate" | null>(null);
   const [loading, setLoading] = useState(false);
   const isActive = apiKey.status === "active";
@@ -101,7 +103,7 @@ export function ApiKeyRow({ apiKey, onRevoke, onRotate }: ApiKeyRowProps) {
                 ) : (
                   <XCircle className="h-3 w-3" />
                 )}
-                {isActive ? "Active" : "Revoked"}
+                {isActive ? t("apiKeys.active") : t("apiKeys.revoked")}
               </span>
             </div>
 
@@ -112,13 +114,13 @@ export function ApiKeyRow({ apiKey, onRevoke, onRotate }: ApiKeyRowProps) {
             <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400">
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                Created {formatDate(apiKey.created_at)}
+                {t("apiKeys.created")} {formatDate(apiKey.created_at)}
               </span>
               {apiKey.last_used_at && (
-                <span>Last used {formatDateTime(apiKey.last_used_at)}</span>
+                <span>{t("apiKeys.lastUsed")} {formatDateTime(apiKey.last_used_at)}</span>
               )}
               {apiKey.revoked_at && (
-                <span>Revoked {formatDate(apiKey.revoked_at)}</span>
+                <span>{t("apiKeys.revokedAt")} {formatDate(apiKey.revoked_at)}</span>
               )}
             </div>
           </div>
@@ -132,57 +134,57 @@ export function ApiKeyRow({ apiKey, onRevoke, onRotate }: ApiKeyRowProps) {
                 <button
                   onClick={() => setConfirming("rotate")}
                   className="flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
-                  title="Rotate: revoke this key and create a new one"
+                  title={t("apiKeys.rotateTitle")}
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  Rotate
+                  {t("apiKeys.rotate")}
                 </button>
                 <button
                   onClick={() => setConfirming("revoke")}
                   className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-50"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                  Revoke
+                  {t("apiKeys.revoke")}
                 </button>
               </>
             )}
 
             {confirming === "revoke" && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-red-600 font-medium">Revoke this key?</span>
+                <span className="text-xs text-red-600 font-medium">{t("apiKeys.revokeConfirm")}</span>
                 <button
                   onClick={handleRevoke}
                   disabled={loading}
                   className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
                 >
-                  {loading ? "Revoking..." : "Confirm"}
+                  {loading ? t("apiKeys.revoking") : t("apiKeys.confirm")}
                 </button>
                 <button
                   onClick={() => setConfirming(null)}
                   disabled={loading}
                   className="rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-50"
                 >
-                  Cancel
+                  {t("apiKeys.cancel")}
                 </button>
               </div>
             )}
 
             {confirming === "rotate" && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-amber-600 font-medium">Rotate key?</span>
+                <span className="text-xs text-amber-600 font-medium">{t("apiKeys.rotateConfirm")}</span>
                 <button
                   onClick={handleRotate}
                   disabled={loading}
                   className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-amber-700 disabled:opacity-50"
                 >
-                  {loading ? "Rotating..." : "Confirm"}
+                  {loading ? t("apiKeys.rotating") : t("apiKeys.confirm")}
                 </button>
                 <button
                   onClick={() => setConfirming(null)}
                   disabled={loading}
                   className="rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-50"
                 >
-                  Cancel
+                  {t("apiKeys.cancel")}
                 </button>
               </div>
             )}

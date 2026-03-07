@@ -1,6 +1,7 @@
 "use client";
 
 import type { Currency } from "@/lib/billing/api-types";
+import { useI18n } from "@/lib/i18n";
 
 const CURRENCY_OPTIONS: { value: Currency; label: string; symbol: string }[] = [
   { value: "GBP", label: "GBP", symbol: "£" },
@@ -14,11 +15,12 @@ interface CurrencyToggleProps {
 }
 
 export function CurrencyToggle({ currency, onChange }: CurrencyToggleProps) {
+  const { t } = useI18n();
   return (
     <div className="w-64 grid grid-rows-[auto_auto_auto] gap-3">
       {/* Title - Row 1 */}
       <h3 className="text-sm font-semibold text-gray-900">
-        Select Currency
+        {t("billing.selectCurrencyLabel")}
       </h3>
 
       {/* Toggle Buttons - Row 2 */}
@@ -40,7 +42,7 @@ export function CurrencyToggle({ currency, onChange }: CurrencyToggleProps) {
 
       {/* Subheading - Row 3 */}
       <p className="text-xs text-gray-600 leading-relaxed">
-        Choose your preferred currency for pricing.
+        {t("billing.selectCurrencyHelp")}
       </p>
     </div>
   );

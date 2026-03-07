@@ -176,7 +176,7 @@ export default function DashboardPage() {
               </h2>
             </div>
             <p className="text-sm text-gray-500 leading-relaxed">
-              Get help from our support team. Create and manage support tickets.
+              {t("dashboard.supportDescription")}
             </p>
           </Link>
         </div>
@@ -189,7 +189,7 @@ export default function DashboardPage() {
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
           >
             <RotateCcw className={`w-4 h-4 ${restarting ? "animate-spin" : ""}`} />
-            {restarting ? "Restarting..." : "Restart Setup"}
+            {restarting ? t("dashboard.restarting") : t("dashboard.restartSetup")}
           </button>
           <Link
             href="/support"

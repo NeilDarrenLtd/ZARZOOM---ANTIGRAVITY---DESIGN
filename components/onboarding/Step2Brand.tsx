@@ -337,7 +337,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 <Sparkles className="w-4 h-4" />
               )}
               <span className="hidden sm:inline">
-                {investigating ? "Analysing..." : "Auto-fill from website"}
+                {investigating ? t("onboarding.step2.analysing") : t("onboarding.step2.autofillFromWebsite")}
               </span>
             </button>
           </div>
@@ -379,14 +379,14 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         {/* Import from file section */}
         <div className="pt-6 border-t border-gray-200">
           <label className="block text-xs font-medium text-gray-700 mb-2">
-            Import from file
+            {t("onboarding.step2.importFromFile")}
           </label>
           <div className="flex gap-2">
             <div className="flex-1 relative">
               <label className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
                 <FileText className="w-4 h-4 text-gray-500 flex-shrink-0" />
                 <span className="text-sm text-gray-700 truncate">
-                  {selectedFile ? selectedFile.name : "Choose PDF or Word document"}
+                  {selectedFile ? selectedFile.name : t("onboarding.step2.choosePdfOrWord")}
                 </span>
                 <input
                   type="file"
@@ -408,7 +408,7 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
                 <Sparkles className="w-4 h-4" />
               )}
               <span className="hidden sm:inline">
-                {fileStatus === "loading" ? "Analysing..." : "Auto-fill from file"}
+                {fileStatus === "loading" ? t("onboarding.step2.analysing") : t("brandSettings.autoFillFromFile")}
               </span>
             </button>
           </div>

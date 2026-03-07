@@ -31,7 +31,7 @@ export default function ContactPage() {
     e.preventDefault();
     
     if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
-      setError(t("contact.form.errors.required") || "Please fill in all fields");
+      setError(t("pages.contact.form.errors.required"));
       return;
     }
 
@@ -60,7 +60,7 @@ export default function ContactPage() {
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (err: any) {
       console.error("[v0] Contact form submission failed:", err);
-      setError(err.message || t("contact.form.errors.failed") || "Failed to send message. Please try again.");
+      setError(err.message || t("pages.contact.form.errors.failed"));
     } finally {
       setSubmitting(false);
     }
@@ -69,8 +69,8 @@ export default function ContactPage() {
   return (
     <>
       <DynamicSEO
-        title={t("contact.seo.title") || "Contact Us - ZARZOOM"}
-        description={t("contact.seo.description") || "Get in touch with the ZARZOOM team. We're here to help with any questions or concerns."}
+        title={t("pages.contact.seo.title")}
+        description={t("pages.contact.seo.description")}
       />
       <SiteNavbar />
       
@@ -79,10 +79,10 @@ export default function ContactPage() {
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Get in Touch
+              {t("pages.contact.title")}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible.
+              {t("pages.contact.subtitle")}
             </p>
           </div>
 
@@ -92,7 +92,7 @@ export default function ContactPage() {
               {/* Company Info Card */}
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Contact Information
+                  {t("pages.contact.info.title")}
                 </h2>
                 
                 <div className="space-y-6">
@@ -103,7 +103,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-1">
-                        Email
+                        {t("pages.contact.info.email.label")}
                       </p>
                       <a
                         href="mailto:support@zarzoom.com"
@@ -119,24 +119,24 @@ export default function ContactPage() {
               {/* Business Hours */}
               <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl border border-green-200 p-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">
-                  Business Hours
+                  {t("pages.contact.hours.title")}
                 </h3>
                 <div className="space-y-2 text-sm text-gray-700">
                   <div className="flex justify-between">
-                    <span className="font-medium">Monday - Friday</span>
-                    <span>9:00 AM - 6:00 PM</span>
+                    <span className="font-medium">{t("pages.contact.hours.weekdays")}</span>
+                    <span>{t("pages.contact.hours.weekdaysTime")}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">Saturday</span>
-                    <span>10:00 AM - 4:00 PM</span>
+                    <span className="font-medium">{t("pages.contact.hours.saturday")}</span>
+                    <span>{t("pages.contact.hours.saturdayTime")}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">Sunday</span>
-                    <span>Closed</span>
+                    <span className="font-medium">{t("pages.contact.hours.sunday")}</span>
+                    <span>{t("pages.contact.hours.closed")}</span>
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-4">
-                  We typically respond to all inquiries within 24 hours during business days.
+                  {t("pages.contact.hours.note")}
                 </p>
               </div>
             </div>
@@ -144,8 +144,8 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Send us a Message
+<h2 className="text-2xl font-bold text-gray-900 mb-6">
+                {t("pages.contact.form.title")}
                 </h2>
 
                 {/* Success Message */}
@@ -154,10 +154,10 @@ export default function ContactPage() {
                     <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-green-900">
-                        Message Sent Successfully!
+                        {t("pages.contact.form.success.title")}
                       </p>
                       <p className="text-sm text-green-700 mt-1">
-                        Thank you for contacting us. We'll get back to you as soon as possible.
+                        {t("pages.contact.form.success.message")}
                       </p>
                     </div>
                   </div>
@@ -169,7 +169,7 @@ export default function ContactPage() {
                     <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-red-900">
-                        Error
+                        {t("pages.contact.form.error.title")}
                       </p>
                       <p className="text-sm text-red-700 mt-1">{error}</p>
                     </div>
@@ -181,7 +181,7 @@ export default function ContactPage() {
                     {/* Name */}
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Your Name <span className="text-red-500">*</span>
+                        {t("pages.contact.form.name")} <span className="text-red-500">*</span>
                       </label>
                       <input
                         id="name"
@@ -190,7 +190,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="John Doe"
+                        placeholder={t("pages.contact.form.namePlaceholder")}
                         required
                       />
                     </div>
@@ -198,7 +198,7 @@ export default function ContactPage() {
                     {/* Email */}
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                        Your Email <span className="text-red-500">*</span>
+                        {t("pages.contact.form.email")} <span className="text-red-500">*</span>
                       </label>
                       <input
                         id="email"
@@ -207,7 +207,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="john@example.com"
+                        placeholder={t("pages.contact.form.emailPlaceholder")}
                         required
                       />
                     </div>
@@ -216,7 +216,7 @@ export default function ContactPage() {
                   {/* Subject */}
                   <div>
                     <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Subject <span className="text-red-500">*</span>
+                      {t("pages.contact.form.subject")} <span className="text-red-500">*</span>
                     </label>
                     <input
                       id="subject"
@@ -225,7 +225,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="How can we help you?"
+                      placeholder={t("pages.contact.form.subjectPlaceholder")}
                       required
                     />
                   </div>
@@ -233,7 +233,7 @@ export default function ContactPage() {
                   {/* Message */}
                   <div>
                     <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Message <span className="text-red-500">*</span>
+                      {t("pages.contact.form.message")} <span className="text-red-500">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -242,11 +242,11 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                      placeholder="Tell us more about your inquiry..."
+                      placeholder={t("pages.contact.form.messagePlaceholder")}
                       required
                     />
                     <p className="text-xs text-gray-500 mt-1.5">
-                      Minimum 10 characters
+                      {t("pages.contact.form.messageHint")}
                     </p>
                   </div>
 
@@ -259,12 +259,12 @@ export default function ContactPage() {
                     {submitting ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
+                        {t("pages.contact.form.sending")}
                       </>
                     ) : (
                       <>
                         <Send className="w-5 h-5" />
-                        Send Message
+                        {t("pages.contact.form.submit")}
                       </>
                     )}
                   </button>

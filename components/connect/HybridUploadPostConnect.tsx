@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react";
 import { openBlankCenteredPopup, navigatePopup } from "@/lib/ui/popup";
+import { useI18n } from "@/lib/i18n";
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
@@ -23,6 +24,7 @@ interface Props {
 
 export default function HybridUploadPostConnect({ returnTo, originLabel }: Props) {
   const router = useRouter();
+  const { t } = useI18n();
   const [uiState, setUiState] = useState<UIState>("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [accessUrl, setAccessUrl] = useState<string | null>(null);
@@ -167,23 +169,23 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       {uiState === "idle" && (
         <>
           <h1 className="text-3xl font-bold text-foreground tracking-tight text-balance">
-            Connect your accounts
+            {t("connect.heading")}
           </h1>
           <p className="max-w-sm text-sm text-muted-foreground leading-relaxed text-pretty">
-            Link your social media accounts to start posting automatically with ZARZOOM.
+            {t("connect.subheading")}
           </p>
           <div className="flex flex-col items-center gap-3 w-full max-w-sm mt-2">
             <button
               onClick={handleConnect}
               className="w-full rounded-xl px-8 py-4 text-base font-bold text-white bg-green-600 hover:bg-green-700 transition-colors active:scale-[0.98]"
             >
-              Connect Accounts
+              {t("connect.connectAccounts")}
             </button>
             <button
               onClick={() => router.push(returnTo)}
               className="w-full rounded-xl border border-border px-8 py-4 text-sm font-medium text-foreground hover:bg-accent transition-colors"
             >
-              Back
+              {t("connect.back")}
             </button>
           </div>
         </>
@@ -276,7 +278,7 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
               onClick={() => router.push(returnTo)}
               className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
             >
-              Back
+              {t("connect.back")}
             </button>
           </div>
         </>

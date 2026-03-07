@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Social Media Autopilot",
+    "description": "Automate your social media growth with AI-powered content generation and scheduling."
+  },
+  "nav": {
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "getStarted": "Login-Launch",
+    "support": "Support",
+    "logout": "LOGOUT",
+    "dashboard": "DASHBOARD",
+    "userTerms": "User T&C's",
+    "websiteTerms": "Website T&C's",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "admin": "Admin",
+    "selectLanguage": "Select language"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilot Your Socials in Seconds",
+    "scrollToLaunch": "Scroll to Launch"
+  },
+  "tagline": {
+    "heading": "AI-Powered Social Media Growth",
+    "subheading": "Generate, schedule, and post — all on autopilot."
+  },
+  "feature": {
+    "heading": "One Click. Explosive Growth."
+  },
+  "cta": {
+    "heading": "Ready to Transform Your Social Presence?",
+    "button": "Start Free Trial"
+  },
+  "testimonials": {
+    "heading": "Trusted by Industry Leaders",
+    "subheading": "Join 10,000+ marketers scaling with ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM doubled our reach in 30 days. The AI content generation is indistinguishable from human writing."
+      },
+      {
+        "name": "David Chen",
+        "role": "Founder, GrowthStack",
+        "content": "The autopilot feature is a game changer. I spend 5 minutes a week on social now."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Influence Lead",
+        "content": "Explosive growth indeed. Our engagement metrics are up 400% across all platforms."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Ready to Blast Off?",
+    "subheading": "Start your 14-day free trial. No credit card required.",
+    "button": "Get Started Now"
+  },
+  "loading": {
+    "text": "Loading Experience..."
+  },
+  "notFound": {
+    "title": "Houston, we have a problem",
+    "description": "The page you're looking for has drifted into deep space. Let's get you back on course.",
+    "backHome": "Back to Home",
+    "support": "Support"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "We encountered an unexpected error. Please try again or return to the home page.",
+    "tryAgain": "Try again",
+    "backHome": "Back to Home"
+  },
+  "footer": {
+    "tagline": "Autopilot Your Socials in Seconds",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "support": "Support",
+    "userTerms": "User T&C's",
+    "websiteTerms": "Website T&C's",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "copyright": "ZARZOOM. All rights reserved."
+  },
+  "pages": {
+    "support": {
+      "title": "Support Centre",
+      "subtitle": "We're here to help you get the most out of ZARZOOM.",
+      "faqTitle": "Frequently Asked Questions",
+      "faq1q": "How do I connect my social media accounts?",
+      "faq1a": "Navigate to your Dashboard, click 'Connected Accounts', and follow the prompts to authorise each platform. We support Facebook, Instagram, X (Twitter), LinkedIn, and TikTok.",
+      "faq2q": "Can I schedule posts in advance?",
+      "faq2a": "Absolutely. Our calendar view lets you schedule content weeks or even months ahead. Simply create your post, pick a date and time, and ZARZOOM handles the rest.",
+      "faq3q": "What happens if I exceed my plan limits?",
+      "faq3a": "You'll receive a notification when you approach your limit. You can upgrade your plan at any time from the Account Settings page, and the change takes effect immediately.",
+      "faq4q": "Is my data secure?",
+      "faq4a": "Yes. We use industry-standard encryption for data at rest and in transit. We never share your data with third parties. See our Privacy Policy for full details.",
+      "contactTitle": "Still need help?",
+      "contactText": "Our support team typically responds within 24 hours on business days.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "About ZARZOOM - AI-Powered Social Media Automation",
+        "description": "Learn about ZARZOOM's mission to revolutionize social media management through intelligent automation and AI-driven content creation."
+      },
+      "badge": "About ZARZOOM",
+      "heroTitle": "Autopilot your socials",
+      "heroTitleHighlight": "in seconds.",
+      "heroDescription": "ZARZOOM is an AI-powered platform designed to help businesses and creators generate and publish social media content automatically — so you can focus on what you do best.",
+      "hero": {
+        "title": "About ZARZOOM",
+        "subtitle": "Revolutionizing social media management through intelligent automation and AI-powered content creation."
+      },
+      "storySteps": [
+        {
+          "title": "The Idea",
+          "text": "Founded to solve a problem every creator faces — staying consistent on social media without burning out."
+        },
+        {
+          "title": "Building the Platform",
+          "text": "We combined AI-powered content generation with smart scheduling to create a fully automated social media pipeline."
+        },
+        {
+          "title": "Automation at Scale",
+          "text": "ZARZOOM now helps businesses and creators maintain a strong online presence — without the daily effort normally required."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "AI Content Generation",
+          "text": "Automatically generate engaging posts tailored to your brand voice and audience.",
+          "bullets": [
+            "Brand voice learning",
+            "Trending topic integration",
+            "Captions and hashtags"
+          ]
+        },
+        {
+          "title": "Smart Scheduling",
+          "text": "Schedule and publish content across your social platforms at the optimal time.",
+          "bullets": [
+            "Audience activity analysis",
+            "Time zone optimisation",
+            "Content calendar automation"
+          ]
+        },
+        {
+          "title": "Consistent Online Presence",
+          "text": "Maintain visibility and grow your audience without the daily grind.",
+          "bullets": [
+            "Multi-platform posting",
+            "Engagement-based timing",
+            "Centralised dashboard"
+          ]
+        },
+        {
+          "title": "Time-Saving Automation",
+          "text": "Focus on your business while ZARZOOM handles your entire content pipeline.",
+          "bullets": [
+            "Zero manual effort",
+            "Set-and-forget autopilot",
+            "Real-time reporting"
+          ]
+        }
+      ],
+      "getStartedFree": "Get Started Free",
+      "viewFeatures": "View Features",
+      "autopilotActive": "Autopilot Active",
+      "mission": {
+        "title": "Our Mission",
+        "subtitle": "Removing the Biggest Barrier to Social Media Growth",
+        "para1": "Our mission is to remove the biggest barrier to social media growth — the constant demand for fresh content.",
+        "para2": "ZARZOOM uses artificial intelligence to automate content creation and publishing so entrepreneurs and businesses can focus on what they do best.",
+        "para3": "Instead of spending hours planning posts, writing content, and managing multiple platforms, ZARZOOM helps you stay visible online — effortlessly."
+      },
+      "missionStats": {
+        "contentCreated": "Content Created",
+        "hoursSaved": "Hours Saved",
+        "platformsActive": "Platforms Active"
+      },
+      "story": {
+        "sectionTitle": "Our Story",
+        "heading": "Built to Solve a Real Problem",
+        "para1": "ZARZOOM was created to solve a problem many founders and creators face — staying consistent on social media.",
+        "para2": "While social media is one of the most powerful tools for building an audience, maintaining a steady stream of high-quality content is difficult and time-consuming.",
+        "para3": "By combining AI-powered content generation with automated scheduling, ZARZOOM allows users to maintain a strong online presence without the daily effort normally required."
+      },
+      "platform": {
+        "badge": "The Platform",
+        "heading": "How ZARZOOM Helps You Grow"
+      },
+      "lookingAhead": {
+        "badge": "Looking Ahead",
+        "heading": "The Future of Social Media Growth",
+        "para1": "We believe the future of social media growth will be powered by intelligent automation.",
+        "para2": "ZARZOOM is continually evolving to help businesses and creators build their online presence faster and more effectively.",
+        "para3": "Our goal is simple: make powerful social media growth tools accessible to everyone."
+      },
+      "intelligentAutomation": {
+        "title": "Intelligent Automation",
+        "subtitle": "Powered by cutting-edge AI to grow your audience while you focus on your business.",
+        "tags": [
+          "AI Generation",
+          "Auto-Schedule",
+          "Multi-Platform",
+          "Analytics"
+        ]
+      },
+      "cta": {
+        "badge": "Get Started Today",
+        "title": "Start Autopiloting Your Socials Today",
+        "description": "Join thousands of creators and businesses growing on autopilot.",
+        "getStarted": "Get Started",
+        "viewFeatures": "View Features"
+      },
+      "values": {
+        "title": "Our Core Values",
+        "innovation": {
+          "title": "Innovation First",
+          "description": "We push the boundaries of AI and automation to deliver solutions that were impossible just yesterday. Our commitment to innovation means you always have access to the latest advancements in social media technology."
+        },
+        "authenticity": {
+          "title": "Authentic Engagement",
+          "description": "Automation should enhance, not replace, genuine human connection. Our tools are designed to help you maintain your unique voice and build real relationships with your audience at scale."
+        },
+        "simplicity": {
+          "title": "Simplicity & Power",
+          "description": "Sophisticated technology doesn't have to be complicated. We believe in making powerful tools accessible to everyone, regardless of technical expertise."
+        },
+        "trust": {
+          "title": "Trust & Privacy",
+          "description": "Your data, your content, your community—we treat everything with the utmost respect and security. We never sell your data and maintain the highest standards of privacy protection."
+        }
+      },
+      "team": {
+        "title": "Built by Experts",
+        "description": "Our team combines decades of experience in AI, social media marketing, and user experience design. We're passionate about creating tools that truly make a difference in how businesses connect with their audiences."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Features - ZARZOOM Social Media Automation",
+        "description": "Discover powerful features that automate your social media: AI content generation, smart scheduling, multi-platform posting, analytics, and more."
+      },
+      "hero": {
+        "title": "Powerful Features",
+        "subtitle": "Everything you need to automate, optimize, and scale your social media presence—all in one intelligent platform."
+      },
+      "aiContent": {
+        "title": "AI-Powered Content Generation",
+        "description": "Create engaging posts in seconds with our advanced AI that understands your brand voice, audience preferences, and trending topics. Generate captions, hashtags, and full post ideas that resonate with your community.",
+        "features": [
+          "Brand voice learning and adaptation",
+          "Trending topic integration",
+          "Multi-format content (text, captions, hashtags)",
+          "A/B testing suggestions"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Smart Scheduling & Autopilot",
+        "description": "Let our AI determine the optimal posting times for maximum engagement. Set your preferences once, and watch your social presence grow on autopilot while you focus on your business.",
+        "features": [
+          "Audience activity analysis",
+          "Time zone optimization",
+          "Content calendar automation",
+          "Engagement-based scheduling"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Multi-Platform Management",
+        "description": "Manage all your social media accounts from one unified dashboard. Post to Twitter, LinkedIn, Facebook, Instagram, and more with a single click.",
+        "features": [
+          "Cross-platform posting",
+          "Platform-specific optimization",
+          "Unified inbox",
+          "Centralized analytics"
+        ]
+      },
+      "analytics": {
+        "title": "Advanced Analytics & Insights",
+        "description": "Track what matters with comprehensive analytics that go beyond vanity metrics. Understand your audience, measure ROI, and make data-driven decisions to improve your strategy.",
+        "features": [
+          "Real-time performance tracking",
+          "Audience demographics & behavior",
+          "Engagement rate analysis",
+          "Competitor benchmarking"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Content Library & Assets",
+        "description": "Build and organize your content repository with our intelligent media library. Store images, videos, templates, and copy snippets for quick access and reuse.",
+        "features": [
+          "Unlimited media storage",
+          "Smart tagging and search",
+          "Template library",
+          "Asset performance tracking"
+        ]
+      },
+      "collaboration": {
+        "title": "Team Collaboration",
+        "description": "Work seamlessly with your team, clients, or agencies. Assign roles, manage permissions, and streamline approval workflows all within the platform.",
+        "features": [
+          "Role-based access control",
+          "Approval workflows",
+          "Team activity logs",
+          "Client management"
+        ]
+      },
+      "integration": {
+        "title": "Integrations & API",
+        "description": "Connect ZARZOOM with your existing tools and workflows. Our robust API and pre-built integrations ensure seamless data flow across your tech stack.",
+        "features": [
+          "Zapier integration",
+          "Webhook support",
+          "REST API access",
+          "Custom integrations"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API & OpenClaw Integrations",
+        "description": "Supercharge your workflow with ZARZOOM's powerful OpenClaw integration for on-demand automated social media creation and scheduling across 10 platforms. Trigger AI-powered content generation directly from your existing systems via our REST API, or let OpenClaw agents handle everything autonomously. Perfect for agencies, developers, and businesses wanting seamless automation.",
+        "features": [
+          "OpenClaw agent automation (10+ platforms)",
+          "On-demand AI content creation via API",
+          "Instant scheduling triggers",
+          "Custom workflow automation"
+        ]
+      },
+      "support": {
+        "title": "World-Class Support",
+        "description": "Get help when you need it with our dedicated support team. Access comprehensive documentation, video tutorials, and responsive customer service.",
+        "features": [
+          "24/7 email support",
+          "Live chat (Pro+)",
+          "Video tutorials",
+          "Knowledge base"
+        ]
+      },
+      "cta": {
+        "title": "Ready to Transform Your Social Media?",
+        "description": "Start your free trial and experience the power of intelligent automation.",
+        "button": "Get Started Free"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Contact Us - ZARZOOM",
+        "description": "Get in touch with the ZARZOOM team. We're here to help with any questions or concerns."
+      },
+      "title": "Get in Touch",
+      "subtitle": "Have a question or need support? We're here to help. Send us a message and we'll respond as soon as possible.",
+      "info": {
+        "title": "Contact Information",
+        "email": {
+          "label": "Email"
+        },
+        "phone": {
+          "label": "Phone"
+        },
+        "address": {
+          "label": "Office"
+        }
+      },
+      "hours": {
+        "title": "Business Hours",
+        "note": "We typically respond to all inquiries within 24 hours during business days.",
+        "weekdays": "Monday - Friday",
+        "weekdaysTime": "9:00 AM - 6:00 PM",
+        "saturday": "Saturday",
+        "saturdayTime": "10:00 AM - 4:00 PM",
+        "sunday": "Sunday",
+        "closed": "Closed"
+      },
+      "form": {
+        "title": "Send us a Message",
+        "name": "Your Name",
+        "namePlaceholder": "John Doe",
+        "email": "Your Email",
+        "emailPlaceholder": "john@example.com",
+        "subject": "Subject",
+        "subjectPlaceholder": "How can we help you?",
+        "message": "Message",
+        "messagePlaceholder": "Tell us more about your inquiry...",
+        "messageHint": "Minimum 10 characters",
+        "submit": "Send Message",
+        "sending": "Sending...",
+        "success": {
+          "title": "Message Sent Successfully!",
+          "message": "Thank you for contacting us. We'll get back to you as soon as possible."
+        },
+        "error": {
+          "title": "Error"
+        },
+        "errors": {
+          "required": "Please fill in all fields",
+          "failed": "Failed to send message. Please try again."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "User Terms & Conditions",
+      "subtitle": "Please read these terms carefully before using ZARZOOM.",
+      "lastUpdated": "Last updated: 1 February 2026",
+      "s1Title": "1. Acceptance of Terms",
+      "s1Text": "By creating an account or using the ZARZOOM platform, you agree to be bound by these User Terms & Conditions. If you do not agree, you must not use the service.",
+      "s2Title": "2. Account Registration",
+      "s2Text": "You must provide accurate, complete information when registering. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account.",
+      "s3Title": "3. Acceptable Use",
+      "s3Text": "You agree not to use ZARZOOM to post content that is unlawful, defamatory, obscene, or infringes the intellectual property rights of others. We reserve the right to suspend or terminate accounts that violate this policy.",
+      "s4Title": "4. Subscription & Billing",
+      "s4Text": "Paid plans are billed in advance on a monthly or annual basis. You may cancel at any time; cancellation takes effect at the end of the current billing period. Refunds are not provided for partial periods.",
+      "s5Title": "5. Intellectual Property",
+      "s5Text": "You retain ownership of content you create and publish through ZARZOOM. By using the platform, you grant us a limited licence to process, store, and display your content solely for the purpose of providing the service.",
+      "s6Title": "6. Limitation of Liability",
+      "s6Text": "ZARZOOM is provided on an 'as-is' basis. To the fullest extent permitted by law, we disclaim all warranties and shall not be liable for any indirect, incidental, or consequential damages arising from your use of the service.",
+      "s7Title": "7. Changes to Terms",
+      "s7Text": "We may update these terms from time to time. Continued use of the service after changes are published constitutes acceptance of the revised terms."
+    },
+    "termsWebsite": {
+      "title": "Website Terms & Conditions",
+      "subtitle": "Terms governing your use of the zarzoom.com website.",
+      "lastUpdated": "Last updated: 1 February 2026",
+      "s1Title": "1. Website Use",
+      "s1Text": "This website is operated by ZARZOOM Ltd. By accessing and browsing this site, you accept these Website Terms & Conditions in full.",
+      "s2Title": "2. Intellectual Property",
+      "s2Text": "All content on this website, including text, graphics, logos, and software, is the property of ZARZOOM Ltd or its licensors and is protected by copyright and trademark laws.",
+      "s3Title": "3. Accuracy of Information",
+      "s3Text": "While we endeavour to keep the information on this site accurate and up to date, we make no warranties or representations about its completeness or accuracy.",
+      "s4Title": "4. Third-Party Links",
+      "s4Text": "This website may contain links to third-party sites. We are not responsible for the content or privacy practices of those sites.",
+      "s5Title": "5. Governing Law",
+      "s5Text": "These terms are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "subtitle": "How we collect, use, and protect your personal information.",
+      "lastUpdated": "Last updated: 1 February 2026",
+      "s1Title": "1. Information We Collect",
+      "s1Text": "We collect information you provide directly (name, email, payment details) and information generated automatically (IP address, browser type, usage data) when you use ZARZOOM.",
+      "s2Title": "2. How We Use Your Information",
+      "s2Text": "We use your information to provide and improve the service, process payments, send service-related communications, and comply with legal obligations.",
+      "s3Title": "3. Data Sharing",
+      "s3Text": "We do not sell your personal data. We may share data with trusted service providers (payment processors, hosting providers) who assist us in operating the platform, subject to strict confidentiality agreements.",
+      "s4Title": "4. Data Retention",
+      "s4Text": "We retain your personal data for as long as your account is active or as needed to provide the service. You may request deletion of your data at any time by contacting support.",
+      "s5Title": "5. Your Rights",
+      "s5Text": "You have the right to access, correct, or delete your personal data. You may also object to processing or request data portability. To exercise these rights, contact us at privacy@zarzoom.com.",
+      "s6Title": "6. Security",
+      "s6Text": "We implement appropriate technical and organisational measures to protect your data, including encryption, access controls, and regular security assessments.",
+      "s7Title": "7. Changes to This Policy",
+      "s7Text": "We may update this policy from time to time. We will notify you of material changes via email or through the platform."
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "subtitle": "How we use cookies and similar technologies.",
+      "lastUpdated": "Last updated: 1 February 2026",
+      "s1Title": "1. What Are Cookies",
+      "s1Text": "Cookies are small text files placed on your device when you visit a website. They help the site remember your preferences and understand how you use it.",
+      "s2Title": "2. Cookies We Use",
+      "s2Essential": "Essential Cookies",
+      "s2EssentialText": "Required for the website to function properly. These cannot be disabled. They include session cookies and authentication tokens.",
+      "s2Analytics": "Analytics Cookies",
+      "s2AnalyticsText": "Help us understand how visitors interact with our website by collecting anonymous usage data. We use this to improve our service.",
+      "s2Preference": "Preference Cookies",
+      "s2PreferenceText": "Remember your settings and preferences (such as language choice) to provide a more personalised experience.",
+      "s3Title": "3. Managing Cookies",
+      "s3Text": "You can control cookies through your browser settings. Note that disabling certain cookies may affect the functionality of the website.",
+      "s4Title": "4. Third-Party Cookies",
+      "s4Text": "Some cookies are placed by third-party services that appear on our pages. We do not control these cookies. Please refer to the respective third-party privacy policies for more information.",
+      "s5Title": "5. Contact Us",
+      "s5Text": "If you have questions about our use of cookies, please contact us at privacy@zarzoom.com."
+    }
+  }
+}

@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { defaultLanguage, getSupportedLanguageCode } from "./languages";
-import enTranslationsRaw from "@/locales/en.json";
+import { getDefaultTranslationsSync, loadLocale } from "./load";
 import { devCheckPricing } from "./validate-no-pricing";
 
 /* ---------- Types ---------- */
@@ -31,6 +31,8 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
+const enTranslationsRaw = getDefaultTranslationsSync();
+
 // Pre-populate with English for synchronous first render
 const translationCache: Record<string, Translations> = {
   en: enTranslationsRaw,
@@ -45,18 +47,12 @@ async function loadTranslation(locale: string): Promise<Translations> {
     return translationCache[locale];
   }
 
-  try {
-    const mod = await import(`@/locales/${locale}.json`);
-    const translations: Translations = mod.default;
-    translationCache[locale] = translations;
-    if (process.env.NODE_ENV === "development") {
-      devCheckPricing(translations, locale);
-    }
-    return translations;
-  } catch {
-    // Fallback to English if locale cannot be loaded
-    return enTranslationsRaw;
+  const translations = await loadLocale(locale);
+  translationCache[locale] = translations;
+  if (process.env.NODE_ENV === "development") {
+    devCheckPricing(translations, locale);
   }
+  return translations;
 }
 
 /* ---------- Nested value accessor ---------- */
@@ -78,12 +74,29 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 
 /* ---------- Provider ---------- */
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState(defaultLanguage);
-  // Initialize with English so translations are available on first render
-  const [translations, setTranslations] = useState<Translations>(enTranslationsRaw as Translations);
+export interface I18nProviderProps {
+  children: ReactNode;
+  /** When set (e.g. from [locale] route), URL is source of truth; cookie/localStorage sync to this. */
+  initialLocale?: string;
+}
+
+export function I18nProvider({ children, initialLocale }: I18nProviderProps) {
+  const [locale, setLocaleState] = useState(initialLocale ?? defaultLanguage);
+  const [translations, setTranslations] = useState<Translations>(
+    initialLocale === "en" ? enTranslationsRaw : enTranslationsRaw
+  );
 
   useEffect(() => {
+    if (initialLocale) {
+      setLocaleState(initialLocale);
+      setLocaleCookie(initialLocale);
+      if (initialLocale !== "en") {
+        loadTranslation(initialLocale).then(setTranslations);
+      } else {
+        setTranslations(enTranslationsRaw);
+      }
+      return;
+    }
     const stored = localStorage.getItem("zarzoom-locale");
     if (stored) {
       setLocaleState(stored);
@@ -100,7 +113,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
         loadTranslation(detected).then(setTranslations);
       }
     }
-  }, []);
+  }, [initialLocale]);
 
   useEffect(() => {
     document.documentElement.lang = locale;

@@ -5,15 +5,13 @@
  */
 
 import { cookies } from "next/headers";
-import enTranslationsJson from "@/locales/en.json";
-
-const enTranslations = enTranslationsJson as Record<string, unknown>;
+import { getDefaultTranslationsSync, loadLocale } from "./load";
 
 type Translations = Record<string, unknown>;
 type TranslationKey = string;
 
 const translationCache: Record<string, Translations> = {
-  en: enTranslations,
+  en: getDefaultTranslationsSync(),
 };
 
 async function loadServerTranslations(locale: string): Promise<Translations> {
@@ -21,23 +19,18 @@ async function loadServerTranslations(locale: string): Promise<Translations> {
     return translationCache[locale];
   }
 
-  try {
-    const module = await import(`@/locales/${locale}.json`);
-    const translations: Translations = module.default;
-    translationCache[locale] = translations;
-    return translations;
-  } catch {
-    return enTranslations;
-  }
+  const translations = await loadLocale(locale);
+  translationCache[locale] = translations;
+  return translations;
 }
 
 /**
  * Get translation function for server components.
- * Uses the "locale" cookie to determine language, falls back to 'en'.
+ * When locale is provided (e.g. from [locale] route params), that is used; otherwise uses the "locale" cookie, then 'en'.
  */
-export async function getServerTranslations() {
+export async function getServerTranslations(localeOverride?: string) {
   const cookieStore = await cookies();
-  const locale = cookieStore.get("locale")?.value || "en";
+  const locale = localeOverride ?? cookieStore.get("locale")?.value ?? "en";
 
   const translations = await loadServerTranslations(locale);
 

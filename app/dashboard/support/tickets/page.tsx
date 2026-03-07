@@ -99,7 +99,7 @@ export default function TicketsListPage() {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-6">
             <div className="flex items-center gap-4 flex-wrap">
               <label htmlFor="status-filter" className="text-sm font-semibold text-gray-700">
-                Filter by Status:
+                {t("support.list.filterByStatus")}:
               </label>
               <select
                 id="status-filter"
@@ -107,16 +107,16 @@ export default function TicketsListPage() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
               >
-                <option value="all">All Tickets ({tickets.length})</option>
-                <option value="open">Open ({tickets.filter((t) => t.status === "open").length})</option>
-                <option value="investigating">Investigating ({tickets.filter((t) => t.status === "investigating").length})</option>
-                <option value="waiting_on_user">Waiting on User ({tickets.filter((t) => t.status === "waiting_on_user").length})</option>
-                <option value="resolved">Resolved ({tickets.filter((t) => t.status === "resolved").length})</option>
-                <option value="closed">Closed ({tickets.filter((t) => t.status === "closed").length})</option>
+                <option value="all">{t("support.list.allTickets")} ({tickets.length})</option>
+                <option value="open">{t("support.status.open")} ({tickets.filter((tk) => tk.status === "open").length})</option>
+                <option value="investigating">{t("support.status.investigating")} ({tickets.filter((tk) => tk.status === "investigating").length})</option>
+                <option value="waiting_on_user">{t("support.status.waiting_on_user")} ({tickets.filter((tk) => tk.status === "waiting_on_user").length})</option>
+                <option value="resolved">{t("support.status.resolved")} ({tickets.filter((tk) => tk.status === "resolved").length})</option>
+                <option value="closed">{t("support.status.closed")} ({tickets.filter((tk) => tk.status === "closed").length})</option>
               </select>
               {statusFilter !== "all" && (
                 <span className="text-sm text-gray-600">
-                  Showing {filteredTickets.length} of {tickets.length} tickets
+                  {t("support.list.showingTickets").replace("{filtered}", String(filteredTickets.length)).replace("{total}", String(tickets.length))}
                 </span>
               )}
             </div>
@@ -160,12 +160,12 @@ export default function TicketsListPage() {
         {/* No Results Message */}
         {!loading && !error && filteredTickets.length === 0 && tickets.length > 0 && (
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
-            <p className="text-gray-600">No tickets match the selected status filter.</p>
+            <p className="text-gray-600">{t("support.list.noMatchFilter")}</p>
             <button
               onClick={() => setStatusFilter("all")}
               className="mt-4 text-green-600 hover:text-green-700 font-medium"
             >
-              Clear Filter
+              {t("support.list.clearFilter")}
             </button>
           </div>
         )}

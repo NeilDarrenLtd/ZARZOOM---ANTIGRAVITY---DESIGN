@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { X, Copy, Check, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface CreateKeyModalProps {
   open: boolean;
@@ -13,6 +14,7 @@ interface CreateKeyModalProps {
 type Step = "form" | "loading" | "reveal";
 
 export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps) {
+  const { t } = useI18n();
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
   const [rawKey, setRawKey] = useState("");
@@ -41,7 +43,7 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
 
   const handleCreate = useCallback(async () => {
     if (!name.trim()) {
-      setError("Name is required");
+      setError(t("apiKeys.keyNameRequired"));
       return;
     }
 
@@ -103,19 +105,19 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
       }}
       role="dialog"
       aria-modal="true"
-      aria-label="Create API key"
+      aria-label={t("apiKeys.createKeyTitle")}
     >
       <div className="w-full max-w-lg rounded-xl border border-neutral-200 bg-white shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-4">
           <h2 className="text-lg font-semibold text-neutral-900">
-            {step === "reveal" ? "Key Created" : "Create API Key"}
+            {step === "reveal" ? t("apiKeys.keyCreated") : t("apiKeys.createKeyTitle")}
           </h2>
           {step !== "reveal" && (
             <button
               onClick={handleClose}
               className="rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600"
-              aria-label="Close"
+              aria-label={t("apiKeys.close")}
             >
               <X className="h-5 w-5" />
             </button>
@@ -131,7 +133,7 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
                   htmlFor="key-name"
                   className="mb-1.5 block text-sm font-medium text-neutral-700"
                 >
-                  Key Name
+                  {t("apiKeys.keyName")}
                 </label>
                 <input
                   ref={inputRef}
@@ -142,7 +144,7 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleCreate();
                   }}
-                  placeholder="e.g. Production, Staging, CI/CD"
+                  placeholder={t("apiKeys.keyNamePlaceholder")}
                   className="w-full rounded-lg border border-neutral-300 bg-white px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   maxLength={100}
                 />

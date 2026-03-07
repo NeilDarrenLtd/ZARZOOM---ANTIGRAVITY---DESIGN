@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { Currency } from "@/lib/billing/types";
 
 // Comprehensive currency metadata - supports any currency in the database
@@ -34,15 +35,16 @@ export function CurrencyToggle({
   onChange,
   availableCurrencies,
 }: CurrencyToggleProps) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col items-center gap-2">
       <label className="text-sm font-medium text-[hsl(var(--muted-foreground))]">
-        Select Currency
+        {t("billing.selectCurrencyLabel")}
       </label>
       <div
         className="inline-flex items-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] p-1"
         role="radiogroup"
-        aria-label="Select currency"
+        aria-label={t("billing.selectCurrencyLabel")}
       >
         {availableCurrencies.map((currency) => {
           const meta = getCurrencyMeta(currency);

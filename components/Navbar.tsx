@@ -8,13 +8,17 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { ROUTED_LOCALES } from "@/lib/i18n/routing";
 
 export default function Navbar() {
   const { t } = useI18n();
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
-  
+  const localePrefix = ROUTED_LOCALES.some((code) => pathname === `/${code}` || pathname.startsWith(`/${code}/`))
+    ? `/${pathname.split("/")[1]}`
+    : "";
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSubMenuOpen, setDesktopSubMenuOpen] = useState(false);
@@ -43,22 +47,22 @@ export default function Navbar() {
 
   const navLinks = isLoggedIn
     ? [
-        { labelKey: "nav.pricing", href: "/pricing" },
+        { labelKey: "nav.pricing", href: `${localePrefix}/pricing` },
         { labelKey: "nav.support", href: "/dashboard/support" },
         { labelKey: "nav.contact", href: "/dashboard/contact" },
       ]
     : [
-        { labelKey: "nav.about", href: "/about" },
-        { labelKey: "nav.features", href: "/features" },
-        { labelKey: "nav.pricing", href: "/pricing" },
-        { labelKey: "nav.contact", href: "/contact" },
+        { labelKey: "nav.about", href: `${localePrefix}/about` },
+        { labelKey: "nav.features", href: `${localePrefix}/features` },
+        { labelKey: "nav.pricing", href: `${localePrefix}/pricing` },
+        { labelKey: "nav.contact", href: `${localePrefix}/contact` },
       ];
 
   const subMenuLinks = [
-    { labelKey: "nav.userTerms", href: "/terms-user" },
-    { labelKey: "nav.websiteTerms", href: "/terms-website" },
-    { labelKey: "nav.privacy", href: "/privacy" },
-    { labelKey: "nav.cookies", href: "/cookies" },
+    { labelKey: "nav.userTerms", href: `${localePrefix}/terms-user` },
+    { labelKey: "nav.websiteTerms", href: `${localePrefix}/terms-website` },
+    { labelKey: "nav.privacy", href: `${localePrefix}/privacy` },
+    { labelKey: "nav.cookies", href: `${localePrefix}/cookies` },
   ];
 
   const isOnDashboard = pathname === "/dashboard" || pathname.startsWith("/dashboard/");
@@ -70,10 +74,10 @@ export default function Navbar() {
 
     if (isOnDashboard && isLoggedIn) {
       return {
-        label: "LOGOUT",
+        label: t("nav.logout"),
         onClick: async () => {
           await supabase.auth.signOut();
-          router.push("/");
+          router.push(localePrefix || "/");
         },
         href: null,
       };
@@ -81,14 +85,14 @@ export default function Navbar() {
 
     if (isLoggedIn) {
       return {
-        label: "DASHBOARD",
+        label: t("nav.dashboard"),
         onClick: null,
         href: "/dashboard",
       };
     }
 
     return {
-      label: "LOGIN-LAUNCH",
+      label: t("nav.getStarted"),
       onClick: null,
       href: "/auth",
     };

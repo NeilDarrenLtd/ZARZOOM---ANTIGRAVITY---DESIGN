@@ -67,18 +67,18 @@ async function main() {
   
   console.log(`✓ Found ${plans.length} plan(s) in database`);
   
-  // 2. Load i18n translations
+  // 2. Load i18n translations (billing.plans in locale app.json)
   console.log("\n📝 Loading i18n translations...");
   const localesDir = path.join(process.cwd(), "locales");
-  const enPath = path.join(localesDir, "en.json");
+  const enAppPath = path.join(localesDir, "en", "app.json");
   
-  if (!fs.existsSync(enPath)) {
-    console.error("❌ en.json not found at:", enPath);
+  if (!fs.existsSync(enAppPath)) {
+    console.error("❌ locales/en/app.json not found at:", enAppPath);
     process.exit(1);
   }
   
-  const enContent = fs.readFileSync(enPath, "utf-8");
-  const translations = JSON.parse(enContent);
+  const enAppContent = fs.readFileSync(enAppPath, "utf-8");
+  const translations = JSON.parse(enAppContent);
   const planCopies: Record<string, PlanCopy> = translations.billing?.plans || {};
   
   console.log(`✓ Loaded translations for ${Object.keys(planCopies).length} plan(s)`);
@@ -103,7 +103,7 @@ async function main() {
     console.error("❌ Plans in database WITHOUT i18n copy:");
     missingI18n.forEach((key) => {
       console.error(`   • ${key}`);
-      console.error(`     → Add billing.plans.${key}.{displayName,shortTagline,description,bullets} to locales/en.json`);
+      console.error(`     → Add billing.plans.${key}.{displayName,shortTagline,description,bullets} to locales/en/app.json`);
     });
     console.error("");
   }
@@ -120,7 +120,7 @@ async function main() {
     console.warn("⚠️  i18n translations WITHOUT database entry:");
     orphanedI18n.forEach((key) => {
       console.warn(`   • ${key}`);
-      console.warn(`     → Either create plan in DB or remove billing.plans.${key} from locales/en.json`);
+      console.warn(`     → Either create plan in DB or remove billing.plans.${key} from locales/en/app.json`);
     });
     console.warn("");
   }
@@ -155,7 +155,7 @@ async function main() {
     console.error("❌ Plans with INCOMPLETE i18n copy:");
     incompleteCopy.forEach(({ key, missing }) => {
       console.error(`   • ${key} missing: ${missing.join(", ")}`);
-      console.error(`     → Add missing fields to billing.plans.${key} in locales/en.json`);
+      console.error(`     → Add missing fields to billing.plans.${key} in locales/en/app.json`);
     });
     console.error("");
   }

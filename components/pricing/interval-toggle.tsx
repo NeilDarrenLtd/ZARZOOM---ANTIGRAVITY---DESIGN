@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 import type { BillingInterval } from "@/lib/billing/types";
 
 interface IntervalToggleProps {
@@ -9,11 +10,12 @@ interface IntervalToggleProps {
 }
 
 export function IntervalToggle({ value, onChange }: IntervalToggleProps) {
+  const { t } = useI18n();
   return (
     <div
       className="inline-flex items-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] p-1"
       role="radiogroup"
-      aria-label="Select billing interval"
+      aria-label={t("billing.selectBillingInterval")}
     >
       <button
         role="radio"
@@ -26,7 +28,7 @@ export function IntervalToggle({ value, onChange }: IntervalToggleProps) {
             : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
         )}
       >
-        Monthly
+        {t("billing.pricing.monthly")}
       </button>
       <button
         role="radio"
@@ -39,9 +41,9 @@ export function IntervalToggle({ value, onChange }: IntervalToggleProps) {
             : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
         )}
       >
-        Annual
+        {t("billing.pricing.annual")}
         <span className="ml-1.5 inline-block rounded-full bg-[hsl(var(--accent))] px-2 py-0.5 text-xs font-semibold text-[hsl(var(--accent-foreground))]">
-          Save 17%
+          {t("billing.pricing.savePercent").replace("{percent}", "17")}
         </span>
       </button>
     </div>

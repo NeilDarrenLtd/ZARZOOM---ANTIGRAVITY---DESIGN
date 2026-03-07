@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 import type { Currency, BillingInterval } from "@/lib/billing/api-types";
 import type { DisplayablePlan } from "@/lib/pricing";
 import { getPriceForSelection } from "@/lib/pricing";
@@ -25,6 +26,7 @@ export function PlanCard({
   isPopular = false,
   isSelected = false,
 }: PlanCardProps) {
+  const { t } = useI18n();
   const price = getPriceForSelection(
     {
       planKey: plan.planKey,
@@ -104,7 +106,7 @@ export function PlanCard({
         }`}
         disabled={isSelected}
       >
-        {isSelected ? "Selected" : "Choose Plan"}
+        {isSelected ? t("onboarding.step4.selected") : t("onboarding.step4.selectPlan")}
       </button>
 
       <ul className="space-y-3 flex-1">

@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 import type { Currency, BillingInterval } from "@/lib/billing/types";
 
 /* ------------------------------------------------------------------ */
@@ -84,6 +85,7 @@ export function PlanCard({
   discountEnabled = false,
   onChoosePlan,
 }: PlanCardProps) {
+  const { t } = useI18n();
   const matchedPrice = prices.find(
     (p) => p.currency === currency && p.interval === interval && p.isActive
   );
@@ -118,7 +120,7 @@ export function PlanCard({
       {highlight && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
           <span className="rounded-full bg-[hsl(var(--primary))] px-4 py-1 text-xs font-semibold text-[hsl(var(--primary-foreground))]">
-            Most popular
+            {t("billing.pricing.popular")}
           </span>
         </div>
       )}
@@ -172,14 +174,14 @@ export function PlanCard({
             )}
             {hasDiscount && (
               <p className="mt-1 text-xs text-green-600 font-medium">
-                {discountEnabled ? "Partner discount applied" : "Advertising partnership discount applied"}
+                {discountEnabled ? t("billing.discountPartnerApplied") : t("billing.discountAdvertisingApplied")}
               </p>
             )}
           </>
         ) : (
           <div className="flex items-baseline">
             <span className="text-2xl font-bold text-[hsl(var(--foreground))]">
-              Contact us
+              {t("billing.contactUs")}
             </span>
           </div>
         )}
@@ -198,7 +200,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              {cta || "Choose plan"}
+              {cta || t("onboarding.step4.selectPlan")}
             </button>
           ) : (
             <a
@@ -210,7 +212,7 @@ export function PlanCard({
                   : "border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]"
               )}
             >
-              {cta || "Sign up"}
+              {cta || t("auth.signUpLink")}
             </a>
           )
         ) : (
@@ -218,7 +220,7 @@ export function PlanCard({
             href="mailto:sales@zarzoom.com"
             className="block w-full rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] py-3 text-center text-sm font-semibold text-[hsl(var(--foreground))] transition-colors hover:bg-[hsl(var(--muted))]"
           >
-            Contact sales
+            {t("billing.plans.advanced.cta")}
           </a>
         )}
       </div>

@@ -67,7 +67,7 @@ export default function CreateTicketPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.subject.trim() || !formData.description.trim()) {
-      setError("Subject and description are required");
+      setError(`${t("support.validation.subjectRequired")} ${t("support.validation.descriptionRequired")}`);
       return;
     }
 

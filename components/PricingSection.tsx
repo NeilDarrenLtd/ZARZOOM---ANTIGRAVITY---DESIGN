@@ -329,7 +329,7 @@ export default function PricingSection({
                     }`}
                   >
                     {isSelected
-                      ? "Change Plan"
+                      ? t("profile.plan.changePlan")
                       : plan.copy.cta || t("billing.pricing.getStarted")}
                   </button>
 
