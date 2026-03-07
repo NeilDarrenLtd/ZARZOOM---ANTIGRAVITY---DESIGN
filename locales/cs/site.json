@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Sociální sítě na autopilota",
+    "description": "Automatizujte růst na sociálních sítích díky generování a plánování obsahu poháněnému umělou inteligencí."
+  },
+  "nav": {
+    "about": "O nás",
+    "features": "Funkce",
+    "pricing": "Ceník",
+    "contact": "Kontakt",
+    "getStarted": "Přihlásit se a spustit",
+    "support": "Podpora",
+    "logout": "ODHLÁSIT",
+    "dashboard": "PŘEHLED",
+    "userTerms": "Obchodní podmínky",
+    "websiteTerms": "Podmínky webu",
+    "privacy": "Ochrana soukromí",
+    "cookies": "Cookies",
+    "admin": "Admin",
+    "selectLanguage": "Vybrat jazyk"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Sociální sítě na autopilota za vteřiny",
+    "scrollToLaunch": "Přejít ke spuštění"
+  },
+  "tagline": {
+    "heading": "Růst na sociálních sítích poháněný AI",
+    "subheading": "Generujte, plánujte a publikujte — vše na autopilota."
+  },
+  "feature": {
+    "heading": "Jedno kliknutí. Výrazný růst."
+  },
+  "cta": {
+    "heading": "Připraveni proměnit svou přítomnost na sociálních sítích?",
+    "button": "Začít zkušební verzi zdarma"
+  },
+  "testimonials": {
+    "heading": "Důvěřují nám lídři oboru",
+    "subheading": "Přidejte se k více než 10 000 marketérů, kteří škálují s ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM nám zdvojnásobil dosah za 30 dní. Generování obsahu pomocí AI je k nerozeznání od lidského psaní."
+      },
+      {
+        "name": "David Chen",
+        "role": "Zakladatel, GrowthStack",
+        "content": "Funkce autopilota mění pravidla hry. Na sociálních sítích teď trávím 5 minut týdně."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Vedoucí influence",
+        "content": "Opravdu výrazný růst. Naše metriky zapojení vzrostly o 400 % na všech platformách."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Připraveni ke startu?",
+    "subheading": "Začněte 14denní zkušební verzi zdarma. Kreditní karta není potřeba.",
+    "button": "Začít nyní"
+  },
+  "loading": {
+    "text": "Načítání..."
+  },
+  "notFound": {
+    "title": "Houston, máme problém",
+    "description": "Stránka, kterou hledáte, se zatoulala do hlubokého vesmíru. Pojďme vás vrátit na kurz.",
+    "backHome": "Zpět na úvod",
+    "support": "Podpora"
+  },
+  "error": {
+    "title": "Něco se pokazilo",
+    "description": "Došlo k neočekávané chybě. Zkuste to prosím znovu nebo se vraťte na úvodní stránku.",
+    "tryAgain": "Zkusit znovu",
+    "backHome": "Zpět na úvod"
+  },
+  "footer": {
+    "tagline": "Sociální sítě na autopilota za vteřiny",
+    "product": "Produkt",
+    "company": "Společnost",
+    "legal": "Právní informace",
+    "about": "O nás",
+    "features": "Funkce",
+    "pricing": "Ceník",
+    "contact": "Kontakt",
+    "support": "Podpora",
+    "userTerms": "Obchodní podmínky",
+    "websiteTerms": "Podmínky webu",
+    "privacy": "Zásady ochrany soukromí",
+    "cookies": "Zásady cookies",
+    "copyright": "ZARZOOM. Všechna práva vyhrazena."
+  },
+  "pages": {
+    "support": {
+      "title": "Centrum podpory",
+      "subtitle": "Jsme tu, abychom vám pomohli vytěžit z ZARZOOM maximum.",
+      "faqTitle": "Často kladené otázky",
+      "faq1q": "Jak propojím své účty na sociálních sítích?",
+      "faq1a": "Přejděte do přehledu, klikněte na „Propojené účty“ a postupujte podle pokynů pro autorizaci jednotlivých platforem. Podporujeme Facebook, Instagram, X (Twitter), LinkedIn a TikTok.",
+      "faq2q": "Mohu plánovat příspěvky dopředu?",
+      "faq2a": "Určitě. Kalendářní zobrazení umožňuje plánovat obsah na týdny i měsíce dopředu. Stačí vytvořit příspěvek, zvolit datum a čas a ZARZOOM se o zbytek postará.",
+      "faq3q": "Co se stane, když překročím limity plánu?",
+      "faq3a": "Když se budete blížit limitu, obdržíte upozornění. Plán můžete kdykoli upgradovat na stránce Nastavení účtu a změna platí okamžitě.",
+      "faq4q": "Jsou moje data v bezpečí?",
+      "faq4a": "Ano. Pro data v klidu i při přenosu používáme šifrování na úrovni oboru. Vaše data nikdy nesdílíme s třetími stranami. Podrobnosti naleznete v našich Zásadách ochrany soukromí.",
+      "contactTitle": "Stále potřebujete pomoc?",
+      "contactText": "Náš tým podpory obvykle odpovídá do 24 hodin v pracovní dny.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "O ZARZOOM - Automatizace sociálních sítí poháněná AI",
+        "description": "Poznejte poslání ZARZOOM: revolucionizovat správu sociálních sítí pomocí inteligentní automatizace a tvorby obsahu řízené AI."
+      },
+      "badge": "O ZARZOOM",
+      "heroTitle": "Sociální sítě na autopilota",
+      "heroTitleHighlight": "za vteřiny.",
+      "heroDescription": "ZARZOOM je platforma poháněná AI, která pomáhá firmám a tvůrcům automaticky generovat a publikovat obsah na sociálních sítích — abyste se mohli soustředit na to, co umíte nejlépe.",
+      "hero": {
+        "title": "O ZARZOOM",
+        "subtitle": "Revolucionizujeme správu sociálních sítí pomocí inteligentní automatizace a tvorby obsahu poháněné AI."
+      },
+      "storySteps": [
+        {
+          "title": "Nápad",
+          "text": "Založeno proto, abychom vyřešili problém, kterému čelí každý tvůrce — být konzistentní na sociálních sítích bez vyhoření."
+        },
+        {
+          "title": "Budování platformy",
+          "text": "Spojili jsme generování obsahu poháněné AI s chytrým plánováním a vytvořili plně automatizovaný pipeline pro sociální sítě."
+        },
+        {
+          "title": "Automatizace ve velkém",
+          "text": "ZARZOOM nyní pomáhá firmám a tvůrcům udržovat silnou online přítomnost — bez každodenní námahy, která by jinak byla potřeba."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Generování obsahu pomocí AI",
+          "text": "Automaticky generujte poutavé příspěvky přizpůsobené hlasu vaší značky a publiku.",
+          "bullets": [
+            "Učení hlasu značky",
+            "Integrace trendových témat",
+            "Popisky a hashtagy"
+          ]
+        },
+        {
+          "title": "Chytré plánování",
+          "text": "Plánujte a publikujte obsah na sociálních platformách v optimální čas.",
+          "bullets": [
+            "Analýza aktivity publika",
+            "Optimalizace časových pásem",
+            "Automatizace obsahu v kalendáři"
+          ]
+        },
+        {
+          "title": "Konzistentní online přítomnost",
+          "text": "Udržujte viditelnost a rozšiřujte publikum bez každodenní dřiny.",
+          "bullets": [
+            "Publikování na více platformách",
+            "Načasování podle zapojení",
+            "Centralizovaný přehled"
+          ]
+        },
+        {
+          "title": "Automatizace šetřící čas",
+          "text": "Soustřeďte se na své podnikání, zatímco ZARZOOM obstará celý pipeline obsahu.",
+          "bullets": [
+            "Žádná ruční práce",
+            "Nastav a nech běžet",
+            "Reportování v reálném čase"
+          ]
+        }
+      ],
+      "getStartedFree": "Začít zdarma",
+      "viewFeatures": "Zobrazit funkce",
+      "autopilotActive": "Autopilot aktivní",
+      "mission": {
+        "title": "Naše poslání",
+        "subtitle": "Odstraňujeme největší překážku růstu na sociálních sítích",
+        "para1": "Naším posláním je odstranit největší překážku růstu na sociálních sítích — neustálou poptávku po čerstvém obsahu.",
+        "para2": "ZARZOOM využívá umělou inteligenci k automatizaci tvorby a publikování obsahu, aby se podnikatelé a firmy mohli soustředit na to, co umí nejlépe.",
+        "para3": "Místo hodin plánování příspěvků, psaní obsahu a správy více platforem vám ZARZOOM pomáhá zůstat online viditelní — bez námahy."
+      },
+      "missionStats": {
+        "contentCreated": "Vytvořený obsah",
+        "hoursSaved": "Ušetřené hodiny",
+        "platformsActive": "Aktivní platformy"
+      },
+      "story": {
+        "sectionTitle": "Náš příběh",
+        "heading": "Postaveno pro řešení reálného problému",
+        "para1": "ZARZOOM vznikl proto, aby vyřešil problém, kterému čelí mnoho zakladatelů a tvůrců — být konzistentní na sociálních sítích.",
+        "para2": "I když jsou sociální sítě jedním z nejsilnějších nástrojů pro budování publika, udržování stabilního proudu kvalitního obsahu je náročné a časově náročné.",
+        "para3": "Kombinací generování obsahu poháněného AI s automatizovaným plánováním umožňuje ZARZOOM uživatelům udržovat silnou online přítomnost bez každodenní námahy."
+      },
+      "platform": {
+        "badge": "Platforma",
+        "heading": "Jak vám ZARZOOM pomáhá růst"
+      },
+      "lookingAhead": {
+        "badge": "Výhled do budoucna",
+        "heading": "Budoucnost růstu na sociálních sítích",
+        "para1": "Věříme, že budoucnost růstu na sociálních sítích bude poháněna inteligentní automatizací.",
+        "para2": "ZARZOOM se neustále vyvíjí, aby pomáhal firmám a tvůrcům budovat online přítomnost rychleji a efektivněji.",
+        "para3": "Náš cíl je jednoduchý: zpřístupnit výkonné nástroje pro růst na sociálních sítích všem."
+      },
+      "intelligentAutomation": {
+        "title": "Inteligentní automatizace",
+        "subtitle": "Poháněno špičkovou AI pro růst vašeho publika, zatímco se soustředíte na podnikání.",
+        "tags": [
+          "Generování AI",
+          "Auto-plánování",
+          "Více platforem",
+          "Analytika"
+        ]
+      },
+      "cta": {
+        "badge": "Začněte ještě dnes",
+        "title": "Spusťte autopilota pro sociální sítě ještě dnes",
+        "description": "Přidejte se k tisícům tvůrců a firem, které rostou na autopilota.",
+        "getStarted": "Začít",
+        "viewFeatures": "Zobrazit funkce"
+      },
+      "values": {
+        "title": "Naše hlavní hodnoty",
+        "innovation": {
+          "title": "Inovace na prvním místě",
+          "description": "Posouváme hranice AI a automatizace, abychom dodávali řešení, která byla včera ještě nemožná. Naše oddanost inovacím znamená, že máte vždy přístup k nejnovějším pokrokům v technologii sociálních sítí."
+        },
+        "authenticity": {
+          "title": "Autentické zapojení",
+          "description": "Automatizace má posilovat, ne nahrazovat opravdové lidské spojení. Naše nástroje jsou navrženy tak, aby vám pomohly udržet svůj jedinečný hlas a budovat skutečné vztahy s publikem ve velkém měřítku."
+        },
+        "simplicity": {
+          "title": "Jednoduchost a síla",
+          "description": "Sofistikovaná technologie nemusí být složitá. Věříme v to, aby výkonné nástroje byly dostupné každému, bez ohledu na technickou zkušenost."
+        },
+        "trust": {
+          "title": "Důvěra a soukromí",
+          "description": "Vaše data, váš obsah, vaše komunita — se vším zacházíme s maximální úctou a zabezpečením. Vaše data nikdy neprodáváme a dodržujeme nejvyšší standardy ochrany soukromí."
+        }
+      },
+      "team": {
+        "title": "Vytvořeno odborníky",
+        "description": "Náš tým spojuje desítky let zkušeností v AI, marketingu na sociálních sítích a designu uživatelského zážitku. Jsme nadšení z tvorby nástrojů, které opravdu mění způsob, jakým firmy komunikují se svým publikem."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Funkce - Automatizace sociálních sítí ZARZOOM",
+        "description": "Objevte výkonné funkce pro automatizaci sociálních sítí: generování obsahu AI, chytré plánování, publikování na více platformách, analytika a další."
+      },
+      "hero": {
+        "title": "Výkonné funkce",
+        "subtitle": "Vše, co potřebujete k automatizaci, optimalizaci a škálování přítomnosti na sociálních sítích — vše na jedné inteligentní platformě."
+      },
+      "aiContent": {
+        "title": "Generování obsahu poháněné AI",
+        "description": "Vytvářejte poutavé příspěvky za vteřiny s naší pokročilou AI, která rozumí hlasu vaší značky, preferencím publika a trendovým tématům. Generujte popisky, hashtagy a kompletní nápady na příspěvky, které rezonují s vaší komunitou.",
+        "features": [
+          "Učení a adaptace hlasu značky",
+          "Integrace trendových témat",
+          "Obsah ve více formátech (text, popisky, hashtagy)",
+          "Návrhy pro A/B testování"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Chytré plánování a autopilot",
+        "description": "Nechte naši AI určit optimální časy pro publikování pro maximální zapojení. Nastavte preference jednou a sledujte, jak vaše přítomnost na sociálních sítích roste na autopilota, zatímco se soustředíte na podnikání.",
+        "features": [
+          "Analýza aktivity publika",
+          "Optimalizace časových pásem",
+          "Automatizace kalendáře obsahu",
+          "Plánování podle zapojení"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Správa více platforem",
+        "description": "Spravujte všechny své účty na sociálních sítích z jednoho sjednoceného přehledu. Publikujte na Twitter, LinkedIn, Facebook, Instagram a další jedním kliknutím.",
+        "features": [
+          "Publikování napříč platformami",
+          "Optimalizace pro konkrétní platformy",
+          "Sjednocená schránka",
+          "Centralizovaná analytika"
+        ]
+      },
+      "analytics": {
+        "title": "Pokročilá analytika a přehledy",
+        "description": "Sledujte to, na čem záleží, s komplexní analytikou přesahující povrchní metriky. Pochopte své publikum, měřte ROI a činěte rozhodnutí založená na datech pro zlepšení strategie.",
+        "features": [
+          "Sledování výkonu v reálném čase",
+          "Demografie a chování publika",
+          "Analýza míry zapojení",
+          "Benchmarking konkurence"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Knihovna obsahu a materiálů",
+        "description": "Budujte a organizujte úložiště obsahu s naší inteligentní mediální knihovnou. Ukládejte obrázky, videa, šablony a úryvky textu pro rychlý přístup a opětovné použití.",
+        "features": [
+          "Neomezené úložiště médií",
+          "Chytré tagování a vyhledávání",
+          "Knihovna šablon",
+          "Sledování výkonu materiálů"
+        ]
+      },
+      "collaboration": {
+        "title": "Týmová spolupráce",
+        "description": "Pracujte plynule se svým týmem, klienty nebo agenturami. Přiřazujte role, spravujte oprávnění a zjednodušte schvalovací workflow — vše v rámci platformy.",
+        "features": [
+          "Řízení přístupu podle rolí",
+          "Schvalovací workflow",
+          "Protokoly aktivit týmu",
+          "Správa klientů"
+        ]
+      },
+      "integration": {
+        "title": "Integrace a API",
+        "description": "Propojte ZARZOOM s existujícími nástroji a workflow. Naše robustní API a předpřipravené integrace zajišťují plynulý tok dat v rámci vašeho tech stacku.",
+        "features": [
+          "Integrace Zapier",
+          "Podpora webhooků",
+          "Přístup k REST API",
+          "Vlastní integrace"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API a integrace OpenClaw",
+        "description": "Posilte své workflow výkonnou integrací ZARZOOM s OpenClaw pro automatizované vytváření a plánování obsahu na sociálních sítích na vyžádání napříč 10 platformami. Spouštějte generování obsahu poháněné AI přímo z vašich stávajících systémů přes naše REST API, nebo nechte agenty OpenClaw vše obstarat samostatně. Ideální pro agentury, vývojáře a firmy chtějící plynulou automatizaci.",
+        "features": [
+          "Automatizace agentů OpenClaw (10+ platforem)",
+          "Vytváření obsahu AI na vyžádání přes API",
+          "Okamžité spouštění plánování",
+          "Vlastní automatizace workflow"
+        ]
+      },
+      "support": {
+        "title": "Podpora světové úrovně",
+        "description": "Získejte pomoc, když ji potřebujete, s naším dedikovaným týmem podpory. Přístup k komplexní dokumentaci, videonávodům a responzivní zákaznické péči.",
+        "features": [
+          "E-mailová podpora 24/7",
+          "Živý chat (Pro+)",
+          "Videonávody",
+          "Znalostní báze"
+        ]
+      },
+      "cta": {
+        "title": "Připraveni proměnit své sociální sítě?",
+        "description": "Začněte zkušební verzi zdarma a zažijte sílu inteligentní automatizace.",
+        "button": "Začít zdarma"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Kontaktujte nás - ZARZOOM",
+        "description": "Obraťte se na tým ZARZOOM. Jsme tu pro jakékoli dotazy nebo obavy."
+      },
+      "title": "Napište nám",
+      "subtitle": "Máte dotaz nebo potřebujete podporu? Jsme tu pro vás. Pošlete zprávu a odpovíme co nejdříve.",
+      "info": {
+        "title": "Kontaktní údaje",
+        "email": {
+          "label": "E-mail"
+        },
+        "phone": {
+          "label": "Telefon"
+        },
+        "address": {
+          "label": "Kancelář"
+        }
+      },
+      "hours": {
+        "title": "Úřední hodiny",
+        "note": "Na všechny dotazy obvykle odpovídáme do 24 hodin v pracovní dny.",
+        "weekdays": "Pondělí - Pátek",
+        "weekdaysTime": "9:00 - 18:00",
+        "saturday": "Sobota",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Neděle",
+        "closed": "Zavřeno"
+      },
+      "form": {
+        "title": "Pošlete nám zprávu",
+        "name": "Vaše jméno",
+        "namePlaceholder": "Jan Novák",
+        "email": "Váš e-mail",
+        "emailPlaceholder": "jan@example.com",
+        "subject": "Předmět",
+        "subjectPlaceholder": "Jak vám můžeme pomoci?",
+        "message": "Zpráva",
+        "messagePlaceholder": "Napište nám více o vašem dotazu...",
+        "messageHint": "Minimálně 10 znaků",
+        "submit": "Odeslat zprávu",
+        "sending": "Odesílám...",
+        "success": {
+          "title": "Zpráva byla úspěšně odeslána!",
+          "message": "Děkujeme za kontakt. Ozveme se vám co nejdříve."
+        },
+        "error": {
+          "title": "Chyba"
+        },
+        "errors": {
+          "required": "Vyplňte prosím všechna pole",
+          "failed": "Zprávu se nepodařilo odeslat. Zkuste to prosím znovu."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Obchodní podmínky",
+      "subtitle": "Před použitím ZARZOOM si prosím pečlivě přečtěte tyto podmínky.",
+      "lastUpdated": "Poslední aktualizace: 1. února 2026",
+      "s1Title": "1. Přijetí podmínek",
+      "s1Text": "Vytvořením účtu nebo použitím platformy ZARZOOM souhlasíte s těmito obchodními podmínkami. Pokud nesouhlasíte, službu nesmíte používat.",
+      "s2Title": "2. Registrace účtu",
+      "s2Text": "Při registraci musíte uvádět přesné a úplné údaje. Jste odpovědní za zachování důvěrnosti přihlašovacích údajů a za veškerou činnost pod vaším účtem.",
+      "s3Title": "3. Přípustné použití",
+      "s3Text": "Souhlasíte s tím, že nebudete používat ZARZOOM k publikování obsahu, který je nezákonný, pomlouvačný, obscénní nebo porušuje práva duševního vlastnictví jiných. Vyhrazujeme si právo pozastavit nebo ukončit účty porušující tyto zásady.",
+      "s4Title": "4. Předplatné a fakturace",
+      "s4Text": "Plaťené plány se účtují předem měsíčně nebo ročně. Můžete kdykoli zrušit; zrušení nabývá účinnosti na konci aktuálního fakturačního období. Za neúplná období se refundace neposkytují.",
+      "s5Title": "5. Duševní vlastnictví",
+      "s5Text": "Vlastníte obsah, který vytvoříte a publikujete prostřednictvím ZARZOOM. Použitím platformy nám udělujete omezenou licenci ke zpracování, ukládání a zobrazení vašeho obsahu výhradně za účelem poskytování služby.",
+      "s6Title": "6. Omezení odpovědnosti",
+      "s6Text": "ZARZOOM je poskytován „v takovém stavu, v jakém je“. V maximálním rozsahu povoleném zákonem se zříkáme všech záruk a nebudeme odpovědni za jakékoli nepřímé, náhodné nebo následné škody vzniklé z vašeho použití služby.",
+      "s7Title": "7. Změny podmínek",
+      "s7Text": "Tyto podmínky můžeme čas od času aktualizovat. Pokračující používání služby po zveřejnění změn znamená přijetí revidovaných podmínek."
+    },
+    "termsWebsite": {
+      "title": "Podmínky užívání webu",
+      "subtitle": "Podmínky upravující vaše užívání webu zarzoom.com.",
+      "lastUpdated": "Poslední aktualizace: 1. února 2026",
+      "s1Title": "1. Užívání webu",
+      "s1Text": "Tento web provozuje ZARZOOM Ltd. Přístupem a prohlížením tohoto webu plně přijímáte tyto podmínky užívání webu.",
+      "s2Title": "2. Duševní vlastnictví",
+      "s2Text": "Veškerý obsah na tomto webu včetně textů, grafiky, log a softwaru je majetkem ZARZOOM Ltd nebo jeho poskytovatelů licencí a je chráněn zákony o autorských právech a ochranných známkách.",
+      "s3Title": "3. Přesnost informací",
+      "s3Text": "I když se snažíme udržovat informace na tomto webu přesné a aktuální, neposkytujeme žádné záruky ani tvrzení o jejich úplnosti nebo přesnosti.",
+      "s4Title": "4. Odkazy na třetí strany",
+      "s4Text": "Tento web může obsahovat odkazy na weby třetích stran. Za obsah ani zásady ochrany soukromí těchto webů neodpovídáme.",
+      "s5Title": "5. Rozhodné právo",
+      "s5Text": "Tyto podmínky se řídí právem Anglie a Walesu. Veškeré spory podléhají výlučné jurisdikci soudů Anglie a Walesu."
+    },
+    "privacy": {
+      "title": "Zásady ochrany soukromí",
+      "subtitle": "Jak sbíráme, používáme a chráníme vaše osobní údaje.",
+      "lastUpdated": "Poslední aktualizace: 1. února 2026",
+      "s1Title": "1. Informace, které sbíráme",
+      "s1Text": "Sbíráme informace, které nám poskytnete přímo (jméno, e-mail, platební údaje), a informace generované automaticky (IP adresa, typ prohlížeče, údaje o použití) při používání ZARZOOM.",
+      "s2Title": "2. Jak vaše informace používáme",
+      "s2Text": "Vaše informace používáme k poskytování a zlepšování služby, zpracování plateb, odesílání komunikace související se službou a plnění právních povinností.",
+      "s3Title": "3. Sdílení dat",
+      "s3Text": "Vaše osobní data neprodáváme. Data můžeme sdílet s důvěryhodnými poskytovateli služeb (platební procesory, poskytovatelé hostingu), kteří nám pomáhají provozovat platformu, a to za přísných dohod o důvěrnosti.",
+      "s4Title": "4. Uchovávání dat",
+      "s4Text": "Vaše osobní údaje uchováváme po dobu aktivního účtu nebo podle potřeby k poskytování služby. O smazání dat můžete kdykoli požádat kontaktováním podpory.",
+      "s5Title": "5. Vaše práva",
+      "s5Text": "Máte právo na přístup, opravu nebo vymazání svých osobních údajů. Můžete také vznést námitku proti zpracování nebo požádat o přenositelnost dat. Pro uplatnění těchto práv nás kontaktujte na privacy@zarzoom.com.",
+      "s6Title": "6. Zabezpečení",
+      "s6Text": "Zavádíme vhodná technická a organizační opatření na ochranu vašich dat včetně šifrování, řízení přístupu a pravidelných bezpečnostních hodnocení.",
+      "s7Title": "7. Změny těchto zásad",
+      "s7Text": "Tyto zásady můžeme čas od času aktualizovat. O podstatných změnách vás budeme informovat e-mailem nebo prostřednictvím platformy."
+    },
+    "cookies": {
+      "title": "Zásady cookies",
+      "subtitle": "Jak používáme cookies a podobné technologie.",
+      "lastUpdated": "Poslední aktualizace: 1. února 2026",
+      "s1Title": "1. Co jsou cookies",
+      "s1Text": "Cookies jsou malé textové soubory ukládané na vaše zařízení při návštěvě webu. Pomáhají webu zapamatovat si vaše preference a pochopit, jak ho používáte.",
+      "s2Title": "2. Cookies, které používáme",
+      "s2Essential": "Nezbytné cookies",
+      "s2EssentialText": "Potřebné pro správné fungování webu. Nelze je vypnout. Zahrnují relakční cookies a ověřovací tokeny.",
+      "s2Analytics": "Analytické cookies",
+      "s2AnalyticsText": "Pomáhají nám pochopit, jak návštěvníci interagují s naším webem, sběrem anonymních údajů o použití. Používáme je ke zlepšení služby.",
+      "s2Preference": "Preferenční cookies",
+      "s2PreferenceText": "Zapamatují si vaše nastavení a preference (např. volbu jazyka) pro personalizovanější zážitek.",
+      "s3Title": "3. Správa cookies",
+      "s3Text": "Cookies můžete ovládat v nastavení prohlížeče. Vypnutím některých cookies může být ovlivněna funkčnost webu.",
+      "s4Title": "4. Cookies třetích stran",
+      "s4Text": "Některé cookies ukládají služby třetích stran zobrazené na našich stránkách. Tyto cookies nekontrolujeme. Další informace naleznete v příslušných zásadách ochrany soukromí třetích stran.",
+      "s5Title": "5. Kontaktujte nás",
+      "s5Text": "Máte-li dotazy k našemu používání cookies, kontaktujte nás na privacy@zarzoom.com."
+    }
+  }
+}

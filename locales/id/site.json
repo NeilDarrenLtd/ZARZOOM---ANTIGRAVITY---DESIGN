@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Autopilot Media Sosial",
+    "description": "Otomatiskan pertumbuhan media sosial Anda dengan pembuatan konten berbasis AI dan penjadwalan."
+  },
+  "nav": {
+    "about": "Tentang",
+    "features": "Fitur",
+    "pricing": "Harga",
+    "contact": "Kontak",
+    "getStarted": "Login-Launch",
+    "support": "Dukungan",
+    "logout": "KELUAR",
+    "dashboard": "DASHBOARD",
+    "userTerms": "Syarat & Ketentuan Pengguna",
+    "websiteTerms": "Syarat & Ketentuan Situs",
+    "privacy": "Privasi",
+    "cookies": "Cookie",
+    "admin": "Admin",
+    "selectLanguage": "Pilih bahasa"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Autopilot Media Sosial Anda dalam Hitungan Detik",
+    "scrollToLaunch": "Gulir untuk Meluncurkan"
+  },
+  "tagline": {
+    "heading": "Pertumbuhan Media Sosial Berbasis AI",
+    "subheading": "Buat, jadwalkan, dan unggah — semuanya dengan autopilot."
+  },
+  "feature": {
+    "heading": "Satu Klik. Pertumbuhan Eksplosif."
+  },
+  "cta": {
+    "heading": "Siap Mengubah Kehadiran Media Sosial Anda?",
+    "button": "Mulai Uji Coba Gratis"
+  },
+  "testimonials": {
+    "heading": "Dipercaya oleh Pemimpin Industri",
+    "subheading": "Bergabung dengan 10.000+ pemasar yang berkembang dengan ZARZOOM.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM menggandakan jangkauan kami dalam 30 hari. Pembuatan konten AI tidak bisa dibedakan dari tulisan manusia."
+      },
+      {
+        "name": "David Chen",
+        "role": "Pendiri, GrowthStack",
+        "content": "Fitur autopilot mengubah segalanya. Saya hanya menghabiskan 5 menit seminggu untuk media sosial sekarang."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "Influence Lead",
+        "content": "Pertumbuhan eksplosif memang. Metrik keterlibatan kami naik 400% di semua platform."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Siap Meluncur?",
+    "subheading": "Mulai uji coba gratis 14 hari. Tidak perlu kartu kredit.",
+    "button": "Mulai Sekarang"
+  },
+  "loading": {
+    "text": "Memuat Pengalaman..."
+  },
+  "notFound": {
+    "title": "Houston, kami ada masalah",
+    "description": "Halaman yang Anda cari telah hilang ke angkasa. Mari kita bawa Anda kembali ke jalur.",
+    "backHome": "Kembali ke Beranda",
+    "support": "Dukungan"
+  },
+  "error": {
+    "title": "Terjadi kesalahan",
+    "description": "Kami mengalami error yang tidak terduga. Silakan coba lagi atau kembali ke beranda.",
+    "tryAgain": "Coba lagi",
+    "backHome": "Kembali ke Beranda"
+  },
+  "footer": {
+    "tagline": "Autopilot Media Sosial Anda dalam Hitungan Detik",
+    "product": "Produk",
+    "company": "Perusahaan",
+    "legal": "Legal",
+    "about": "Tentang",
+    "features": "Fitur",
+    "pricing": "Harga",
+    "contact": "Kontak",
+    "support": "Dukungan",
+    "userTerms": "Syarat & Ketentuan Pengguna",
+    "websiteTerms": "Syarat & Ketentuan Situs",
+    "privacy": "Kebijakan Privasi",
+    "cookies": "Kebijakan Cookie",
+    "copyright": "ZARZOOM. Hak cipta dilindungi."
+  },
+  "pages": {
+    "support": {
+      "title": "Pusat Dukungan",
+      "subtitle": "Kami di sini untuk membantu Anda memaksimalkan ZARZOOM.",
+      "faqTitle": "Pertanyaan yang Sering Diajukan",
+      "faq1q": "Bagaimana cara menghubungkan akun media sosial saya?",
+      "faq1a": "Buka Dashboard, klik 'Connected Accounts', dan ikuti petunjuk untuk mengotorisasi setiap platform. Kami mendukung Facebook, Instagram, X (Twitter), LinkedIn, dan TikTok.",
+      "faq2q": "Bisakah saya menjadwalkan posting di muka?",
+      "faq2a": "Tentu. Tampilan kalender kami memungkinkan Anda menjadwalkan konten berminggu-minggu bahkan berbulan-bulan ke depan. Cukup buat posting Anda, pilih tanggal dan waktu, dan ZARZOOM yang menanganinya.",
+      "faq3q": "Apa yang terjadi jika saya melebihi batas paket?",
+      "faq3a": "Anda akan menerima notifikasi saat mendekati batas. Anda dapat meningkatkan paket kapan saja dari halaman Pengaturan Akun, dan perubahan berlaku segera.",
+      "faq4q": "Apakah data saya aman?",
+      "faq4a": "Ya. Kami menggunakan enkripsi standar industri untuk data saat disimpan dan dalam transmisi. Kami tidak pernah membagikan data Anda ke pihak ketiga. Lihat Kebijakan Privasi kami untuk detail lengkap.",
+      "contactTitle": "Masih butuh bantuan?",
+      "contactText": "Tim dukungan kami biasanya merespons dalam 24 jam pada hari kerja.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "Tentang ZARZOOM - Otomasi Media Sosial Berbasis AI",
+        "description": "Pelajari misi ZARZOOM merevolusi manajemen media sosial melalui otomasi cerdas dan pembuatan konten berbasis AI."
+      },
+      "badge": "Tentang ZARZOOM",
+      "heroTitle": "Autopilot media sosial Anda",
+      "heroTitleHighlight": "dalam hitungan detik.",
+      "heroDescription": "ZARZOOM adalah platform berbasis AI yang dirancang untuk membantu bisnis dan kreator menghasilkan dan memublikasikan konten media sosial secara otomatis — sehingga Anda bisa fokus pada yang terbaik yang Anda lakukan.",
+      "hero": {
+        "title": "Tentang ZARZOOM",
+        "subtitle": "Merevolusi manajemen media sosial melalui otomasi cerdas dan pembuatan konten berbasis AI."
+      },
+      "storySteps": [
+        {
+          "title": "Ide Awal",
+          "text": "Didirikan untuk menyelesaikan masalah yang dihadapi setiap kreator — tetap konsisten di media sosial tanpa kelelahan."
+        },
+        {
+          "title": "Membangun Platform",
+          "text": "Kami menggabungkan pembuatan konten berbasis AI dengan penjadwalan cerdas untuk menciptakan pipa media sosial yang sepenuhnya otomatis."
+        },
+        {
+          "title": "Otomasi dalam Skala",
+          "text": "ZARZOOM kini membantu bisnis dan kreator mempertahankan kehadiran online yang kuat — tanpa upaya harian yang biasanya dibutuhkan."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Pembuatan Konten AI",
+          "text": "Hasilkan posting yang menarik secara otomatis sesuai suara merek dan audiens Anda.",
+          "bullets": [
+            "Pembelajaran suara merek",
+            "Integrasi topik tren",
+            "Caption dan hashtag"
+          ]
+        },
+        {
+          "title": "Penjadwalan Cerdas",
+          "text": "Jadwalkan dan publikasikan konten di seluruh platform sosial Anda pada waktu yang optimal.",
+          "bullets": [
+            "Analisis aktivitas audiens",
+            "Optimisasi zona waktu",
+            "Otomasi kalender konten"
+          ]
+        },
+        {
+          "title": "Kehadiran Online Konsisten",
+          "text": "Pertahankan visibilitas dan kembangkan audiens tanpa kerja keras harian.",
+          "bullets": [
+            "Posting multi-platform",
+            "Timing berbasis keterlibatan",
+            "Dashboard terpusat"
+          ]
+        },
+        {
+          "title": "Otomasi Hemat Waktu",
+          "text": "Fokus pada bisnis Anda sementara ZARZOOM menangani seluruh pipa konten Anda.",
+          "bullets": [
+            "Tanpa upaya manual",
+            "Autopilot set-and-forget",
+            "Pelaporan real-time"
+          ]
+        }
+      ],
+      "getStartedFree": "Mulai Gratis",
+      "viewFeatures": "Lihat Fitur",
+      "autopilotActive": "Autopilot Aktif",
+      "mission": {
+        "title": "Misi Kami",
+        "subtitle": "Menghilangkan Hambatan Terbesar bagi Pertumbuhan Media Sosial",
+        "para1": "Misi kami adalah menghilangkan hambatan terbesar bagi pertumbuhan media sosial — permintaan konstan akan konten segar.",
+        "para2": "ZARZOOM menggunakan kecerdasan buatan untuk mengotomatisasi pembuatan dan publikasi konten sehingga pengusaha dan bisnis dapat fokus pada yang terbaik yang mereka lakukan.",
+        "para3": "Daripada menghabiskan berjam-jam merencanakan posting, menulis konten, dan mengelola banyak platform, ZARZOOM membantu Anda tetap terlihat online — dengan mudah."
+      },
+      "missionStats": {
+        "contentCreated": "Konten Dibuat",
+        "hoursSaved": "Jam Dihemat",
+        "platformsActive": "Platform Aktif"
+      },
+      "story": {
+        "sectionTitle": "Cerita Kami",
+        "heading": "Dibangun untuk Menyelesaikan Masalah Nyata",
+        "para1": "ZARZOOM diciptakan untuk menyelesaikan masalah yang dihadapi banyak pendiri dan kreator — tetap konsisten di media sosial.",
+        "para2": "Meskipun media sosial adalah salah satu alat paling kuat untuk membangun audiens, mempertahankan aliran konten berkualitas tinggi yang stabil itu sulit dan memakan waktu.",
+        "para3": "Dengan menggabungkan pembuatan konten berbasis AI dengan penjadwalan otomatis, ZARZOOM memungkinkan pengguna mempertahankan kehadiran online yang kuat tanpa upaya harian yang biasanya dibutuhkan."
+      },
+      "platform": {
+        "badge": "Platform",
+        "heading": "Bagaimana ZARZOOM Membantu Anda Tumbuh"
+      },
+      "lookingAhead": {
+        "badge": "Melihat ke Depan",
+        "heading": "Masa Depan Pertumbuhan Media Sosial",
+        "para1": "Kami percaya masa depan pertumbuhan media sosial akan didukung oleh otomasi cerdas.",
+        "para2": "ZARZOOM terus berevolusi untuk membantu bisnis dan kreator membangun kehadiran online mereka lebih cepat dan efektif.",
+        "para3": "Tujuan kami sederhana: membuat alat pertumbuhan media sosial yang powerful dapat diakses semua orang."
+      },
+      "intelligentAutomation": {
+        "title": "Otomasi Cerdas",
+        "subtitle": "Didukung oleh AI mutakhir untuk mengembangkan audiens Anda sementara Anda fokus pada bisnis.",
+        "tags": [
+          "Generasi AI",
+          "Auto-Jadwal",
+          "Multi-Platform",
+          "Analitik"
+        ]
+      },
+      "cta": {
+        "badge": "Mulai Hari Ini",
+        "title": "Mulai Autopilot Media Sosial Anda Hari Ini",
+        "description": "Bergabung dengan ribuan kreator dan bisnis yang berkembang dengan autopilot.",
+        "getStarted": "Mulai",
+        "viewFeatures": "Lihat Fitur"
+      },
+      "values": {
+        "title": "Nilai Inti Kami",
+        "innovation": {
+          "title": "Inovasi Utama",
+          "description": "Kami mendorong batas AI dan otomasi untuk menghadirkan solusi yang mustahil kemarin. Komitmen kami pada inovasi berarti Anda selalu memiliki akses ke kemajuan terbaru dalam teknologi media sosial."
+        },
+        "authenticity": {
+          "title": "Keterlibatan Autentik",
+          "description": "Otomasi harus meningkatkan, bukan menggantikan, koneksi manusia yang genuin. Alat kami dirancang untuk membantu Anda mempertahankan suara unik dan membangun hubungan nyata dengan audiens dalam skala."
+        },
+        "simplicity": {
+          "title": "Kesederhanaan & Kekuatan",
+          "description": "Teknologi canggih tidak harus rumit. Kami percaya membuat alat yang powerful dapat diakses semua orang, terlepas dari keahlian teknis."
+        },
+        "trust": {
+          "title": "Kepercayaan & Privasi",
+          "description": "Data Anda, konten Anda, komunitas Anda—kami memperlakukan segalanya dengan penghormatan dan keamanan tertinggi. Kami tidak pernah menjual data Anda dan mempertahankan standar perlindungan privasi tertinggi."
+        }
+      },
+      "team": {
+        "title": "Dibangun oleh Ahli",
+        "description": "Tim kami menggabungkan pengalaman puluhan tahun dalam AI, pemasaran media sosial, dan desain pengalaman pengguna. Kami bersemangat menciptakan alat yang benar-benar membuat perbedaan dalam cara bisnis terhubung dengan audiens mereka."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Fitur - Otomasi Media Sosial ZARZOOM",
+        "description": "Temukan fitur powerful yang mengotomatisasi media sosial Anda: pembuatan konten AI, penjadwalan cerdas, posting multi-platform, analitik, dan lainnya."
+      },
+      "hero": {
+        "title": "Fitur Powerful",
+        "subtitle": "Semua yang Anda butuhkan untuk mengotomatisasi, mengoptimalkan, dan menskalakan kehadiran media sosial Anda—semua dalam satu platform cerdas."
+      },
+      "aiContent": {
+        "title": "Pembuatan Konten Berbasis AI",
+        "description": "Buat posting yang menarik dalam hitungan detik dengan AI canggih kami yang memahami suara merek, preferensi audiens, dan topik tren. Hasilkan caption, hashtag, dan ide posting lengkap yang selaras dengan komunitas Anda.",
+        "features": [
+          "Pembelajaran dan adaptasi suara merek",
+          "Integrasi topik tren",
+          "Konten multi-format (teks, caption, hashtag)",
+          "Saran pengujian A/B"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Penjadwalan Cerdas & Autopilot",
+        "description": "Biarkan AI kami menentukan waktu posting optimal untuk keterlibatan maksimal. Atur preferensi sekali, dan saksikan kehadiran sosial Anda tumbuh dengan autopilot sementara Anda fokus pada bisnis.",
+        "features": [
+          "Analisis aktivitas audiens",
+          "Optimisasi zona waktu",
+          "Otomasi kalender konten",
+          "Penjadwalan berbasis keterlibatan"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Manajemen Multi-Platform",
+        "description": "Kelola semua akun media sosial Anda dari satu dashboard terpadu. Posting ke Twitter, LinkedIn, Facebook, Instagram, dan lainnya dengan satu klik.",
+        "features": [
+          "Posting lintas platform",
+          "Optimisasi spesifik platform",
+          "Kotak masuk terpadu",
+          "Analitik terpusat"
+        ]
+      },
+      "analytics": {
+        "title": "Analitik & Wawasan Lanjutan",
+        "description": "Lacak yang penting dengan analitik komprehensif yang melampaui metrik kesombongan. Pahami audiens Anda, ukur ROI, dan buat keputusan berbasis data untuk meningkatkan strategi.",
+        "features": [
+          "Pelacakan performa real-time",
+          "Demografi & perilaku audiens",
+          "Analisis tingkat keterlibatan",
+          "Benchmarking kompetitor"
+        ]
+      },
+      "contentLibrary": {
+        "title": "Perpustakaan Konten & Aset",
+        "description": "Bangun dan organisasikan repositori konten Anda dengan perpustakaan media cerdas kami. Simpan gambar, video, templat, dan cuplikan salinan untuk akses cepat dan penggunaan ulang.",
+        "features": [
+          "Penyimpanan media tak terbatas",
+          "Tag dan pencarian cerdas",
+          "Perpustakaan templat",
+          "Pelacakan performa aset"
+        ]
+      },
+      "collaboration": {
+        "title": "Kolaborasi Tim",
+        "description": "Bekerja seamlessly dengan tim, klien, atau agensi Anda. Tetapkan peran, kelola izin, dan streamlin alur persetujuan semuanya dalam platform.",
+        "features": [
+          "Kontrol akses berbasis peran",
+          "Alur persetujuan",
+          "Log aktivitas tim",
+          "Manajemen klien"
+        ]
+      },
+      "integration": {
+        "title": "Integrasi & API",
+        "description": "Hubungkan ZARZOOM dengan alat dan alur kerja yang ada. API kami yang tangguh dan integrasi siap pakai memastikan aliran data seamless di seluruh tumpukan teknologi Anda.",
+        "features": [
+          "Integrasi Zapier",
+          "Dukungan webhook",
+          "Akses REST API",
+          "Integrasi kustom"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API & Integrasi OpenClaw",
+        "description": "Tingkatkan alur kerja Anda dengan integrasi OpenClaw ZARZOOM yang powerful untuk pembuatan dan penjadwalan media sosial otomatis on-demand di 10 platform. Picu pembuatan konten berbasis AI langsung dari sistem Anda melalui REST API kami, atau biarkan agen OpenClaw menangani semuanya secara otonom. Sempurna untuk agensi, pengembang, dan bisnis yang menginginkan otomasi seamless.",
+        "features": [
+          "Otomasi agen OpenClaw (10+ platform)",
+          "Pembuatan konten AI on-demand via API",
+          "Pemicu penjadwalan instan",
+          "Otomasi alur kerja kustom"
+        ]
+      },
+      "support": {
+        "title": "Dukungan Kelas Dunia",
+        "description": "Dapatkan bantuan saat Anda butuh dengan tim dukungan khusus kami. Akses dokumentasi komprehensif, tutorial video, dan layanan pelanggan responsif.",
+        "features": [
+          "Dukungan email 24/7",
+          "Obrolan langsung (Pro+)",
+          "Tutorial video",
+          "Basis pengetahuan"
+        ]
+      },
+      "cta": {
+        "title": "Siap Mengubah Media Sosial Anda?",
+        "description": "Mulai uji coba gratis dan rasakan kekuatan otomasi cerdas.",
+        "button": "Mulai Gratis"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Hubungi Kami - ZARZOOM",
+        "description": "Hubungi tim ZARZOOM. Kami di sini untuk membantu dengan pertanyaan atau kekhawatiran apa pun."
+      },
+      "title": "Hubungi Kami",
+      "subtitle": "Ada pertanyaan atau butuh dukungan? Kami di sini untuk membantu. Kirim pesan dan kami akan merespons secepat mungkin.",
+      "info": {
+        "title": "Informasi Kontak",
+        "email": {
+          "label": "Email"
+        },
+        "phone": {
+          "label": "Telepon"
+        },
+        "address": {
+          "label": "Kantor"
+        }
+      },
+      "hours": {
+        "title": "Jam Kerja",
+        "note": "Kami biasanya merespons semua pertanyaan dalam 24 jam pada hari kerja.",
+        "weekdays": "Senin - Jumat",
+        "weekdaysTime": "09:00 - 18:00",
+        "saturday": "Sabtu",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Minggu",
+        "closed": "Tutup"
+      },
+      "form": {
+        "title": "Kirim Pesan",
+        "name": "Nama Anda",
+        "namePlaceholder": "John Doe",
+        "email": "Email Anda",
+        "emailPlaceholder": "john@example.com",
+        "subject": "Subjek",
+        "subjectPlaceholder": "Bagaimana kami bisa membantu Anda?",
+        "message": "Pesan",
+        "messagePlaceholder": "Ceritakan lebih lanjut tentang pertanyaan Anda...",
+        "messageHint": "Minimal 10 karakter",
+        "submit": "Kirim Pesan",
+        "sending": "Mengirim...",
+        "success": {
+          "title": "Pesan Berhasil Dikirim!",
+          "message": "Terima kasih telah menghubungi kami. Kami akan segera membalas."
+        },
+        "error": {
+          "title": "Error"
+        },
+        "errors": {
+          "required": "Harap isi semua bidang",
+          "failed": "Gagal mengirim pesan. Silakan coba lagi."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Syarat & Ketentuan Pengguna",
+      "subtitle": "Harap baca syarat ini dengan saksama sebelum menggunakan ZARZOOM.",
+      "lastUpdated": "Terakhir diperbarui: 1 Februari 2026",
+      "s1Title": "1. Penerimaan Syarat",
+      "s1Text": "Dengan membuat akun atau menggunakan platform ZARZOOM, Anda setuju terikat oleh Syarat & Ketentuan Pengguna ini. Jika tidak setuju, Anda tidak boleh menggunakan layanan.",
+      "s2Title": "2. Pendaftaran Akun",
+      "s2Text": "Anda harus memberikan informasi yang akurat dan lengkap saat mendaftar. Anda bertanggung jawab menjaga kerahasiaan kredensial akun dan semua aktivitas yang terjadi di bawah akun Anda.",
+      "s3Title": "3. Penggunaan yang Dapat Diterima",
+      "s3Text": "Anda setuju tidak menggunakan ZARZOOM untuk memposting konten yang melanggar hukum, fitnah, cabul, atau melanggar hak kekayaan intelektual pihak lain. Kami berhak menangguhkan atau menghentikan akun yang melanggar kebijakan ini.",
+      "s4Title": "4. Langganan & Penagihan",
+      "s4Text": "Paket berbayar ditagih di muka secara bulanan atau tahunan. Anda dapat membatalkan kapan saja; pembatalan berlaku pada akhir periode penagihan saat ini. Pengembalian dana tidak diberikan untuk periode sebagian.",
+      "s5Title": "5. Kekayaan Intelektual",
+      "s5Text": "Anda tetap memiliki kepemilikan konten yang Anda buat dan publikasikan melalui ZARZOOM. Dengan menggunakan platform, Anda memberikan kami lisensi terbatas untuk memproses, menyimpan, dan menampilkan konten Anda semata untuk tujuan penyediaan layanan.",
+      "s6Title": "6. Batasan Tanggung Jawab",
+      "s6Text": "ZARZOOM disediakan 'sebagaimana adanya'. Sejauh diizinkan hukum, kami menolak semua jaminan dan tidak bertanggung jawab atas kerugian tidak langsung, insidental, atau konsekuensial yang timbul dari penggunaan layanan Anda.",
+      "s7Title": "7. Perubahan Syarat",
+      "s7Text": "Kami dapat memperbarui syarat ini dari waktu ke waktu. Penggunaan layanan yang berkelanjutan setelah perubahan dipublikasikan merupakan penerimaan syarat yang direvisi."
+    },
+    "termsWebsite": {
+      "title": "Syarat & Ketentuan Situs Web",
+      "subtitle": "Syarat yang mengatur penggunaan Anda atas situs web zarzoom.com.",
+      "lastUpdated": "Terakhir diperbarui: 1 Februari 2026",
+      "s1Title": "1. Penggunaan Situs Web",
+      "s1Text": "Situs web ini dioperasikan oleh ZARZOOM Ltd. Dengan mengakses dan menjelajahi situs ini, Anda menerima Syarat & Ketentuan Situs Web ini sepenuhnya.",
+      "s2Title": "2. Kekayaan Intelektual",
+      "s2Text": "Semua konten di situs web ini, termasuk teks, grafik, logo, dan perangkat lunak, adalah milik ZARZOOM Ltd atau pemberi lisensinya dan dilindungi oleh hukum hak cipta dan merek dagang.",
+      "s3Title": "3. Akurasi Informasi",
+      "s3Text": "Meskipun kami berusaha menjaga informasi di situs ini akurat dan terkini, kami tidak memberikan jaminan atau pernyataan tentang kelengkapan atau akurasinya.",
+      "s4Title": "4. Tautan Pihak Ketiga",
+      "s4Text": "Situs web ini dapat berisi tautan ke situs pihak ketiga. Kami tidak bertanggung jawab atas konten atau praktik privasi situs tersebut.",
+      "s5Title": "5. Hukum yang Mengatur",
+      "s5Text": "Syarat ini diatur oleh hukum Inggris dan Wales. Setiap sengketa tunduk pada yurisdiksi eksklusif pengadilan Inggris dan Wales."
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi",
+      "subtitle": "Bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda.",
+      "lastUpdated": "Terakhir diperbarui: 1 Februari 2026",
+      "s1Title": "1. Informasi yang Kami Kumpulkan",
+      "s1Text": "Kami mengumpulkan informasi yang Anda berikan langsung (nama, email, detail pembayaran) dan informasi yang dihasilkan otomatis (alamat IP, jenis browser, data penggunaan) saat Anda menggunakan ZARZOOM.",
+      "s2Title": "2. Bagaimana Kami Menggunakan Informasi Anda",
+      "s2Text": "Kami menggunakan informasi Anda untuk menyediakan dan meningkatkan layanan, memproses pembayaran, mengirim komunikasi terkait layanan, dan mematuhi kewajiban hukum.",
+      "s3Title": "3. Berbagi Data",
+      "s3Text": "Kami tidak menjual data pribadi Anda. Kami dapat membagikan data dengan penyedia layanan tepercaya (prosesor pembayaran, penyedia hosting) yang membantu kami mengoperasikan platform, tunduk pada perjanjian kerahasiaan ketat.",
+      "s4Title": "4. Retensi Data",
+      "s4Text": "Kami menyimpan data pribadi Anda selama akun Anda aktif atau sesuai kebutuhan untuk menyediakan layanan. Anda dapat meminta penghapusan data kapan saja dengan menghubungi dukungan.",
+      "s5Title": "5. Hak Anda",
+      "s5Text": "Anda berhak mengakses, memperbaiki, atau menghapus data pribadi Anda. Anda juga dapat menolak pemrosesan atau meminta portabilitas data. Untuk menggunakan hak ini, hubungi kami di privacy@zarzoom.com.",
+      "s6Title": "6. Keamanan",
+      "s6Text": "Kami menerapkan langkah-langkah teknis dan organisasi yang sesuai untuk melindungi data Anda, termasuk enkripsi, kontrol akses, dan penilaian keamanan rutin.",
+      "s7Title": "7. Perubahan Kebijakan Ini",
+      "s7Text": "Kami dapat memperbarui kebijakan ini dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan material melalui email atau melalui platform."
+    },
+    "cookies": {
+      "title": "Kebijakan Cookie",
+      "subtitle": "Bagaimana kami menggunakan cookie dan teknologi serupa.",
+      "lastUpdated": "Terakhir diperbarui: 1 Februari 2026",
+      "s1Title": "1. Apa Itu Cookie",
+      "s1Text": "Cookie adalah file teks kecil yang ditempatkan di perangkat Anda saat mengunjungi situs web. Cookie membantu situs mengingat preferensi Anda dan memahami cara Anda menggunakannya.",
+      "s2Title": "2. Cookie yang Kami Gunakan",
+      "s2Essential": "Cookie Esensial",
+      "s2EssentialText": "Diperlukan agar situs web berfungsi dengan baik. Ini tidak dapat dinonaktifkan. Termasuk cookie sesi dan token autentikasi.",
+      "s2Analytics": "Cookie Analitik",
+      "s2AnalyticsText": "Membantu kami memahami cara pengunjung berinteraksi dengan situs web kami dengan mengumpulkan data penggunaan anonim. Kami menggunakan ini untuk meningkatkan layanan kami.",
+      "s2Preference": "Cookie Preferensi",
+      "s2PreferenceText": "Mengingat pengaturan dan preferensi Anda (seperti pilihan bahasa) untuk memberikan pengalaman yang lebih dipersonalisasi.",
+      "s3Title": "3. Mengelola Cookie",
+      "s3Text": "Anda dapat mengontrol cookie melalui pengaturan browser. Perhatikan bahwa menonaktifkan cookie tertentu dapat memengaruhi fungsionalitas situs web.",
+      "s4Title": "4. Cookie Pihak Ketiga",
+      "s4Text": "Beberapa cookie ditempatkan oleh layanan pihak ketiga yang muncul di halaman kami. Kami tidak mengontrol cookie ini. Silakan merujuk ke kebijakan privasi pihak ketiga masing-masing untuk informasi lebih lanjut.",
+      "s5Title": "5. Hubungi Kami",
+      "s5Text": "Jika Anda memiliki pertanyaan tentang penggunaan cookie kami, silakan hubungi kami di privacy@zarzoom.com."
+    }
+  }
+}

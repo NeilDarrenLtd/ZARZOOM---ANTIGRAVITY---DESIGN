@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "वापस स्वागत है",
+    "loginSubtitle": "अपने ZARZOOM अकाउंट में साइन इन करें",
+    "registerTitle": "अपना अकाउंट बनाएँ",
+    "registerSubtitle": "हजारों मार्केटर्स के साथ जुड़ें जो अपना सोशल मीडिया ऑटोमेट कर रहे हैं",
+    "email": "ईमेल पता",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "login": "साइन इन",
+    "register": "अकाउंट बनाएँ",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "orContinueWith": "या जारी रखें",
+    "noAccount": "अकाउंट नहीं है?",
+    "hasAccount": "पहले से अकाउंट है?",
+    "signUpLink": "साइन अप",
+    "signInLink": "साइन इन",
+    "passwordMinLength": "पासवर्ड कम से कम 8 अक्षर का होना चाहिए",
+    "passwordUppercase": "एक बड़ा अक्षर होना चाहिए",
+    "passwordLowercase": "एक छोटा अक्षर होना चाहिए",
+    "passwordNumber": "एक संख्या होनी चाहिए",
+    "passwordSpecial": "एक विशेष अक्षर होना चाहिए",
+    "passwordsNoMatch": "पासवर्ड मेल नहीं खाते",
+    "emailRequired": "ईमेल आवश्यक है",
+    "emailInvalid": "कृपया वैध ईमेल दर्ज करें",
+    "signUpSuccess": "अपना ईमेल जाँचें",
+    "signUpSuccessMessage": "हमने आपके ईमेल पते पर वेरिफिकेशन लिंक भेज दिया है। कृपया इनबॉक्स देखें और अकाउंट एक्टिवेट करने के लिए लिंक पर क्लिक करें।",
+    "backToLogin": "लॉगिन पर वापस",
+    "authError": "प्रमाणीकरण त्रुटि",
+    "authErrorMessage": "प्रमाणीकरण के दौरान कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+    "tryAgain": "पुनः प्रयास करें",
+    "tabLogin": "लॉग इन",
+    "tabCreateAccount": "अकाउंट बनाएँ",
+    "continueWithGoogle": "Google के साथ जारी रखें",
+    "continueWithFacebook": "Facebook के साथ जारी रखें",
+    "continueWithLinkedIn": "LinkedIn के साथ जारी रखें",
+    "continueWithX": "X के साथ जारी रखें",
+    "rememberMe": "मुझे याद रखें",
+    "forgotLogin": "लॉगिन भूल गए?",
+    "verifyTitle": "अपना इनबॉक्स जाँचें",
+    "verifySubtitle": "हमने आपके ईमेल पते पर वेरिफिकेशन लिंक भेज दिया है। कृपया इनबॉक्स देखें और अकाउंट एक्टिवेट करने के लिए लिंक पर क्लिक करें।",
+    "verifyResend": "वेरिफिकेशन ईमेल पुनः भेजें",
+    "verifyResent": "वेरिफिकेशन ईमेल पुनः भेजा गया",
+    "verifyBack": "लॉगिन पर वापस",
+    "verifiedTitle": "ईमेल सत्यापित",
+    "verifiedSubtitle": "आपका ईमेल सफलतापूर्वक सत्यापित हो गया। अब आप अपने अकाउंट में साइन इन कर सकते हैं।",
+    "verifiedContinue": "लॉगिन पर जारी रखें",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "welcome": "वापस स्वागत है",
+    "overview": "अवलोकन",
+    "accountSettings": "अकाउंट सेटिंग्स",
+    "connectedAccounts": "कनेक्टेड अकाउंट्स",
+    "comingSoon": "जल्द आ रहा है — आपका सोशल मीडिया कमांड सेंटर।",
+    "emailVerified": "ईमेल सत्यापित",
+    "memberSince": "सदस्यता से",
+    "profile": "ब्रांड सेटिंग्स",
+    "supportDescription": "हमारी सपोर्ट टीम से मदद लें। सपोर्ट टिकट बनाएँ और प्रबंधित करें।",
+    "restartSetup": "सेटअप पुनः शुरू करें",
+    "restarting": "पुनः शुरू हो रहा है..."
+  },
+  "connect": {
+    "heading": "अपने अकाउंट कनेक्ट करें",
+    "subheading": "ZARZOOM के साथ ऑटोमेटिक पोस्टिंग शुरू करने के लिए अपने सोशल मीडिया अकाउंट लिंक करें।",
+    "connectAccounts": "अकाउंट कनेक्ट करें",
+    "back": "वापस"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "फ़ाइल से ऑटो-भरें"
+  },
+  "apiKeys": {
+    "createKeyTitle": "API कुंजी बनाएँ",
+    "keyCreated": "कुंजी बनाई गई",
+    "close": "बंद करें",
+    "keyName": "कुंजी का नाम",
+    "keyNamePlaceholder": "जैसे Production, Staging, CI/CD",
+    "keyNameRequired": "नाम आवश्यक है",
+    "active": "सक्रिय",
+    "revoked": "रद्द",
+    "created": "बनाया गया",
+    "lastUsed": "अंतिम उपयोग",
+    "revokedAt": "रद्द",
+    "rotate": "रोटेट",
+    "revoke": "रद्द करें",
+    "revokeConfirm": "इस कुंजी को रद्द करें?",
+    "rotateConfirm": "कुंजी रोटेट करें?",
+    "confirm": "पुष्टि करें",
+    "cancel": "रद्द करें",
+    "revoking": "रद्द हो रहा है...",
+    "rotating": "रोटेट हो रहा है...",
+    "rotateTitle": "रोटेट: इस कुंजी को रद्द करें और नई बनाएँ"
+  },
+  "profile": {
+    "title": "ब्रांड सेटिंग्स",
+    "subtitle": "अपना ब्रांड, लक्ष्य, प्लान और सोशल कनेक्शन प्रबंधित करें।",
+    "saving": "सेव हो रहा है...",
+    "saved": "बदलाव सफलतापूर्वक सेव हुए।",
+    "saveFailed": "बदलाव सेव करने में विफल। कृपया पुनः प्रयास करें।",
+    "loadFailed": "प्रोफ़ाइल लोड करने में विफल। कृपया पुनः प्रयास करें।",
+    "save": "बदलाव सेव करें",
+    "sections": {
+      "brand": "ब्रांड बेसिक्स",
+      "brandDesc": "आपकी व्यावसायिक पहचान और कंटेंट प्राथमिकताएँ।",
+      "goals": "लक्ष्य और ग्रोथ",
+      "goalsDesc": "ZARZOOM के साथ आप क्या हासिल करना चाहते हैं।",
+      "posting": "पोस्टिंग प्राथमिकताएँ",
+      "postingDesc": "ZARZOOM आपका कंटेंट कैसे पब्लिश करता है।",
+      "plan": "आपका प्लान",
+      "planDesc": "वर्तमान सब्सक्रिप्शन और बिलिंग प्राथमिकताएँ।",
+      "social": "सोशल कनेक्शन",
+      "socialDesc": "अपने कनेक्टेड सोशल मीडिया अकाउंट प्रबंधित करें।"
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "ऑटो-पब्लिश",
+        "help": "ZARZOOM को आपकी ओर से कंटेंट स्वचालित रूप से पब्लिश करने की अनुमति दें।"
+      }
+    },
+    "plan": {
+      "current": "वर्तमान प्लान",
+      "noPlan": "कोई प्लान चयनित नहीं",
+      "annualBilling": "वार्षिक बिलिंग",
+      "changePlan": "प्लान बदलें"
+    },
+    "social": {
+      "username": "सोशल यूजरनेम",
+      "noUsername": "अभी कॉन्फ़िगर नहीं",
+      "connected": "सोशल अकाउंट कनेक्टेड",
+      "notConnected": "अभी कोई अकाउंट कनेक्ट नहीं",
+      "connect": "अकाउंट कनेक्ट करें",
+      "manage": "कनेक्शन प्रबंधित करें"
+    },
+    "back": "डैशबोर्ड पर वापस"
+  },
+  "support": {
+    "nav": {
+      "title": "सहायता",
+      "myTickets": "मेरे टिकट",
+      "createTicket": "टिकट बनाएँ",
+      "backToSupport": "सहायता पर वापस",
+      "backToDashboard": "डैशबोर्ड पर वापस"
+    },
+    "landing": {
+      "title": "सहायता पाएँ",
+      "subtitle": "हम यहाँ हैं ताकि आप ZARZOOM से अधिकतम लाभ उठा सकें।",
+      "description": "सपोर्ट टिकट सबमिट करें और हमारी टीम व्यावसायिक दिनों में 24 घंटे के भीतर जवाब देगी।",
+      "createTicketBtn": "टिकट बनाएँ",
+      "myTicketsBtn": "मेरे टिकट"
+    },
+    "list": {
+      "title": "मेरे सपोर्ट टिकट",
+      "subtitle": "अपने सपोर्ट अनुरोध देखें और प्रबंधित करें।",
+      "empty": "अभी कोई टिकट नहीं",
+      "emptyDescription": "आपने कोई सपोर्ट टिकट नहीं बनाया। शुरू करने के लिए नीचे बटन पर क्लिक करें।",
+      "createFirstTicket": "पहला टिकट बनाएँ",
+      "filterByStatus": "स्टेटस के अनुसार फ़िल्टर करें",
+      "allTickets": "सभी टिकट",
+      "showingTickets": "{filtered} में से {total} टिकट दिख रहे हैं",
+      "noMatchFilter": "चयनित स्टेटस फ़िल्टर से कोई टिकट मेल नहीं खाता।",
+      "clearFilter": "फ़िल्टर साफ़ करें",
+      "table": {
+        "ticketId": "टिकट ID",
+        "subject": "विषय",
+        "status": "स्टेटस",
+        "lastUpdated": "अंतिम अपडेट",
+        "created": "बनाया गया"
+      }
+    },
+    "create": {
+      "title": "सपोर्ट टिकट बनाएँ",
+      "subtitle": "अपनी समस्या बताएँ और हम इसे हल करने में मदद करेंगे।",
+      "form": {
+        "subject": "विषय",
+        "subjectPlaceholder": "आपकी समस्या का संक्षिप्त विवरण",
+        "subjectHelp": "आवश्यक। संक्षिप्त और स्पष्ट रखें।",
+        "category": "श्रेणी",
+        "categoryHelp": "वैकल्पिक। वह श्रेणी चुनें जो आपकी समस्या से सबसे अच्छी फिट हो।",
+        "priority": "प्राथमिकता",
+        "priorityHelp": "वैकल्पिक। बताएँ कि यह कितना ज़रूरी है।",
+        "description": "विवरण",
+        "descriptionPlaceholder": "अपनी समस्या के बारे में विस्तृत जानकारी दें...",
+        "descriptionHelp": "आवश्यक। रिप्रोड्यूस करने के चरण, एरर संदेश या अन्य प्रासंगिक विवरण शामिल करें।",
+        "attachments": "स्क्रीनशॉट अटैच करें",
+        "attachmentsHelp": "वैकल्पिक। अधिकतम 3 स्क्रीनशॉट अपलोड करें (PNG, JPG या WebP)। प्रत्येक अधिकतम 5MB।",
+        "attachmentsBtn": "फ़ाइलें चुनें",
+        "attachmentsSelected": "फ़ाइल(एं) चयनित",
+        "removeAttachment": "हटाएँ",
+        "submit": "टिकट सबमिट करें",
+        "submitting": "टिकट बन रहा है...",
+        "cancel": "रद्द करें"
+      },
+      "success": {
+        "title": "टिकट सफलतापूर्वक बनाया गया",
+        "message": "आपका सपोर्ट टिकट बन गया है। व्यावसायिक दिनों में 24 घंटे के भीतर जवाब देंगे।",
+        "viewTicket": "टिकट देखें",
+        "createAnother": "एक और टिकट बनाएँ"
+      },
+      "error": {
+        "title": "टिकट बनाने में विफल",
+        "message": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
+        "retry": "पुनः प्रयास करें"
+      }
+    },
+    "detail": {
+      "title": "टिकट विवरण",
+      "status": "स्टेटस",
+      "category": "श्रेणी",
+      "priority": "प्राथमिकता",
+      "created": "बनाया गया",
+      "lastActivity": "अंतिम गतिविधि",
+      "comments": "टिप्पणियाँ",
+      "addComment": "टिप्पणी जोड़ें",
+      "commentPlaceholder": "अपना संदेश टाइप करें...",
+      "attachScreenshots": "स्क्रीनशॉट अटैच करें",
+      "sendComment": "भेजें",
+      "sending": "भेज रहे हैं...",
+      "loadingTicket": "टिकट लोड हो रहा है...",
+      "ticketNotFound": "टिकट नहीं मिला",
+      "ticketNotFoundMessage": "यह टिकट मौजूद नहीं है या आपके पास इसे देखने की अनुमति नहीं है।",
+      "noComments": "अभी कोई टिप्पणी नहीं",
+      "userRole": "आप",
+      "adminRole": "सपोर्ट टीम",
+      "systemRole": "सिस्टम",
+      "attachmentPreview": "पूर्ण आकार देखने के लिए क्लिक करें",
+      "attachmentAlt": "अटैचमेंट",
+      "closeModal": "बंद करें",
+      "closeTicketTitle": "टिकट बंद करें",
+      "closeTicketMessage": "क्या आप वाकई इस टिकट को बंद करना चाहते हैं? वैकल्पिक रूप से कारण दे सकते हैं।",
+      "closeTicketPlaceholder": "वैकल्पिक: आप टिकट क्यों बंद कर रहे हैं?",
+      "closeTicketCancel": "रद्द करें",
+      "closeTicketButton": "टिकट बंद करें",
+      "closeTicketClosing": "बंद हो रहा है..."
+    },
+    "status": {
+      "open": "खुला",
+      "investigating": "जाँच में",
+      "waiting_on_user": "आपका इंतज़ार",
+      "resolved": "हल",
+      "closed": "बंद"
+    },
+    "category": {
+      "none": "निर्दिष्ट नहीं",
+      "account_login": "अकाउंट और लॉगिन",
+      "billing_subscription": "बिलिंग और सब्सक्रिप्शन",
+      "social_connections": "सोशल कनेक्शन",
+      "content_generation": "कंटेंट जनरेशन",
+      "publishing_issues": "पब्लिशिंग समस्याएँ",
+      "technical_bug": "तकनीकी बग",
+      "feature_request": "फ़ीचर अनुरोध",
+      "general_question": "सामान्य प्रश्न"
+    },
+    "priority": {
+      "none": "निर्दिष्ट नहीं",
+      "urgent": "जरूरी – सिस्टम ब्लॉकिंग",
+      "high": "उच्च – बड़ी समस्या",
+      "normal": "सामान्य – मानक",
+      "low": "कम – मामूली / सुझाव"
+    },
+    "attachments": {
+      "uploading": "अटैचमेंट अपलोड हो रहे हैं...",
+      "uploadSuccess": "अटैचमेंट सफलतापूर्वक अपलोड हुए",
+      "uploadError": "कुछ अटैचमेंट अपलोड करने में विफल",
+      "fileTypeError": "केवल PNG, JPG और WebP फ़ाइलें अनुमत हैं",
+      "fileSizeError": "फ़ाइल का आकार 5MB से कम होना चाहिए",
+      "fileCountError": "प्रति टिप्पणी अधिकतम 3 फ़ाइलें अपलोड कर सकते हैं",
+      "viewFullSize": "पूर्ण आकार देखें"
+    },
+    "errors": {
+      "loadFailed": "सपोर्ट टिकट लोड करने में विफल",
+      "createFailed": "टिकट बनाने में विफल",
+      "commentFailed": "टिप्पणी जोड़ने में विफल",
+      "unauthorized": "इस टिकट तक पहुँच की अनुमति नहीं है",
+      "networkError": "नेटवर्क त्रुटि। कृपया कनेक्शन जाँचें और पुनः प्रयास करें।"
+    },
+    "validation": {
+      "subjectRequired": "विषय आवश्यक है",
+      "descriptionRequired": "विवरण आवश्यक है",
+      "messageRequired": "संदेश आवश्यक है",
+      "emailRequired": "ईमेल आवश्यक है",
+      "invalidEmail": "कृपया वैध ईमेल पता दर्ज करें",
+      "noUpdatesProvided": "कोई अपडेट नहीं दिया गया",
+      "noFilesProvided": "कोई फ़ाइल नहीं दी गई",
+      "tooManyFiles": "बहुत अधिक फ़ाइलें। अधिकतम {count} फ़ाइलें अनुमत।",
+      "invalidFileType": "{name} के लिए अमान्य फ़ाइल प्रकार। केवल PNG, JPG और WebP फ़ाइलें अनुमत।",
+      "fileTooLarge": "फ़ाइल {name} बहुत बड़ी है ({size})। अधिकतम आकार 5MB।"
+    }
+  },
+  "onboarding": {
+    "title": "अपना ZARZOOM सेट करें",
+    "subtitle": "चलिए कुछ ही कदमों में आपका सोशल मीडिया ऑटोपायलट कॉन्फ़िगर करते हैं।",
+    "stepper": {
+      "step1": "अकाउंट",
+      "step2": "ब्रांड",
+      "step3": "लक्ष्य",
+      "step4": "प्लान",
+      "step5": "कनेक्ट"
+    },
+    "nav": {
+      "back": "वापस",
+      "next": "जारी रखें",
+      "saveExit": "सेव करें और बाहर",
+      "skipForNow": "अभी छोड़ें",
+      "finish": "ZARZOOM लॉन्च करें",
+      "saving": "सेव हो रहा है..."
+    },
+    "step1": {
+      "title": "अकाउंट बन गया",
+      "subtitle": "आप साइन इन हैं और शुरू करने के लिए तैयार।",
+      "signedInAs": "इस रूप में साइन इन",
+      "continue": "चलिए ब्रांड सेट करते हैं"
+    },
+    "step2": {
+      "title": "ब्रांड बेसिक्स",
+      "subtitle": "अपने व्यवसाय के बारे में बताएँ ताकि हम कंटेंट को आपके ब्रांड के अनुरूप बना सकें।",
+      "businessName": {
+        "label": "व्यावसायिक नाम",
+        "placeholder": "जैसे Acme Corp",
+        "help": "आपके व्यवसाय या ब्रांड का नाम।"
+      },
+      "description": {
+        "label": "विवरण",
+        "placeholder": "संक्षेप में बताएँ आपका व्यवसाय क्या करता है...",
+        "help": "संक्षिप्त सार ताकि हमारा AI आपकी ब्रांड आवाज़ समझे।"
+      },
+      "websiteUrl": {
+        "label": "वेबसाइट URL",
+        "placeholder": "https://yourwebsite.com",
+        "help": "हम आपकी साइट का विश्लेषण करके कंटेंट को अनुरूप बनाएंगे।"
+      },
+      "autofillFromWebsite": "वेबसाइट से ऑटो-भरें",
+      "analysing": "विश्लेषण हो रहा है...",
+      "importFromFile": "फ़ाइल से इंपोर्ट करें",
+      "choosePdfOrWord": "PDF या Word दस्तावेज़ चुनें",
+      "investigate": {
+        "button": "वेबसाइट जाँचें",
+        "loading": "आपकी वेबसाइट का विश्लेषण हो रहा है...",
+        "success": "वेबसाइट सफलतापूर्वक विश्लेषित!",
+        "error": "वेबसाइट विश्लेषित नहीं हो सकी। कृपया विवरण मैन्युअल भरें।"
+      },
+      "contentLanguage": {
+        "label": "कंटेंट भाषा",
+        "help": "आपके जनरेटेड कंटेंट की प्राथमिक भाषा।"
+      },
+      "articleStyles": {
+        "label": "आर्टिकल स्टाइल",
+        "help": "वे कंटेंट प्रकार चुनें जो आप चाहते हैं कि ZARZOOM बनाए।",
+        "options": {
+          "let_zarzoom_decide": "ZARZOOM पर छोड़ें",
+          "how_to_guides": "हाउ-टू गाइड",
+          "listicles": "लिस्टिकल",
+          "tutorials": "ट्यूटोरियल",
+          "opinion_pieces": "विचार लेख",
+          "case_studies": "केस स्टडी",
+          "news_commentary": "समाचार कमेंट्री",
+          "interviews": "इंटरव्यू",
+          "product_reviews": "प्रोडक्ट रिव्यू",
+          "explainer_articles": "एक्सप्लेनर आर्टिकल",
+          "comparisons_vs_articles": "तुलना और Vs आर्टिकल",
+          "ultimate_guides_pillar": "अल्टीमेट गाइड / पिलर कंटेंट",
+          "checklists_cheat_sheets": "चेकलिस्ट और चीट शीट",
+          "best_top_forecasts": "बेस्ट / टॉप फॉरकास्ट",
+          "problem_solution_posts": "समस्या/समाधान पोस्ट",
+          "myth_busting": "मिथ बस्टिंग / गलत धारणाएँ",
+          "resource_roundups": "रिसोर्स राउंडअप",
+          "faqs_qa_content": "FAQ / Q&A स्टाइल कंटेंट",
+          "personal_stories": "व्यक्तिगत कहानियाँ / अनुभव",
+          "research_summaries": "रिसर्च सार / डेटा इनसाइट्स",
+          "historical_timeline": "ऐतिहासिक / टाइमलाइन",
+          "satire_humor": "व्यंग्य या हास्य कंटेंट",
+          "explained_in_minutes": "X मिनट में समझाया"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "हमारा AI आपके कंटेंट के लिए सबसे अच्छा फॉर्मेट चुनेगा",
+          "how_to_guides": "चरण-दर-चरण निर्देश",
+          "listicles": "नंबर वाली लिस्ट (जैसे X के लिए 10 टिप्स)",
+          "tutorials": "हाउ-टू से अधिक गहन",
+          "opinion_pieces": "विशेषज्ञ दृष्टिकोण या कमेंट्री",
+          "case_studies": "वास्तविक उदाहरण/परिणाम",
+          "news_commentary": "वर्तमान घटनाओं के संदर्भ",
+          "interviews": "किसी व्यक्ति/अधिकारी के साथ Q&A",
+          "product_reviews": "मूल्यांकन/रेटिंग",
+          "explainer_articles": "जटिल अवधारणाओं को सरलता से समझाएँ",
+          "comparisons_vs_articles": "X बनाम Y, पेशेवर/विपक्ष तुलना",
+          "ultimate_guides_pillar": "लॉन्ग-फॉर्म, प्रामाणिक, पूरे विषय को कवर",
+          "checklists_cheat_sheets": "त्वरित संदर्भ, एक्शन योग्य लिस्ट",
+          "best_top_forecasts": "X के लिए बेस्ट टूल्स, 202X में टॉप ट्रेंड्स",
+          "problem_solution_posts": "दर्द बिंदु पहचानें फिर उसका जवाब दें",
+          "myth_busting": "आम गलत धारणाओं को दूर करना",
+          "resource_roundups": "किसी विषय पर बेस्ट आर्टिकल, टूल, लिंक",
+          "faqs_qa_content": "लॉन्ग-टेल सर्च क्वेरी को सीधे टारगेट करें",
+          "personal_stories": "कथात्मक, भावनात्मक प्रभाव",
+          "research_summaries": "सर्वे, रिसर्च परिणाम सारांशित करें",
+          "historical_timeline": "विकास या विकास पर पीछे देखें",
+          "satire_humor": "मनोरंजक, ब्रांड-पर्सनैलिटी कंटेंट",
+          "explained_in_minutes": "मुख्य बिंदु, तेज़ उपभोग"
+        }
+      },
+      "styleLinks": {
+        "label": "स्टाइल रेफरेंस लिंक",
+        "placeholder": "https://example.com/article",
+        "help": "ऐसे आर्टिकल के 3 तक लिंक जोड़ें जिसकी स्टाइल आप अपनाना चाहते हैं।",
+        "add": "लिंक जोड़ें",
+        "max": "अधिकतम 3 लिंक"
+      },
+      "brandColor": {
+        "label": "ब्रांड रंग",
+        "help": "जनरेटेड विज़ुअल के लिए आपका प्राथमिक ब्रांड रंग।"
+      },
+      "logo": {
+        "label": "लोगो",
+        "help": "अपना ब्रांड लोगो अपलोड करें (JPG फॉर्मेट)।",
+        "upload": "लोगो अपलोड करें",
+        "change": "लोगो बदलें",
+        "uploading": "अपलोड हो रहा है..."
+      }
+    },
+    "step3": {
+      "title": "लक्ष्य और ग्रोथ",
+      "subtitle": "ZARZOOM के साथ आप क्या हासिल करना चाहते हैं?",
+      "goals": {
+        "label": "अपने लक्ष्य चुनें",
+        "help": "एक या अधिक लक्ष्य चुनें। हम आपकी रणनीति तदनुसार बनाएंगे।",
+        "options": {
+          "increase_website_traffic": "वेबसाइट ट्रैफिक बढ़ाएँ",
+          "get_more_subscribers_leads": "अधिक सब्सक्राइबर्स और लीड पाएँ",
+          "promote_product_or_service": "प्रोडक्ट या सेवा प्रचारित करें",
+          "increase_sales": "बिक्री बढ़ाएँ",
+          "build_brand_authority": "ब्रांड अथॉरिटी बनाएँ",
+          "improve_seo": "SEO सुधारें",
+          "educate_audience": "ऑडियंस को शिक्षित करें",
+          "generate_social_content": "सोशल कंटेंट जनरेट करें"
+        }
+      },
+      "websiteUrl": {
+        "label": "वेबसाइट या लैंडिंग पेज URL",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "जब आपके लक्ष्य में वेबसाइट ट्रैफिक या लीड जनरेशन शामिल हो तो आवश्यक।"
+      },
+      "productUrl": {
+        "label": "प्रोडक्ट या सेल्स पेज URL",
+        "placeholder": "https://yoursite.com/product",
+        "help": "जब आपके लक्ष्य में प्रोडक्ट प्रचार या बिक्री शामिल हो तो आवश्यक।"
+      }
+    },
+    "step4": {
+      "title": "अपना प्लान चुनें",
+      "subtitle": "ऐसा प्लान शुरू करें जो आपकी ग्रोथ महत्वाकांक्षाओं से मेल खाता हो।",
+      "discount": {
+        "label": "वार्षिक बिलिंग",
+        "save": "{percent}% बचाएँ"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "3 तक सोशल प्रोफाइल",
+          "postsPerMonth": "महीने में 30 पोस्ट",
+          "aiGeneration": "बेसिक AI कंटेंट जनरेशन",
+          "scheduling": "पोस्ट शेड्यूलिंग",
+          "emailSupport": "ईमेल सपोर्ट"
+        },
+        "pro": {
+          "socialProfiles": "10 तक सोशल प्रोफाइल",
+          "postsPerMonth": "महीने में 150 पोस्ट",
+          "aiGeneration": "एडवांस्ड AI कंटेंट जनरेशन",
+          "scheduling": "सही समय के साथ स्मार्ट शेड्यूलिंग",
+          "analytics": "एनालिटिक्स डैशबोर्ड",
+          "prioritySupport": "प्राथमिकता सपोर्ट"
+        },
+        "scale": {
+          "socialProfiles": "असीमित सोशल प्रोफाइल",
+          "postsPerMonth": "असीमित पोस्ट",
+          "aiGeneration": "कस्टम ब्रांड वॉयस के साथ प्रीमियम AI",
+          "scheduling": "AI-संचालित ऑटो-शेड्यूलिंग",
+          "analytics": "एडवांस्ड एनालिटिक्स और रिपोर्टिंग",
+          "customBranding": "कस्टम ब्रांडिंग और व्हाइट-लेबल",
+          "dedicatedSupport": "डेडिकेटेड अकाउंट मैनेजर",
+          "apiAccess": "पूर्ण API एक्सेस"
+        }
+      },
+      "planNames": {
+        "basic": "बेसिक",
+        "pro": "प्रो",
+        "scale": "स्केल"
+      },
+      "planDescriptions": {
+        "basic": "सोशल मीडिया ऑटोमेशन से शुरू करने के लिए बिल्कुल सही।",
+        "pro": "बढ़ते व्यवसायों के लिए जिन्हें अधिक पावर और इनसाइट्स चाहिए।",
+        "scale": "टीमों और एजेंसियों के लिए असीमित सब कुछ।"
+      },
+      "popular": "सबसे लोकप्रिय",
+      "perMonth": "/महीना",
+      "selectPlan": "प्लान चुनें",
+      "selected": "चयनित",
+      "trialDays": "{days}-दिन मुफ्त ट्रायल"
+    },
+    "step5": {
+      "title": "कनेक्ट करें और लॉन्च करें",
+      "subtitle": "अपने सोशल अकाउंट कनेक्ट करें और प्राथमिकताएँ सेट करें।",
+      "connectSocials": {
+        "label": "सोशल अकाउंट कनेक्ट करें",
+        "help": "अपने सोशल मीडिया अकाउंट लिंक करें",
+        "button": "अकाउंट कनेक्ट करें",
+        "manage": "कनेक्शन प्रबंधित करें",
+        "connected": "सोशल अकाउंट कनेक्टेड",
+        "notConnected": "अभी कोई अकाउंट कनेक्ट नहीं"
+      },
+      "approval": {
+        "label": "कंटेंट अनुमोदन",
+        "help": "चुनें कि ZARZOOM आपका कंटेंट कैसे पब्लिश करे।",
+        "auto": "ऑटो-पब्लिश",
+        "autoHelp": "ZARZOOM शेड्यूल के अनुसार कंटेंट स्वचालित रूप से पब्लिश करता है।",
+        "manual": "मैन्युअल अनुमोदन",
+        "manualHelp": "लाइव होने से पहले हर पोस्ट की समीक्षा और अनुमोदन करें।"
+      },
+      "notes": {
+        "label": "अतिरिक्त नोट",
+        "placeholder": "अपने ब्रांड या कंटेंट प्राथमिकताओं के बारे में और कुछ बताना चाहें...",
+        "help": "हमारे AI के लिए वैकल्पिक नोट।"
+      }
+    },
+    "modal": {
+      "title": "सोशल अकाउंट कनेक्ट करें",
+      "loading": "सोशल कनेक्टर तैयार हो रहा है...",
+      "checking": "कनेक्शन जाँच हो रहा है...",
+      "close": "हो गया",
+      "openInNewTab": "नई टैब में खोलें",
+      "skipConnect": "अभी छोड़ें",
+      "errorGeneric": "सोशल कनेक्टर लोड नहीं हो सका। बाद में पुनः प्रयास करें।",
+      "errorNoUrl": "कोई कनेक्ट URL नहीं मिला। पुनः प्रयास करें।",
+      "demoTitle": "सोशल कनेक्टर जल्द आ रहा है",
+      "demoDescription": "इस एन्वायरनमेंट के लिए सोशल कनेक्टर अभी कॉन्फ़िगर नहीं है। एडमिनिस्ट्रेटर द्वारा प्रोवाइडर सेट अप होने के बाद आपके सोशल अकाउंट कनेक्शन उपलब्ध होंगे।"
+    },
+    "errors": {
+      "loadFailed": "ऑनबोर्डिंग डेटा लोड करने में विफल। कृपया पुनः प्रयास करें।",
+      "saveFailed": "सेव करने में विफल। कृपया पुनः प्रयास करें।",
+      "completeFailed": "ऑनबोर्डिंग पूरा नहीं हो सका। कृपया सभी आवश्यक फ़ील्ड जाँचें।"
+    },
+    "banner": {
+      "skipped": "आपने सेटअप छोड़ दिया। सभी फ़ीचर्स अनलॉक करने के लिए पूरा करें।",
+      "inProgress": "आपका सेटअप अधूरा है। शुरू करने के लिए पूरा करें।",
+      "cta": "सेटअप पूरा करें"
+    },
+    "gate": {
+      "title": "सेटअप आवश्यक",
+      "description": "इस फ़ीचर को अनलॉक करने के लिए ऑनबोर्डिंग सेटअप पूरा करें। बस कुछ मिनट लगते हैं।",
+      "cta": "सेटअप पूरा करें"
+    },
+    "a11y": {
+      "brandLogoAlt": "ब्रांड लोगो",
+      "socialConnectorTitle": "सोशल कनेक्टर",
+      "dismissBanner": "बैनर हटाएँ",
+      "currency": "£",
+      "stepperLabel": "ऑनबोर्डिंग प्रगति"
+    },
+    "validation": {
+      "invalidUrl": "कृपया वैध URL दर्ज करें (जैसे https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "बिलिंग इतिहास"
+    },
+    "selectCurrencyLabel": "मुद्रा चुनें",
+    "selectCurrencyHelp": "मूल्य निर्धारण के लिए अपनी पसंदीदा मुद्रा चुनें।",
+    "selectBillingInterval": "बिलिंग अंतराल चुनें",
+    "toggleDiscount": "विज्ञापन पार्टनरशिप छूट टॉगल करें",
+    "discountPartnershipTitle": "विज्ञापन पार्टनरशिप से {percent}% बचाएँ",
+    "discountActive": "सक्रिय",
+    "discountPartnershipDescription": "ZARZOOM को आपकी फ़ीड पर प्रचारात्मक कंटेंट पोस्ट करने दें (अधिकतम {maxFrequency}) और अपनी सब्सक्रिप्शन पर {percent}% छूट पाएँ। पूर्ण नियंत्रण आपके पास है और कभी भी बंद कर सकते हैं।",
+    "discountOncePerDay": "दिन में एक बार",
+    "discountPerWeek": "हफ्ते में {count} बार",
+    "discountPartnerApplied": "पार्टनर छूट लागू",
+    "discountAdvertisingApplied": "विज्ञापन पार्टनरशिप छूट लागू",
+    "contactUs": "संपर्क करें",
+    "partnerDiscountEnable": "50% पार्टनर छूट सक्षम करें",
+    "partnerDiscountStandardPrice": "मानक कीमत",
+    "partnerDiscount50Off": "50% छूट",
+    "partnerDiscountSubheading": "50% बचाएँ। हम प्रति दिन अधिकतम 1 छोटा ZARZOOM प्रोमो पोस्ट कर सकते हैं (साप्ताहिक अधिकतम 3–7) — कभी आपकी अपनी पोस्ट पर नहीं।",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "सरल, पारदर्शी मूल्य निर्धारण",
+      "subtitle": "वह प्लान चुनें जो आपकी ग्रोथ के अनुरूप हो। मुफ्त ट्रायल से शुरू करें, कभी भी अपग्रेड करें।",
+      "monthly": "मासिक",
+      "annual": "वार्षिक",
+      "popular": "सबसे लोकप्रिय",
+      "getStarted": "शुरू करें",
+      "savePercent": "वार्षिक बिलिंग से {percent}% बचाएँ",
+      "trialDays": "{days}-दिन मुफ्त ट्रायल",
+      "page": {
+        "title": "सरल, पारदर्शी मूल्य निर्धारण",
+        "subtitle": "वह प्लान चुनें जो आपके लिए सही हो। सभी प्लान में 14-दिन का मुफ्त ट्रायल शामिल।",
+        "footer": "सभी कीमतें जहाँ लागू हो VAT को छोड़कर। कभी भी प्लान रद्द या बदल सकते हैं।",
+        "contactCta": "सवाल? संपर्क करें और सही प्लान खोजने में मदद करेंगे।",
+        "contactCtaPrefix": "सवाल? ",
+        "contactLink": "संपर्क करें",
+        "contactCtaSuffix": " और हम सही प्लान खोजने में मदद करेंगे।"
+      },
+      "fallback": {
+        "title": "मूल्य निर्धारण अस्थायी रूप से अनुपलब्ध",
+        "message": "हम वर्तमान में अपने मूल्य प्लान अपडेट कर रहे हैं। कृपया जल्द वापस जाँचें या सहायता के लिए सपोर्ट से संपर्क करें।"
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "बेसिक",
+        "shortTagline": "शुरू करने के लिए बिल्कुल सही",
+        "description": "AI-संचालित कंटेंट क्रिएशन और शेड्यूलिंग के साथ अपनी सोशल मीडिया उपस्थिति लॉन्च करने के लिए ज़रूरी फ़ीचर्स।",
+        "bullets": [
+          "3 तक सोशल प्रोफाइल",
+          "महीने में 30 पोस्ट",
+          "बेसिक AI कंटेंट जनरेशन",
+          "पोस्ट शेड्यूलिंग",
+          "ईमेल सपोर्ट"
+        ],
+        "cta": "मुफ्त ट्रायल शुरू करें"
+      },
+      "pro": {
+        "displayName": "प्रो",
+        "shortTagline": "बढ़ते व्यवसायों के लिए सर्वश्रेष्ठ",
+        "description": "इंटेलिजेंट ऑटोमेशन के साथ सोशल मीडिया रणनीति स्केल करने के लिए एडवांस्ड फ़ीचर्स और एनालिटिक्स।",
+        "bullets": [
+          "10 तक सोशल प्रोफाइल",
+          "महीने में 150 पोस्ट",
+          "एडवांस्ड AI कंटेंट जनरेशन",
+          "सही समय के साथ स्मार्ट शेड्यूलिंग",
+          "एनालिटिक्स डैशबोर्ड",
+          "प्राथमिकता सपोर्ट"
+        ],
+        "cta": "मुफ्त ट्रायल शुरू करें"
+      },
+      "advanced": {
+        "displayName": "एडवांस्ड",
+        "shortTagline": "टीमों और एजेंसियों के लिए",
+        "description": "असीमित कंटेंट, कस्टम ब्रांडिंग और अधिकतम प्रभाव के लिए डेडिकेटेड सपोर्ट के साथ एंटरप्राइज़-ग्रेड फ़ीचर्स।",
+        "bullets": [
+          "असीमित सोशल प्रोफाइल",
+          "असीमित पोस्ट",
+          "कस्टम ब्रांड वॉयस के साथ प्रीमियम AI",
+          "AI-संचालित ऑटो-शेड्यूलिंग",
+          "एडवांस्ड एनालिटिक्स और रिपोर्टिंग",
+          "कस्टम ब्रांडिंग और व्हाइट-लेबल",
+          "डेडिकेटेड अकाउंट मैनेजर",
+          "पूर्ण API एक्सेस"
+        ],
+        "cta": "सेल्स से संपर्क करें"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "3 तक सोशल प्रोफाइल",
+        "postsPerMonth": "महीने में 30 पोस्ट",
+        "aiGeneration": "बेसिक AI कंटेंट जनरेशन",
+        "scheduling": "पोस्ट शेड्यूलिंग",
+        "emailSupport": "ईमेल सपोर्ट"
+      },
+      "pro": {
+        "socialProfiles": "10 तक सोशल प्रोफाइल",
+        "postsPerMonth": "महीने में 150 पोस्ट",
+        "aiGeneration": "एडवांस्ड AI कंटेंट जनरेशन",
+        "scheduling": "सही समय के साथ स्मार्ट शेड्यूलिंग",
+        "analytics": "एनालिटिक्स डैशबोर्ड",
+        "prioritySupport": "प्राथमिकता सपोर्ट"
+      },
+      "advanced": {
+        "socialProfiles": "असीमित सोशल प्रोफाइल",
+        "postsPerMonth": "असीमित पोस्ट",
+        "aiGeneration": "कस्टम ब्रांड वॉयस के साथ प्रीमियम AI",
+        "scheduling": "AI-संचालित ऑटो-शेड्यूलिंग",
+        "analytics": "एडवांस्ड एनालिटिक्स और रिपोर्टिंग",
+        "customBranding": "कस्टम ब्रांडिंग और व्हाइट-लेबल",
+        "dedicatedSupport": "डेडिकेटेड अकाउंट मैनेजर",
+        "apiAccess": "पूर्ण API एक्सेस"
+      }
+    }
+  }
+}

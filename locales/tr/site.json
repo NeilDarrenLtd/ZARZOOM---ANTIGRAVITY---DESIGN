@@ -1,0 +1,485 @@
+{
+  "meta": {
+    "title": "ZARZOOM - Sosyal Medya Oto Pilot",
+    "description": "Yapay zeka destekli içerik üretimi ve planlama ile sosyal medya büyümenizi otomatikleştirin."
+  },
+  "nav": {
+    "about": "Hakkımızda",
+    "features": "Özellikler",
+    "pricing": "Fiyatlandırma",
+    "contact": "İletişim",
+    "getStarted": "Giriş-Başlat",
+    "support": "Destek",
+    "logout": "ÇIKIŞ",
+    "dashboard": "KONTROL PANELİ",
+    "userTerms": "Kullanıcı Şartları",
+    "websiteTerms": "Web Sitesi Şartları",
+    "privacy": "Gizlilik",
+    "cookies": "Çerezler",
+    "admin": "Admin",
+    "selectLanguage": "Dil seçin"
+  },
+  "hero": {
+    "title": "ZARZOOM",
+    "subtitle": "Sosyal Medyanızı Saniyeler İçinde Oto Pilota Alın",
+    "scrollToLaunch": "Başlatmak İçin Kaydır"
+  },
+  "tagline": {
+    "heading": "Yapay Zeka Destekli Sosyal Medya Büyümesi",
+    "subheading": "Üretin, planlayın ve yayınlayın — hepsi oto pilotta."
+  },
+  "feature": {
+    "heading": "Tek Tık. Patlayan Büyüme."
+  },
+  "cta": {
+    "heading": "Sosyal Medya Varlığınızı Dönüştürmeye Hazır mısınız?",
+    "button": "Ücretsiz Denemeyi Başlat"
+  },
+  "testimonials": {
+    "heading": "Sektör Liderleri Tarafından Tercih Ediliyor",
+    "subheading": "ZARZOOM ile büyüyen 10.000'den fazla pazarlamacıya katılın.",
+    "items": [
+      {
+        "name": "Sarah Jenkins",
+        "role": "CMO, TechFlow",
+        "content": "ZARZOOM 30 günde erişimimizi ikiye katladı. Yapay zeka içerik üretimi insan yazısından ayırt edilemiyor."
+      },
+      {
+        "name": "David Chen",
+        "role": "Kurucu, GrowthStack",
+        "content": "Oto pilot özelliği oyunu değiştirdi. Artık sosyal medyada haftada 5 dakika harcıyorum."
+      },
+      {
+        "name": "Elena Rodriguez",
+        "role": "İnfluence Lideri",
+        "content": "Gerçekten patlayan büyüme. Tüm platformlarda etkileşim metriklerimiz %400 arttı."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Fırlamaya Hazır mısınız?",
+    "subheading": "14 günlük ücretsiz denemenizi başlatın. Kredi kartı gerekmez.",
+    "button": "Şimdi Başlayın"
+  },
+  "loading": {
+    "text": "Deneyim yükleniyor..."
+  },
+  "notFound": {
+    "title": "Houston, bir sorunumuz var",
+    "description": "Aradığınız sayfa derin uzaya sürüklendi. Sizi tekrar rotaya getirelim.",
+    "backHome": "Ana Sayfaya Dön",
+    "support": "Destek"
+  },
+  "error": {
+    "title": "Bir şeyler yanlış gitti",
+    "description": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin veya ana sayfaya dönün.",
+    "tryAgain": "Tekrar dene",
+    "backHome": "Ana Sayfaya Dön"
+  },
+  "footer": {
+    "tagline": "Sosyal Medyanızı Saniyeler İçinde Oto Pilota Alın",
+    "product": "Ürün",
+    "company": "Şirket",
+    "legal": "Yasal",
+    "about": "Hakkımızda",
+    "features": "Özellikler",
+    "pricing": "Fiyatlandırma",
+    "contact": "İletişim",
+    "support": "Destek",
+    "userTerms": "Kullanıcı Şartları",
+    "websiteTerms": "Web Sitesi Şartları",
+    "privacy": "Gizlilik Politikası",
+    "cookies": "Çerez Politikası",
+    "copyright": "ZARZOOM. Tüm hakları saklıdır."
+  },
+  "pages": {
+    "support": {
+      "title": "Destek Merkezi",
+      "subtitle": "ZARZOOM'dan en iyi şekilde yararlanmanız için buradayız.",
+      "faqTitle": "Sıkça Sorulan Sorular",
+      "faq1q": "Sosyal medya hesaplarımı nasıl bağlarım?",
+      "faq1a": "Kontrol panelinize gidin, 'Bağlı Hesaplar'ı tıklayın ve her platform için yetkilendirme adımlarını izleyin. Facebook, Instagram, X (Twitter), LinkedIn ve TikTok destekliyoruz.",
+      "faq2q": "Gönderileri önceden planlayabilir miyim?",
+      "faq2a": "Kesinlikle. Takvim görünümümüz içeriği haftalar veya aylar önceden planlamanıza olanak tanır. Gönderinizi oluşturun, tarih ve saat seçin, gerisini ZARZOOM halleder.",
+      "faq3q": "Plan limitlerimi aşarsam ne olur?",
+      "faq3a": "Limitinize yaklaştığınızda bir bildirim alırsınız. Hesap Ayarları sayfasından planınızı istediğiniz zaman yükseltebilirsiniz; değişiklik anında geçerli olur.",
+      "faq4q": "Verilerim güvende mi?",
+      "faq4a": "Evet. Verileri hem saklarken hem aktarırken sektör standardı şifreleme kullanıyoruz. Verilerinizi üçüncü taraflarla asla paylaşmıyoruz. Ayrıntılar için Gizlilik Politikamıza bakın.",
+      "contactTitle": "Hâlâ yardıma mı ihtiyacınız var?",
+      "contactText": "Destek ekibimiz iş günlerinde genellikle 24 saat içinde yanıt verir.",
+      "contactEmail": "support@zarzoom.com"
+    },
+    "about": {
+      "seo": {
+        "title": "ZARZOOM Hakkında - Yapay Zeka Destekli Sosyal Medya Otomasyonu",
+        "description": "ZARZOOM'un akıllı otomasyon ve yapay zeka destekli içerik üretimiyle sosyal medya yönetimini devrimleştirme misyonu hakkında bilgi edinin."
+      },
+      "badge": "ZARZOOM Hakkında",
+      "heroTitle": "Sosyal medyanızı oto pilota alın",
+      "heroTitleHighlight": "saniyeler içinde.",
+      "heroDescription": "ZARZOOM, işletmelerin ve içerik üreticilerin sosyal medya içeriğini otomatik üretmesine ve yayınlamasına yardımcı olmak için tasarlanmış yapay zeka destekli bir platformdur — böylece en iyi yaptığınız işe odaklanabilirsiniz.",
+      "hero": {
+        "title": "ZARZOOM Hakkında",
+        "subtitle": "Akıllı otomasyon ve yapay zeka destekli içerik üretimiyle sosyal medya yönetiminde devrim."
+      },
+      "storySteps": [
+        {
+          "title": "Fikir",
+          "text": "Her içerik üreticisinin karşılaştığı bir sorunu çözmek için kuruldu: tükenmeden sosyal medyada tutarlı kalmak."
+        },
+        {
+          "title": "Platformu İnşa Etmek",
+          "text": "Yapay zeka destekli içerik üretimini akıllı planlamayla birleştirerek tam otomatik bir sosyal medya hattı oluşturduk."
+        },
+        {
+          "title": "Ölçekte Otomasyon",
+          "text": "ZARZOOM artık işletmelerin ve içerik üreticilerin güçlü bir çevrimiçi varlık sürdürmesine yardımcı oluyor — normalde gereken günlük çaba olmadan."
+        }
+      ],
+      "helpCards": [
+        {
+          "title": "Yapay Zeka İçerik Üretimi",
+          "text": "Marka sesinize ve hedef kitlenize uyarlanmış etkileyici gönderileri otomatik oluşturun.",
+          "bullets": [
+            "Marka sesi öğrenimi",
+            "Gündem konuları entegrasyonu",
+            "Altyazılar ve etiketler"
+          ]
+        },
+        {
+          "title": "Akıllı Planlama",
+          "text": "İçeriği sosyal platformlarınızda en uygun zamanda planlayın ve yayınlayın.",
+          "bullets": [
+            "Hedef kitle aktivite analizi",
+            "Saat dilimi optimizasyonu",
+            "İçerik takvimi otomasyonu"
+          ]
+        },
+        {
+          "title": "Tutarlı Çevrimiçi Varlık",
+          "text": "Günlük uğraş olmadan görünürlüğünüzü koruyun ve kitlenizi büyütün.",
+          "bullets": [
+            "Çoklu platform yayını",
+            "Etkileşime dayalı zamanlama",
+            "Merkezi kontrol paneli"
+          ]
+        },
+        {
+          "title": "Zaman Kazandıran Otomasyon",
+          "text": "İşinize odaklanın, ZARZOOM tüm içerik hattınızı yönetsin.",
+          "bullets": [
+            "Sıfır manuel çaba",
+            "Kur ve unut oto pilot",
+            "Anlık raporlama"
+          ]
+        }
+      ],
+      "getStartedFree": "Ücretsiz Başlayın",
+      "viewFeatures": "Özellikleri Görüntüle",
+      "autopilotActive": "Oto Pilot Aktif",
+      "mission": {
+        "title": "Misyonumuz",
+        "subtitle": "Sosyal Medya Büyümesinin Önündeki En Büyük Engeli Kaldırmak",
+        "para1": "Misyonumuz, sosyal medya büyümesinin önündeki en büyük engeli kaldırmak: sürekli taze içerik talebi.",
+        "para2": "ZARZOOM, girişimcilerin ve işletmelerin en iyi yaptıkları işe odaklanabilmesi için içerik oluşturmayı ve yayınlamayı otomatikleştirmek üzere yapay zeka kullanır.",
+        "para3": "Saatlerce gönderi planlamak, içerik yazmak ve birden fazla platformu yönetmek yerine ZARZOOM, çevrimiçi görünür kalmanıza — zahmetsizce yardımcı olur."
+      },
+      "missionStats": {
+        "contentCreated": "Oluşturulan İçerik",
+        "hoursSaved": "Tasarruf Edilen Saat",
+        "platformsActive": "Aktif Platform"
+      },
+      "story": {
+        "sectionTitle": "Hikayemiz",
+        "heading": "Gerçek Bir Sorunu Çözmek İçin Kuruldu",
+        "para1": "ZARZOOM, birçok kurucu ve içerik üreticisinin karşılaştığı bir sorunu çözmek için yaratıldı: sosyal medyada tutarlı kalmak.",
+        "para2": "Sosyal medya kitle oluşturmak için en güçlü araçlardan biri olsa da, sürekli yüksek kaliteli içerik akışı sürdürmek zor ve zaman alıcıdır.",
+        "para3": "Yapay zeka destekli içerik üretimini otomatik planlamayla birleştirerek ZARZOOM, kullanıcıların normalde gereken günlük çaba olmadan güçlü bir çevrimiçi varlık sürdürmesine olanak tanır."
+      },
+      "platform": {
+        "badge": "Platform",
+        "heading": "ZARZOOM Size Nasıl Büyümenize Yardımcı Olur"
+      },
+      "lookingAhead": {
+        "badge": "İleriye Bakış",
+        "heading": "Sosyal Medya Büyümesinin Geleceği",
+        "para1": "Sosyal medya büyümesinin geleceğinin akıllı otomasyonla güçleneceğine inanıyoruz.",
+        "para2": "ZARZOOM, işletmelerin ve içerik üreticilerin çevrimiçi varlıklarını daha hızlı ve etkili kurmasına yardımcı olmak için sürekli gelişiyor.",
+        "para3": "Hedefimiz basit: güçlü sosyal medya büyüme araçlarını herkes için erişilebilir kılmak."
+      },
+      "intelligentAutomation": {
+        "title": "Akıllı Otomasyon",
+        "subtitle": "İşinize odaklanırken kitlenizi büyütmek için son teknoloji yapay zeka ile güçlendirilmiş.",
+        "tags": [
+          "Yapay Zeka Üretimi",
+          "Otomatik Planlama",
+          "Çoklu Platform",
+          "Analitik"
+        ]
+      },
+      "cta": {
+        "badge": "Bugün Başlayın",
+        "title": "Sosyal Medyanızı Bugün Oto Pilota Alın",
+        "description": "Oto pilotta büyüyen binlerce içerik üreticisi ve işletmeye katılın.",
+        "getStarted": "Başlayın",
+        "viewFeatures": "Özellikleri Görüntüle"
+      },
+      "values": {
+        "title": "Temel Değerlerimiz",
+        "innovation": {
+          "title": "Önce İnovasyon",
+          "description": "Dün imkansız olan çözümleri sunmak için yapay zeka ve otomasyonun sınırlarını zorluyoruz. İnovasyona bağlılığımız, sosyal medya teknolojisindeki en son gelişmelere her zaman erişiminiz olduğu anlamına gelir."
+        },
+        "authenticity": {
+          "title": "Özgün Etkileşim",
+          "description": "Otomasyon gerçek insan bağını güçlendirmeli, yerini almamalı. Araçlarımız benzersiz sesinizi korumanıza ve kitlenizle ölçekte gerçek ilişkiler kurmanıza yardımcı olacak şekilde tasarlanmıştır."
+        },
+        "simplicity": {
+          "title": "Basitlik ve Güç",
+          "description": "Sofistike teknoloji karmaşık olmak zorunda değil. Teknik bilgiden bağımsız olarak güçlü araçları herkes için erişilebilir kılmaya inanıyoruz."
+        },
+        "trust": {
+          "title": "Güven ve Gizlilik",
+          "description": "Verileriniz, içeriğiniz, topluluğunuz—her şeye en üst düzeyde saygı ve güvenlikle davranıyoruz. Verilerinizi asla satmıyoruz ve gizlilik korumasında en yüksek standartları uyguluyoruz."
+        }
+      },
+      "team": {
+        "title": "Uzmanlar Tarafından İnşa Edildi",
+        "description": "Ekibimiz yapay zeka, sosyal medya pazarlaması ve kullanıcı deneyimi tasarımında onlarca yıllık deneyimi bir araya getiriyor. İşletmelerin kitleleriyle gerçekten fark yaratan bir şekilde bağ kurmasını sağlayan araçlar yaratmaya tutkuluyuz."
+      }
+    },
+    "features": {
+      "seo": {
+        "title": "Özellikler - ZARZOOM Sosyal Medya Otomasyonu",
+        "description": "Sosyal medyanızı otomatikleştiren güçlü özellikleri keşfedin: yapay zeka içerik üretimi, akıllı planlama, çoklu platform yayını, analitik ve daha fazlası."
+      },
+      "hero": {
+        "title": "Güçlü Özellikler",
+        "subtitle": "Sosyal medya varlığınızı otomatikleştirmek, optimize etmek ve ölçeklendirmek için ihtiyacınız olan her şey—hepsi tek bir akıllı platformda."
+      },
+      "aiContent": {
+        "title": "Yapay Zeka Destekli İçerik Üretimi",
+        "description": "Marka sesinizi, hedef kitle tercihlerinizi ve gündem konularını anlayan gelişmiş yapay zekamızla saniyeler içinde etkileyici gönderiler oluşturun. Topluluğunuzla rezonansa giren altyazılar, etiketler ve tam gönderi fikirleri üretin.",
+        "features": [
+          "Marka sesi öğrenimi ve uyarlama",
+          "Gündem konuları entegrasyonu",
+          "Çoklu format içerik (metin, altyazılar, etiketler)",
+          "A/B test önerileri"
+        ]
+      },
+      "smartScheduling": {
+        "title": "Akıllı Planlama ve Oto Pilot",
+        "description": "Maksimum etkileşim için en uygun yayın zamanlarını yapay zekamız belirlesin. Tercihlerinizi bir kez ayarlayın, işinize odaklanırken sosyal varlığınızın oto pilotta büyümesini izleyin.",
+        "features": [
+          "Hedef kitle aktivite analizi",
+          "Saat dilimi optimizasyonu",
+          "İçerik takvimi otomasyonu",
+          "Etkileşime dayalı planlama"
+        ]
+      },
+      "multiPlatform": {
+        "title": "Çoklu Platform Yönetimi",
+        "description": "Tüm sosyal medya hesaplarınızı tek bir birleşik panelden yönetin. Twitter, LinkedIn, Facebook, Instagram ve daha fazlasına tek tıkla gönderin.",
+        "features": [
+          "Platformlar arası yayın",
+          "Platforma özel optimizasyon",
+          "Birleşik gelen kutusu",
+          "Merkezi analitik"
+        ]
+      },
+      "analytics": {
+        "title": "Gelişmiş Analitik ve İçgörüler",
+        "description": "Boş metriklerin ötesine geçen kapsamlı analitikle önemli olanı takip edin. Kitlenizi anlayın, yatırım getirisini ölçün ve stratejinizi iyileştirmek için veri odaklı kararlar alın.",
+        "features": [
+          "Anlık performans takibi",
+          "Hedef kitle demografisi ve davranışı",
+          "Etkileşim oranı analizi",
+          "Rakip kıyaslaması"
+        ]
+      },
+      "contentLibrary": {
+        "title": "İçerik Kütüphanesi ve Varlıklar",
+        "description": "Akıllı medya kütüphanemizle içerik havuzunuzu oluşturun ve düzenleyin. Hızlı erişim ve yeniden kullanım için görseller, videolar, şablonlar ve metin parçaları saklayın.",
+        "features": [
+          "Sınırsız medya depolama",
+          "Akıllı etiketleme ve arama",
+          "Şablon kütüphanesi",
+          "Varlık performans takibi"
+        ]
+      },
+      "collaboration": {
+        "title": "Ekip İşbirliği",
+        "description": "Ekibiniz, müşterileriniz veya ajanslarınızla sorunsuz çalışın. Rolleri atayın, izinleri yönetin ve onay iş akışlarını platform içinde kolaylaştırın.",
+        "features": [
+          "Rol tabanlı erişim kontrolü",
+          "Onay iş akışları",
+          "Ekip aktivite günlükleri",
+          "Müşteri yönetimi"
+        ]
+      },
+      "integration": {
+        "title": "Entegrasyonlar ve API",
+        "description": "ZARZOOM'u mevcut araçlarınız ve iş akışlarınızla bağlayın. Sağlam API'miz ve hazır entegrasyonlarımız teknoloji yığınınızda kesintisiz veri akışı sağlar.",
+        "features": [
+          "Zapier entegrasyonu",
+          "Webhook desteği",
+          "REST API erişimi",
+          "Özel entegrasyonlar"
+        ]
+      },
+      "openClawIntegration": {
+        "title": "API ve OpenClaw Entegrasyonları",
+        "description": "10 platformda talep üzerine otomatik sosyal medya oluşturma ve planlama için ZARZOOM'un güçlü OpenClaw entegrasyonuyla iş akışınızı güçlendirin. REST API'miz aracılığıyla mevcut sistemlerinizden doğrudan yapay zeka destekli içerik üretimini tetikleyin veya OpenClaw ajanlarının her şeyi otonom yönetmesine izin verin. Ajanslar, geliştiriciler ve kesintisiz otomasyon isteyen işletmeler için ideal.",
+        "features": [
+          "OpenClaw ajan otomasyonu (10+ platform)",
+          "API ile talep üzerine yapay zeka içerik oluşturma",
+          "Anında planlama tetikleyicileri",
+          "Özel iş akışı otomasyonu"
+        ]
+      },
+      "support": {
+        "title": "Dünya Standartında Destek",
+        "description": "Özverili destek ekibimizle ihtiyacınız olduğunda yardım alın. Kapsamlı dokümantasyon, video eğitimleri ve duyarlı müşteri hizmetine erişin.",
+        "features": [
+          "7/24 e-posta desteği",
+          "Canlı sohbet (Pro+)",
+          "Video eğitimleri",
+          "Bilgi bankası"
+        ]
+      },
+      "cta": {
+        "title": "Sosyal Medyanızı Dönüştürmeye Hazır mısınız?",
+        "description": "Ücretsiz denemenizi başlatın ve akıllı otomasyonun gücünü deneyimleyin.",
+        "button": "Ücretsiz Başlayın"
+      }
+    },
+    "contact": {
+      "seo": {
+        "title": "Bize Ulaşın - ZARZOOM",
+        "description": "ZARZOOM ekibiyle iletişime geçin. Sorularınız veya endişeleriniz için buradayız."
+      },
+      "title": "Bize Ulaşın",
+      "subtitle": "Bir sorunuz mu var ya da destek mi gerekiyor? Yardımcı olmak için buradayız. Bize bir mesaj gönderin, en kısa sürede yanıt vereceğiz.",
+      "info": {
+        "title": "İletişim Bilgileri",
+        "email": {
+          "label": "E-posta"
+        },
+        "phone": {
+          "label": "Telefon"
+        },
+        "address": {
+          "label": "Ofis"
+        }
+      },
+      "hours": {
+        "title": "Çalışma Saatleri",
+        "note": "İş günlerinde tüm taleplere genellikle 24 saat içinde yanıt veriyoruz.",
+        "weekdays": "Pazartesi - Cuma",
+        "weekdaysTime": "09:00 - 18:00",
+        "saturday": "Cumartesi",
+        "saturdayTime": "10:00 - 16:00",
+        "sunday": "Pazar",
+        "closed": "Kapalı"
+      },
+      "form": {
+        "title": "Bize Mesaj Gönderin",
+        "name": "Adınız Soyadınız",
+        "namePlaceholder": "Ahmet Yılmaz",
+        "email": "E-posta Adresiniz",
+        "emailPlaceholder": "ornek@email.com",
+        "subject": "Konu",
+        "subjectPlaceholder": "Size nasıl yardımcı olabiliriz?",
+        "message": "Mesaj",
+        "messagePlaceholder": "Talebiniz hakkında daha fazla bilgi verin...",
+        "messageHint": "En az 10 karakter",
+        "submit": "Mesaj Gönder",
+        "sending": "Gönderiliyor...",
+        "success": {
+          "title": "Mesaj Başarıyla Gönderildi!",
+          "message": "Bizimle iletişime geçtiğiniz için teşekkür ederiz. En kısa sürede size dönüş yapacağız."
+        },
+        "error": {
+          "title": "Hata"
+        },
+        "errors": {
+          "required": "Lütfen tüm alanları doldurun",
+          "failed": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
+        }
+      }
+    },
+    "termsUser": {
+      "title": "Kullanıcı Şartları ve Koşulları",
+      "subtitle": "ZARZOOM'u kullanmadan önce lütfen bu şartları dikkatlice okuyun.",
+      "lastUpdated": "Son güncelleme: 1 Şubat 2026",
+      "s1Title": "1. Şartların Kabulü",
+      "s1Text": "Hesap oluşturarak veya ZARZOOM platformunu kullanarak bu Kullanıcı Şartları ve Koşullarına bağlı kalmayı kabul edersiniz. Kabul etmiyorsanız hizmeti kullanmamalısınız.",
+      "s2Title": "2. Hesap Kaydı",
+      "s2Text": "Kayıt sırasında doğru ve eksiksiz bilgi vermelisiniz. Hesap kimlik bilgilerinizin gizliliğini korumak ve hesabınız altında gerçekleşen tüm faaliyetlerden sorumlu olmak sizin yükümlülüğünüzdür.",
+      "s3Title": "3. Kabul Edilebilir Kullanım",
+      "s3Text": "ZARZOOM'u yasadışı, iftira niteliğinde, müstehcen veya başkalarının fikri mülkiyet haklarını ihlal eden içerik yayınlamak için kullanmayacağınızı kabul edersiniz. Bu politikayı ihlal eden hesapları askıya alma veya sonlandırma hakkımızı saklı tutarız.",
+      "s4Title": "4. Abonelik ve Faturalandırma",
+      "s4Text": "Ücretli planlar aylık veya yıllık olarak önceden faturalandırılır. İstediğiniz zaman iptal edebilirsiniz; iptal mevcut faturalandırma döneminin sonunda geçerli olur. Kısmi dönemler için iade yapılmaz.",
+      "s5Title": "5. Fikri Mülkiyet",
+      "s5Text": "ZARZOOM aracılığıyla oluşturduğunuz ve yayınladığınız içeriğin mülkiyetini siz korursunuz. Platformu kullanarak, hizmeti sağlama amacıyla içeriğinizi işleme, saklama ve görüntüleme konusunda bize sınırlı bir lisans verirsiniz.",
+      "s6Title": "6. Sorumluluk Sınırlaması",
+      "s6Text": "ZARZOOM 'olduğu gibi' sunulmaktadır. Yürürlük izin verdiği ölçüde tüm garantileri reddederiz ve hizmeti kullanımınızdan kaynaklanan dolaylı, arızi veya sonuç olarak ortaya çıkan zararlardan sorumlu olmayız.",
+      "s7Title": "7. Şartlarda Değişiklikler",
+      "s7Text": "Bu şartları zaman zaman güncelleyebiliriz. Değişiklikler yayınlandıktan sonra hizmeti kullanmaya devam etmeniz güncellenmiş şartları kabul ettiğiniz anlamına gelir."
+    },
+    "termsWebsite": {
+      "title": "Web Sitesi Şartları ve Koşulları",
+      "subtitle": "zarzoom.com web sitesinin kullanımınıza ilişkin şartlar.",
+      "lastUpdated": "Son güncelleme: 1 Şubat 2026",
+      "s1Title": "1. Web Sitesi Kullanımı",
+      "s1Text": "Bu web sitesi ZARZOOM Ltd tarafından işletilmektedir. Bu siteye erişerek ve gezinerek bu Web Sitesi Şartları ve Koşullarını tamamen kabul etmiş olursunuz.",
+      "s2Title": "2. Fikri Mülkiyet",
+      "s2Text": "Metin, grafikler, logolar ve yazılım dahil bu web sitesindeki tüm içerik ZARZOOM Ltd veya lisans verenlerinin mülkiyetindedir ve telif hakkı ve marka yasalarıyla korunmaktadır.",
+      "s3Title": "3. Bilginin Doğruluğu",
+      "s3Text": "Sitedeki bilgileri doğru ve güncel tutmaya çalışsak da, bütünlüğü veya doğruluğu hakkında hiçbir garanti veya beyanda bulunmuyoruz.",
+      "s4Title": "4. Üçüncü Taraf Bağlantıları",
+      "s4Text": "Bu web sitesi üçüncü taraf sitelere bağlantılar içerebilir. Bu sitelerin içeriğinden veya gizlilik uygulamalarından sorumlu değiliz.",
+      "s5Title": "5. Uygulanacak Hukuk",
+      "s5Text": "Bu şartlar İngiltere ve Galler hukukuna tabidir. Uyuşmazlıklar İngiltere ve Galler mahkemelerinin münhasır yargı yetkisine tabidir."
+    },
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "subtitle": "Kişisel bilgilerinizi nasıl topladığımız, kullandığımız ve koruduğumuz.",
+      "lastUpdated": "Son güncelleme: 1 Şubat 2026",
+      "s1Title": "1. Topladığımız Bilgiler",
+      "s1Text": "ZARZOOM kullandığınızda doğrudan verdiğiniz bilgileri (ad, e-posta, ödeme bilgileri) ve otomatik oluşturulan bilgileri (IP adresi, tarayıcı türü, kullanım verileri) topluyoruz.",
+      "s2Title": "2. Bilgilerinizi Nasıl Kullandığımız",
+      "s2Text": "Bilgilerinizi hizmeti sağlamak ve iyileştirmek, ödemeleri işlemek, hizmetle ilgili iletişimler göndermek ve yasal yükümlülüklere uymak için kullanıyoruz.",
+      "s3Title": "3. Veri Paylaşımı",
+      "s3Text": "Kişisel verilerinizi satmıyoruz. Platformu işletmemize yardımcı olan güvenilir hizmet sağlayıcılarla (ödeme işlemcileri, barındırma sağlayıcıları) sıkı gizlilik anlaşmalarına tabi olarak veri paylaşabiliriz.",
+      "s4Title": "4. Veri Saklama",
+      "s4Text": "Kişisel verilerinizi hesabınız aktif olduğu sürece veya hizmeti sağlamak için gerekli olduğu sürece saklarız. Verilerinizin silinmesini istediğiniz zaman destek ile iletişime geçerek talep edebilirsiniz.",
+      "s5Title": "5. Haklarınız",
+      "s5Text": "Kişisel verilerinize erişme, düzeltme veya silme hakkınız vardır. İşlemeye itiraz edebilir veya veri taşınabilirliği talep edebilirsiniz. Bu hakları kullanmak için privacy@zarzoom.com adresinden bize ulaşın.",
+      "s6Title": "6. Güvenlik",
+      "s6Text": "Verilerinizi korumak için şifreleme, erişim kontrolleri ve düzenli güvenlik değerlendirmeleri dahil uygun teknik ve örgütsel önlemleri uyguluyoruz.",
+      "s7Title": "7. Bu Politikada Değişiklikler",
+      "s7Text": "Bu politikayı zaman zaman güncelleyebiliriz. Önemli değişiklikleri e-posta veya platform üzerinden size bildireceğiz."
+    },
+    "cookies": {
+      "title": "Çerez Politikası",
+      "subtitle": "Çerezleri ve benzer teknolojileri nasıl kullandığımız.",
+      "lastUpdated": "Son güncelleme: 1 Şubat 2026",
+      "s1Title": "1. Çerezler Nedir",
+      "s1Text": "Çerezler, bir web sitesini ziyaret ettiğinizde cihazınıza yerleştirilen küçük metin dosyalarıdır. Sitenin tercihlerinizi hatırlamasına ve nasıl kullandığınızı anlamasına yardımcı olurlar.",
+      "s2Title": "2. Kullandığımız Çerezler",
+      "s2Essential": "Zorunlu Çerezler",
+      "s2EssentialText": "Web sitesinin düzgün çalışması için gereklidir. Bunlar devre dışı bırakılamaz. Oturum çerezleri ve kimlik doğrulama belirteçlerini içerir.",
+      "s2Analytics": "Analitik Çerezler",
+      "s2AnalyticsText": "Anonim kullanım verisi toplayarak ziyaretçilerin web sitemizle nasıl etkileşime girdiğini anlamamıza yardımcı olur. Bunu hizmetimizi iyileştirmek için kullanıyoruz.",
+      "s2Preference": "Tercih Çerezleri",
+      "s2PreferenceText": "Daha kişiselleştirilmiş bir deneyim sunmak için ayarlarınızı ve tercihlerinizi (örneğin dil seçimi) hatırlar.",
+      "s3Title": "3. Çerezleri Yönetme",
+      "s3Text": "Çerezleri tarayıcı ayarlarınızdan kontrol edebilirsiniz. Belirli çerezleri devre dışı bırakmanın web sitesinin işlevselliğini etkileyebileceğini unutmayın.",
+      "s4Title": "4. Üçüncü Taraf Çerezleri",
+      "s4Text": "Sayfalarımızda görünen üçüncü taraf hizmetleri tarafından bazı çerezler yerleştirilir. Bu çerezleri kontrol etmiyoruz. Daha fazla bilgi için ilgili üçüncü taraf gizlilik politikalarına bakın.",
+      "s5Title": "5. Bize Ulaşın",
+      "s5Text": "Çerez kullanımımız hakkında sorularınız varsa lütfen privacy@zarzoom.com adresinden bizimle iletişime geçin."
+    }
+  }
+}

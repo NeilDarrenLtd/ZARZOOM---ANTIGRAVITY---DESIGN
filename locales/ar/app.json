@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "مرحباً بعودتك",
+    "loginSubtitle": "سجّل الدخول إلى حساب ZARZOOM",
+    "registerTitle": "إنشاء حسابك",
+    "registerSubtitle": "انضم إلى آلاف المسوقين الذين يؤتمتون وسائل التواصل",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء الحساب",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "orContinueWith": "أو تابع باستخدام",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "signUpLink": "إنشاء حساب",
+    "signInLink": "تسجيل الدخول",
+    "passwordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+    "passwordUppercase": "يجب أن تحتوي على حرف كبير",
+    "passwordLowercase": "يجب أن تحتوي على حرف صغير",
+    "passwordNumber": "يجب أن تحتوي على رقم",
+    "passwordSpecial": "يجب أن تحتوي على رمز خاص",
+    "passwordsNoMatch": "كلمتا المرور غير متطابقتين",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+    "signUpSuccess": "تحقق من بريدك",
+    "signUpSuccessMessage": "أرسلنا رابط التحقق إلى بريدك. يرجى فتح صندوق الوارد والنقر على الرابط لتفعيل حسابك.",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "authError": "خطأ في المصادقة",
+    "authErrorMessage": "حدث خطأ أثناء المصادقة. يرجى المحاولة مرة أخرى.",
+    "tryAgain": "حاول مرة أخرى",
+    "tabLogin": "تسجيل الدخول",
+    "tabCreateAccount": "إنشاء حساب",
+    "continueWithGoogle": "المتابعة مع Google",
+    "continueWithFacebook": "المتابعة مع Facebook",
+    "continueWithLinkedIn": "المتابعة مع LinkedIn",
+    "continueWithX": "المتابعة مع X",
+    "rememberMe": "تذكرني",
+    "forgotLogin": "نسيت بيانات الدخول؟",
+    "verifyTitle": "تحقق من صندوق الوارد",
+    "verifySubtitle": "أرسلنا رابط التحقق إلى بريدك. يرجى فتح صندوق الوارد والنقر على الرابط لتفعيل حسابك.",
+    "verifyResend": "إعادة إرسال بريد التحقق",
+    "verifyResent": "تم إعادة إرسال بريد التحقق",
+    "verifyBack": "العودة لتسجيل الدخول",
+    "verifiedTitle": "تم التحقق من البريد",
+    "verifiedSubtitle": "تم التحقق من بريدك بنجاح. يمكنك الآن تسجيل الدخول إلى حسابك.",
+    "verifiedContinue": "المتابعة لتسجيل الدخول",
+    "adminLogin": "Admin Login",
+    "adminLoginSubtitle": "Restricted area. Authorised personnel only.",
+    "adminSignIn": "Sign In as Admin"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بعودتك",
+    "overview": "نظرة عامة",
+    "accountSettings": "إعدادات الحساب",
+    "connectedAccounts": "الحسابات المتصلة",
+    "comingSoon": "قريباً — مركز التحكم في وسائل التواصل.",
+    "emailVerified": "تم التحقق من البريد",
+    "memberSince": "عضو منذ",
+    "profile": "إعدادات العلامة",
+    "supportDescription": "احصل على المساعدة من فريق الدعم. أنشئ وأدر تذاكر الدعم.",
+    "restartSetup": "إعادة الإعداد",
+    "restarting": "جاري إعادة التشغيل..."
+  },
+  "connect": {
+    "heading": "ربط حساباتك",
+    "subheading": "اربط حسابات وسائل التواصل لبدء النشر تلقائياً مع ZARZOOM.",
+    "connectAccounts": "ربط الحسابات",
+    "back": "رجوع"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "التعبئة التلقائية من ملف"
+  },
+  "apiKeys": {
+    "createKeyTitle": "إنشاء مفتاح API",
+    "keyCreated": "تم إنشاء المفتاح",
+    "close": "إغلاق",
+    "keyName": "اسم المفتاح",
+    "keyNamePlaceholder": "مثال: Production, Staging, CI/CD",
+    "keyNameRequired": "الاسم مطلوب",
+    "active": "نشط",
+    "revoked": "ملغى",
+    "created": "تاريخ الإنشاء",
+    "lastUsed": "آخر استخدام",
+    "revokedAt": "تاريخ الإلغاء",
+    "rotate": "تدوير",
+    "revoke": "إلغاء",
+    "revokeConfirm": "إلغاء هذا المفتاح؟",
+    "rotateConfirm": "تدوير المفتاح؟",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "revoking": "جاري الإلغاء...",
+    "rotating": "جاري التدوير...",
+    "rotateTitle": "تدوير: إلغاء هذا المفتاح وإنشاء مفتاح جديد"
+  },
+  "profile": {
+    "title": "إعدادات العلامة",
+    "subtitle": "أدر علامتك وأهدافك وخطتك واتصالاتك الاجتماعية.",
+    "saving": "جاري الحفظ...",
+    "saved": "تم حفظ التغييرات بنجاح.",
+    "saveFailed": "فشل حفظ التغييرات. يرجى المحاولة مرة أخرى.",
+    "loadFailed": "فشل تحميل الملف الشخصي. يرجى المحاولة مرة أخرى.",
+    "save": "حفظ التغييرات",
+    "sections": {
+      "brand": "أساسيات العلامة",
+      "brandDesc": "هوية عملك وتفضيلات المحتوى.",
+      "goals": "الأهداف والنمو",
+      "goalsDesc": "ما تريد تحقيقه مع ZARZOOM.",
+      "posting": "تفضيلات النشر",
+      "postingDesc": "كيف ينشر ZARZOOM محتواك.",
+      "plan": "خطتك",
+      "planDesc": "الاشتراك الحالي وتفضيلات الفوترة.",
+      "social": "الاتصالات الاجتماعية",
+      "socialDesc": "أدر حسابات وسائل التواصل المتصلة."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "النشر التلقائي",
+        "help": "السماح لـ ZARZOOM بنشر المحتوى تلقائياً نيابة عنك."
+      }
+    },
+    "plan": {
+      "current": "الخطة الحالية",
+      "noPlan": "لم تُختر خطة",
+      "annualBilling": "الفوترة السنوية",
+      "changePlan": "تغيير الخطة"
+    },
+    "social": {
+      "username": "اسم المستخدم الاجتماعي",
+      "noUsername": "لم يُضبط بعد",
+      "connected": "حسابات اجتماعية متصلة",
+      "notConnected": "لا حسابات متصلة بعد",
+      "connect": "ربط الحسابات",
+      "manage": "إدارة الاتصالات"
+    },
+    "back": "العودة إلى لوحة التحكم"
+  },
+  "support": {
+    "nav": {
+      "title": "الدعم",
+      "myTickets": "تذاكري",
+      "createTicket": "إنشاء تذكرة",
+      "backToSupport": "العودة إلى الدعم",
+      "backToDashboard": "العودة إلى لوحة التحكم"
+    },
+    "landing": {
+      "title": "احصل على الدعم",
+      "subtitle": "نحن هنا لمساعدتك على الاستفادة القصوى من ZARZOOM.",
+      "description": "قدّم تذكرة دعم وسيرد فريقنا خلال 24 ساعة في أيام العمل.",
+      "createTicketBtn": "إنشاء تذكرة",
+      "myTicketsBtn": "تذاكري"
+    },
+    "list": {
+      "title": "تذاكر الدعم الخاصة بي",
+      "subtitle": "عرض وإدارة طلبات الدعم.",
+      "empty": "لا توجد تذاكر بعد",
+      "emptyDescription": "لم تنشئ أي تذاكر دعم. انقر الزر أدناه للبدء.",
+      "createFirstTicket": "إنشاء تذكرتك الأولى",
+      "filterByStatus": "تصفية حسب الحالة",
+      "allTickets": "جميع التذاكر",
+      "showingTickets": "عرض {filtered} من {total} تذكرة",
+      "noMatchFilter": "لا تذاكر تطابق فلتر الحالة المحدد.",
+      "clearFilter": "مسح الفلتر",
+      "table": {
+        "ticketId": "رقم التذكرة",
+        "subject": "الموضوع",
+        "status": "الحالة",
+        "lastUpdated": "آخر تحديث",
+        "created": "تاريخ الإنشاء"
+      }
+    },
+    "create": {
+      "title": "إنشاء تذكرة دعم",
+      "subtitle": "صف مشكلتك وسنساعدك على حلها.",
+      "form": {
+        "subject": "الموضوع",
+        "subjectPlaceholder": "وصف مختصر لمشكلتك",
+        "subjectHelp": "مطلوب. اجعله قصيراً وواضحاً.",
+        "category": "الفئة",
+        "categoryHelp": "اختياري. اختر الفئة الأنسب لمشكلتك.",
+        "priority": "الأولوية",
+        "priorityHelp": "اختياري. أخبرنا بمدى إلحاح الأمر.",
+        "description": "الوصف",
+        "descriptionPlaceholder": "قدّم تفاصيل عن مشكلتك...",
+        "descriptionHelp": "مطلوب. أدرج خطوات إعادة الإنتاج أو رسائل الخطأ أو أي تفاصيل ذات صلة.",
+        "attachments": "إرفاق لقطات شاشة",
+        "attachmentsHelp": "اختياري. رفع حتى 3 لقطات (PNG أو JPG أو WebP). بحد أقصى 5 ميجابايت لكل منها.",
+        "attachmentsBtn": "اختيار ملفات",
+        "attachmentsSelected": "ملف/ملفات محددة",
+        "removeAttachment": "إزالة",
+        "submit": "إرسال التذكرة",
+        "submitting": "جاري إنشاء التذكرة...",
+        "cancel": "إلغاء"
+      },
+      "success": {
+        "title": "تم إنشاء التذكرة بنجاح",
+        "message": "تم إنشاء تذكرة الدعم. سنرد خلال 24 ساعة في أيام العمل.",
+        "viewTicket": "عرض التذكرة",
+        "createAnother": "إنشاء تذكرة أخرى"
+      },
+      "error": {
+        "title": "فشل إنشاء التذكرة",
+        "message": "حدث خطأ. يرجى المحاولة مرة أخرى.",
+        "retry": "حاول مرة أخرى"
+      }
+    },
+    "detail": {
+      "title": "تفاصيل التذكرة",
+      "status": "الحالة",
+      "category": "الفئة",
+      "priority": "الأولوية",
+      "created": "تاريخ الإنشاء",
+      "lastActivity": "آخر نشاط",
+      "comments": "التعليقات",
+      "addComment": "إضافة تعليق",
+      "commentPlaceholder": "اكتب رسالتك...",
+      "attachScreenshots": "إرفاق لقطات شاشة",
+      "sendComment": "إرسال",
+      "sending": "جاري الإرسال...",
+      "loadingTicket": "جاري تحميل التذكرة...",
+      "ticketNotFound": "التذكرة غير موجودة",
+      "ticketNotFoundMessage": "هذه التذكرة غير موجودة أو ليس لديك صلاحية لعرضها.",
+      "noComments": "لا تعليقات بعد",
+      "userRole": "أنت",
+      "adminRole": "فريق الدعم",
+      "systemRole": "النظام",
+      "attachmentPreview": "انقر لعرض بالحجم الكامل",
+      "attachmentAlt": "مرفق",
+      "closeModal": "إغلاق",
+      "closeTicketTitle": "إغلاق التذكرة",
+      "closeTicketMessage": "هل أنت متأكد من إغلاق هذه التذكرة؟ يمكنك اختيارياً تقديم سبب.",
+      "closeTicketPlaceholder": "اختياري: لماذا تغلق هذه التذكرة؟",
+      "closeTicketCancel": "إلغاء",
+      "closeTicketButton": "إغلاق التذكرة",
+      "closeTicketClosing": "جاري الإغلاق..."
+    },
+    "status": {
+      "open": "مفتوحة",
+      "investigating": "قيد التحقق",
+      "waiting_on_user": "في انتظارك",
+      "resolved": "تم الحل",
+      "closed": "مغلقة"
+    },
+    "category": {
+      "none": "غير محدد",
+      "account_login": "الحساب وتسجيل الدخول",
+      "billing_subscription": "الفوترة والاشتراك",
+      "social_connections": "الاتصالات الاجتماعية",
+      "content_generation": "إنشاء المحتوى",
+      "publishing_issues": "مشاكل النشر",
+      "technical_bug": "خلل تقني",
+      "feature_request": "طلب ميزة",
+      "general_question": "سؤال عام"
+    },
+    "priority": {
+      "none": "غير محدد",
+      "urgent": "عاجل — يعطل النظام",
+      "high": "عالية — مشكلة كبيرة",
+      "normal": "عادية — معيارية",
+      "low": "منخفضة — بسيطة / اقتراح"
+    },
+    "attachments": {
+      "uploading": "جاري رفع المرفقات...",
+      "uploadSuccess": "تم رفع المرفقات بنجاح",
+      "uploadError": "فشل رفع بعض المرفقات",
+      "fileTypeError": "يُسمح فقط بملفات PNG و JPG و WebP",
+      "fileSizeError": "حجم الملف يجب أن يكون أقل من 5 ميجابايت",
+      "fileCountError": "يمكنك رفع حتى 3 ملفات لكل تعليق",
+      "viewFullSize": "عرض بالحجم الكامل"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل تذاكر الدعم",
+      "createFailed": "فشل إنشاء التذكرة",
+      "commentFailed": "فشل إضافة التعليق",
+      "unauthorized": "ليس لديك صلاحية للوصول إلى هذه التذكرة",
+      "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
+    },
+    "validation": {
+      "subjectRequired": "الموضوع مطلوب",
+      "descriptionRequired": "الوصف مطلوب",
+      "messageRequired": "الرسالة مطلوبة",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+      "noUpdatesProvided": "لم تُقدّم تحديثات",
+      "noFilesProvided": "لم تُرفع ملفات",
+      "tooManyFiles": "عدد الملفات كبير. الحد الأقصى {count} ملفات.",
+      "invalidFileType": "نوع ملف غير صالح لـ {name}. يُسمح فقط بملفات PNG و JPG و WebP.",
+      "fileTooLarge": "الملف {name} كبير جداً ({size}). الحجم الأقصى 5 ميجابايت."
+    }
+  },
+  "onboarding": {
+    "title": "إعداد ZARZOOM",
+    "subtitle": "لنُعد الطيار الآلي لوسائل التواصل في خطوات قليلة.",
+    "stepper": {
+      "step1": "الحساب",
+      "step2": "العلامة",
+      "step3": "الأهداف",
+      "step4": "الخطة",
+      "step5": "الربط"
+    },
+    "nav": {
+      "back": "رجوع",
+      "next": "متابعة",
+      "saveExit": "حفظ والخروج",
+      "skipForNow": "تخطي الآن",
+      "finish": "إطلاق ZARZOOM",
+      "saving": "جاري الحفظ..."
+    },
+    "step1": {
+      "title": "تم إنشاء الحساب",
+      "subtitle": "أنت مسجّل الدخول وجاهز.",
+      "signedInAs": "تم تسجيل الدخول كـ",
+      "continue": "لنُعد علامتك"
+    },
+    "step2": {
+      "title": "أساسيات العلامة",
+      "subtitle": "أخبرنا عن عملك لنُخصص المحتوى لعلامتك.",
+      "businessName": {
+        "label": "اسم النشاط",
+        "placeholder": "مثال: Acme Corp",
+        "help": "اسم نشاطك أو علامتك."
+      },
+      "description": {
+        "label": "الوصف",
+        "placeholder": "صف بإيجاز ماذا يفعل نشاطك...",
+        "help": "ملخص قصير ليُدرك الذكاء الاصطناعي صوت علامتك."
+      },
+      "websiteUrl": {
+        "label": "رابط الموقع",
+        "placeholder": "https://yourwebsite.com",
+        "help": "سنحلل موقعك لتخصيص المحتوى."
+      },
+      "autofillFromWebsite": "التعبئة التلقائية من الموقع",
+      "analysing": "جاري التحليل...",
+      "importFromFile": "استيراد من ملف",
+      "choosePdfOrWord": "اختر مستند PDF أو Word",
+      "investigate": {
+        "button": "تحليل الموقع",
+        "loading": "جاري تحليل موقعك...",
+        "success": "تم تحليل الموقع بنجاح!",
+        "error": "تعذر تحليل الموقع. يرجى تعبئة التفاصيل يدوياً."
+      },
+      "contentLanguage": {
+        "label": "لغة المحتوى",
+        "help": "اللغة الأساسية للمحتوى المُنشأ."
+      },
+      "articleStyles": {
+        "label": "أنماط المقالات",
+        "help": "اختر أنواع المحتوى التي تريد أن ينشئها ZARZOOM.",
+        "options": {
+          "let_zarzoom_decide": "دع ZARZOOM يقرر",
+          "how_to_guides": "أدلة خطوة بخطوة",
+          "listicles": "قوائم مرقمة",
+          "tutorials": "دروس تعليمية",
+          "opinion_pieces": "مقالات رأي",
+          "case_studies": "دراسات حالة",
+          "news_commentary": "تعليق على الأخبار",
+          "interviews": "مقابلات",
+          "product_reviews": "مراجعات منتجات",
+          "explainer_articles": "مقالات شرح",
+          "comparisons_vs_articles": "مقارنات ومقالات X مقابل Y",
+          "ultimate_guides_pillar": "أدلة شاملة / محتوى أساسي",
+          "checklists_cheat_sheets": "قوائم تحقق وملخصات",
+          "best_top_forecasts": "أفضل / أهم / توقعات",
+          "problem_solution_posts": "مشكلة/حل",
+          "myth_busting": "دحض الشائعات",
+          "resource_roundups": "تجمعات موارد",
+          "faqs_qa_content": "أسئلة شائعة / محتوى سؤال وجواب",
+          "personal_stories": "قصص شخصية / تجارب",
+          "research_summaries": "ملخصات أبحاث / رؤى بيانات",
+          "historical_timeline": "تاريخي / خط زمني",
+          "satire_humor": "ساخر أو فكاهي",
+          "explained_in_minutes": "شرح في X دقائق"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "دع الذكاء الاصطناعي يختار أفضل صيغة لمحتواك",
+          "how_to_guides": "تعليمات خطوة بخطوة",
+          "listicles": "قوائم مرقمة (مثل: 10 نصائح لـ X)",
+          "tutorials": "أعمق من الدليل",
+          "opinion_pieces": "وجهات نظر أو تعليق خبير",
+          "case_studies": "أمثلة/نتائج من الواقع",
+          "news_commentary": "سياق حول الأحداث الجارية",
+          "interviews": "سؤال وجواب مع شخص/سلطة",
+          "product_reviews": "تقييم/تقييمات",
+          "explainer_articles": "تبسيط المفاهيم المعقدة",
+          "comparisons_vs_articles": "X مقابل Y، مقارنات إيجابيات وسلبيات",
+          "ultimate_guides_pillar": "طويل، موثوق، يغطي الموضوع بالكامل",
+          "checklists_cheat_sheets": "مرجع سريع، قوائم قابلة للتطبيق",
+          "best_top_forecasts": "أفضل أدوات لـ X، أهم اتجاهات 202X",
+          "problem_solution_posts": "تحديد نقطة ألم ثم الإجابة عليها",
+          "myth_busting": "تصحيح المعتقدات الخاطئة الشائعة",
+          "resource_roundups": "أفضل مقالات، أدوات، روابط في موضوع",
+          "faqs_qa_content": "استهداف استعلامات البحث الطويلة مباشرة",
+          "personal_stories": "سردي، تأثير عاطفي",
+          "research_summaries": "تلخيص استطلاعات ونتائج أبحاث",
+          "historical_timeline": "نظرة على التطور أو المسار",
+          "satire_humor": "ترفيهي، يعكس شخصية العلامة",
+          "explained_in_minutes": "النقاط الرئيسية، استهلاك سريع"
+        }
+      },
+      "styleLinks": {
+        "label": "روابط مرجعية للأسلوب",
+        "placeholder": "https://example.com/article",
+        "help": "أضف حتى 3 روابط لمقالات تريد محاكاة أسلوبها.",
+        "add": "إضافة رابط",
+        "max": "3 روابط كحد أقصى"
+      },
+      "brandColor": {
+        "label": "لون العلامة",
+        "help": "لون علامتك الأساسي للعناصر المرئية المُنشأة."
+      },
+      "logo": {
+        "label": "الشعار",
+        "help": "ارفع شعار علامتك (صيغة JPG).",
+        "upload": "رفع الشعار",
+        "change": "تغيير الشعار",
+        "uploading": "جاري الرفع..."
+      }
+    },
+    "step3": {
+      "title": "الأهداف والنمو",
+      "subtitle": "ماذا تريد تحقيقه مع ZARZOOM؟",
+      "goals": {
+        "label": "اختر أهدافك",
+        "help": "اختر هدفاً أو أكثر. سنُخصص استراتيجيتك وفقاً لذلك.",
+        "options": {
+          "increase_website_traffic": "زيادة زيارات الموقع",
+          "get_more_subscribers_leads": "الحصول على مزيد من المشتركين والعملاء المحتملين",
+          "promote_product_or_service": "الترويج لمنتج أو خدمة",
+          "increase_sales": "زيادة المبيعات",
+          "build_brand_authority": "بناء سلطة العلامة",
+          "improve_seo": "تحسين محركات البحث",
+          "educate_audience": "تثقيف جمهورك",
+          "generate_social_content": "إنشاء محتوى لوسائل التواصل"
+        }
+      },
+      "websiteUrl": {
+        "label": "رابط الموقع أو الصفحة المقصودة",
+        "placeholder": "https://yoursite.com/landing",
+        "help": "مطلوب عندما تتضمن أهدافك زيارات الموقع أو جلب العملاء المحتملين."
+      },
+      "productUrl": {
+        "label": "رابط المنتج أو صفحة المبيعات",
+        "placeholder": "https://yoursite.com/product",
+        "help": "مطلوب عندما تتضمن أهدافك الترويج للمنتج أو المبيعات."
+      }
+    },
+    "step4": {
+      "title": "اختر خطتك",
+      "subtitle": "ابدأ بخطة تناسب طموحاتك للنمو.",
+      "discount": {
+        "label": "الفوترة السنوية",
+        "save": "وفر {percent}%"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "حتى 3 حسابات اجتماعية",
+          "postsPerMonth": "30 منشوراً شهرياً",
+          "aiGeneration": "إنشاء محتوى أساسي بالذكاء الاصطناعي",
+          "scheduling": "جدولة المنشورات",
+          "emailSupport": "دعم بالبريد الإلكتروني"
+        },
+        "pro": {
+          "socialProfiles": "حتى 10 حسابات اجتماعية",
+          "postsPerMonth": "150 منشوراً شهرياً",
+          "aiGeneration": "إنشاء محتوى متقدم بالذكاء الاصطناعي",
+          "scheduling": "جدولة ذكية بأوقات مثلى",
+          "analytics": "لوحة تحليلات",
+          "prioritySupport": "دعم ذو أولوية"
+        },
+        "scale": {
+          "socialProfiles": "حسابات اجتماعية غير محدودة",
+          "postsPerMonth": "منشورات غير محدودة",
+          "aiGeneration": "ذكاء اصطناعي متميز مع صوت علامة مخصص",
+          "scheduling": "جدولة تلقائية بالذكاء الاصطناعي",
+          "analytics": "تحليلات وتقارير متقدمة",
+          "customBranding": "هوية مخصصة وعلامة بيضاء",
+          "dedicatedSupport": "مدير حساب مخصص",
+          "apiAccess": "وصول كامل لواجهة برمجة التطبيقات"
+        }
+      },
+      "planNames": {
+        "basic": "أساسي",
+        "pro": "احترافي",
+        "scale": "توسع"
+      },
+      "planDescriptions": {
+        "basic": "مثالي للبدء بأتمتة وسائل التواصل.",
+        "pro": "للشركات النامية التي تحتاج مزيداً من القوة والرؤى.",
+        "scale": "كل شيء غير محدود للفرق والوكالات."
+      },
+      "popular": "الأكثر شعبية",
+      "perMonth": "/شهر",
+      "selectPlan": "اختيار الخطة",
+      "selected": "محددة",
+      "trialDays": "تجربة مجانية {days} يوماً"
+    },
+    "step5": {
+      "title": "الربط والإطلاق",
+      "subtitle": "اربط حساباتك الاجتماعية وحدد تفضيلاتك.",
+      "connectSocials": {
+        "label": "ربط الحسابات الاجتماعية",
+        "help": "اربط حسابات وسائل التواصل",
+        "button": "ربط الحسابات",
+        "manage": "إدارة الاتصالات",
+        "connected": "حسابات اجتماعية متصلة",
+        "notConnected": "لا حسابات متصلة بعد"
+      },
+      "approval": {
+        "label": "الموافقة على المحتوى",
+        "help": "اختر كيف ينشر ZARZOOM محتواك.",
+        "auto": "نشر تلقائي",
+        "autoHelp": "ينشر ZARZOOM المحتوى تلقائياً حسب الجدول.",
+        "manual": "موافقة يدوية",
+        "manualHelp": "مراجعة والموافقة على كل منشور قبل النشر."
+      },
+      "notes": {
+        "label": "ملاحظات إضافية",
+        "placeholder": "أي شيء آخر تريدنا أن نعرفه عن علامتك أو تفضيلات المحتوى...",
+        "help": "ملاحظات اختيارية للذكاء الاصطناعي."
+      }
+    },
+    "modal": {
+      "title": "ربط الحسابات الاجتماعية",
+      "loading": "جاري تحضير موصل الشبكات الاجتماعية...",
+      "checking": "جاري التحقق من الاتصال...",
+      "close": "تم",
+      "openInNewTab": "فتح في نافذة جديدة",
+      "skipConnect": "تخطي الآن",
+      "errorGeneric": "تعذر تحميل موصل الشبكات الاجتماعية. يرجى المحاولة لاحقاً.",
+      "errorNoUrl": "لم يُعاد رابط الربط. يرجى المحاولة مرة أخرى.",
+      "demoTitle": "موصل الشبكات الاجتماعية قريباً",
+      "demoDescription": "موصل الشبكات الاجتماعية غير مُعد لهذه البيئة بعد. اتصالات حساباتك ستكون متاحة بعد إعداد المزود من قبل المسؤول."
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل بيانات الإعداد. يرجى المحاولة مرة أخرى.",
+      "saveFailed": "فشل الحفظ. يرجى المحاولة مرة أخرى.",
+      "completeFailed": "تعذر إكمال الإعداد. يرجى التحقق من جميع الحقول المطلوبة."
+    },
+    "banner": {
+      "skipped": "تخطيت الإعداد. أكمله لفتح جميع المميزات.",
+      "inProgress": "إعدادك غير مكتمل. أكمله للبدء.",
+      "cta": "إكمال الإعداد"
+    },
+    "gate": {
+      "title": "الإعداد مطلوب",
+      "description": "أكمل إعداد البدء لفتح هذه الميزة. يستغرق دقائق قليلة فقط.",
+      "cta": "إكمال الإعداد"
+    },
+    "a11y": {
+      "brandLogoAlt": "شعار العلامة",
+      "socialConnectorTitle": "موصل الشبكات الاجتماعية",
+      "dismissBanner": "إغلاق الشريط",
+      "currency": "£",
+      "stepperLabel": "تقدم الإعداد"
+    },
+    "validation": {
+      "invalidUrl": "يرجى إدخال رابط صحيح (مثال: https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "سجل الفوترة"
+    },
+    "selectCurrencyLabel": "اختر العملة",
+    "selectCurrencyHelp": "اختر العملة المفضلة للأسعار.",
+    "selectBillingInterval": "اختر فترة الفوترة",
+    "toggleDiscount": "تفعيل/إلغاء خصم شراكة الإعلانات",
+    "discountPartnershipTitle": "وفر {percent}% مع شراكة الإعلانات",
+    "discountActive": "نشط",
+    "discountPartnershipDescription": "السماح لـ ZARZOOM بنشر محتوى ترويجي في خلاصتك (بحد أقصى {maxFrequency}) والحصول على خصم {percent}% على اشتراكك. تحتفظ بالتحكم الكامل ويمكنك تعطيل ذلك في أي وقت.",
+    "discountOncePerDay": "مرة يومياً",
+    "discountPerWeek": "{count} مرات أسبوعياً",
+    "discountPartnerApplied": "تم تطبيق خصم الشريك",
+    "discountAdvertisingApplied": "تم تطبيق خصم شراكة الإعلانات",
+    "contactUs": "تواصل معنا",
+    "partnerDiscountEnable": "تفعيل خصم الشريك 50%",
+    "partnerDiscountStandardPrice": "السعر العادي",
+    "partnerDiscount50Off": "خصم 50%",
+    "partnerDiscountSubheading": "وفر 50%. قد ننشر حتى إعلان ZARZOOM صغير واحد يومياً (بحد أقصى 3–7 أسبوعياً) — أبداً على منشوراتك.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "أسعار بسيطة وشفافة",
+      "subtitle": "اختر الخطة التي تناسب نموك. ابدأ بتجربة مجانية، ترقّ في أي وقت.",
+      "monthly": "شهري",
+      "annual": "سنوي",
+      "popular": "الأكثر شعبية",
+      "getStarted": "ابدأ",
+      "savePercent": "وفر {percent}% مع الفوترة السنوية",
+      "trialDays": "تجربة مجانية {days} يوماً",
+      "page": {
+        "title": "أسعار بسيطة وشفافة",
+        "subtitle": "اختر الخطة المناسبة لك. جميع الخطط تتضمن تجربة مجانية 14 يوماً.",
+        "footer": "جميع الأسعار لا تشمل ضريبة القيمة المضافة حيث ينطبق. ألغِ أو غيّر خطتك في أي وقت.",
+        "contactCta": "أسئلة؟ تواصل معنا وسنساعدك في اختيار الخطة المناسبة.",
+        "contactCtaPrefix": "أسئلة؟ ",
+        "contactLink": "تواصل معنا",
+        "contactCtaSuffix": " وسنساعدك في اختيار الخطة المناسبة."
+      },
+      "fallback": {
+        "title": "الأسعار غير متاحة مؤقتاً",
+        "message": "نحدّث خطط الأسعار حالياً. يرجى المراجعة قريباً أو التواصل مع الدعم للمساعدة."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "أساسي",
+        "shortTagline": "مثالي للبدء",
+        "description": "مميزات أساسية لإطلاق حضورك على وسائل التواصل مع إنشاء وجدولة المحتوى بالذكاء الاصطناعي.",
+        "bullets": [
+          "حتى 3 حسابات اجتماعية",
+          "30 منشوراً شهرياً",
+          "إنشاء محتوى أساسي بالذكاء الاصطناعي",
+          "جدولة المنشورات",
+          "دعم بالبريد الإلكتروني"
+        ],
+        "cta": "ابدأ التجربة المجانية"
+      },
+      "pro": {
+        "displayName": "احترافي",
+        "shortTagline": "الأفضل للشركات النامية",
+        "description": "مميزات متقدمة وتحليلات لتوسيع استراتيجية وسائل التواصل بأتمتة ذكية.",
+        "bullets": [
+          "حتى 10 حسابات اجتماعية",
+          "150 منشوراً شهرياً",
+          "إنشاء محتوى متقدم بالذكاء الاصطناعي",
+          "جدولة ذكية بأوقات مثلى",
+          "لوحة تحليلات",
+          "دعم ذو أولوية"
+        ],
+        "cta": "ابدأ التجربة المجانية"
+      },
+      "advanced": {
+        "displayName": "متقدم",
+        "shortTagline": "للفرق والوكالات",
+        "description": "مميزات على مستوى المؤسسات مع محتوى غير محدود وهوية مخصصة ودعم مخصص لأقصى تأثير.",
+        "bullets": [
+          "حسابات اجتماعية غير محدودة",
+          "منشورات غير محدودة",
+          "ذكاء اصطناعي متميز مع صوت علامة مخصص",
+          "جدولة تلقائية بالذكاء الاصطناعي",
+          "تحليلات وتقارير متقدمة",
+          "هوية مخصصة وعلامة بيضاء",
+          "مدير حساب مخصص",
+          "وصول كامل لواجهة برمجة التطبيقات"
+        ],
+        "cta": "تواصل مع المبيعات"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "حتى 3 حسابات اجتماعية",
+        "postsPerMonth": "30 منشوراً شهرياً",
+        "aiGeneration": "إنشاء محتوى أساسي بالذكاء الاصطناعي",
+        "scheduling": "جدولة المنشورات",
+        "emailSupport": "دعم بالبريد الإلكتروني"
+      },
+      "pro": {
+        "socialProfiles": "حتى 10 حسابات اجتماعية",
+        "postsPerMonth": "150 منشوراً شهرياً",
+        "aiGeneration": "إنشاء محتوى متقدم بالذكاء الاصطناعي",
+        "scheduling": "جدولة ذكية بأوقات مثلى",
+        "analytics": "لوحة تحليلات",
+        "prioritySupport": "دعم ذو أولوية"
+      },
+      "advanced": {
+        "socialProfiles": "حسابات اجتماعية غير محدودة",
+        "postsPerMonth": "منشورات غير محدودة",
+        "aiGeneration": "ذكاء اصطناعي متميز مع صوت علامة مخصص",
+        "scheduling": "جدولة تلقائية بالذكاء الاصطناعي",
+        "analytics": "تحليلات وتقارير متقدمة",
+        "customBranding": "هوية مخصصة وعلامة بيضاء",
+        "dedicatedSupport": "مدير حساب مخصص",
+        "apiAccess": "وصول كامل لواجهة برمجة التطبيقات"
+      }
+    }
+  }
+}

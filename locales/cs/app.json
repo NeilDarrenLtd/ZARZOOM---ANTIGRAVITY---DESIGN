@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Vítejte zpět",
+    "loginSubtitle": "Přihlaste se ke svému účtu ZARZOOM",
+    "registerTitle": "Vytvořte si účet",
+    "registerSubtitle": "Přidejte se k tisícům marketérů automatizujících své sociální sítě",
+    "email": "E-mailová adresa",
+    "password": "Heslo",
+    "confirmPassword": "Potvrďte heslo",
+    "login": "Přihlásit se",
+    "register": "Vytvořit účet",
+    "forgotPassword": "Zapomněli jste heslo?",
+    "orContinueWith": "Nebo pokračujte pomocí",
+    "noAccount": "Nemáte účet?",
+    "hasAccount": "Už máte účet?",
+    "signUpLink": "Registrovat se",
+    "signInLink": "Přihlásit se",
+    "passwordMinLength": "Heslo musí mít alespoň 8 znaků",
+    "passwordUppercase": "Musí obsahovat velké písmeno",
+    "passwordLowercase": "Musí obsahovat malé písmeno",
+    "passwordNumber": "Musí obsahovat číslici",
+    "passwordSpecial": "Musí obsahovat speciální znak",
+    "passwordsNoMatch": "Hesla se neshodují",
+    "emailRequired": "E-mail je povinný",
+    "emailInvalid": "Zadejte prosím platný e-mail",
+    "signUpSuccess": "Zkontrolujte svůj e-mail",
+    "signUpSuccessMessage": "Odeslali jsme ověřovací odkaz na vaši e-mailovou adresu. Zkontrolujte schránku a klikněte na odkaz pro aktivaci účtu.",
+    "backToLogin": "Zpět k přihlášení",
+    "authError": "Chyba ověření",
+    "authErrorMessage": "Během ověření došlo k chybě. Zkuste to prosím znovu.",
+    "tryAgain": "Zkusit znovu",
+    "tabLogin": "Přihlásit se",
+    "tabCreateAccount": "Vytvořit účet",
+    "continueWithGoogle": "Pokračovat přes Google",
+    "continueWithFacebook": "Pokračovat přes Facebook",
+    "continueWithLinkedIn": "Pokračovat přes LinkedIn",
+    "continueWithX": "Pokračovat přes X",
+    "rememberMe": "Zapamatovat si mě",
+    "forgotLogin": "Zapomněli jste přihlašovací údaje?",
+    "verifyTitle": "Zkontrolujte schránku",
+    "verifySubtitle": "Odeslali jsme ověřovací odkaz na vaši e-mailovou adresu. Zkontrolujte schránku a klikněte na odkaz pro aktivaci účtu.",
+    "verifyResend": "Znovu odeslat ověřovací e-mail",
+    "verifyResent": "Ověřovací e-mail byl znovu odeslán",
+    "verifyBack": "Zpět k přihlášení",
+    "verifiedTitle": "E-mail ověřen",
+    "verifiedSubtitle": "Váš e-mail byl úspěšně ověřen. Nyní se můžete přihlásit ke svému účtu.",
+    "verifiedContinue": "Pokračovat k přihlášení",
+    "adminLogin": "Admin přihlášení",
+    "adminLoginSubtitle": "Omezená oblast. Pouze pro oprávněný personál.",
+    "adminSignIn": "Přihlásit se jako admin"
+  },
+  "dashboard": {
+    "title": "Přehled",
+    "welcome": "Vítejte zpět",
+    "overview": "Přehled",
+    "accountSettings": "Nastavení účtu",
+    "connectedAccounts": "Propojené účty",
+    "comingSoon": "Již brzy — vaše centrum pro sociální sítě.",
+    "emailVerified": "E-mail ověřen",
+    "memberSince": "Člen od",
+    "profile": "Nastavení značky",
+    "supportDescription": "Získejte pomoc od našeho týmu podpory. Vytvářejte a spravujte požadavky na podporu.",
+    "restartSetup": "Restartovat nastavení",
+    "restarting": "Restartuji..."
+  },
+  "connect": {
+    "heading": "Propojte své účty",
+    "subheading": "Propojte účty na sociálních sítích a začněte automaticky publikovat s ZARZOOM.",
+    "connectAccounts": "Propojit účty",
+    "back": "Zpět"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Automaticky vyplnit ze souboru"
+  },
+  "apiKeys": {
+    "createKeyTitle": "Vytvořit API klíč",
+    "keyCreated": "Klíč vytvořen",
+    "close": "Zavřít",
+    "keyName": "Název klíče",
+    "keyNamePlaceholder": "např. Produkce, Staging, CI/CD",
+    "keyNameRequired": "Název je povinný",
+    "active": "Aktivní",
+    "revoked": "Odvolán",
+    "created": "Vytvořeno",
+    "lastUsed": "Naposledy použit",
+    "revokedAt": "Odvolán",
+    "rotate": "Rotovat",
+    "revoke": "Odvolat",
+    "revokeConfirm": "Odvolat tento klíč?",
+    "rotateConfirm": "Rotovat klíč?",
+    "confirm": "Potvrdit",
+    "cancel": "Zrušit",
+    "revoking": "Odvolávám...",
+    "rotating": "Rotuji...",
+    "rotateTitle": "Rotovat: odvolat tento klíč a vytvořit nový"
+  },
+  "profile": {
+    "title": "Nastavení značky",
+    "subtitle": "Spravujte svou značku, cíle, plán a propojení na sociální sítě.",
+    "saving": "Ukládám...",
+    "saved": "Změny byly úspěšně uloženy.",
+    "saveFailed": "Změny se nepodařilo uložit. Zkuste to prosím znovu.",
+    "loadFailed": "Nepodařilo se načíst váš profil. Zkuste to prosím znovu.",
+    "save": "Uložit změny",
+    "sections": {
+      "brand": "Základy značky",
+      "brandDesc": "Identita vašeho podnikání a preference obsahu.",
+      "goals": "Cíle a růst",
+      "goalsDesc": "Čeho chcete s ZARZOOM dosáhnout.",
+      "posting": "Preference publikování",
+      "postingDesc": "Jak ZARZOOM publikuje váš obsah.",
+      "plan": "Váš plán",
+      "planDesc": "Aktuální předplatné a preference fakturace.",
+      "social": "Propojení na sociální sítě",
+      "socialDesc": "Spravujte své propojené účty na sociálních sítích."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Automatické publikování",
+        "help": "Povolit ZARZOOM automaticky publikovat obsah vaším jménem."
+      }
+    },
+    "plan": {
+      "current": "Aktuální plán",
+      "noPlan": "Není vybrán žádný plán",
+      "annualBilling": "Roční fakturace",
+      "changePlan": "Změnit plán"
+    },
+    "social": {
+      "username": "Uživatelské jméno na sociálních sítích",
+      "noUsername": "Zatím nenastaveno",
+      "connected": "Propojené účty na sociálních sítích",
+      "notConnected": "Zatím nejsou propojeny žádné účty",
+      "connect": "Propojit účty",
+      "manage": "Spravovat propojení"
+    },
+    "back": "Zpět na přehled"
+  },
+  "support": {
+    "nav": {
+      "title": "Podpora",
+      "myTickets": "Moje požadavky",
+      "createTicket": "Vytvořit požadavek",
+      "backToSupport": "Zpět na podporu",
+      "backToDashboard": "Zpět na přehled"
+    },
+    "landing": {
+      "title": "Získejte podporu",
+      "subtitle": "Jsme tu, abychom vám pomohli vytěžit z ZARZOOM maximum.",
+      "description": "Odešlete požadavek na podporu a náš tým odpoví do 24 hodin v pracovní dny.",
+      "createTicketBtn": "Vytvořit požadavek",
+      "myTicketsBtn": "Moje požadavky"
+    },
+    "list": {
+      "title": "Moje požadavky na podporu",
+      "subtitle": "Prohlížejte a spravujte své požadavky na podporu.",
+      "empty": "Zatím žádné požadavky",
+      "emptyDescription": "Zatím jste nevytvořili žádný požadavek na podporu. Klikněte na tlačítko níže a začněte.",
+      "createFirstTicket": "Vytvořit první požadavek",
+      "filterByStatus": "Filtrovat podle stavu",
+      "allTickets": "Všechny požadavky",
+      "showingTickets": "Zobrazeno {filtered} z {total} požadavků",
+      "noMatchFilter": "Žádné požadavky neodpovídají zvolenému filtru stavu.",
+      "clearFilter": "Zrušit filtr",
+      "table": {
+        "ticketId": "ID požadavku",
+        "subject": "Předmět",
+        "status": "Stav",
+        "lastUpdated": "Naposledy aktualizováno",
+        "created": "Vytvořeno"
+      }
+    },
+    "create": {
+      "title": "Vytvořit požadavek na podporu",
+      "subtitle": "Popište svůj problém a pomůžeme vám ho vyřešit.",
+      "form": {
+        "subject": "Předmět",
+        "subjectPlaceholder": "Stručný popis vašeho problému",
+        "subjectHelp": "Povinné. Buďte struční a jasní.",
+        "category": "Kategorie",
+        "categoryHelp": "Volitelné. Vyberte kategorii, která nejlépe odpovídá vašemu problému.",
+        "priority": "Priorita",
+        "priorityHelp": "Volitelné. Dejte nám vědět, jak je to naléhavé.",
+        "description": "Popis",
+        "descriptionPlaceholder": "Uveďte podrobné informace o vašem problému...",
+        "descriptionHelp": "Povinné. Uveďte kroky k reprodukci, chybové hlášky nebo další relevantní údaje.",
+        "attachments": "Připojit snímky obrazovky",
+        "attachmentsHelp": "Volitelné. Nahrajte až 3 snímky (PNG, JPG nebo WebP). Max 5 MB každý.",
+        "attachmentsBtn": "Vybrat soubory",
+        "attachmentsSelected": "vybraných souborů",
+        "removeAttachment": "Odebrat",
+        "submit": "Odeslat požadavek",
+        "submitting": "Vytvářím požadavek...",
+        "cancel": "Zrušit"
+      },
+      "success": {
+        "title": "Požadavek byl úspěšně vytvořen",
+        "message": "Váš požadavek na podporu byl vytvořen. Odpovíme do 24 hodin v pracovní dny.",
+        "viewTicket": "Zobrazit požadavek",
+        "createAnother": "Vytvořit další požadavek"
+      },
+      "error": {
+        "title": "Vytvoření požadavku se nezdařilo",
+        "message": "Něco se pokazilo. Zkuste to prosím znovu.",
+        "retry": "Zkusit znovu"
+      }
+    },
+    "detail": {
+      "title": "Detail požadavku",
+      "status": "Stav",
+      "category": "Kategorie",
+      "priority": "Priorita",
+      "created": "Vytvořeno",
+      "lastActivity": "Poslední aktivita",
+      "comments": "Komentáře",
+      "addComment": "Přidat komentář",
+      "commentPlaceholder": "Napište svou zprávu...",
+      "attachScreenshots": "Připojit snímky obrazovky",
+      "sendComment": "Odeslat",
+      "sending": "Odesílám...",
+      "loadingTicket": "Načítám požadavek...",
+      "ticketNotFound": "Požadavek nenalezen",
+      "ticketNotFoundMessage": "Tento požadavek neexistuje nebo nemáte oprávnění jej zobrazit.",
+      "noComments": "Zatím žádné komentáře",
+      "userRole": "Vy",
+      "adminRole": "Tým podpory",
+      "systemRole": "Systém",
+      "attachmentPreview": "Klikněte pro zobrazení v plné velikosti",
+      "attachmentAlt": "Příloha",
+      "closeModal": "Zavřít",
+      "closeTicketTitle": "Uzavřít požadavek",
+      "closeTicketMessage": "Opravdu chcete tento požadavek uzavřít? Volitelně můžete uvést důvod.",
+      "closeTicketPlaceholder": "Volitelně: Proč uzavíráte tento požadavek?",
+      "closeTicketCancel": "Zrušit",
+      "closeTicketButton": "Uzavřít požadavek",
+      "closeTicketClosing": "Uzavírám..."
+    },
+    "status": {
+      "open": "Otevřen",
+      "investigating": "Šetříme",
+      "waiting_on_user": "Čekáme na vás",
+      "resolved": "Vyřešen",
+      "closed": "Uzavřen"
+    },
+    "category": {
+      "none": "Nespecifikováno",
+      "account_login": "Účet a přihlášení",
+      "billing_subscription": "Fakturace a předplatné",
+      "social_connections": "Propojení na sociální sítě",
+      "content_generation": "Generování obsahu",
+      "publishing_issues": "Problémy s publikováním",
+      "technical_bug": "Technická chyba",
+      "feature_request": "Požadavek na funkci",
+      "general_question": "Obecný dotaz"
+    },
+    "priority": {
+      "none": "Nespecifikováno",
+      "urgent": "Naléhavé – systém blokuje",
+      "high": "Vysoké – závažný problém",
+      "normal": "Normální – standardní",
+      "low": "Nízké – drobnost / návrh"
+    },
+    "attachments": {
+      "uploading": "Nahrávám přílohy...",
+      "uploadSuccess": "Přílohy byly úspěšně nahrány",
+      "uploadError": "Některé přílohy se nepodařilo nahrát",
+      "fileTypeError": "Povoleny jsou pouze soubory PNG, JPG a WebP",
+      "fileSizeError": "Velikost souboru musí být menší než 5 MB",
+      "fileCountError": "Ke každému komentáři můžete nahrát až 3 soubory",
+      "viewFullSize": "Zobrazit v plné velikosti"
+    },
+    "errors": {
+      "loadFailed": "Nepodařilo se načíst požadavky na podporu",
+      "createFailed": "Nepodařilo se vytvořit požadavek",
+      "commentFailed": "Nepodařilo se přidat komentář",
+      "unauthorized": "Nemáte oprávnění k tomuto požadavku",
+      "networkError": "Chyba sítě. Zkontrolujte připojení a zkuste to znovu."
+    },
+    "validation": {
+      "subjectRequired": "Předmět je povinný",
+      "descriptionRequired": "Popis je povinný",
+      "messageRequired": "Zpráva je povinná",
+      "emailRequired": "E-mail je povinný",
+      "invalidEmail": "Zadejte prosím platnou e-mailovou adresu",
+      "noUpdatesProvided": "Nebyly poskytnuty žádné aktualizace",
+      "noFilesProvided": "Nebyly poskytnuty žádné soubory",
+      "tooManyFiles": "Příliš mnoho souborů. Povoleno je maximálně {count} souborů.",
+      "invalidFileType": "Neplatný typ souboru pro {name}. Povoleny jsou pouze soubory PNG, JPG a WebP.",
+      "fileTooLarge": "Soubor {name} je příliš velký ({size}). Maximální velikost je 5 MB."
+    }
+  },
+  "onboarding": {
+    "title": "Nastavte si ZARZOOM",
+    "subtitle": "Pojďme nakonfigurovat váš autopilot pro sociální sítě v několika rychlých krocích.",
+    "stepper": {
+      "step1": "Účet",
+      "step2": "Značka",
+      "step3": "Cíle",
+      "step4": "Plán",
+      "step5": "Propojení"
+    },
+    "nav": {
+      "back": "Zpět",
+      "next": "Pokračovat",
+      "saveExit": "Uložit a ukončit",
+      "skipForNow": "Přeskočit zatím",
+      "finish": "Spustit ZARZOOM",
+      "saving": "Ukládám..."
+    },
+    "step1": {
+      "title": "Účet vytvořen",
+      "subtitle": "Jste přihlášeni a připraveni.",
+      "signedInAs": "Přihlášeni jako",
+      "continue": "Pojďme nastavit vaši značku"
+    },
+    "step2": {
+      "title": "Základy značky",
+      "subtitle": "Řekněte nám o svém podnikání, abychom mohli přizpůsobit obsah vaší značce.",
+      "businessName": {
+        "label": "Název firmy",
+        "placeholder": "např. Acme Corp",
+        "help": "Název vaší firmy nebo značky."
+      },
+      "description": {
+        "label": "Popis",
+        "placeholder": "Stručně popište, čím se vaše firma zabývá...",
+        "help": "Krátké shrnutí, aby naše AI pochopila hlas vaší značky."
+      },
+      "websiteUrl": {
+        "label": "URL webu",
+        "placeholder": "https://vasweb.cz",
+        "help": "Analyzujeme váš web pro přizpůsobení obsahu."
+      },
+      "autofillFromWebsite": "Automaticky vyplnit z webu",
+      "analysing": "Analyzuji...",
+      "importFromFile": "Importovat ze souboru",
+      "choosePdfOrWord": "Vyberte dokument PDF nebo Word",
+      "investigate": {
+        "button": "Analyzovat web",
+        "loading": "Analyzuji váš web...",
+        "success": "Web byl úspěšně analyzován!",
+        "error": "Web se nepodařilo analyzovat. Vyplňte údaje prosím ručně."
+      },
+      "contentLanguage": {
+        "label": "Jazyk obsahu",
+        "help": "Hlavní jazyk pro váš generovaný obsah."
+      },
+      "articleStyles": {
+        "label": "Styly článků",
+        "help": "Vyberte typy obsahu, které má ZARZOOM vytvářet.",
+        "options": {
+          "let_zarzoom_decide": "Nechat ZARZOOM rozhodnout",
+          "how_to_guides": "Návody krok za krokem",
+          "listicles": "Seznamy",
+          "tutorials": "Tutoriály",
+          "opinion_pieces": "Komentáře a názory",
+          "case_studies": "Případové studie",
+          "news_commentary": "Komentáře k událostem",
+          "interviews": "Rozhovory",
+          "product_reviews": "Recenze produktů",
+          "explainer_articles": "Vysvětlující články",
+          "comparisons_vs_articles": "Srovnání a články typu X vs Y",
+          "ultimate_guides_pillar": "Kompletní průvodci / pilířový obsah",
+          "checklists_cheat_sheets": "Kontrolní seznamy a taháky",
+          "best_top_forecasts": "Nejlepší / Top předpovědi",
+          "problem_solution_posts": "Problém / řešení",
+          "myth_busting": "Bourání mýtů / omylů",
+          "resource_roundups": "Přehledy zdrojů",
+          "faqs_qa_content": "FAQ / obsah formou Q&A",
+          "personal_stories": "Osobní příběhy / zkušenosti",
+          "research_summaries": "Shrnutí výzkumů / datové přehledy",
+          "historical_timeline": "Historické / časové osy",
+          "satire_humor": "Satira nebo humor",
+          "explained_in_minutes": "Vysvětleno za X minut"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Nechte naši AI zvolit nejvhodnější formát pro váš obsah",
+          "how_to_guides": "Návody krok za krokem",
+          "listicles": "Číslované seznamy (např. 10 tipů pro X)",
+          "tutorials": "Podrobnější než návod",
+          "opinion_pieces": "Odborné názory nebo komentáře",
+          "case_studies": "Reálné příklady a výsledky",
+          "news_commentary": "Kontext k aktuálním událostem",
+          "interviews": "Q&A s osobou / autoritou",
+          "product_reviews": "Hodnocení a recenze",
+          "explainer_articles": "Jednoduše vysvětlit složité koncepty",
+          "comparisons_vs_articles": "X vs Y, srovnání výhod a nevýhod",
+          "ultimate_guides_pillar": "Dlouhé, autoritativní, pokrývá celé téma",
+          "checklists_cheat_sheets": "Rychlá reference, akční seznamy",
+          "best_top_forecasts": "Nejlepší nástroje pro X, Top trendy 202X",
+          "problem_solution_posts": "Identifikovat problém a nabídnout řešení",
+          "myth_busting": "Vyvracení běžných mylných představ",
+          "resource_roundups": "Nejlepší články, nástroje, odkazy k tématu",
+          "faqs_qa_content": "Cílit přímo na dlouhé vyhledávací dotazy",
+          "personal_stories": "Vyprávění, emocionální dopad",
+          "research_summaries": "Shrnout průzkumy a výsledky výzkumů",
+          "historical_timeline": "Pohled na vývoj v čase",
+          "satire_humor": "Zábavný obsah v duchu značky",
+          "explained_in_minutes": "Hlavní body, rychlá konzumace"
+        }
+      },
+      "styleLinks": {
+        "label": "Odkazy na referenční styl",
+        "placeholder": "https://example.com/clanek",
+        "help": "Přidejte až 3 odkazy na články, jejichž styl chcete napodobit.",
+        "add": "Přidat odkaz",
+        "max": "Maximálně 3 odkazy"
+      },
+      "brandColor": {
+        "label": "Barva značky",
+        "help": "Hlavní barva vaší značky pro generované vizuály."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Nahrajte logo své značky (formát JPG).",
+        "upload": "Nahrát logo",
+        "change": "Změnit logo",
+        "uploading": "Nahrávám..."
+      }
+    },
+    "step3": {
+      "title": "Cíle a růst",
+      "subtitle": "Čeho chcete s ZARZOOM dosáhnout?",
+      "goals": {
+        "label": "Vyberte své cíle",
+        "help": "Vyberte jeden nebo více cílů. Vaši strategii tomu přizpůsobíme.",
+        "options": {
+          "increase_website_traffic": "Zvýšit návštěvnost webu",
+          "get_more_subscribers_leads": "Získat více odběratelů a leadů",
+          "promote_product_or_service": "Propagovat produkt nebo službu",
+          "increase_sales": "Zvýšit prodeje",
+          "build_brand_authority": "Budovat autoritu značky",
+          "improve_seo": "Zlepšit SEO",
+          "educate_audience": "Vzdělávat své publikum",
+          "generate_social_content": "Generovat obsah pro sociální sítě"
+        }
+      },
+      "websiteUrl": {
+        "label": "URL webu nebo cílové stránky",
+        "placeholder": "https://vase-stranka.cz/landing",
+        "help": "Povinné, pokud mezi cíli máte návštěvnost webu nebo generování leadů."
+      },
+      "productUrl": {
+        "label": "URL produktu nebo prodejní stránky",
+        "placeholder": "https://vase-stranka.cz/produkt",
+        "help": "Povinné, pokud mezi cíli máte propagaci produktu nebo prodeje."
+      }
+    },
+    "step4": {
+      "title": "Vyberte si plán",
+      "subtitle": "Začněte s plánem, který odpovídá vašim ambicím růstu.",
+      "discount": {
+        "label": "Roční fakturace",
+        "save": "Ušetříte {percent} %"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "Až 3 profily na sociálních sítích",
+          "postsPerMonth": "30 příspěvků měsíčně",
+          "aiGeneration": "Základní generování obsahu AI",
+          "scheduling": "Plánování příspěvků",
+          "emailSupport": "E-mailová podpora"
+        },
+        "pro": {
+          "socialProfiles": "Až 10 profilů na sociálních sítích",
+          "postsPerMonth": "150 příspěvků měsíčně",
+          "aiGeneration": "Pokročilé generování obsahu AI",
+          "scheduling": "Chytré plánování s optimálními časy",
+          "analytics": "Přehled analytiky",
+          "prioritySupport": "Prioritní podpora"
+        },
+        "scale": {
+          "socialProfiles": "Neomezené profily na sociálních sítích",
+          "postsPerMonth": "Neomezené příspěvky",
+          "aiGeneration": "Prémiové AI s vlastním hlasem značky",
+          "scheduling": "Auto-plánování poháněné AI",
+          "analytics": "Pokročilá analytika a reporty",
+          "customBranding": "Vlastní branding a white-label",
+          "dedicatedSupport": "Vyhrazený account manager",
+          "apiAccess": "Plný přístup k API"
+        }
+      },
+      "planNames": {
+        "basic": "Basic",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Ideální pro začátek s automatizací sociálních sítí.",
+        "pro": "Pro rostoucí firmy, které potřebují více výkonu a přehledů.",
+        "scale": "Neomezené vše pro týmy a agentury."
+      },
+      "popular": "Nejoblíbenější",
+      "perMonth": "/měs.",
+      "selectPlan": "Vybrat plán",
+      "selected": "Vybráno",
+      "trialDays": "{days}denní zkušební verze zdarma"
+    },
+    "step5": {
+      "title": "Propojení a spuštění",
+      "subtitle": "Propojte účty na sociálních sítích a nastavte preference.",
+      "connectSocials": {
+        "label": "Propojit účty na sociálních sítích",
+        "help": "Propojte své účty na sociálních sítích",
+        "button": "Propojit účty",
+        "manage": "Spravovat propojení",
+        "connected": "Propojené účty na sociálních sítích",
+        "notConnected": "Zatím nejsou propojeny žádné účty"
+      },
+      "approval": {
+        "label": "Schvalování obsahu",
+        "help": "Zvolte, jak ZARZOOM publikuje váš obsah.",
+        "auto": "Automatické publikování",
+        "autoHelp": "ZARZOOM publikuje obsah automaticky podle plánu.",
+        "manual": "Manuální schválení",
+        "manualHelp": "Před zveřejněním každý příspěvek zkontrolujte a schvalte."
+      },
+      "notes": {
+        "label": "Další poznámky",
+        "placeholder": "Cokoli dalšího, co bychom o vaší značce nebo preferencích obsahu měli vědět...",
+        "help": "Volitelné poznámky pro naši AI."
+      }
+    },
+    "modal": {
+      "title": "Propojit účty na sociálních sítích",
+      "loading": "Připravuji konektor...",
+      "checking": "Kontroluji propojení...",
+      "close": "Hotovo",
+      "openInNewTab": "Otevřít v nové záložce",
+      "skipConnect": "Přeskočit zatím",
+      "errorGeneric": "Konektor se nepodařilo načíst. Zkuste to prosím později.",
+      "errorNoUrl": "Nebyla vrácena žádná URL pro propojení. Zkuste to prosím znovu.",
+      "demoTitle": "Konektor pro sociální sítě již brzy",
+      "demoDescription": "Konektor pro sociální sítě není v tomto prostředí zatím nakonfigurován. Propojení účtů bude k dispozici po nastavení poskytovatele administrátorem."
+    },
+    "errors": {
+      "loadFailed": "Nepodařilo se načíst data nastavení. Zkuste to prosím znovu.",
+      "saveFailed": "Uložení se nezdařilo. Zkuste to prosím znovu.",
+      "completeFailed": "Nastavení se nepodařilo dokončit. Zkontrolujte prosím všechna povinná pole."
+    },
+    "banner": {
+      "skipped": "Nastavení jste přeskočili. Dokončete ho pro odemčení všech funkcí.",
+      "inProgress": "Vaše nastavení není dokončeno. Dokončete ho pro začátek.",
+      "cta": "Dokončit nastavení"
+    },
+    "gate": {
+      "title": "Vyžadováno nastavení",
+      "description": "Dokončete nastavení pro odemčení této funkce. Zabere to jen pár minut.",
+      "cta": "Dokončit nastavení"
+    },
+    "a11y": {
+      "brandLogoAlt": "Logo značky",
+      "socialConnectorTitle": "Konektor pro sociální sítě",
+      "dismissBanner": "Zavřít banner",
+      "currency": "Kč",
+      "stepperLabel": "Průběh nastavení"
+    },
+    "validation": {
+      "invalidUrl": "Zadejte prosím platnou URL (např. https://example.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Historie fakturace"
+    },
+    "selectCurrencyLabel": "Vybrat měnu",
+    "selectCurrencyHelp": "Vyberte preferovanou měnu pro ceny.",
+    "selectBillingInterval": "Vybrat interval fakturace",
+    "toggleDiscount": "Přepnout slevu reklamního partnerství",
+    "discountPartnershipTitle": "Ušetříte {percent} % s reklamním partnerstvím",
+    "discountActive": "Aktivní",
+    "discountPartnershipDescription": "Povolte ZARZOOM publikovat propagační obsah ve vašem feedu (max {maxFrequency}) a získejte {percent}% slevu na předplatné. Máte plnou kontrolu a můžete to kdykoli vypnout.",
+    "discountOncePerDay": "jednou denně",
+    "discountPerWeek": "{count}× týdně",
+    "discountPartnerApplied": "Partnerská sleva aplikována",
+    "discountAdvertisingApplied": "Sleva reklamního partnerství aplikována",
+    "contactUs": "Kontaktujte nás",
+    "partnerDiscountEnable": "Povolit 50% partnerskou slevu",
+    "partnerDiscountStandardPrice": "Standardní cena",
+    "partnerDiscount50Off": "50% SLEVA",
+    "partnerDiscountSubheading": "Ušetříte 50 %. Můžeme publikovat až 1 malou propagaci ZARZOOM denně (max 3–7 týdně) — nikdy u vašich vlastních příspěvků.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Jednoduché, transparentní ceny",
+      "subtitle": "Vyberte plán, který odpovídá vašemu růstu. Začněte zkušební verzí zdarma, kdykoli upgrade.",
+      "monthly": "Měsíčně",
+      "annual": "Ročně",
+      "popular": "Nejoblíbenější",
+      "getStarted": "Začít",
+      "savePercent": "Ušetříte {percent} % s roční fakturace",
+      "trialDays": "{days}denní zkušební verze zdarma",
+      "page": {
+        "title": "Jednoduché, transparentní ceny",
+        "subtitle": "Vyberte plán, který vám vyhovuje. Všechny plány zahrnují 14denní zkušební verzi zdarma.",
+        "footer": "Všechny ceny jsou bez DPH tam, kde je to zákonem stanoveno. Zrušit nebo změnit plán můžete kdykoli.",
+        "contactCta": "Máte dotazy? Kontaktujte nás a pomůžeme vám vybrat správný plán.",
+        "contactCtaPrefix": "Máte dotazy? ",
+        "contactLink": "Kontaktujte nás",
+        "contactCtaSuffix": " a pomůžeme vám vybrat správný plán."
+      },
+      "fallback": {
+        "title": "Ceník dočasně nedostupný",
+        "message": "Aktuálně aktualizujeme naše cenové plány. Zkuste to prosím za chvíli nebo kontaktujte podporu."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Basic",
+        "shortTagline": "Ideální pro začátek",
+        "description": "Základní funkce pro spuštění přítomnosti na sociálních sítích s tvorbou a plánováním obsahu poháněným AI.",
+        "bullets": [
+          "Až 3 profily na sociálních sítích",
+          "30 příspěvků měsíčně",
+          "Základní generování obsahu AI",
+          "Plánování příspěvků",
+          "E-mailová podpora"
+        ],
+        "cta": "Začít zkušební verzi zdarma"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Nejlepší pro rostoucí firmy",
+        "description": "Pokročilé funkce a analytika pro škálování strategie na sociálních sítích s inteligentní automatizací.",
+        "bullets": [
+          "Až 10 profilů na sociálních sítích",
+          "150 příspěvků měsíčně",
+          "Pokročilé generování obsahu AI",
+          "Chytré plánování s optimálními časy",
+          "Přehled analytiky",
+          "Prioritní podpora"
+        ],
+        "cta": "Začít zkušební verzi zdarma"
+      },
+      "advanced": {
+        "displayName": "Advanced",
+        "shortTagline": "Pro týmy a agentury",
+        "description": "Funkce na úrovni enterprise s neomezeným obsahem, vlastním brandingem a vyhrazenou podporou pro maximální dopad.",
+        "bullets": [
+          "Neomezené profily na sociálních sítích",
+          "Neomezené příspěvky",
+          "Prémiové AI s vlastním hlasem značky",
+          "Auto-plánování poháněné AI",
+          "Pokročilá analytika a reporty",
+          "Vlastní branding a white-label",
+          "Vyhrazený account manager",
+          "Plný přístup k API"
+        ],
+        "cta": "Kontaktovat prodej"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "Až 3 profily na sociálních sítích",
+        "postsPerMonth": "30 příspěvků měsíčně",
+        "aiGeneration": "Základní generování obsahu AI",
+        "scheduling": "Plánování příspěvků",
+        "emailSupport": "E-mailová podpora"
+      },
+      "pro": {
+        "socialProfiles": "Až 10 profilů na sociálních sítích",
+        "postsPerMonth": "150 příspěvků měsíčně",
+        "aiGeneration": "Pokročilé generování obsahu AI",
+        "scheduling": "Chytré plánování s optimálními časy",
+        "analytics": "Přehled analytiky",
+        "prioritySupport": "Prioritní podpora"
+      },
+      "advanced": {
+        "socialProfiles": "Neomezené profily na sociálních sítích",
+        "postsPerMonth": "Neomezené příspěvky",
+        "aiGeneration": "Prémiové AI s vlastním hlasem značky",
+        "scheduling": "Auto-plánování poháněné AI",
+        "analytics": "Pokročilá analytika a reporty",
+        "customBranding": "Vlastní branding a white-label",
+        "dedicatedSupport": "Vyhrazený account manager",
+        "apiAccess": "Plný přístup k API"
+      }
+    }
+  }
+}

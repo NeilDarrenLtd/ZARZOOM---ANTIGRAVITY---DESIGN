@@ -1,0 +1,707 @@
+{
+  "auth": {
+    "loginTitle": "Tekrar Hoş Geldiniz",
+    "loginSubtitle": "ZARZOOM hesabınıza giriş yapın",
+    "registerTitle": "Hesabınızı Oluşturun",
+    "registerSubtitle": "Sosyal medyasını otomatikleştiren binlerce pazarlamacıya katılın",
+    "email": "E-posta Adresi",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "login": "Giriş Yap",
+    "register": "Hesap Oluştur",
+    "forgotPassword": "Şifrenizi mi Unuttunuz?",
+    "orContinueWith": "Veya şununla devam edin",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "signUpLink": "Kayıt olun",
+    "signInLink": "Giriş yapın",
+    "passwordMinLength": "Şifre en az 8 karakter olmalıdır",
+    "passwordUppercase": "En az bir büyük harf içermelidir",
+    "passwordLowercase": "En az bir küçük harf içermelidir",
+    "passwordNumber": "En az bir rakam içermelidir",
+    "passwordSpecial": "En az bir özel karakter içermelidir",
+    "passwordsNoMatch": "Şifreler eşleşmiyor",
+    "emailRequired": "E-posta zorunludur",
+    "emailInvalid": "Lütfen geçerli bir e-posta girin",
+    "signUpSuccess": "E-postanızı Kontrol Edin",
+    "signUpSuccessMessage": "E-posta adresinize bir doğrulama bağlantısı gönderdik. Lütfen gelen kutunuzu kontrol edin ve hesabınızı etkinleştirmek için bağlantıya tıklayın.",
+    "backToLogin": "Girişe Dön",
+    "authError": "Kimlik Doğrulama Hatası",
+    "authErrorMessage": "Kimlik doğrulama sırasında bir sorun oluştu. Lütfen tekrar deneyin.",
+    "tryAgain": "Tekrar Dene",
+    "tabLogin": "Giriş Yap",
+    "tabCreateAccount": "Hesap Oluştur",
+    "continueWithGoogle": "Google ile devam et",
+    "continueWithFacebook": "Facebook ile devam et",
+    "continueWithLinkedIn": "LinkedIn ile devam et",
+    "continueWithX": "X ile devam et",
+    "rememberMe": "Beni hatırla",
+    "forgotLogin": "Giriş bilgilerinizi mi unuttunuz?",
+    "verifyTitle": "Gelen Kutunuzu Kontrol Edin",
+    "verifySubtitle": "E-posta adresinize bir doğrulama bağlantısı gönderdik. Lütfen gelen kutunuzu kontrol edin ve hesabınızı etkinleştirmek için bağlantıya tıklayın.",
+    "verifyResend": "Doğrulama e-postasını tekrar gönder",
+    "verifyResent": "Doğrulama e-postası tekrar gönderildi",
+    "verifyBack": "Girişe dön",
+    "verifiedTitle": "E-posta Doğrulandı",
+    "verifiedSubtitle": "E-postanız başarıyla doğrulandı. Artık hesabınıza giriş yapabilirsiniz.",
+    "verifiedContinue": "Girişe devam et",
+    "adminLogin": "Yönetici Girişi",
+    "adminLoginSubtitle": "Kısıtlı alan. Sadece yetkili personel.",
+    "adminSignIn": "Yönetici Olarak Giriş Yap"
+  },
+  "dashboard": {
+    "title": "Kontrol Paneli",
+    "welcome": "Tekrar hoş geldiniz",
+    "overview": "Genel Bakış",
+    "accountSettings": "Hesap Ayarları",
+    "connectedAccounts": "Bağlı Hesaplar",
+    "comingSoon": "Yakında — sosyal medya komuta merkeziniz.",
+    "emailVerified": "E-posta doğrulandı",
+    "memberSince": "Üyelik tarihi",
+    "profile": "Marka Ayarları",
+    "supportDescription": "Destek ekibimizden yardım alın. Destek talepleri oluşturun ve yönetin.",
+    "restartSetup": "Kurulumu Yeniden Başlat",
+    "restarting": "Yeniden başlatılıyor..."
+  },
+  "connect": {
+    "heading": "Hesaplarınızı bağlayın",
+    "subheading": "ZARZOOM ile otomatik yayınlamaya başlamak için sosyal medya hesaplarınızı bağlayın.",
+    "connectAccounts": "Hesapları Bağla",
+    "back": "Geri"
+  },
+  "brandSettings": {
+    "autoFillFromFile": "Dosyadan otomatik doldur"
+  },
+  "apiKeys": {
+    "createKeyTitle": "API Anahtarı Oluştur",
+    "keyCreated": "Anahtar Oluşturuldu",
+    "close": "Kapat",
+    "keyName": "Anahtar Adı",
+    "keyNamePlaceholder": "örn. Production, Staging, CI/CD",
+    "keyNameRequired": "Ad zorunludur",
+    "active": "Aktif",
+    "revoked": "İptal edildi",
+    "created": "Oluşturulma",
+    "lastUsed": "Son kullanım",
+    "revokedAt": "İptal",
+    "rotate": "Döndür",
+    "revoke": "İptal et",
+    "revokeConfirm": "Bu anahtar iptal edilsin mi?",
+    "rotateConfirm": "Anahtar döndürülsün mü?",
+    "confirm": "Onayla",
+    "cancel": "İptal",
+    "revoking": "İptal ediliyor...",
+    "rotating": "Döndürülüyor...",
+    "rotateTitle": "Döndür: bu anahtarı iptal et ve yeni bir tane oluştur"
+  },
+  "profile": {
+    "title": "Marka Ayarları",
+    "subtitle": "Markanızı, hedeflerinizi, planınızı ve sosyal bağlantılarınızı yönetin.",
+    "saving": "Kaydediliyor...",
+    "saved": "Değişiklikler başarıyla kaydedildi.",
+    "saveFailed": "Değişiklikler kaydedilemedi. Lütfen tekrar deneyin.",
+    "loadFailed": "Profiliniz yüklenemedi. Lütfen tekrar deneyin.",
+    "save": "Değişiklikleri Kaydet",
+    "sections": {
+      "brand": "Marka Temelleri",
+      "brandDesc": "İş kimliğiniz ve içerik tercihleriniz.",
+      "goals": "Hedefler ve Büyüme",
+      "goalsDesc": "ZARZOOM ile ne elde etmek istiyorsunuz.",
+      "posting": "Yayınlama Tercihleri",
+      "postingDesc": "ZARZOOM içeriğinizi nasıl yayınlar.",
+      "plan": "Planınız",
+      "planDesc": "Mevcut abonelik ve faturalandırma tercihleriniz.",
+      "social": "Sosyal Bağlantılar",
+      "socialDesc": "Bağlı sosyal medya hesaplarınızı yönetin."
+    },
+    "fields": {
+      "autoPublish": {
+        "label": "Otomatik yayınlama",
+        "help": "ZARZOOM'un sizin adınıza içeriği otomatik yayınlamasına izin verin."
+      }
+    },
+    "plan": {
+      "current": "Mevcut plan",
+      "noPlan": "Plan seçilmedi",
+      "annualBilling": "Yıllık faturalandırma",
+      "changePlan": "Planı Değiştir"
+    },
+    "social": {
+      "username": "Sosyal Kullanıcı Adı",
+      "noUsername": "Henüz yapılandırılmadı",
+      "connected": "Sosyal hesaplar bağlı",
+      "notConnected": "Henüz hesap bağlı değil",
+      "connect": "Hesapları Bağla",
+      "manage": "Bağlantıları Yönet"
+    },
+    "back": "Kontrol Paneline Dön"
+  },
+  "support": {
+    "nav": {
+      "title": "Destek",
+      "myTickets": "Taleplerim",
+      "createTicket": "Talep Oluştur",
+      "backToSupport": "Desteke Dön",
+      "backToDashboard": "Kontrol Paneline Dön"
+    },
+    "landing": {
+      "title": "Destek Alın",
+      "subtitle": "ZARZOOM'dan en iyi şekilde yararlanmanız için buradayız.",
+      "description": "Bir destek talebi gönderin, ekibimiz iş günlerinde 24 saat içinde yanıt verecektir.",
+      "createTicketBtn": "Talep Oluştur",
+      "myTicketsBtn": "Taleplerim"
+    },
+    "list": {
+      "title": "Destek Taleplerim",
+      "subtitle": "Destek taleplerinizi görüntüleyin ve yönetin.",
+      "empty": "Henüz talep yok",
+      "emptyDescription": "Henüz destek talebi oluşturmadınız. Başlamak için aşağıdaki düğmeye tıklayın.",
+      "createFirstTicket": "İlk Talebinizi Oluşturun",
+      "filterByStatus": "Duruma Göre Filtrele",
+      "allTickets": "Tüm Talepler",
+      "showingTickets": "{total} talepten {filtered} gösteriliyor",
+      "noMatchFilter": "Seçilen durum filtresine uyan talep yok.",
+      "clearFilter": "Filtreyi Temizle",
+      "table": {
+        "ticketId": "Talep No",
+        "subject": "Konu",
+        "status": "Durum",
+        "lastUpdated": "Son Güncelleme",
+        "created": "Oluşturulma"
+      }
+    },
+    "create": {
+      "title": "Destek Talebi Oluştur",
+      "subtitle": "Sorununuzu açıklayın, çözmenize yardımcı olalım.",
+      "form": {
+        "subject": "Konu",
+        "subjectPlaceholder": "Sorununuzun kısa açıklaması",
+        "subjectHelp": "Zorunlu. Kısa ve net tutun.",
+        "category": "Kategori",
+        "categoryHelp": "İsteğe bağlı. Sorununuza en uygun kategoriyi seçin.",
+        "priority": "Öncelik",
+        "priorityHelp": "İsteğe bağlı. Ne kadar acil olduğunu belirtin.",
+        "description": "Açıklama",
+        "descriptionPlaceholder": "Sorununuz hakkında ayrıntılı bilgi verin...",
+        "descriptionHelp": "Zorunlu. Tekrarlama adımları, hata mesajları veya diğer ilgili ayrıntıları ekleyin.",
+        "attachments": "Ekran Görüntüsü Ekleyin",
+        "attachmentsHelp": "İsteğe bağlı. En fazla 3 ekran görüntüsü (PNG, JPG veya WebP) yükleyin. Her biri en fazla 5MB.",
+        "attachmentsBtn": "Dosya Seç",
+        "attachmentsSelected": "dosya seçildi",
+        "removeAttachment": "Kaldır",
+        "submit": "Talep Gönder",
+        "submitting": "Talep oluşturuluyor...",
+        "cancel": "İptal"
+      },
+      "success": {
+        "title": "Talep Başarıyla Oluşturuldu",
+        "message": "Destek talebiniz oluşturuldu. İş günlerinde 24 saat içinde yanıt vereceğiz.",
+        "viewTicket": "Talep Görüntüle",
+        "createAnother": "Başka Talep Oluştur"
+      },
+      "error": {
+        "title": "Talep Oluşturulamadı",
+        "message": "Bir sorun oluştu. Lütfen tekrar deneyin.",
+        "retry": "Tekrar Dene"
+      }
+    },
+    "detail": {
+      "title": "Talep Detayları",
+      "status": "Durum",
+      "category": "Kategori",
+      "priority": "Öncelik",
+      "created": "Oluşturulma",
+      "lastActivity": "Son Aktivite",
+      "comments": "Yorumlar",
+      "addComment": "Yorum Ekle",
+      "commentPlaceholder": "Mesajınızı yazın...",
+      "attachScreenshots": "Ekran Görüntüsü Ekle",
+      "sendComment": "Gönder",
+      "sending": "Gönderiliyor...",
+      "loadingTicket": "Talep yükleniyor...",
+      "ticketNotFound": "Talep bulunamadı",
+      "ticketNotFoundMessage": "Bu talep mevcut değil veya görüntüleme yetkiniz yok.",
+      "noComments": "Henüz yorum yok",
+      "userRole": "Siz",
+      "adminRole": "Destek Ekibi",
+      "systemRole": "Sistem",
+      "attachmentPreview": "Tam boy görmek için tıklayın",
+      "attachmentAlt": "Ek",
+      "closeModal": "Kapat",
+      "closeTicketTitle": "Talep Kapat",
+      "closeTicketMessage": "Bu talebi kapatmak istediğinizden emin misiniz? İsteğe bağlı bir gerekçe verebilirsiniz.",
+      "closeTicketPlaceholder": "İsteğe bağlı: Talebi neden kapatıyorsunuz?",
+      "closeTicketCancel": "İptal",
+      "closeTicketButton": "Talep Kapat",
+      "closeTicketClosing": "Kapatılıyor..."
+    },
+    "status": {
+      "open": "Açık",
+      "investigating": "İnceleniyor",
+      "waiting_on_user": "Sizden Bekleniyor",
+      "resolved": "Çözüldü",
+      "closed": "Kapatıldı"
+    },
+    "category": {
+      "none": "Belirtilmedi",
+      "account_login": "Hesap ve Giriş",
+      "billing_subscription": "Faturalandırma ve Abonelik",
+      "social_connections": "Sosyal Bağlantılar",
+      "content_generation": "İçerik Üretimi",
+      "publishing_issues": "Yayınlama Sorunları",
+      "technical_bug": "Teknik Hata",
+      "feature_request": "Özellik Talebi",
+      "general_question": "Genel Soru"
+    },
+    "priority": {
+      "none": "Belirtilmedi",
+      "urgent": "Acil – Sistem Engelliyor",
+      "high": "Yüksek – Ciddi Sorun",
+      "normal": "Normal – Standart",
+      "low": "Düşük – Küçük / Öneri"
+    },
+    "attachments": {
+      "uploading": "Ekler yükleniyor...",
+      "uploadSuccess": "Ekler başarıyla yüklendi",
+      "uploadError": "Bazı ekler yüklenemedi",
+      "fileTypeError": "Yalnızca PNG, JPG ve WebP dosyalarına izin verilir",
+      "fileSizeError": "Dosya boyutu 5MB'dan küçük olmalıdır",
+      "fileCountError": "Yorum başına en fazla 3 dosya yükleyebilirsiniz",
+      "viewFullSize": "Tam boyutta görüntüle"
+    },
+    "errors": {
+      "loadFailed": "Destek talepleri yüklenemedi",
+      "createFailed": "Talep oluşturulamadı",
+      "commentFailed": "Yorum eklenemedi",
+      "unauthorized": "Bu talebe erişim yetkiniz yok",
+      "networkError": "Ağ hatası. Bağlantınızı kontrol edip tekrar deneyin."
+    },
+    "validation": {
+      "subjectRequired": "Konu zorunludur",
+      "descriptionRequired": "Açıklama zorunludur",
+      "messageRequired": "Mesaj zorunludur",
+      "emailRequired": "E-posta zorunludur",
+      "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+      "noUpdatesProvided": "Güncelleme sağlanmadı",
+      "noFilesProvided": "Dosya sağlanmadı",
+      "tooManyFiles": "Çok fazla dosya. En fazla {count} dosyaya izin verilir.",
+      "invalidFileType": "{name} için geçersiz dosya türü. Yalnızca PNG, JPG ve WebP dosyalarına izin verilir.",
+      "fileTooLarge": "{name} dosyası çok büyük ({size}). Maksimum boyut 5MB."
+    }
+  },
+  "onboarding": {
+    "title": "ZARZOOM'unuzu Kurun",
+    "subtitle": "Sosyal medya oto pilotunuzu birkaç hızlı adımda yapılandıralım.",
+    "stepper": {
+      "step1": "Hesap",
+      "step2": "Marka",
+      "step3": "Hedefler",
+      "step4": "Plan",
+      "step5": "Bağlan"
+    },
+    "nav": {
+      "back": "Geri",
+      "next": "Devam",
+      "saveExit": "Kaydet ve Çık",
+      "skipForNow": "Şimdilik atla",
+      "finish": "ZARZOOM'u Başlat",
+      "saving": "Kaydediliyor..."
+    },
+    "step1": {
+      "title": "Hesap Oluşturuldu",
+      "subtitle": "Giriş yaptınız ve hazırsınız.",
+      "signedInAs": "Giriş yapan",
+      "continue": "Markanızı kuralım"
+    },
+    "step2": {
+      "title": "Marka Temelleri",
+      "subtitle": "İçeriği markanıza uyarlayabilmemiz için işletmeniz hakkında bilgi verin.",
+      "businessName": {
+        "label": "İşletme Adı",
+        "placeholder": "örn. Acme Corp",
+        "help": "İşletmenizin veya markanızın adı."
+      },
+      "description": {
+        "label": "Açıklama",
+        "placeholder": "İşletmenizin ne yaptığını kısaca açıklayın...",
+        "help": "Yapay zekamızın marka sesinizi anlaması için kısa bir özet."
+      },
+      "websiteUrl": {
+        "label": "Web Sitesi URL",
+        "placeholder": "https://siteniz.com",
+        "help": "İçeriği uyarlamak için sitenizi analiz edeceğiz."
+      },
+      "autofillFromWebsite": "Web sitesinden otomatik doldur",
+      "analysing": "Analiz ediliyor...",
+      "importFromFile": "Dosyadan içe aktar",
+      "choosePdfOrWord": "PDF veya Word belgesi seçin",
+      "investigate": {
+        "button": "Web Sitesini İncele",
+        "loading": "Web siteniz analiz ediliyor...",
+        "success": "Web sitesi başarıyla analiz edildi!",
+        "error": "Web sitesi analiz edilemedi. Lütfen bilgileri manuel doldurun."
+      },
+      "contentLanguage": {
+        "label": "İçerik Dili",
+        "help": "Üretilen içeriğinizin birincil dili."
+      },
+      "articleStyles": {
+        "label": "Makale Stilleri",
+        "help": "ZARZOOM'un oluşturmasını istediğiniz içerik türlerini seçin.",
+        "options": {
+          "let_zarzoom_decide": "ZARZOOM Karar Versin",
+          "how_to_guides": "Nasıl Yapılır Rehberleri",
+          "listicles": "Liste İçerikleri",
+          "tutorials": "Eğitimler",
+          "opinion_pieces": "Görüş Yazıları",
+          "case_studies": "Vaka Çalışmaları",
+          "news_commentary": "Haber Yorumları",
+          "interviews": "Röportajlar",
+          "product_reviews": "Ürün İncelemeleri",
+          "explainer_articles": "Açıklayıcı Makaleler",
+          "comparisons_vs_articles": "Karşılaştırmalar ve Vs Makaleleri",
+          "ultimate_guides_pillar": "Nihai Rehberler / Temel İçerik",
+          "checklists_cheat_sheets": "Kontrol Listeleri ve Kopya Kağıtları",
+          "best_top_forecasts": "En İyi / En Üst Tahminler",
+          "problem_solution_posts": "Sorun/Çözüm Gönderileri",
+          "myth_busting": "Efsane Yıkım / Yanlış Kanılar",
+          "resource_roundups": "Kaynak Derlemeleri",
+          "faqs_qa_content": "SSS / S&C Tarzı İçerik",
+          "personal_stories": "Kişisel Hikayeler / Deneyimler",
+          "research_summaries": "Araştırma Özetleri / Veri İçgörüleri",
+          "historical_timeline": "Tarihsel / Zaman Çizelgesi Yazıları",
+          "satire_humor": "Satir veya Mizah İçeriği",
+          "explained_in_minutes": "X Dakikada Açıklandı"
+        },
+        "descriptions": {
+          "let_zarzoom_decide": "Yapay zekamız içeriğiniz için en iyi formatı seçsin",
+          "how_to_guides": "Adım adım talimatlar",
+          "listicles": "Numaralı listeler (örn. X için 10 İpucu)",
+          "tutorials": "Nasıl yapılırdan daha detaylı",
+          "opinion_pieces": "Uzman bakış açıları veya yorumlar",
+          "case_studies": "Gerçek dünya örnekleri/sonuçları",
+          "news_commentary": "Güncel olaylara bağlam",
+          "interviews": "Bir kişi/otorite ile S&C",
+          "product_reviews": "Değerlendirme/puanlama",
+          "explainer_articles": "Karmaşık kavramları basitçe açıklayın",
+          "comparisons_vs_articles": "X vs Y, artıları/eksileri karşılaştırmaları",
+          "ultimate_guides_pillar": "Uzun format, yetkili, tüm konuyu kapsar",
+          "checklists_cheat_sheets": "Hızlı referans, uygulanabilir listeler",
+          "best_top_forecasts": "X için En İyi Araçlar, 202X'te En Üst Trendler",
+          "problem_solution_posts": "Bir acı noktası belirleyin sonra yanıtlayın",
+          "myth_busting": "Yaygın yanlış inançları giderme",
+          "resource_roundups": "Bir konuda En İyi Makaleler, Araçlar, Bağlantılar",
+          "faqs_qa_content": "Uzun kuyruk arama sorgularını doğrudan hedefleyin",
+          "personal_stories": "Anlatı, duygusal etki",
+          "research_summaries": "Anketleri, araştırma sonuçlarını özetleyin",
+          "historical_timeline": "Gelişim veya evrim üzerinden geriye bakış",
+          "satire_humor": "Eğlenceli, marka kişiliği yazıları",
+          "explained_in_minutes": "Ana noktalar, hızlı tüketim"
+        }
+      },
+      "styleLinks": {
+        "label": "Stil Referans Bağlantıları",
+        "placeholder": "https://ornek.com/makale",
+        "help": "Tarzını taklit etmek istediğiniz makalelere en fazla 3 bağlantı ekleyin.",
+        "add": "Bağlantı Ekle",
+        "max": "En fazla 3 bağlantı"
+      },
+      "brandColor": {
+        "label": "Marka Rengi",
+        "help": "Üretilen görseller için birincil marka renginiz."
+      },
+      "logo": {
+        "label": "Logo",
+        "help": "Marka logonuzu yükleyin (JPG formatı).",
+        "upload": "Logo Yükle",
+        "change": "Logoyu Değiştir",
+        "uploading": "Yükleniyor..."
+      }
+    },
+    "step3": {
+      "title": "Hedefler ve Büyüme",
+      "subtitle": "ZARZOOM ile ne elde etmek istiyorsunuz?",
+      "goals": {
+        "label": "Hedeflerinizi Seçin",
+        "help": "Bir veya daha fazla hedef seçin. Stratejinizi buna göre uyarlayacağız.",
+        "options": {
+          "increase_website_traffic": "Web Sitesi Trafiğini Artır",
+          "get_more_subscribers_leads": "Daha Fazla Abone ve Lead Kazan",
+          "promote_product_or_service": "Ürün veya Hizmet Tanıt",
+          "increase_sales": "Satışları Artır",
+          "build_brand_authority": "Marka Otoritesi Oluştur",
+          "improve_seo": "SEO'yu İyileştir",
+          "educate_audience": "Kitlenizi Eğitin",
+          "generate_social_content": "Sosyal İçerik Üret"
+        }
+      },
+      "websiteUrl": {
+        "label": "Web Sitesi veya Açılış Sayfası URL",
+        "placeholder": "https://siteniz.com/landing",
+        "help": "Hedefleriniz web sitesi trafiği veya lead üretimi içerdiğinde zorunludur."
+      },
+      "productUrl": {
+        "label": "Ürün veya Satış Sayfası URL",
+        "placeholder": "https://siteniz.com/urun",
+        "help": "Hedefleriniz ürün tanıtımı veya satış içerdiğinde zorunludur."
+      }
+    },
+    "step4": {
+      "title": "Planınızı Seçin",
+      "subtitle": "Büyüme hedeflerinize uyan bir planla başlayın.",
+      "discount": {
+        "label": "Yıllık faturalandırma",
+        "save": "%{percent} tasarruf"
+      },
+      "features": {
+        "basic": {
+          "socialProfiles": "En fazla 3 sosyal profil",
+          "postsPerMonth": "Ayda 30 gönderi",
+          "aiGeneration": "Temel yapay zeka içerik üretimi",
+          "scheduling": "Gönderi planlama",
+          "emailSupport": "E-posta desteği"
+        },
+        "pro": {
+          "socialProfiles": "En fazla 10 sosyal profil",
+          "postsPerMonth": "Ayda 150 gönderi",
+          "aiGeneration": "Gelişmiş yapay zeka içerik üretimi",
+          "scheduling": "En uygun zamanlarla akıllı planlama",
+          "analytics": "Analitik paneli",
+          "prioritySupport": "Öncelikli destek"
+        },
+        "scale": {
+          "socialProfiles": "Sınırsız sosyal profil",
+          "postsPerMonth": "Sınırsız gönderi",
+          "aiGeneration": "Özel marka sesiyle premium yapay zeka",
+          "scheduling": "Yapay zeka destekli otomatik planlama",
+          "analytics": "Gelişmiş analitik ve raporlama",
+          "customBranding": "Özel markalama ve beyaz etiket",
+          "dedicatedSupport": "Özel hesap yöneticisi",
+          "apiAccess": "Tam API erişimi"
+        }
+      },
+      "planNames": {
+        "basic": "Temel",
+        "pro": "Pro",
+        "scale": "Scale"
+      },
+      "planDescriptions": {
+        "basic": "Sosyal medya otomasyonuna başlamak için ideal.",
+        "pro": "Daha fazla güç ve içgörüye ihtiyaç duyan büyüyen işletmeler için.",
+        "scale": "Ekipler ve ajanslar için sınırsız her şey."
+      },
+      "popular": "En Popüler",
+      "perMonth": "/ay",
+      "selectPlan": "Plan Seç",
+      "selected": "Seçildi",
+      "trialDays": "{days} günlük ücretsiz deneme"
+    },
+    "step5": {
+      "title": "Bağlan ve Başlat",
+      "subtitle": "Sosyal hesaplarınızı bağlayın ve tercihlerinizi ayarlayın.",
+      "connectSocials": {
+        "label": "Sosyal Hesapları Bağla",
+        "help": "Sosyal medya hesaplarınızı bağlayın",
+        "button": "Hesapları Bağla",
+        "manage": "Bağlantıları Yönet",
+        "connected": "Sosyal hesaplar bağlı",
+        "notConnected": "Henüz hesap bağlı değil"
+      },
+      "approval": {
+        "label": "İçerik Onayı",
+        "help": "ZARZOOM'un içeriğinizi nasıl yayınlayacağını seçin.",
+        "auto": "Otomatik yayınlama",
+        "autoHelp": "ZARZOOM içeriği plana göre otomatik yayınlar.",
+        "manual": "Manuel onay",
+        "manualHelp": "Yayına girmeden önce her gönderiyi inceleyin ve onaylayın."
+      },
+      "notes": {
+        "label": "Ek Notlar",
+        "placeholder": "Markanız veya içerik tercihleriniz hakkında bilmemizi istediğiniz başka bir şey...",
+        "help": "Yapay zekamızın dikkate alması için isteğe bağlı notlar."
+      }
+    },
+    "modal": {
+      "title": "Sosyal Hesapları Bağla",
+      "loading": "Sosyal bağlayıcı hazırlanıyor...",
+      "checking": "Bağlantı kontrol ediliyor...",
+      "close": "Tamam",
+      "openInNewTab": "Yeni sekmede aç",
+      "skipConnect": "Şimdilik atla",
+      "errorGeneric": "Sosyal bağlayıcı yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+      "errorNoUrl": "Bağlantı URL'si dönmedi. Lütfen tekrar deneyin.",
+      "demoTitle": "Sosyal Bağlayıcı Yakında",
+      "demoDescription": "Sosyal bağlayıcı bu ortam için henüz yapılandırılmadı. Sosyal hesap bağlantılarınız, bir yönetici tarafından sağlayıcı kurulduğunda kullanılabilir olacaktır."
+    },
+    "errors": {
+      "loadFailed": "Onboarding verileriniz yüklenemedi. Lütfen tekrar deneyin.",
+      "saveFailed": "Kaydedilemedi. Lütfen tekrar deneyin.",
+      "completeFailed": "Onboarding tamamlanamadı. Lütfen tüm zorunlu alanları kontrol edin."
+    },
+    "banner": {
+      "skipped": "Kurulumu atladınız. Tüm özelliklerin kilidini açmak için tamamlayın.",
+      "inProgress": "Kurulumunuz eksik. Başlamak için bitirin.",
+      "cta": "Kurulumu Tamamla"
+    },
+    "gate": {
+      "title": "Kurulum Gerekli",
+      "description": "Bu özelliğin kilidini açmak için onboarding kurulumunuzu tamamlayın. Sadece birkaç dakika sürer.",
+      "cta": "Kurulumu Tamamla"
+    },
+    "a11y": {
+      "brandLogoAlt": "Marka logosu",
+      "socialConnectorTitle": "Sosyal Bağlayıcı",
+      "dismissBanner": "Banner'ı kapat",
+      "currency": "£",
+      "stepperLabel": "Onboarding ilerlemesi"
+    },
+    "validation": {
+      "invalidUrl": "Lütfen geçerli bir URL girin (örn. https://ornek.com)"
+    }
+  },
+  "billing": {
+    "nav": {
+      "billingHistory": "Fatura Geçmişi"
+    },
+    "selectCurrencyLabel": "Para Birimi Seçin",
+    "selectCurrencyHelp": "Fiyatlandırma için tercih ettiğiniz para birimini seçin.",
+    "selectBillingInterval": "Faturalandırma dönemini seçin",
+    "toggleDiscount": "Reklam ortaklığı indirimi",
+    "discountPartnershipTitle": "Reklam Ortaklığı ile %{percent} Tasarruf",
+    "discountActive": "Aktif",
+    "discountPartnershipDescription": "ZARZOOM'un feed'inize tanıtım içeriği yayınlamasına (en fazla {maxFrequency}) izin verin ve aboneliğinizde %{percent} indirim alın. Tam kontrol sizde, istediğiniz zaman kapatabilirsiniz.",
+    "discountOncePerDay": "günde bir kez",
+    "discountPerWeek": "haftada {count} kez",
+    "discountPartnerApplied": "Ortak indirimi uygulandı",
+    "discountAdvertisingApplied": "Reklam ortaklığı indirimi uygulandı",
+    "contactUs": "Bize ulaşın",
+    "partnerDiscountEnable": "%50 Ortak İndirimini Etkinleştir",
+    "partnerDiscountStandardPrice": "Standart Fiyat",
+    "partnerDiscount50Off": "%50 İNDİRİM",
+    "partnerDiscountSubheading": "%50 tasarruf edin. Günde en fazla 1 küçük ZARZOOM tanıtımı yayınlayabiliriz (haftada en fazla 3–7) — kendi gönderilerinize asla.",
+    "admin": {
+      "title": "Billing Management",
+      "subtitle": "Manage subscription plans, pricing, and billing settings",
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubs": "Active Subscriptions",
+      "pastDueSubs": "Past Due",
+      "totalPlans": "Active Plans",
+      "newPlan": "New Plan",
+      "plansTitle": "Subscription Plans",
+      "noPlan": "No plans available",
+      "planName": "Plan Name",
+      "planSlug": "Slug",
+      "planStatus": "Status",
+      "planPriceGBP": "Price (GBP)",
+      "planTrialDays": "Trial",
+      "planActions": "Actions",
+      "editPlan": "Edit Plan",
+      "editPlanDesc": "Update plan details and pricing",
+      "newPlanDesc": "Create a new subscription plan with pricing",
+      "planDetails": "Plan Details",
+      "planDescription": "Description",
+      "planDisplayOrder": "Sort Order",
+      "planPrices": "Pricing",
+      "addPrice": "Add Price",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "updatePlan": "Update Plan",
+      "createPlan": "Create Plan"
+    },
+    "pricing": {
+      "title": "Basit, Şeffaf Fiyatlandırma",
+      "subtitle": "Büyümenize uyan planı seçin. Ücretsiz denemeyle başlayın, istediğiniz zaman yükseltin.",
+      "monthly": "Aylık",
+      "annual": "Yıllık",
+      "popular": "En Popüler",
+      "getStarted": "Başlayın",
+      "savePercent": "Yıllık faturalandırma ile %{percent} tasarruf",
+      "trialDays": "{days} günlük ücretsiz deneme",
+      "page": {
+        "title": "Basit, Şeffaf Fiyatlandırma",
+        "subtitle": "Size uyan planı seçin. Tüm planlar 14 günlük ücretsiz deneme içerir.",
+        "footer": "Tüm fiyatlar geçerli olduğu yerlerde KDV hariçtir. Planınızı istediğiniz zaman iptal edebilir veya değiştirebilirsiniz.",
+        "contactCta": "Sorularınız mı var? Bize ulaşın, size uygun planı bulmanıza yardımcı olalım.",
+        "contactCtaPrefix": "Sorularınız mı var? ",
+        "contactLink": "Bize ulaşın",
+        "contactCtaSuffix": " size uygun planı bulmanıza yardımcı olalım."
+      },
+      "fallback": {
+        "title": "Fiyatlandırma Geçici Olarak Kullanılamıyor",
+        "message": "Fiyatlandırma planlarımızı güncelliyoruz. Lütfen kısa süre içinde tekrar kontrol edin veya yardım için destekle iletişime geçin."
+      }
+    },
+    "plans": {
+      "basic": {
+        "displayName": "Temel",
+        "shortTagline": "Başlamak için ideal",
+        "description": "Yapay zeka destekli içerik oluşturma ve planlamayla sosyal medya varlığınızı başlatmak için temel özellikler.",
+        "bullets": [
+          "En fazla 3 sosyal profil",
+          "Ayda 30 gönderi",
+          "Temel yapay zeka içerik üretimi",
+          "Gönderi planlama",
+          "E-posta desteği"
+        ],
+        "cta": "Ücretsiz Denemeyi Başlat"
+      },
+      "pro": {
+        "displayName": "Pro",
+        "shortTagline": "Büyüyen işletmeler için en iyi",
+        "description": "Akıllı otomasyonla sosyal medya stratejinizi ölçeklendirmek için gelişmiş özellikler ve analitik.",
+        "bullets": [
+          "En fazla 10 sosyal profil",
+          "Ayda 150 gönderi",
+          "Gelişmiş yapay zeka içerik üretimi",
+          "En uygun zamanlarla akıllı planlama",
+          "Analitik paneli",
+          "Öncelikli destek"
+        ],
+        "cta": "Ücretsiz Denemeyi Başlat"
+      },
+      "advanced": {
+        "displayName": "Gelişmiş",
+        "shortTagline": "Ekipler ve ajanslar için",
+        "description": "Maksimum etki için sınırsız içerik, özel markalama ve özel destek ile kurumsal düzeyde özellikler.",
+        "bullets": [
+          "Sınırsız sosyal profil",
+          "Sınırsız gönderi",
+          "Özel marka sesiyle premium yapay zeka",
+          "Yapay zeka destekli otomatik planlama",
+          "Gelişmiş analitik ve raporlama",
+          "Özel markalama ve beyaz etiket",
+          "Özel hesap yöneticisi",
+          "Tam API erişimi"
+        ],
+        "cta": "Satış ile İletişim"
+      }
+    },
+    "features": {
+      "basic": {
+        "socialProfiles": "En fazla 3 sosyal profil",
+        "postsPerMonth": "Ayda 30 gönderi",
+        "aiGeneration": "Temel yapay zeka içerik üretimi",
+        "scheduling": "Gönderi planlama",
+        "emailSupport": "E-posta desteği"
+      },
+      "pro": {
+        "socialProfiles": "En fazla 10 sosyal profil",
+        "postsPerMonth": "Ayda 150 gönderi",
+        "aiGeneration": "Gelişmiş yapay zeka içerik üretimi",
+        "scheduling": "En uygun zamanlarla akıllı planlama",
+        "analytics": "Analitik paneli",
+        "prioritySupport": "Öncelikli destek"
+      },
+      "advanced": {
+        "socialProfiles": "Sınırsız sosyal profil",
+        "postsPerMonth": "Sınırsız gönderi",
+        "aiGeneration": "Özel marka sesiyle premium yapay zeka",
+        "scheduling": "Yapay zeka destekli otomatik planlama",
+        "analytics": "Gelişmiş analitik ve raporlama",
+        "customBranding": "Özel markalama ve beyaz etiket",
+        "dedicatedSupport": "Özel hesap yöneticisi",
+        "apiAccess": "Tam API erişimi"
+      }
+    }
+  }
+}
