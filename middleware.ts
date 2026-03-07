@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // ── Locale routing: public pages get [locale] prefix; only en/fr supported ──
+  // ── Locale routing: public pages get [locale] prefix; all ROUTED_LOCALES supported ──
   const segments = pathname.split('/').filter(Boolean)
   const first = segments[0]
 

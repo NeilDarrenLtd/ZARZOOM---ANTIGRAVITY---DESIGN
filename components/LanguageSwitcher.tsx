@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n, languages } from "@/lib/i18n";
-import { ROUTED_LOCALES } from "@/lib/i18n/routing";
+import { ROUTED_LOCALES, type RoutedLocale } from "@/lib/i18n/routing";
 
 export default function LanguageSwitcher() {
   const { t, locale, setLocale } = useI18n();
@@ -31,7 +31,7 @@ export default function LanguageSwitcher() {
   const handleSelect = (code: string) => {
     setLocale(code);
     setOpen(false);
-    if (isOnLocaleRoute && ROUTED_LOCALES.includes(code as "en" | "fr")) {
+    if (isOnLocaleRoute && ROUTED_LOCALES.includes(code as RoutedLocale)) {
       const match = pathname.match(/^\/[a-z]{2}(\/.*)?$/);
       const pathWithoutLocale = match ? (match[1] ?? "") : pathname;
       router.push(`/${code}${pathWithoutLocale || ""}`);

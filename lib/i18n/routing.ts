@@ -1,9 +1,36 @@
 /**
  * Locale routing config for SEO-friendly public URLs.
- * Only locales listed here get [locale] prefix and are shown in the switcher on locale routes.
+ * All supported languages listed here get [locale] prefix on public marketing pages.
+ * Must match languages that have locales/{code}/site.json and app.json.
  */
 
-export const ROUTED_LOCALES = ["en", "fr"] as const;
+export const ROUTED_LOCALES = [
+  "en",
+  "fr",
+  "es",
+  "de",
+  "it",
+  "pt",
+  "nl",
+  "pl",
+  "sv",
+  "da",
+  "no",
+  "fi",
+  "ru",
+  "uk",
+  "tr",
+  "ar",
+  "he",
+  "hi",
+  "zh",
+  "ja",
+  "ko",
+  "th",
+  "vi",
+  "id",
+  "ms",
+] as const;
 export type RoutedLocale = (typeof ROUTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: RoutedLocale = "en";
