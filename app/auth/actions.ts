@@ -31,12 +31,15 @@ async function getBaseUrl(): Promise<string> {
 }
 
 export async function signInWithEmail(email: string, password: string) {
+  console.log("[v0] signInWithEmail called for:", email);
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+
+  console.log("[v0] signInWithPassword result - error:", error?.message, "user:", data?.user?.id);
 
   if (error) {
     return { error: error.message };
@@ -62,6 +65,7 @@ export async function signInWithEmail(email: string, password: string) {
   );
   const redirectTo = await resolvePostAuthRedirect(data.user.id);
 
+  console.log("[v0] Login success, redirecting to:", redirectTo);
   return { success: true, redirectTo };
 }
 
