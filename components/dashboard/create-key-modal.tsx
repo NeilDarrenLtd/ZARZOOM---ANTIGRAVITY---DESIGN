@@ -10,11 +10,13 @@ interface CreateKeyModalProps {
   open: boolean;
   onClose: () => void;
   onCreated: () => void;
+  /** Pre-fill key name when opening (e.g. from Rotate flow). */
+  initialName?: string;
 }
 
 type Step = "form" | "loading" | "reveal";
 
-export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps) {
+export function CreateKeyModal({ open, onClose, onCreated, initialName }: CreateKeyModalProps) {
   const { t } = useI18n();
   const workspaceFetch = useWorkspaceFetch();
   const [step, setStep] = useState<Step>("form");
@@ -29,6 +31,12 @@ export function CreateKeyModal({ open, onClose, onCreated }: CreateKeyModalProps
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [open, step]);
+
+  useEffect(() => {
+    if (open && initialName != null) {
+      setName(initialName);
+    }
+  }, [open, initialName]);
 
   const reset = useCallback(() => {
     setStep("form");

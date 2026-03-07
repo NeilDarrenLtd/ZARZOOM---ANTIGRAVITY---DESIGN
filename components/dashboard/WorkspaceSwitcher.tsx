@@ -26,25 +26,27 @@ interface WorkspaceSwitcherProps {
   activeWorkspaceId: string | null;
   onSwitch: (workspaceId: string) => void;
   onAddWorkspace: () => void;
+  /** When true, Add Workspace button is disabled (e.g. create in progress). */
+  addWorkspaceLoading?: boolean;
 }
 
 function getStatusConfig(status: WorkspaceStatus) {
   switch (status) {
     case "active":
       return {
-        label: "Active",
+        label: "Paid",
         className: "bg-green-100 text-green-700",
         icon: Check,
       };
     case "setup_incomplete":
       return {
-        label: "Setup incomplete",
+        label: "Setup Incomplete",
         className: "bg-amber-100 text-amber-700",
         icon: Settings,
       };
     case "payment_required":
       return {
-        label: "Payment required",
+        label: "Payment Required",
         className: "bg-red-100 text-red-700",
         icon: AlertCircle,
       };
@@ -62,6 +64,7 @@ export default function WorkspaceSwitcher({
   activeWorkspaceId,
   onSwitch,
   onAddWorkspace,
+  addWorkspaceLoading = false,
 }: WorkspaceSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -224,7 +227,8 @@ export default function WorkspaceSwitcher({
                   onAddWorkspace();
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-gray-50 transition-colors duration-150 group"
+                disabled={addWorkspaceLoading}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left hover:bg-gray-50 transition-colors duration-150 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="w-9 h-9 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center group-hover:border-green-400 transition-colors">
                   <Plus className="w-4 h-4 text-gray-400 group-hover:text-green-500 transition-colors" />

@@ -23,6 +23,8 @@ export default function DashboardPage() {
   const [restarting, setRestarting] = useState(false);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(activeWorkspaceId);
+  const [addWorkspaceLoading, setAddWorkspaceLoading] = useState(false);
+  const [addWorkspaceError, setAddWorkspaceError] = useState<string | null>(null);
   const showSuccessBanner = useUploadPostSuccess();
 
   const fetchWorkspaces = useCallback(async () => {
@@ -78,20 +80,34 @@ export default function DashboardPage() {
   }
 
   async function handleAddWorkspace() {
+    const rawName = typeof window !== "undefined"
+      ? window.prompt(t("dashboard.workspaceNamePrompt") ?? "Workspace name?", "My Workspace")
+      : "My Workspace";
+    if (rawName === null) return; // user cancelled
+    const name = rawName.trim() || "My Workspace";
+
+    setAddWorkspaceError(null);
+    setAddWorkspaceLoading(true);
     try {
       const res = await workspaceFetch("/api/v1/workspaces", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: "My Workspace" }),
+        body: JSON.stringify({ name: name.slice(0, 200) }),
+        credentials: "include",
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        window.location.href = "/dashboard";
+        // API sets active_workspace_id cookie to the new workspace; full redirect so layout picks up cookie
+        window.location.href = "/dashboard/profile";
         return;
       }
+      const message = (data as { error?: { message?: string } })?.error?.message ?? res.statusText ?? "Failed to create workspace";
+      setAddWorkspaceError(message);
     } catch {
-      // fallback
+      setAddWorkspaceError("Network error. Please try again.");
+    } finally {
+      setAddWorkspaceLoading(false);
     }
-    window.location.href = "/dashboard";
   }
 
 
@@ -134,7 +150,7 @@ export default function DashboardPage() {
       <SiteNavbar />
 
       <div className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
-        {/* Welcome header */}
+        {/* Welcome header with workspace switcher */}
         <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">
@@ -145,23 +161,24 @@ export default function DashboardPage() {
               <span className="text-green-600 font-medium">
                 {user?.email ?? ""}
               </span>
-              <button
-                onClick={handleAddWorkspace}
-                title="Add workspace"
-                aria-label="Add workspace"
-                className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 hover:bg-green-200 text-green-700 transition-colors flex-shrink-0"
-              >
-                <Plus className="w-3 h-3" />
-              </button>
             </p>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            {t("nav.logout")}
-          </button>
+          <div className="flex items-center gap-3">
+            <WorkspaceSwitcher
+              workspaces={workspaces}
+              activeWorkspaceId={currentWorkspaceId}
+              onSwitch={handleSwitchWorkspace}
+              onAddWorkspace={handleAddWorkspace}
+              addWorkspaceLoading={addWorkspaceLoading}
+            />
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              {t("nav.logout")}
+            </button>
+          </div>
         </div>
 
         {/* Dashboard cards */}
@@ -177,12 +194,23 @@ export default function DashboardPage() {
               </div>
               <button
                 onClick={handleAddWorkspace}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-green-400 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors"
+                disabled={addWorkspaceLoading}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-green-400 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Plus className="w-4 h-4" />
+                {addWorkspaceLoading ? (
+                  <span className="inline-block h-4 w-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
                 Add Workspace
               </button>
             </div>
+
+            {addWorkspaceError && (
+              <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2" role="alert">
+                {addWorkspaceError}
+              </p>
+            )}
 
             <p className="text-sm text-gray-500 leading-relaxed mb-5">
               Manage multiple brands, businesses, or projects from a single ZARZOOM account.{" "}
@@ -203,9 +231,9 @@ export default function DashboardPage() {
                     payment_required: "bg-red-100 text-red-700",
                   };
                   const statusLabels: Record<string, string> = {
-                    active: "Active",
-                    setup_incomplete: "Setup incomplete",
-                    payment_required: "Payment required",
+                    active: "Paid",
+                    setup_incomplete: "Setup Incomplete",
+                    payment_required: "Payment Required",
                   };
                   const StatusIcon = ws.status === "active" ? Check : AlertCircle;
 

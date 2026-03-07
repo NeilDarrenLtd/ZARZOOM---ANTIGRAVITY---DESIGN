@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import {
   createApiHandler,
-  badRequest,
+  created,
   ok,
   serverError,
 } from "@/lib/api";
@@ -10,6 +10,15 @@ import {
   ACTIVE_WORKSPACE_COOKIE,
   getActiveWorkspaceCookieOptions,
 } from "@/lib/workspace/active";
+
+/** Return 500 with a message the client can display (includes underlying error for debugging). */
+function fail(ctx: { requestId: string }, userMessage: string, underlying?: string) {
+  const message = underlying ? `${userMessage}: ${underlying}` : userMessage;
+  return NextResponse.json(
+    { error: { code: "INTERNAL_ERROR", message, requestId: ctx.requestId } },
+    { status: 500, headers: { "X-Request-Id": ctx.requestId } }
+  );
+}
 
 /** Map tenant DB status to UI workspace status */
 function toWorkspaceStatus(
@@ -41,6 +50,7 @@ export const GET = createApiHandler({
   tenantOptional: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
+    // Use user's session client for reads (RLS filters by membership)
     const supabase = ctx.supabase!;
     const userId = ctx.user!.id;
 
@@ -112,7 +122,6 @@ export const POST = createApiHandler({
   tenantOptional: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
-    const supabase = ctx.supabase!;
     const userId = ctx.user!.id;
 
     let name = "My Workspace";
@@ -125,7 +134,16 @@ export const POST = createApiHandler({
       // use default name
     }
 
-    const { data: tenant, error: tenantError } = await supabase
+    let admin;
+    try {
+      admin = await createAdminClient();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error("[workspaces POST] createAdminClient failed:", msg);
+      return fail(ctx, "Server configuration error", msg);
+    }
+
+    const { data: tenant, error: tenantError } = await admin
       .from("tenants")
       .insert({
         name,
@@ -135,10 +153,12 @@ export const POST = createApiHandler({
       .single();
 
     if (tenantError || !tenant) {
-      return serverError(ctx.requestId, "Failed to create workspace");
+      const errMsg = tenantError?.message ?? (tenantError ? String(tenantError) : "No data returned");
+      console.error("[workspaces POST] tenant insert failed:", errMsg);
+      return fail(ctx, "Failed to create workspace", errMsg);
     }
 
-    const { error: membershipError } = await supabase
+    const { error: membershipError } = await admin
       .from("tenant_memberships")
       .insert({
         tenant_id: tenant.id,
@@ -147,10 +167,11 @@ export const POST = createApiHandler({
       });
 
     if (membershipError) {
-      return serverError(ctx.requestId, "Failed to add workspace membership");
+      console.error("[workspaces POST] membership insert failed:", membershipError.message);
+      return fail(ctx, "Failed to add workspace membership", membershipError.message);
     }
 
-    const response = ok(
+    const response = created(
       {
         workspace: {
           id: tenant.id,

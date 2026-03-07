@@ -61,7 +61,8 @@
     "profile": "Brand Settings",
     "supportDescription": "Get help from our support team. Create and manage support tickets.",
     "restartSetup": "Restart Setup",
-    "restarting": "Restarting..."
+    "restarting": "Restarting...",
+    "workspaceNamePrompt": "Workspace name?"
   },
   "connect": {
     "heading": "Connect your accounts",

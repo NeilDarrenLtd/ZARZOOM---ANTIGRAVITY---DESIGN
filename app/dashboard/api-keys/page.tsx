@@ -289,7 +289,7 @@ export default function ApiIntegrationsPage() {
         </div>
       )}
 
-      {/* Create / Rotate modal */}
+      {/* Create / Rotate modal — initialName pre-fills when opening from Rotate */}
       <CreateKeyModal
         open={showCreate || showRotateModal}
         onClose={() => {
@@ -298,6 +298,7 @@ export default function ApiIntegrationsPage() {
           setRotateName("");
         }}
         onCreated={() => mutate()}
+        initialName={showRotateModal ? rotateName : undefined}
       />
       </div>
       <Footer />
