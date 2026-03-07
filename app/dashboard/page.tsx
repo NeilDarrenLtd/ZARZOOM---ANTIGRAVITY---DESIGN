@@ -8,7 +8,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap } from "lucide-react";
 import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
 import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import WorkspaceSwitcher, { type Workspace } from "@/components/dashboard/WorkspaceSwitcher";
@@ -274,6 +274,24 @@ export default function DashboardPage() {
                 </p>
               )}
             </div>
+          </Link>
+
+          {/* API & Integrations card */}
+          <Link
+            href="/dashboard/api-keys"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-emerald-300 hover:shadow-md transition-all block"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Zap className="w-5 h-5 text-emerald-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">
+                API & Integrations
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              Manage API keys, connect services, and configure integrations for your workspace.
+            </p>
           </Link>
 
           {/* Connected accounts card */}
