@@ -7,7 +7,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { Ticket, Plus } from "lucide-react";
+import { ArrowLeft, Ticket, Plus } from "lucide-react";
 
 interface TicketItem {
   id: string;
@@ -79,6 +79,17 @@ export default function TicketsListPage() {
       <SiteNavbar />
 
       <div className="flex-1 max-w-6xl mx-auto w-full px-4 py-12">
+        {/* Back to Dashboard */}
+        <div className="mb-6">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div>

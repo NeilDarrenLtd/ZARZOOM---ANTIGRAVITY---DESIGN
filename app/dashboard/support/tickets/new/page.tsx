@@ -8,7 +8,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { Upload, X, Check, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, X, Check, AlertCircle } from "lucide-react";
 
 export default function CreateTicketPage() {
   const { t } = useI18n();
@@ -186,6 +186,17 @@ export default function CreateTicketPage() {
       <SiteNavbar />
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-12">
+        {/* Back to Dashboard */}
+        <div className="mb-6">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
