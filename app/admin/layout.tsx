@@ -19,6 +19,7 @@ import {
   HelpCircle,
   Sparkles,
   Link2,
+  InboxIcon,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -129,6 +130,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/billing/stripe",
       label: "Stripe Debug",
       icon: Webhook,
+    },
+    {
+      href: "/admin/email-queue",
+      label: "Email Queue",
+      icon: InboxIcon,
     },
   ];
 

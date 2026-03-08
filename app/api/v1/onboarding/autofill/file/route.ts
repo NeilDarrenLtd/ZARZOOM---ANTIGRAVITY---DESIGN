@@ -226,7 +226,6 @@ export async function POST(request: Request) {
 
     // 7. Persist results to database
     let persistError: string | undefined;
-    const tenantId = request.headers.get("x-tenant-id")?.trim() || null;
     if (analysisData && Object.keys(analysisData).length > 0) {
       try {
         await persistAutofillResults(
