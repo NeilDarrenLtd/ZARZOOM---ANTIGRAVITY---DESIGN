@@ -72,8 +72,9 @@ export const POST = createApiHandler({
       ticketSubject: ticket.subject,
       userEmail: ownerEmail,
       adminComment: message,
+      createdBy: userId,
     }).catch((err) => {
-      console.error("[Support] Failed to send admin comment email:", err);
+      console.error("[Support] Failed to queue admin comment email:", err);
     });
 
     return ok(

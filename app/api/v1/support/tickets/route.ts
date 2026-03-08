@@ -92,14 +92,16 @@ export const POST = createApiHandler({
       throw new Error(`Failed to create initial comment: ${commentError?.message ?? "unknown"}`);
     }
 
-    // Send email notification to support team (async, don't block response)
+    // Queue email notification for support team (async, don't block response)
     sendNewTicketNotification({
       ticketId: ticket.id,
       ticketSubject: ticket.subject,
       userEmail: ctx.user!.email || "Unknown",
       firstMessage: description,
+      tenantId,
+      createdBy: userId,
     }).catch((err) => {
-      console.error("[Support] Failed to send new ticket email:", err);
+      console.error("[Support] Failed to queue new ticket email:", err);
     });
 
     return ok(

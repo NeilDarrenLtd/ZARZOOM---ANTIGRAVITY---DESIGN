@@ -163,8 +163,9 @@ export const PATCH = createApiHandler({
         userEmail: ownerEmail,
         oldStatus,
         newStatus: updates.status,
+        createdBy: ctx.user!.id,
       }).catch((err) => {
-        console.error("[Support] Failed to send status change email:", err);
+        console.error("[Support] Failed to queue status change email:", err);
       });
     }
 

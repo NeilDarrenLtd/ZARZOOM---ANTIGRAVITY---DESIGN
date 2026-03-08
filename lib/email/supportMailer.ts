@@ -1,92 +1,12 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { env } from "@/lib/api/env";
+import { queueEmail } from "@/lib/email/queue";
 
 /**
- * Support ticket email notifications using existing SMTP infrastructure.
- * Reads SMTP settings from site_settings table and sends emails via nodemailer.
+ * Support ticket email notifications.
+ * Emails are enqueued into the email_queue table for later delivery
+ * by the external sending engine. The SMTP test flow is not affected.
  */
-
-interface EmailOptions {
-  to: string;
-  subject: string;
-  text: string;
-  html: string;
-}
-
-/**
- * Get SMTP configuration from site_settings
- */
-async function getSmtpConfig() {
-  const supabase = await createAdminClient();
-  const { data: rows, error } = await supabase
-    .from("site_settings")
-    .select("key, value")
-    .like("key", "smtp_%");
-
-  if (error) {
-    console.error("[SupportMailer] Failed to fetch SMTP settings:", error);
-    return null;
-  }
-
-  const smtp: Record<string, string> = {};
-  for (const row of rows || []) {
-    smtp[row.key] = row.value ?? "";
-  }
-
-  if (!smtp.smtp_host || !smtp.smtp_user || !smtp.smtp_pass) {
-    console.warn("[SupportMailer] SMTP not configured");
-    return null;
-  }
-
-  return smtp;
-}
-
-/**
- * Send an email using the configured SMTP server
- */
-async function sendEmail(options: EmailOptions): Promise<boolean> {
-  console.log("[SupportMailer] Attempting to send email to:", options.to, "Subject:", options.subject);
-  
-  const smtp = await getSmtpConfig();
-  if (!smtp) {
-    console.error("[SupportMailer] Cannot send email: SMTP not configured. Check site_settings for smtp_host, smtp_user, smtp_pass.");
-    return false;
-  }
-
-  console.log("[SupportMailer] SMTP config found. Host:", smtp.smtp_host, "Port:", smtp.smtp_port || "587");
-
-  try {
-    const nodemailer = await import("nodemailer");
-
-    const port = parseInt(smtp.smtp_port || "587", 10);
-    const secure = smtp.smtp_encryption === "ssl" || port === 465;
-
-    const transporter = nodemailer.default.createTransport({
-      host: smtp.smtp_host,
-      port,
-      secure,
-      auth: {
-        user: smtp.smtp_user,
-        pass: smtp.smtp_pass,
-      },
-      ...(smtp.smtp_encryption === "tls" && !secure ? { requireTLS: true } : {}),
-    });
-
-    await transporter.sendMail({
-      from: `"${smtp.smtp_from_name || "ZARZOOM"}" <${smtp.smtp_from_email || smtp.smtp_user}>`,
-      to: options.to,
-      subject: options.subject,
-      text: options.text,
-      html: options.html,
-    });
-
-    console.log("[SupportMailer] Email sent successfully to:", options.to);
-    return true;
-  } catch (err) {
-    console.error("[SupportMailer] Failed to send email:", err);
-    return false;
-  }
-}
 
 /**
  * Get the base URL for generating deep links
@@ -96,7 +16,8 @@ function getBaseUrl(): string {
 }
 
 /**
- * Get the support recipient email from support_settings table
+ * Get the support recipient email from support_settings table,
+ * falling back to SMTP user or from_email from site_settings.
  */
 async function getSupportRecipientEmail(): Promise<string | null> {
   const supabase = await createAdminClient();
@@ -105,18 +26,22 @@ async function getSupportRecipientEmail(): Promise<string | null> {
     .select("support_recipient_email")
     .single();
 
-  if (error || !data?.support_recipient_email) {
-    console.warn("[SupportMailer] No support recipient email configured");
-    // Fall back to SMTP username as admin email
-    const smtp = await getSmtpConfig();
-    if (smtp?.smtp_user) {
-      console.log("[SupportMailer] Using SMTP username as fallback:", smtp.smtp_user);
-      return smtp.smtp_user;
-    }
-    return null;
+  if (!error && data?.support_recipient_email) {
+    return data.support_recipient_email;
   }
 
-  return data.support_recipient_email;
+  console.warn("[SupportMailer] No support recipient email configured, checking SMTP fallback");
+  const { data: rows } = await supabase
+    .from("site_settings")
+    .select("key, value")
+    .in("key", ["smtp_user", "smtp_from_email"]);
+
+  const settings: Record<string, string> = {};
+  for (const row of rows || []) {
+    settings[row.key] = row.value ?? "";
+  }
+
+  return settings.smtp_user || settings.smtp_from_email || null;
 }
 
 /**
@@ -160,6 +85,8 @@ export async function sendNewTicketNotification(params: {
   ticketSubject: string;
   userEmail: string;
   firstMessage: string;
+  tenantId?: string;
+  createdBy?: string;
 }): Promise<boolean> {
   const recipientEmail = await getSupportRecipientEmail();
   if (!recipientEmail) return false;
@@ -210,7 +137,18 @@ ${messageTruncated}
 View ticket: ${adminLink}
   `.trim();
 
-  return sendEmail({ to: recipientEmail, subject, text, html });
+  const queued = await queueEmail({
+    toEmail: recipientEmail,
+    subject,
+    htmlBody: html,
+    textBody: text,
+    emailType: "support_new_ticket",
+    relatedType: "support_ticket",
+    relatedId: params.ticketId,
+    tenantId: params.tenantId,
+    createdBy: params.createdBy,
+  });
+  return queued !== null;
 }
 
 /**
@@ -221,6 +159,8 @@ export async function sendUserCommentNotification(params: {
   ticketSubject: string;
   userEmail: string;
   commentText: string;
+  tenantId?: string;
+  createdBy?: string;
 }): Promise<boolean> {
   const recipientEmail = await getSupportRecipientEmail();
   if (!recipientEmail) return false;
@@ -271,7 +211,18 @@ ${commentTruncated}
 View ticket: ${adminLink}
   `.trim();
 
-  return sendEmail({ to: recipientEmail, subject, text, html });
+  const queued = await queueEmail({
+    toEmail: recipientEmail,
+    subject,
+    htmlBody: html,
+    textBody: text,
+    emailType: "support_user_comment",
+    relatedType: "support_ticket",
+    relatedId: params.ticketId,
+    tenantId: params.tenantId,
+    createdBy: params.createdBy,
+  });
+  return queued !== null;
 }
 
 /**
@@ -282,6 +233,8 @@ export async function sendAdminCommentNotification(params: {
   ticketSubject: string;
   userEmail: string;
   adminComment: string;
+  tenantId?: string;
+  createdBy?: string;
 }): Promise<boolean> {
   const baseUrl = getBaseUrl();
   const userLink = `${baseUrl}/dashboard/support/tickets/${params.ticketId}`;
@@ -326,7 +279,18 @@ ${commentTruncated}
 View ticket: ${userLink}
   `.trim();
 
-  return sendEmail({ to: params.userEmail, subject, text, html });
+  const queued = await queueEmail({
+    toEmail: params.userEmail,
+    subject,
+    htmlBody: html,
+    textBody: text,
+    emailType: "support_admin_comment",
+    relatedType: "support_ticket",
+    relatedId: params.ticketId,
+    tenantId: params.tenantId,
+    createdBy: params.createdBy,
+  });
+  return queued !== null;
 }
 
 /**
@@ -338,6 +302,7 @@ export async function sendStatusChangeNotification(params: {
   userEmail: string;
   oldStatus: string;
   newStatus: string;
+  createdBy?: string;
 }): Promise<boolean> {
   const baseUrl = getBaseUrl();
   const userLink = `${baseUrl}/dashboard/support/tickets/${params.ticketId}`;
@@ -388,5 +353,15 @@ Status: ${statusLabels[params.oldStatus] || params.oldStatus} → ${newStatusLab
 View ticket: ${userLink}
   `.trim();
 
-  return sendEmail({ to: params.userEmail, subject, text, html });
+  const queued = await queueEmail({
+    toEmail: params.userEmail,
+    subject,
+    htmlBody: html,
+    textBody: text,
+    emailType: "support_status_change",
+    relatedType: "support_ticket",
+    relatedId: params.ticketId,
+    createdBy: params.createdBy,
+  });
+  return queued !== null;
 }

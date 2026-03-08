@@ -1,8 +1,10 @@
 import { createAdminClient } from "@/lib/supabase/server";
+import { queueEmail } from "@/lib/email/queue";
 
 /**
- * Contact form email handler with fallback support
- * Uses SMTP settings and support recipient email with fallback chain
+ * Contact form email handler.
+ * Emails are enqueued into the email_queue table for later delivery
+ * by the external sending engine. The SMTP test flow is not affected.
  */
 
 interface ContactEmailParams {
@@ -13,34 +15,6 @@ interface ContactEmailParams {
 }
 
 /**
- * Get SMTP configuration from site_settings
- */
-async function getSmtpConfig() {
-  const supabase = await createAdminClient();
-  const { data: rows, error } = await supabase
-    .from("site_settings")
-    .select("key, value")
-    .like("key", "smtp_%");
-
-  if (error) {
-    console.error("[ContactMailer] Failed to fetch SMTP settings:", error);
-    return null;
-  }
-
-  const smtp: Record<string, string> = {};
-  for (const row of rows || []) {
-    smtp[row.key] = row.value ?? "";
-  }
-
-  if (!smtp.smtp_host || !smtp.smtp_user || !smtp.smtp_pass) {
-    console.warn("[ContactMailer] SMTP not configured");
-    return null;
-  }
-
-  return smtp;
-}
-
-/**
  * Get the support recipient email with fallback chain:
  * 1. support_recipient_email from support_settings
  * 2. smtp_user from site_settings
@@ -48,74 +22,27 @@ async function getSmtpConfig() {
  */
 async function getRecipientEmail(): Promise<string | null> {
   const supabase = await createAdminClient();
-  
-  // Try support_settings first
+
   const { data: supportSettings } = await supabase
     .from("support_settings")
     .select("support_recipient_email")
     .single();
 
   if (supportSettings?.support_recipient_email) {
-    console.log("[ContactMailer] Using support recipient email:", supportSettings.support_recipient_email);
     return supportSettings.support_recipient_email;
   }
 
-  // Fallback to SMTP settings
-  const smtp = await getSmtpConfig();
-  if (smtp?.smtp_user) {
-    console.log("[ContactMailer] Using SMTP username as fallback:", smtp.smtp_user);
-    return smtp.smtp_user;
+  const { data: rows } = await supabase
+    .from("site_settings")
+    .select("key, value")
+    .in("key", ["smtp_user", "smtp_from_email"]);
+
+  const settings: Record<string, string> = {};
+  for (const row of rows || []) {
+    settings[row.key] = row.value ?? "";
   }
 
-  if (smtp?.smtp_from_email) {
-    console.log("[ContactMailer] Using SMTP from email as fallback:", smtp.smtp_from_email);
-    return smtp.smtp_from_email;
-  }
-
-  return null;
-}
-
-/**
- * Send email with retry logic
- */
-async function sendEmail(to: string, subject: string, text: string, html: string): Promise<boolean> {
-  const smtp = await getSmtpConfig();
-  if (!smtp) {
-    console.error("[ContactMailer] Cannot send email: SMTP not configured");
-    return false;
-  }
-
-  try {
-    const nodemailer = await import("nodemailer");
-
-    const port = parseInt(smtp.smtp_port || "587", 10);
-    const secure = smtp.smtp_encryption === "ssl" || port === 465;
-
-    const transporter = nodemailer.default.createTransport({
-      host: smtp.smtp_host,
-      port,
-      secure,
-      auth: {
-        user: smtp.smtp_user,
-        pass: smtp.smtp_pass,
-      },
-      ...(smtp.smtp_encryption === "tls" && !secure ? { requireTLS: true } : {}),
-    });
-
-    await transporter.sendMail({
-      from: `"${smtp.smtp_from_name || "ZARZOOM"}" <${smtp.smtp_from_email || smtp.smtp_user}>`,
-      to,
-      subject,
-      text,
-      html,
-    });
-
-    console.log("[ContactMailer] Email sent successfully to:", to);
-    return true;
-  } catch (err) {
-    console.error("[ContactMailer] Failed to send email to", to, "Error:", err);
-    return false;
-  }
+  return settings.smtp_user || settings.smtp_from_email || null;
 }
 
 /**
@@ -151,21 +78,19 @@ function createEmailWrapper(content: string): string {
 }
 
 /**
- * Send contact form submission with retry logic
+ * Enqueue a contact form submission for later delivery.
  */
 export async function sendContactFormEmail(params: ContactEmailParams): Promise<{ success: boolean; error?: string }> {
   console.log("[ContactMailer] Processing contact form from:", params.email);
 
-  // Get primary recipient
   const primaryRecipient = await getRecipientEmail();
   if (!primaryRecipient) {
     console.error("[ContactMailer] No recipient email configured");
     return { success: false, error: "Email system not configured. Please try again later." };
   }
 
-  // Build email content
   const subject = `Contact Form: ${params.subject}`;
-  
+
   const html = createEmailWrapper(`
     <h2 style="margin: 0 0 16px 0; color: #111827; font-size: 20px;">New Contact Form Submission</h2>
     <div style="margin-bottom: 16px;">
@@ -200,25 +125,19 @@ ${params.message}
 Reply to: ${params.email}
   `.trim();
 
-  // Try primary recipient
-  console.log("[ContactMailer] Attempting to send to primary recipient:", primaryRecipient);
-  const primarySuccess = await sendEmail(primaryRecipient, subject, text, html);
-  
-  if (primarySuccess) {
+  const queued = await queueEmail({
+    toEmail: primaryRecipient,
+    toName: params.name,
+    subject,
+    htmlBody: html,
+    textBody: text,
+    emailType: "contact_form",
+    relatedType: "contact_form",
+  });
+
+  if (queued) {
     return { success: true };
   }
 
-  // If failed and primary was from support_settings, try SMTP from email as fallback
-  const smtp = await getSmtpConfig();
-  if (smtp?.smtp_from_email && smtp.smtp_from_email !== primaryRecipient) {
-    console.log("[ContactMailer] Primary failed, retrying with SMTP from email:", smtp.smtp_from_email);
-    const fallbackSuccess = await sendEmail(smtp.smtp_from_email, subject, text, html);
-    
-    if (fallbackSuccess) {
-      return { success: true };
-    }
-  }
-
-  console.error("[ContactMailer] All email attempts failed");
-  return { success: false, error: "Failed to send email. Please try again later or contact us directly." };
+  return { success: false, error: "Failed to queue email. Please try again later or contact us directly." };
 }

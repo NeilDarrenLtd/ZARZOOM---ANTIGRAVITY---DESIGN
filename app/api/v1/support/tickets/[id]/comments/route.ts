@@ -80,8 +80,10 @@ export const POST = createApiHandler({
           ticketSubject: ticket.subject,
           userEmail,
           adminComment: message,
+          tenantId,
+          createdBy: userId,
         }).catch((err) => {
-          console.error("[Support] Failed to send admin comment email:", err);
+          console.error("[Support] Failed to queue admin comment email:", err);
         });
       } else {
         sendUserCommentNotification({
@@ -89,8 +91,10 @@ export const POST = createApiHandler({
           ticketSubject: ticket.subject,
           userEmail: ctx.user!.email || "Unknown",
           commentText: message,
+          tenantId,
+          createdBy: userId,
         }).catch((err) => {
-          console.error("[Support] Failed to send user comment email:", err);
+          console.error("[Support] Failed to queue user comment email:", err);
         });
       }
     }
