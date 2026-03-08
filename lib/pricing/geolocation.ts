@@ -112,18 +112,26 @@ function getCurrencyFromNumberFormat(): Currency | null {
   }
 }
 
+function storageKey(base: string, workspaceId?: string | null): string {
+  if (workspaceId) return `workspace:${workspaceId}:${base}`;
+  return base;
+}
+
 /**
  * Main geolocation detection function
- * Tries multiple strategies and returns USD as final fallback
+ * Tries multiple strategies and returns USD as final fallback.
+ * When workspaceId is provided, currency preference is read from workspace-scoped localStorage.
  */
 export async function detectUserCurrency(
-  availableCurrencies: Currency[]
+  availableCurrencies: Currency[],
+  workspaceId?: string | null
 ): Promise<Currency> {
   console.log("[v0] Detecting user currency...");
-  
+  const key = storageKey("zarzoom_currency", workspaceId);
+
   // Strategy 1: Check localStorage first (user preference)
   try {
-    const saved = localStorage.getItem("zarzoom_currency") as Currency | null;
+    const saved = localStorage.getItem(key) as Currency | null;
     if (saved && availableCurrencies.includes(saved)) {
       console.log("[v0] Using saved currency from localStorage:", saved);
       return saved;
@@ -166,11 +174,13 @@ export async function detectUserCurrency(
 }
 
 /**
- * Save currency preference to localStorage
+ * Save currency preference to localStorage.
+ * When workspaceId is provided, key is workspace-scoped: workspace:${workspaceId}:zarzoom_currency
  */
-export function saveCurrencyPreference(currency: Currency): void {
+export function saveCurrencyPreference(currency: Currency, workspaceId?: string | null): void {
   try {
-    localStorage.setItem("zarzoom_currency", currency);
+    const key = storageKey("zarzoom_currency", workspaceId);
+    localStorage.setItem(key, currency);
     console.log("[v0] Saved currency preference:", currency);
   } catch (error) {
     console.error("[v0] Failed to save currency preference:", error);
@@ -178,11 +188,13 @@ export function saveCurrencyPreference(currency: Currency): void {
 }
 
 /**
- * Save discount preference to localStorage
+ * Save discount preference to localStorage.
+ * When workspaceId is provided, key is workspace-scoped: workspace:${workspaceId}:zarzoom_discount_enabled
  */
-export function saveDiscountPreference(enabled: boolean): void {
+export function saveDiscountPreference(enabled: boolean, workspaceId?: string | null): void {
   try {
-    localStorage.setItem("zarzoom_discount_enabled", String(enabled));
+    const key = storageKey("zarzoom_discount_enabled", workspaceId);
+    localStorage.setItem(key, String(enabled));
     console.log("[v0] Saved discount preference:", enabled);
   } catch (error) {
     console.error("[v0] Failed to save discount preference:", error);
@@ -190,11 +202,13 @@ export function saveDiscountPreference(enabled: boolean): void {
 }
 
 /**
- * Get discount preference from localStorage
+ * Get discount preference from localStorage.
+ * When workspaceId is provided, reads from workspace-scoped key.
  */
-export function getDiscountPreference(): boolean {
+export function getDiscountPreference(workspaceId?: string | null): boolean {
   try {
-    const saved = localStorage.getItem("zarzoom_discount_enabled");
+    const key = storageKey("zarzoom_discount_enabled", workspaceId);
+    const saved = localStorage.getItem(key);
     return saved === "true";
   } catch {
     return false;

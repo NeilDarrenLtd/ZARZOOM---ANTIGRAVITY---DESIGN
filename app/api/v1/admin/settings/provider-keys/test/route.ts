@@ -19,6 +19,7 @@ const testSchema = z.object({
 
 export const POST = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 5, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();

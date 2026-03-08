@@ -1,8 +1,12 @@
 export {
   ActiveWorkspaceProvider,
   useActiveWorkspace,
+  useRequiredActiveWorkspace,
+  useWorkspaceSwitchKey,
+  useSetActiveWorkspaceAndInvalidate,
   useWorkspaceFetch,
   useWorkspaceFetcher,
+  workspaceScopedKey,
 } from "./context";
 export {
   getActiveWorkspaceId,

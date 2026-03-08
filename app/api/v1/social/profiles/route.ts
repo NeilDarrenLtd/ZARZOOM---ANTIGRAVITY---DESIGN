@@ -19,6 +19,7 @@ import { createProfileSchema } from "@/lib/social";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   requiredEntitlement: "social.profile.create",
   quotaMetric: "social_profiles",
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
@@ -65,6 +66,7 @@ export const POST = createApiHandler({
  */
 export const GET = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;

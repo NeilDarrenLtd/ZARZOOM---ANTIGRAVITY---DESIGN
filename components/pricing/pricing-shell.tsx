@@ -65,46 +65,48 @@ export function PricingShell({
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  /* Workspace-scoped pricing preferences (when in dashboard) */
+  const workspaceId = getActiveWorkspaceIdFromCookie();
+
   /* Initialize currency with geolocation detection */
   useEffect(() => {
     async function initializeCurrency() {
-      const detectedCurrency = await detectUserCurrency(availableCurrencies);
+      const detectedCurrency = await detectUserCurrency(availableCurrencies, workspaceId);
       setCurrency(detectedCurrency);
-      
-      // Load discount preference
-      const savedDiscount = getDiscountPreference();
+
+      const savedDiscount = getDiscountPreference(workspaceId);
       setDiscountEnabled(savedDiscount);
-      
+
       setIsInitialized(true);
       console.log("[v0] Initialized pricing with currency:", detectedCurrency, "discount:", savedDiscount);
     }
-    
+
     if (availableCurrencies.length > 0) {
       initializeCurrency();
     }
-  }, [availableCurrencies]);
+  }, [availableCurrencies, workspaceId]);
 
   const handleCurrencyChange = useCallback(
     (c: Currency) => {
       setCurrency(c);
-      saveCurrencyPreference(c);
+      saveCurrencyPreference(c, workspaceId);
     },
-    []
+    [workspaceId]
   );
-  
+
   const handleDiscountChange = useCallback(
     (enabled: boolean) => {
       setDiscountEnabled(enabled);
-      saveDiscountPreference(enabled);
+      saveDiscountPreference(enabled, workspaceId);
     },
-    []
+    [workspaceId]
   );
 
   const handleChoosePlan = useCallback(
     async (priceId: string) => {
       setCheckoutLoading(priceId);
       try {
-        const tenantId = getActiveWorkspaceIdFromCookie();
+        const tenantId = workspaceId ?? getActiveWorkspaceIdFromCookie();
         const headers: Record<string, string> = { "Content-Type": "application/json" };
         if (tenantId) headers["X-Tenant-Id"] = tenantId;
         const res = await fetch("/api/v1/billing/checkout", {

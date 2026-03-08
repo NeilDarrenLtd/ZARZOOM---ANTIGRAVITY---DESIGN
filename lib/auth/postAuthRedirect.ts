@@ -3,26 +3,33 @@ import { createClient } from "@/lib/supabase/server";
 /**
  * Centralised post-authentication redirect resolver.
  *
- * Checks the user's onboarding_profiles row and returns the
- * appropriate destination path:
+ * When workspaceId is provided (e.g. from auth callback after setting cookie),
+ * checks that workspace's onboarding_profiles row:
  *   - 'completed' → /dashboard
- *   - anything else (not_started | in_progress | skipped | missing) → /onboarding
+ *   - anything else → /onboarding
  *
- * This function is the ONLY place that decides post-login routing.
+ * When workspaceId is not provided, returns /dashboard so the user lands there;
+ * the dashboard layout will set the active workspace cookie and the page can
+ * redirect to /onboarding for that workspace if needed. No first-workspace fallback.
  */
 export async function resolvePostAuthRedirect(
-  userId: string
+  userId: string,
+  workspaceId?: string | null
 ): Promise<string> {
   try {
-    const supabase = await createClient();
+    const tenantId = workspaceId?.trim() || null;
+    if (!tenantId) {
+      return "/dashboard";
+    }
 
+    const supabase = await createClient();
     const { data: profile, error } = await supabase
       .from("onboarding_profiles")
       .select("onboarding_status")
+      .eq("tenant_id", tenantId)
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
 
-    // If no profile row or fetch error, user hasn't started onboarding
     if (error || !profile) {
       return "/onboarding";
     }
@@ -31,10 +38,8 @@ export async function resolvePostAuthRedirect(
       return "/dashboard";
     }
 
-    // not_started | in_progress | skipped → onboarding
     return "/onboarding";
   } catch {
-    // If anything fails, default to onboarding (safe fallback)
     return "/onboarding";
   }
 }

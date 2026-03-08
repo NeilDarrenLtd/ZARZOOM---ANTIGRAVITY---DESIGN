@@ -22,9 +22,15 @@ export interface ActiveWorkspaceResult {
 }
 
 /**
- * Resolve the user's active workspace id.
+ * Resolve the user's active workspace id for INITIAL COOKIE SETTING ONLY.
  * - If cookieValue is present and user is a member of that tenant, use it.
- * - Otherwise use the user's first tenant membership (existing users default to original workspace).
+ * - Otherwise use the user's first tenant membership so the layout can set the cookie.
+ *
+ * IMPORTANT: This first-membership fallback must ONLY be used by the dashboard layout
+ * to set the active_workspace_id cookie when it is missing. It must NEVER be used for
+ * workspace-scoped reads, writes, or API decisions. All such operations require an
+ * explicit workspace (cookie or X-Tenant-Id); API routes use requireExplicitTenant.
+ *
  * Returns shouldSetCookie true when the cookie should be set (missing or invalid).
  */
 export async function getActiveWorkspaceId(

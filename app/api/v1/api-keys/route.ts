@@ -12,6 +12,7 @@ import {
 import { ValidationError, ConflictError, NotFoundError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
 import { generateApiKey, hashApiKey } from "@/lib/api-keys/generate";
+import { assertWorkspaceSave, logWorkspaceSave } from "@/lib/dev/workspace-guardrails";
 import { z } from "zod";
 
 /* ------------------------------------------------------------------ */
@@ -32,6 +33,7 @@ function getAdminClient() {
 
 export const GET = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const admin = getAdminClient();
@@ -79,6 +81,7 @@ const createSchema = z.object({
 
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
@@ -133,23 +136,28 @@ export const POST = createApiHandler({
     /* -- Generate key --------------------------------------------- */
     const generated = generateApiKey();
 
+    const insertPayload = {
+      tenant_id: tenantId,
+      user_id: userId,
+      name,
+      key_hash: generated.keyHash,
+      key_prefix: generated.keyPrefix,
+      scopes_json: scopes,
+    };
+    assertWorkspaceSave(tenantId, insertPayload, "api_keys");
+
     /* -- Insert --------------------------------------------------- */
     const { data: inserted, error: insertError } = await admin
       .from("api_keys")
-      .insert({
-        tenant_id: tenantId,
-        user_id: userId,
-        name,
-        key_hash: generated.keyHash,
-        key_prefix: generated.keyPrefix,
-        scopes_json: scopes,
-      })
+      .insert(insertPayload)
       .select("id, name, key_prefix, scopes_json, created_at")
       .single();
 
     if (insertError || !inserted) {
       throw new Error(`Failed to create API key: ${insertError?.message ?? "unknown"}`);
     }
+
+    logWorkspaceSave("api_keys", tenantId, tenantId);
 
     /* -- Audit log ------------------------------------------------ */
     await writeAuditLog({
@@ -208,6 +216,7 @@ const deleteSchema = z.object({
 
 export const DELETE = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;

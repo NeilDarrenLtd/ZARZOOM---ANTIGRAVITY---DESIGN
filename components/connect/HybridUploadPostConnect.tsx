@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react";
 import { openBlankCenteredPopup, navigatePopup } from "@/lib/ui/popup";
 import { useI18n } from "@/lib/i18n";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
@@ -37,8 +38,9 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       if (event.origin !== window.location.origin) return;
       if (event.data?.type !== "UPLOADPOST_CONNECTED") return;
       setUiState("success");
-      // Sync status to DB then refresh RSC cache so panels reflect new state
-      fetch("/api/v1/onboarding/social-connect/status", { method: "GET" })
+      const tenantId = getActiveWorkspaceIdFromCookie();
+      const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
+      fetch("/api/v1/onboarding/social-connect/status", { method: "GET", headers })
         .catch(() => {/* non-fatal */})
         .finally(() => router.refresh());
     }
@@ -71,7 +73,9 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
   const fetchAccessUrl = useCallback(async (): Promise<string | null> => {
     try {
       const params = new URLSearchParams({ returnTo });
-      const res = await fetch(`/api/upload-post/connect-url?${params}`);
+      const tenantId = getActiveWorkspaceIdFromCookie();
+      const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
+      const res = await fetch(`/api/upload-post/connect-url?${params}`, { headers });
       const body = await res.json().catch(() => ({}));
 
       if (!res.ok) {

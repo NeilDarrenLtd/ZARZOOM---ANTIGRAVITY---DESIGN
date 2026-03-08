@@ -27,6 +27,7 @@ import { imageGenerateSchema } from "@/lib/images";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   requiredEntitlement: "image_generate",
   quotaMetric: "image_generations",
   rateLimit: { maxRequests: 30, windowMs: 60_000 },

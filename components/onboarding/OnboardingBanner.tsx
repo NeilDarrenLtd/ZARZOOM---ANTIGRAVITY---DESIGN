@@ -1,20 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useOnboarding } from "@/lib/onboarding/useOnboarding";
 import { useI18n } from "@/lib/i18n";
+import { useWorkspaceSwitchKey } from "@/lib/workspace/context";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, X } from "lucide-react";
-import { useState } from "react";
 
 /**
  * Persistent banner shown on /dashboard when onboarding is
- * skipped or in_progress. Dismissible for the session but
- * re-appears on next page load.
+ * skipped or in_progress for the active workspace. Dismissible for the session
+ * but re-appears on next page load. Resets when workspace changes so the
+ * banner reflects the current workspace's onboarding state.
  */
 export default function OnboardingBanner() {
   const { needsBanner, status, isLoading } = useOnboarding();
   const { t } = useI18n();
+  const workspaceSwitchKey = useWorkspaceSwitchKey();
   const [dismissed, setDismissed] = useState(false);
+
+  // Reset dismissed when workspace changes so banner can show for the new workspace
+  useEffect(() => {
+    setDismissed(false);
+  }, [workspaceSwitchKey]);
 
   if (isLoading || !needsBanner || dismissed) return null;
 

@@ -23,6 +23,7 @@ import { createServerClient } from "@supabase/ssr";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 20, windowMs: 60_000 },
   handler: async (ctx) => {
     const profileUsername = ctx.req.nextUrl.pathname.split("/")[5]; // /api/v1/social/profiles/{username}/connect

@@ -32,6 +32,7 @@ import {
   QuotaExceededError,
   ValidationError,
 } from "./errors";
+import { warnQueryWithoutWorkspaceId } from "@/lib/dev/workspace-guardrails";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -80,6 +81,14 @@ export interface HandlerConfig {
    * Default: `false`.
    */
   tenantOptional?: boolean;
+
+  /**
+   * Require an explicit X-Tenant-Id header for this endpoint. When `true`, the handler
+   * returns 400 if the header is missing or empty (no fallback to "first workspace").
+   * Use for all workspace-scoped reads/writes so the caller always sends the active workspace.
+   * Default: `false`.
+   */
+  requireExplicitTenant?: boolean;
 
   /**
    * Minimum role required. Implies `auth: true`.
@@ -135,10 +144,14 @@ export interface HandlerConfig {
 /**
  * Create an API route handler with all cross-cutting concerns wired up.
  *
+ * Workspace guardrail: All workspace-scoped writes MUST use ctx.membership.tenantId
+ * (derived from X-Tenant-Id header). Never use a tenant id from the request body
+ * for mutations; this prevents cross-workspace writes.
+ *
  * Execution order:
  *   1. Generate / inherit request ID
  *   2. Authenticate (if `auth !== false`)
- *   3. Resolve tenant (if authenticated)
+ *   3. Resolve tenant (if authenticated) from X-Tenant-Id header
  *   4. Check role (if `requiredRole` is set)
  *   5. Enforce rate limit (if `rateLimit` is set)
  *   6. Resolve language
@@ -206,10 +219,20 @@ export function createApiHandler(config: HandlerConfig) {
           supabase = auth.supabase;
           authMethod = "session";
 
-          // Tenant resolution -- prefer X-Tenant-Id header
-          // Skip tenant resolution if tenantOptional is true
+          // Tenant resolution: require explicit X-Tenant-Id when requireExplicitTenant; no default/first workspace
+          const raw = req.headers.get("x-tenant-id");
+          const preferredTenantId = raw?.trim() || null;
+          if (config.requireExplicitTenant && !preferredTenantId) {
+            warnQueryWithoutWorkspaceId(
+              preferredTenantId,
+              `${req.method} ${req.nextUrl.pathname} (requireExplicitTenant but no X-Tenant-Id)`
+            );
+            return badRequest(
+              requestId,
+              "X-Tenant-Id header is required for this endpoint. Send the active workspace id."
+            );
+          }
           if (!config.tenantOptional) {
-            const preferredTenantId = req.headers.get("x-tenant-id");
             membership = await resolveTenant(
               supabase,
               user.id,
@@ -218,7 +241,6 @@ export function createApiHandler(config: HandlerConfig) {
           } else {
             // Try to resolve tenant but don't fail if not found
             try {
-              const preferredTenantId = req.headers.get("x-tenant-id");
               membership = await resolveTenant(
                 supabase,
                 user.id,

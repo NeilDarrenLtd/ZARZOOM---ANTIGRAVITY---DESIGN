@@ -10,6 +10,7 @@ import { createServerClient } from "@supabase/ssr";
  */
 export const GET = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     const params = Object.fromEntries(ctx.req.nextUrl.searchParams);

@@ -29,6 +29,7 @@ import { resolvePromptTemplate } from "@/lib/research/prompts";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   requiredEntitlement: "research_social",
   quotaMetric: "research_social",
   rateLimit: { maxRequests: 20, windowMs: 60_000 },

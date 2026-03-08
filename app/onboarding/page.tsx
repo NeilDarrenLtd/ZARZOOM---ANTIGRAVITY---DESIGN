@@ -1,10 +1,24 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
+import { ACTIVE_WORKSPACE_COOKIE, getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
+
+/**
+ * Build headers for onboarding API calls.
+ * Accepts an explicit workspaceId override so callers don't rely on the cookie
+ * (which may not be set yet during the initial load after workspace creation).
+ */
+function onboardingHeaders(extra?: HeadersInit, explicitWorkspaceId?: string | null): HeadersInit {
+  const tenantId = explicitWorkspaceId ?? (typeof document !== "undefined" ? getActiveWorkspaceIdFromCookie() : null);
+  return {
+    ...(typeof extra === "object" && extra !== null ? extra : {}),
+    ...(tenantId ? { "X-Tenant-Id": tenantId } : {}),
+  } as HeadersInit;
+}
 
 import Stepper from "@/components/onboarding/Stepper";
 import Step1Account from "@/components/onboarding/Step1Account";
@@ -22,6 +36,7 @@ const TOTAL_STEPS = 5;
 export default function OnboardingPage() {
   const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [step, setStep] = useState(1);
@@ -38,9 +53,29 @@ export default function OnboardingPage() {
   });
   const [aiFilledFields, setAiFilledFields] = useState<string[]>([]);
 
+  // Persist the resolved workspace id so saveProgress / reloadWizardData always target the right workspace
+  const resolvedWorkspaceRef = useRef<string | null>(null);
+
   // Load user + existing onboarding data
   useEffect(() => {
+    let cancelled = false;
+
     async function load() {
+      // Resolve workspace: prefer URL ?workspace= param, then cookie
+      const workspaceFromUrl = searchParams.get("workspace")?.trim() || null;
+      const workspaceId = workspaceFromUrl ?? getActiveWorkspaceIdFromCookie();
+
+      // Ensure cookie matches the target workspace (may have been set by dashboard already, but be safe)
+      if (workspaceId && typeof document !== "undefined") {
+        document.cookie = `${ACTIVE_WORKSPACE_COOKIE}=${encodeURIComponent(workspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+      }
+      resolvedWorkspaceRef.current = workspaceId;
+
+      // Strip ?workspace= from URL after persisting to cookie (cosmetic; does not interrupt load)
+      if (workspaceFromUrl) {
+        router.replace("/onboarding", { scroll: false });
+      }
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -49,23 +84,26 @@ export default function OnboardingPage() {
         router.push("/auth");
         return;
       }
+      if (cancelled) return;
 
       setUserEmail(user.email ?? "");
 
       try {
-        const res = await fetch("/api/v1/onboarding");
+        // Use explicit workspaceId so we never accidentally load the old workspace's profile
+        const res = await fetch("/api/v1/onboarding", {
+          headers: onboardingHeaders(undefined, workspaceId),
+        });
+        if (cancelled) return;
         if (res.ok) {
           const body = await res.json();
           const profile = body.data;
 
           if (profile) {
-            // If already completed, redirect to dashboard
             if (profile.onboarding_status === "completed") {
               router.push("/dashboard");
               return;
             }
 
-            // Merge persisted data into local state
             const merged: OnboardingUpdate = { ...data };
 
             if (profile.business_name) merged.business_name = profile.business_name;
@@ -88,25 +126,24 @@ export default function OnboardingPage() {
 
             setData(merged);
 
-            // Track AI-filled fields
             if (profile.autofill_fields_filled && Array.isArray(profile.autofill_fields_filled)) {
               setAiFilledFields(profile.autofill_fields_filled);
             }
 
-            // Resume at the saved step
             if (profile.onboarding_step && profile.onboarding_step >= 1 && profile.onboarding_step <= 5) {
               setStep(profile.onboarding_step);
             }
           }
         }
       } catch {
-        setError(t("onboarding.errors.loadFailed"));
+        if (!cancelled) setError(t("onboarding.errors.loadFailed"));
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
 
     load();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,7 +154,9 @@ export default function OnboardingPage() {
   // Reload wizard data from DB (used after autofill)
   const reloadWizardData = useCallback(async () => {
     try {
-      const res = await fetch("/api/v1/onboarding");
+      const res = await fetch("/api/v1/onboarding", {
+        headers: onboardingHeaders(undefined, resolvedWorkspaceRef.current),
+      });
       if (res.ok) {
         const body = await res.json();
         const profile = body.data;
@@ -145,7 +184,6 @@ export default function OnboardingPage() {
 
           setData(merged);
 
-          // Update AI-filled fields
           if (profile.autofill_fields_filled && Array.isArray(profile.autofill_fields_filled)) {
             setAiFilledFields(profile.autofill_fields_filled);
           }
@@ -168,7 +206,7 @@ export default function OnboardingPage() {
 
       const res = await fetch("/api/v1/onboarding", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: onboardingHeaders({ "Content-Type": "application/json" }, resolvedWorkspaceRef.current),
         body: JSON.stringify(payload),
       });
 
@@ -205,19 +243,17 @@ export default function OnboardingPage() {
     }
   }
 
-  async function handleSaveAndExit() {
-    await saveProgress(step);
-    // Skip onboarding
-    try {
-      await fetch("/api/v1/onboarding/skip", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ onboarding_step: step }),
-      });
-    } catch {
-      // Silently ignore skip errors
-    }
-    router.push("/dashboard");
+  function handleSaveAndExit() {
+    setSaving(true);
+    saveProgress(step).catch(() => {});
+    fetch("/api/v1/onboarding/skip", {
+      method: "POST",
+      credentials: "include",
+      headers: onboardingHeaders({ "Content-Type": "application/json" }, resolvedWorkspaceRef.current),
+      body: JSON.stringify({ onboarding_step: step }),
+    }).catch((e) => console.warn("[onboarding] Skip request failed:", e));
+    // Dashboard is always reachable (middleware no longer redirects back to onboarding)
+    window.location.href = "/dashboard";
   }
 
   async function handleFinish() {
@@ -231,6 +267,7 @@ export default function OnboardingPage() {
     try {
       const res = await fetch("/api/v1/onboarding/complete", {
         method: "POST",
+        headers: onboardingHeaders(undefined, resolvedWorkspaceRef.current),
       });
 
       if (res.ok) {
@@ -273,17 +310,19 @@ export default function OnboardingPage() {
             </div>
           </div>
 
-          {step > 1 && (
-            <button
-              type="button"
-              onClick={handleSaveAndExit}
-              disabled={saving}
-              className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50"
-            >
+          <button
+            type="button"
+            onClick={handleSaveAndExit}
+            disabled={saving}
+            className="flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 transition-colors disabled:opacity-50"
+          >
+            {saving ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
               <LogOut className="w-3.5 h-3.5" />
-              {t("onboarding.nav.skipForNow")}
-            </button>
-          )}
+            )}
+            {t("onboarding.nav.skipForNow")}
+          </button>
         </div>
       </header>
 

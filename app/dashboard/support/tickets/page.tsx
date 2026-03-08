@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { useWorkspaceFetch } from "@/lib/workspace/context";
+import { useWorkspaceFetch, useActiveWorkspace } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
@@ -19,6 +19,7 @@ interface TicketItem {
 
 export default function TicketsListPage() {
   const { t } = useI18n();
+  const activeWorkspaceId = useActiveWorkspace();
   const workspaceFetch = useWorkspaceFetch();
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<TicketItem[]>([]);
@@ -27,6 +28,7 @@ export default function TicketsListPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   useEffect(() => {
+    if (!activeWorkspaceId) return;
     async function fetchTickets() {
       try {
         const res = await workspaceFetch("/api/v1/support/tickets");
@@ -40,8 +42,9 @@ export default function TicketsListPage() {
         setLoading(false);
       }
     }
+    setLoading(true);
     fetchTickets();
-  }, [t, workspaceFetch]);
+  }, [t, activeWorkspaceId, workspaceFetch]);
 
   // Filter tickets when status filter changes
   useEffect(() => {

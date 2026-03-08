@@ -11,12 +11,8 @@ export async function updateSession(request: NextRequest) {
 
   // Routes that HARD-gate onboarding (no access unless completed)
   const isEngineRoute = request.nextUrl.pathname.startsWith('/engine')
-
-  // Routes that SOFT-gate onboarding (allow access but show banner if not completed)
-  const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
-
-  // Combined: any route that should redirect brand-new / in_progress users
-  const isOnboardingGuardedRoute = isEngineRoute || isDashboardRoute
+  // Dashboard is always reachable when authenticated; OnboardingBanner prompts to complete/skip.
+  // Only /engine is hard-gated so users never get stuck in the wizard.
 
   // For public routes, skip Supabase auth entirely to avoid blocking page loads
   if (!isProtectedRoute) {
@@ -95,30 +91,25 @@ export async function updateSession(request: NextRequest) {
     }
 
     // ── Onboarding guard ──────────────────────────────────────────
-    // Engine routes: hard-gate (only completed users may enter)
-    // Dashboard routes: soft-gate (skipped users may enter but see banner;
-    //   not_started / in_progress users are redirected to /onboarding)
-    if (isOnboardingGuardedRoute && user) {
-      const { data: profile } = await supabase
-        .from('onboarding_profiles')
-        .select('onboarding_status')
-        .eq('user_id', user.id)
-        .single()
+    // Only /engine is hard-gated (must have completed onboarding).
+    // Dashboard is always allowed when authenticated; OnboardingBanner on dashboard
+    // prompts incomplete/skipped users, so no one gets stuck in the wizard.
+    if (isEngineRoute && user) {
+      const activeWorkspaceId = request.cookies.get('active_workspace_id')?.value?.trim()
+      if (activeWorkspaceId) {
+        const { data: profile } = await supabase
+          .from('onboarding_profiles')
+          .select('onboarding_status')
+          .eq('tenant_id', activeWorkspaceId)
+          .eq('user_id', user.id)
+          .maybeSingle()
 
-      const status = profile?.onboarding_status ?? 'not_started'
-
-      if (isEngineRoute && status !== 'completed') {
-        // Engine is fully blocked until onboarding is completed
-        const url = request.nextUrl.clone()
-        url.pathname = '/onboarding'
-        return NextResponse.redirect(url)
-      }
-
-      if (isDashboardRoute && status !== 'completed' && status !== 'skipped') {
-        // Dashboard allows completed + skipped; everything else → onboarding
-        const url = request.nextUrl.clone()
-        url.pathname = '/onboarding'
-        return NextResponse.redirect(url)
+        const status = profile?.onboarding_status ?? 'not_started'
+        if (status !== 'completed') {
+          const url = request.nextUrl.clone()
+          url.pathname = '/onboarding'
+          return NextResponse.redirect(url)
+        }
       }
     }
 

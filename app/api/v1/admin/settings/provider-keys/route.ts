@@ -79,6 +79,7 @@ function maskValue(raw: string): string {
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const admin = getAdminClient();
@@ -150,6 +151,7 @@ const putSchema = z.object({
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();

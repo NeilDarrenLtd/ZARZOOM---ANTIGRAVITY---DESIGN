@@ -27,6 +27,7 @@ import { resolvePromptTemplate } from "@/lib/research/prompts";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   requiredEntitlement: "generate_script",
   quotaMetric: "generate_script",
   rateLimit: { maxRequests: 20, windowMs: 60_000 },

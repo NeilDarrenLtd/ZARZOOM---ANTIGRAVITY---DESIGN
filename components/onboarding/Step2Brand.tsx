@@ -5,6 +5,7 @@ import { useI18n, languages } from "@/lib/i18n";
 import { Search, Plus, X, Upload, Loader2, FileText, Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { ARTICLE_STYLE_OPTIONS } from "@/lib/validation/onboarding";
 import type { OnboardingUpdate } from "@/lib/validation/onboarding";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 import { AIFilledField } from "./AIFilledField";
 
 interface Step2Props {
@@ -59,10 +60,12 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
 
     try {
       console.log("[v0] Calling website autofill API...");
-      
+      const tenantId = typeof document !== "undefined" ? getActiveWorkspaceIdFromCookie() : null;
+      const headers: HeadersInit = { "Content-Type": "application/json" };
+      if (tenantId) headers["X-Tenant-Id"] = tenantId;
       const res = await fetch("/api/v1/onboarding/autofill/website", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ url: data.website_url }),
       });
 
@@ -114,8 +117,12 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
         // For PDFs, send the file via FormData to the upload-file endpoint for server-side extraction
         const formData = new FormData();
         formData.append("file", selectedFile);
+        const uploadTenantId = typeof document !== "undefined" ? getActiveWorkspaceIdFromCookie() : null;
+        const uploadHeaders: HeadersInit = {};
+        if (uploadTenantId) uploadHeaders["X-Tenant-Id"] = uploadTenantId;
         const uploadRes = await fetch("/api/v1/onboarding/upload-file", {
           method: "POST",
+          headers: uploadHeaders,
           body: formData,
         });
         if (!uploadRes.ok) {
@@ -136,9 +143,12 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
       }
 
       // Step 2: Send extracted text directly to the autofill/file endpoint
+      const fileTenantId = typeof document !== "undefined" ? getActiveWorkspaceIdFromCookie() : null;
+      const fileHeaders: HeadersInit = { "Content-Type": "application/json" };
+      if (fileTenantId) fileHeaders["X-Tenant-Id"] = fileTenantId;
       const analyzeRes = await fetch("/api/v1/onboarding/autofill/file", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: fileHeaders,
         body: JSON.stringify({
           storageFilePath: `client-${Date.now()}`,
           extractedText: extractedText.trim(),
@@ -245,8 +255,12 @@ export default function Step2Brand({ data, onChange, aiFilledFields = [], onRelo
       const formData = new FormData();
       formData.append("file", file);
 
+      const tenantId = typeof document !== "undefined" ? getActiveWorkspaceIdFromCookie() : null;
+      const headers: HeadersInit = {};
+      if (tenantId) headers["X-Tenant-Id"] = tenantId;
       const res = await fetch("/api/v1/onboarding/upload-logo", {
         method: "POST",
+        headers,
         body: formData,
       });
 

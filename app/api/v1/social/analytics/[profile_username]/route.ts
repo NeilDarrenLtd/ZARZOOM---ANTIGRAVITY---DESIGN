@@ -11,6 +11,7 @@ import { createServerClient } from "@supabase/ssr";
  */
 export const GET = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const profileUsername = ctx.req.nextUrl.pathname.split("/").at(-1);

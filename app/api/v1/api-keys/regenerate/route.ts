@@ -8,6 +8,7 @@ import {
 import { ValidationError, NotFoundError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
 import { generateApiKey } from "@/lib/api-keys/generate";
+import { assertWorkspaceWhere, logWorkspaceSave } from "@/lib/dev/workspace-guardrails";
 import { z } from "zod";
 
 /* ------------------------------------------------------------------ */
@@ -33,6 +34,7 @@ const regenerateSchema = z.object({
 
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const tenantId = ctx.membership!.tenantId;
@@ -73,11 +75,13 @@ export const POST = createApiHandler({
     await enforceQuota(tenantId, "max_api_keys");
 
     /* -- Revoke old key --------------------------------------------- */
+    assertWorkspaceWhere(tenantId, "update", "api_keys", { tenant_id: tenantId });
     const now = new Date().toISOString();
     const { error: updateError } = await admin
       .from("api_keys")
       .update({ revoked_at: now })
-      .eq("id", key_id);
+      .eq("id", key_id)
+      .eq("tenant_id", tenantId);
 
     if (updateError) {
       throw new Error(`Failed to revoke API key: ${updateError.message}`);
@@ -110,6 +114,8 @@ export const POST = createApiHandler({
     if (insertError || !inserted) {
       throw new Error(`Failed to create new API key: ${insertError?.message ?? "unknown"}`);
     }
+
+    logWorkspaceSave("api_keys", tenantId, tenantId);
 
     await writeAuditLog({
       userId,

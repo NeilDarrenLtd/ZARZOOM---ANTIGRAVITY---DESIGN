@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     // 1. Authenticate user
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
+    const tenantId = request.headers.get("x-tenant-id")?.trim() || null;
 
     // 2. Check autofill usage (2/day combined, degrade after 10 lifetime)
     const usage = await checkAutofillUsage(supabase, userId);
@@ -132,7 +133,11 @@ export async function POST(request: Request) {
         "file",
         fileName,
         "fail",
-        "Insufficient text content extracted from file"
+        "Insufficient text content extracted from file",
+        undefined,
+        undefined,
+        undefined,
+        tenantId
       );
 
       return NextResponse.json(
@@ -197,7 +202,8 @@ export async function POST(request: Request) {
           analysis.error || analysis.message,
           0,
           undefined,
-          analysis.debug
+          analysis.debug,
+          tenantId
         );
 
         return NextResponse.json(
@@ -220,6 +226,7 @@ export async function POST(request: Request) {
 
     // 7. Persist results to database
     let persistError: string | undefined;
+    const tenantId = request.headers.get("x-tenant-id")?.trim() || null;
     if (analysisData && Object.keys(analysisData).length > 0) {
       try {
         await persistAutofillResults(
@@ -227,7 +234,8 @@ export async function POST(request: Request) {
           userId,
           analysisData as any,
           "file",
-          fileName
+          fileName,
+          tenantId
         );
       } catch (err) {
         persistError = err instanceof Error ? err.message : "Unknown persist error";
@@ -238,7 +246,7 @@ export async function POST(request: Request) {
     // 8. Increment usage counter
     await incrementAutofillUsage(supabase, userId);
 
-    // 9. Log audit with debug data
+    // 9. Log audit with debug data (workspace-scoped when X-Tenant-Id sent)
     await logAutofillAudit(
       supabase,
       userId,
@@ -248,7 +256,8 @@ export async function POST(request: Request) {
       persistError,
       analysisData ? Object.keys(analysisData).length : 0,
       analysisConfidence,
-      analysisDebug
+      analysisDebug,
+      tenantId
     );
 
     const duration = Date.now() - startTime;
@@ -274,13 +283,18 @@ export async function POST(request: Request) {
     if (userId && fileName) {
       try {
         const { supabase } = await requireAuthenticatedUser();
+        const failTenantId = request.headers.get("x-tenant-id")?.trim() || undefined;
         await logAutofillAudit(
           supabase,
           userId,
           "file",
           fileName,
           "fail",
-          error instanceof Error ? error.message : "Unknown error"
+          error instanceof Error ? error.message : "Unknown error",
+          undefined,
+          undefined,
+          undefined,
+          failTenantId
         );
       } catch (auditError) {
         console.error("[v0] Failed to log audit:", auditError);

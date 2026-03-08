@@ -49,10 +49,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build storage path: brand-logos/{userId}/{uuid}.{ext}
+    // Build storage path: workspace-scoped when X-Tenant-Id present else user fallback
     const ext = file.name.split(".").pop() || "png";
     const fileName = `${randomUUID()}.${ext}`;
-    const storagePath = `${user.id}/${fileName}`;
+    const tenantIdHeader = request.headers.get("x-tenant-id")?.trim();
+    const storagePath = tenantIdHeader
+      ? `${tenantIdHeader}/${user.id}/${fileName}`
+      : `${user.id}/${fileName}`;
 
     // Upload to Supabase Storage
     const arrayBuffer = await file.arrayBuffer();
@@ -85,11 +88,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Also update onboarding profile with the logo URL
-    await supabase
-      .from("onboarding_profiles")
-      .update({ logo_url: publicUrl })
-      .eq("user_id", user.id);
+    // Update onboarding profile for the active workspace
+    const tenantId = tenantIdHeader;
+    if (tenantId) {
+      const { data: mem } = await supabase
+        .from("tenant_memberships")
+        .select("tenant_id")
+        .eq("tenant_id", tenantId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (mem) {
+        await supabase
+          .from("onboarding_profiles")
+          .update({ logo_url: publicUrl })
+          .eq("tenant_id", tenantId)
+          .eq("user_id", user.id);
+      }
+    }
 
     return NextResponse.json({
       success: true,

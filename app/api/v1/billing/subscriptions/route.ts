@@ -7,6 +7,7 @@ import { getTenantSubscription } from "@/lib/billing/queries";
  */
 export const GET = createApiHandler({
   requiredRole: "viewer",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
     if (!ctx.membership) {

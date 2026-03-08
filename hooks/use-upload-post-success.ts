@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 
 /**
  * Detects `?uploadpost=success` in the URL, triggers a router refresh + status
@@ -28,7 +29,9 @@ export function useUploadPostSuccess(): boolean {
     setShow(true);
 
     // Sync status to DB, then refresh RSC cache so panels reflect new state
-    fetch("/api/v1/onboarding/social-connect/status", { method: "GET" })
+    const tenantId = getActiveWorkspaceIdFromCookie();
+    const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
+    fetch("/api/v1/onboarding/social-connect/status", { method: "GET", headers })
       .catch(() => {/* non-fatal */})
       .finally(() => router.refresh());
 

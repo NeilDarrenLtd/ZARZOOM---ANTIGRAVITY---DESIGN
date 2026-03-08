@@ -1,6 +1,8 @@
 "use client";
 
 import useSWR from "swr";
+import { useCallback } from "react";
+import { useActiveWorkspace, workspaceScopedKey } from "@/lib/workspace/context";
 
 export type OnboardingStatus =
   | "not_started"
@@ -17,28 +19,39 @@ export interface OnboardingProfile {
   [key: string]: unknown;
 }
 
-const fetcher = async (url: string): Promise<OnboardingProfile | null> => {
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const body = await res.json();
-  return body.data ?? null;
-};
-
 /**
- * SWR-backed hook that exposes the current user's onboarding status.
+ * SWR-backed hook that exposes the **active workspace's** onboarding status.
+ * Must be used inside ActiveWorkspaceProvider (e.g. dashboard layout).
+ * Sends X-Tenant-Id so the banner and completion state are scoped per workspace.
  *
  * Returns:
  *  - profile:    the full onboarding_profiles row (or null)
  *  - status:     shortcut to onboarding_status
  *  - isComplete: true when status === 'completed'
- *  - needsBanner: true when status is 'skipped' or 'in_progress'
+ *  - needsBanner: true when status is 'skipped' or 'in_progress' (only for active workspace)
  *  - isLoading:  SWR loading state
  *  - mutate:     SWR mutate to refetch after changes
  */
 export function useOnboarding() {
+  const activeWorkspaceId = useActiveWorkspace();
+
+  const fetcher = useCallback(
+    async (url: string): Promise<OnboardingProfile | null> => {
+      const headers: HeadersInit = { credentials: "include" };
+      if (activeWorkspaceId) {
+        (headers as Record<string, string>)["X-Tenant-Id"] = activeWorkspaceId;
+      }
+      const res = await fetch(url, { headers });
+      if (!res.ok) return null;
+      const body = await res.json();
+      return body.data ?? null;
+    },
+    [activeWorkspaceId]
+  );
+
   const { data: profile, error, isLoading, mutate } = useSWR<OnboardingProfile | null>(
-    "/api/v1/onboarding",
-    fetcher,
+    workspaceScopedKey("/api/v1/onboarding", activeWorkspaceId),
+    ([url]) => fetcher(url as string),
     {
       revalidateOnFocus: false,
       dedupingInterval: 30_000,

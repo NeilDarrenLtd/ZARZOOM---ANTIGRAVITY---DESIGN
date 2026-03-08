@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 // ──────────────────────────────────────────────────────────────────
@@ -20,7 +21,23 @@ function deriveUsername(userId: string): string {
   return `u_${userId.replace(/-/g, "").slice(0, 8)}`;
 }
 
-export async function POST() {
+async function resolveTenantId(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  request: NextRequest
+): Promise<string | null> {
+  const tenantId = request.headers.get("x-tenant-id")?.trim();
+  if (!tenantId) return null;
+  const { data } = await supabase
+    .from("tenant_memberships")
+    .select("tenant_id")
+    .eq("tenant_id", tenantId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  return data?.tenant_id ?? null;
+}
+
+export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -33,10 +50,19 @@ export async function POST() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 1. Derive or reuse existing username
+    const tenantId = await resolveTenantId(supabase, user.id, request);
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: "Workspace context required. Send X-Tenant-Id header." },
+        { status: 400 }
+      );
+    }
+
+    // 1. Derive or reuse existing username for this workspace
     const { data: profile } = await supabase
       .from("onboarding_profiles")
       .select("uploadpost_profile_username")
+      .eq("tenant_id", tenantId)
       .eq("user_id", user.id)
       .single();
 
@@ -48,6 +74,7 @@ export async function POST() {
       await supabase
         .from("onboarding_profiles")
         .update({ uploadpost_profile_username: username })
+        .eq("tenant_id", tenantId)
         .eq("user_id", user.id);
     }
 

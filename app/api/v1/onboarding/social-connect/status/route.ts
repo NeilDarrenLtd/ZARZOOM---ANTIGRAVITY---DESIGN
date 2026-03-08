@@ -1,15 +1,30 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+
+async function resolveTenantId(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  userId: string,
+  request: NextRequest
+): Promise<string | null> {
+  const tenantId = request.headers.get("x-tenant-id")?.trim();
+  if (!tenantId) return null;
+  const { data } = await supabase
+    .from("tenant_memberships")
+    .select("tenant_id")
+    .eq("tenant_id", tenantId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  return data?.tenant_id ?? null;
+}
 
 // ──────────────────────────────────────────────────────────────────
 // GET /api/v1/onboarding/social-connect/status
 //
-// Returns the current social connection status for the onboarding user.
-// Checks Upload-Post API for the profile's connected platforms,
-// and updates onboarding_profiles.socials_connected accordingly.
+// Returns the current social connection status for the active workspace.
 // ──────────────────────────────────────────────────────────────────
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
 
@@ -22,9 +37,18 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const tenantId = await resolveTenantId(supabase, user.id, request);
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: "Workspace context required. Send X-Tenant-Id header." },
+        { status: 400 }
+      );
+    }
+
     const { data: profile } = await supabase
       .from("onboarding_profiles")
       .select("uploadpost_profile_username, socials_connected")
+      .eq("tenant_id", tenantId)
       .eq("user_id", user.id)
       .single();
 
@@ -83,11 +107,12 @@ export async function GET() {
       connected = profile.socials_connected ?? false;
     }
 
-    // Persist the connected state back to onboarding_profiles
+    // Persist the connected state back to onboarding_profiles for this workspace
     if (connected !== profile.socials_connected) {
       await supabase
         .from("onboarding_profiles")
         .update({ socials_connected: connected })
+        .eq("tenant_id", tenantId)
         .eq("user_id", user.id);
     }
 

@@ -317,17 +317,27 @@ export async function analyzeContentWithOpenRouter(
 // Persistence
 // ──────────────────────────────────────────────
 
+/**
+ * Persist autofill results to onboarding_profiles for the given workspace.
+ * Requires tenantId; updates only the row for (tenant_id + user_id).
+ * Does not fall back to user_id-only updates (no shared-row writes).
+ */
 export async function persistAutofillResults(
   _supabase: SupabaseClient,
   userId: string,
   data: Record<string, unknown>,
   _source: "website" | "file",
-  _sourceUrl?: string
+  _sourceUrl?: string,
+  tenantId?: string | null
 ): Promise<void> {
-  // Use admin client to bypass RLS
+  const trimmedTenantId = tenantId?.trim() || null;
+  if (!trimmedTenantId) {
+    console.warn("[v0] persistAutofillResults: workspace (X-Tenant-Id) required; skipping persist to avoid shared-row write");
+    return;
+  }
+
   const adminSb = await createAdminClient();
 
-  // Extract and validate each field
   const getString = (key: string): string | null => {
     const v = data[key];
     if (v == null || v === "") return null;
@@ -348,40 +358,48 @@ export async function persistAutofillResults(
     return null;
   };
 
-  const rpcParams = {
-    p_user_id: userId,
-    p_business_name: getString("business_name"),
-    p_business_description: getString("business_description"),
-    p_brand_color_hex: getString("brand_color_hex"),
-    p_article_styles: getArray("article_styles"),
-    p_goals: getArray("goals"),
-    p_content_language: getString("content_language"),
-    p_website_or_landing_url: getString("website_or_landing_url"),
-    p_product_or_sales_url: getString("product_or_sales_url"),
-    p_approval_preference: getString("approval_preference"),
-    p_additional_notes: getString("additional_notes"),
+  const payload: Record<string, unknown> = {
+    business_name: getString("business_name"),
+    business_description: getString("business_description"),
+    brand_color_hex: getString("brand_color_hex"),
+    article_styles: getArray("article_styles"),
+    goals: getArray("goals"),
+    content_language: getString("content_language"),
+    website_or_landing_url: getString("website_or_landing_url"),
+    product_or_sales_url: getString("product_or_sales_url"),
+    approval_preference: getString("approval_preference"),
+    additional_notes: getString("additional_notes"),
   };
 
-  // Count non-null fields (excluding user_id)
-  const fieldCount = Object.entries(rpcParams)
-    .filter(([k, v]) => k !== "p_user_id" && v != null).length;
-
+  const fieldCount = Object.values(payload).filter((v) => v != null).length;
   if (fieldCount === 0) {
     console.warn("[v0] No valid fields to persist from autofill results");
     return;
   }
 
-  console.log(`[v0] Persisting ${fieldCount} autofill fields via RPC for user ${userId}`);
+  const { data: membership } = await adminSb
+    .from("tenant_memberships")
+    .select("tenant_id")
+    .eq("tenant_id", trimmedTenantId)
+    .eq("user_id", userId)
+    .maybeSingle();
 
-  // Use the dedicated RPC function which handles text[] arrays natively
-  const { error } = await adminSb.rpc("update_onboarding_autofill", rpcParams);
-
-  if (error) {
-    console.error("[v0] RPC update_onboarding_autofill failed:", error);
-    throw new Error(`Failed to save results: ${error.message}`);
+  if (!membership) {
+    console.warn("[v0] Autofill persist: user is not a member of tenant, skipping");
+    return;
   }
 
-  console.log(`[v0] Successfully persisted ${fieldCount} autofill fields for user ${userId}`);
+  const { error } = await adminSb
+    .from("onboarding_profiles")
+    .update(payload)
+    .eq("tenant_id", trimmedTenantId)
+    .eq("user_id", userId);
+
+  if (error) {
+    console.error("[v0] onboarding_profiles update failed:", error);
+    throw new Error(`Failed to save results: ${error.message}`);
+  }
+  console.log(`[v0] Persisted ${fieldCount} autofill fields for workspace ${trimmedTenantId}`);
 }
 
 // ──────────────────────────────────────────────
@@ -401,11 +419,11 @@ export async function logAutofillAudit(
     promptSent?: string;
     responseReceived?: string;
     fieldsExtracted?: Record<string, unknown>;
-  }
+  },
+  tenantId?: string | null
 ): Promise<void> {
-  // Use admin client to bypass RLS on wizard_autofill_audit
   const adminSb = await createAdminClient();
-  const { error } = await adminSb.from("wizard_autofill_audit").insert({
+  const row: Record<string, unknown> = {
     user_id: userId,
     source_type: source,
     source_identifier: sourceIdentifier,
@@ -415,7 +433,10 @@ export async function logAutofillAudit(
     confidence_scores: confidence || null,
     debug_data: debugData || null,
     created_at: new Date().toISOString(),
-  });
+  };
+  if (tenantId?.trim()) row.tenant_id = tenantId.trim();
+
+  const { error } = await adminSb.from("wizard_autofill_audit").insert(row);
 
   if (error) {
     console.error("[v0] Failed to log autofill audit:", error);

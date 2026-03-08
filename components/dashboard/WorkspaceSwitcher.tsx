@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Settings,
 } from "lucide-react";
+import { languages } from "@/lib/i18n";
 
 export type WorkspaceStatus = "active" | "setup_incomplete" | "payment_required";
 
@@ -19,6 +20,8 @@ export interface Workspace {
   name: string;
   status: WorkspaceStatus;
   role?: "owner" | "admin" | "member" | "viewer";
+  /** Content language code (e.g. en, fr) from onboarding; shown next to name as e.g. "ZARSK (English)" */
+  content_language?: string | null;
 }
 
 interface WorkspaceSwitcherProps {
@@ -59,6 +62,8 @@ function getStatusConfig(status: WorkspaceStatus) {
   }
 }
 
+const MOBILE_BREAKPOINT = 640;
+
 export default function WorkspaceSwitcher({
   workspaces,
   activeWorkspaceId,
@@ -67,9 +72,42 @@ export default function WorkspaceSwitcher({
   addWorkspaceLoading = false,
 }: WorkspaceSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileDropdownRect, setMobileDropdownRect] = useState<{
+    top: number;
+    left: number;
+    right: number;
+  } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const activeWorkspace = workspaces.find((w) => w.id === activeWorkspaceId);
+
+  // On mobile, position dropdown fixed so it stays on-screen
+  const updateMobileRect = useCallback(() => {
+    if (!isOpen || typeof window === "undefined") {
+      setMobileDropdownRect(null);
+      return;
+    }
+    if (window.innerWidth >= MOBILE_BREAKPOINT) {
+      setMobileDropdownRect(null);
+      return;
+    }
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const padding = 8;
+    setMobileDropdownRect({
+      top: rect.bottom + 4,
+      left: padding,
+      right: padding,
+    });
+  }, [isOpen]);
+
+  useEffect(() => {
+    updateMobileRect();
+    window.addEventListener("resize", updateMobileRect);
+    return () => window.removeEventListener("resize", updateMobileRect);
+  }, [updateMobileRect]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -104,6 +142,7 @@ export default function WorkspaceSwitcher({
     <div ref={dropdownRef} className="relative">
       {/* Trigger Button */}
       <button
+        ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 min-w-[180px] max-w-[240px]"
         aria-expanded={isOpen}
@@ -143,7 +182,20 @@ export default function WorkspaceSwitcher({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50"
+            className={
+              mobileDropdownRect
+                ? "fixed w-[calc(100vw-1rem)] max-w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50 max-h-[calc(100vh-8rem)] overflow-y-auto"
+                : "absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50"
+            }
+            style={
+              mobileDropdownRect
+                ? {
+                    top: mobileDropdownRect.top,
+                    left: mobileDropdownRect.left,
+                    right: mobileDropdownRect.right,
+                  }
+                : undefined
+            }
             role="listbox"
           >
             {/* Header */}
@@ -199,6 +251,12 @@ export default function WorkspaceSwitcher({
                           }`}
                         >
                           {workspace.name}
+                          {workspace.content_language && (
+                            <span className="text-gray-500 font-normal">
+                              {" "}
+                              ({languages.find((l) => l.code === workspace.content_language)?.name ?? workspace.content_language})
+                            </span>
+                          )}
                         </p>
                         {isActive && (
                           <Check className="w-4 h-4 text-green-600 flex-shrink-0" />

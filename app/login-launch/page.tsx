@@ -73,12 +73,25 @@ export default function LoginLaunchPage() {
       setLoginError(error.message);
       setLoginLoading(false);
     } else {
-      // Resolve onboarding-aware redirect via API
+      // Resolve onboarding-aware redirect: get first workspace, set cookie, then check that workspace's onboarding status
       try {
-        const res = await fetch("/api/v1/onboarding");
-        const body = await res.json();
-        const status = body?.data?.onboarding_status;
-        window.location.href = status === "completed" ? "/dashboard" : "/onboarding";
+        const workspacesRes = await fetch("/api/v1/workspaces", { credentials: "include" });
+        const workspacesData = await workspacesRes.json().catch(() => ({}));
+        const workspaces = workspacesData?.workspaces ?? [];
+        const firstWorkspaceId = workspaces[0]?.id ?? null;
+
+        if (firstWorkspaceId) {
+          document.cookie = `active_workspace_id=${encodeURIComponent(firstWorkspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+          const onboardingRes = await fetch("/api/v1/onboarding", {
+            credentials: "include",
+            headers: { "X-Tenant-Id": firstWorkspaceId },
+          });
+          const onboardingBody = await onboardingRes.json().catch(() => ({}));
+          const status = onboardingBody?.data?.onboarding_status;
+          window.location.href = status === "completed" ? "/dashboard" : "/onboarding";
+        } else {
+          window.location.href = "/onboarding";
+        }
       } catch {
         window.location.href = "/onboarding";
       }

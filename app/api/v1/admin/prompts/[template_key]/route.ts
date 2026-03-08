@@ -12,6 +12,7 @@ import { ValidationError, NotFoundError } from "@/lib/api/errors";
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     // Validate the template_key from the URL

@@ -57,6 +57,7 @@ const checkoutSchema = z.object({
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const { STRIPE_SECRET_KEY, SITE_URL } = env();

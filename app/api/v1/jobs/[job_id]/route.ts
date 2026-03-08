@@ -13,6 +13,7 @@ const paramsSchema = z.object({
  */
 export const GET = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 120, windowMs: 60_000 },
   handler: async (ctx) => {
     // Extract job_id from the URL path

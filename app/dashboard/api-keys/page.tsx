@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { Plus, Key, Terminal, ExternalLink, Plug, Zap, Lightbulb, ArrowLeft } from "lucide-react";
 import { ApiKeyRow, type ApiKeyItem } from "@/components/dashboard/api-key-row";
 import { CreateKeyModal } from "@/components/dashboard/create-key-modal";
 import { cn } from "@/lib/utils";
-import { useWorkspaceFetch, useWorkspaceFetcher } from "@/lib/workspace/context";
+import { useWorkspaceFetch, useWorkspaceFetcher, useActiveWorkspace, useWorkspaceSwitchKey, workspaceScopedKey } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -18,17 +18,26 @@ type TabType = "api" | "openclaw" | "skills";
 /* ------------------------------------------------------------------ */
 
 export default function ApiIntegrationsPage() {
+  const activeWorkspaceId = useActiveWorkspace();
+  const workspaceSwitchKey = useWorkspaceSwitchKey();
   const workspaceFetcher = useWorkspaceFetcher<{ keys: ApiKeyItem[] }>();
   const workspaceFetch = useWorkspaceFetch();
   const { data, error, isLoading, mutate } = useSWR(
-    "/api/v1/api-keys",
-    workspaceFetcher
+    workspaceScopedKey("/api/v1/api-keys", activeWorkspaceId),
+    ([url]) => workspaceFetcher(url as string)
   );
 
   const [activeTab, setActiveTab] = useState<TabType>("api");
   const [showCreate, setShowCreate] = useState(false);
   const [showRotateModal, setShowRotateModal] = useState(false);
   const [rotateName, setRotateName] = useState("");
+
+  // Reset modal state when workspace changes so we don't show workspace-A modals on workspace B
+  useEffect(() => {
+    setShowCreate(false);
+    setShowRotateModal(false);
+    setRotateName("");
+  }, [workspaceSwitchKey]);
 
   const keys = data?.keys ?? [];
   const activeKeys = keys.filter((k) => k.status === "active");

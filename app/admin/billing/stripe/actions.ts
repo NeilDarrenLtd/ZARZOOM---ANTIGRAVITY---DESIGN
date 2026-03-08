@@ -129,7 +129,11 @@ export type SubRow = {
   cancel_at_period_end: boolean;
 };
 
-export async function fetchCurrentSubscription(): Promise<{
+/**
+ * Fetch subscription for the given workspace. Requires explicit workspaceId;
+ * no first-workspace fallback.
+ */
+export async function fetchCurrentSubscription(workspaceId: string | null): Promise<{
   subscription: SubRow | null;
   error?: string;
 }> {
@@ -137,13 +141,17 @@ export async function fetchCurrentSubscription(): Promise<{
     const user = await requireAdmin();
     const admin = await createAdminClient();
 
-    // Find the admin's first membership
+    const trimmed = workspaceId?.trim() || null;
+    if (!trimmed) {
+      return { subscription: null };
+    }
+
     const { data: membership } = await admin
       .from("tenant_memberships")
       .select("tenant_id")
       .eq("user_id", user.id)
-      .limit(1)
-      .single();
+      .eq("tenant_id", trimmed)
+      .maybeSingle();
 
     if (!membership) {
       return { subscription: null };

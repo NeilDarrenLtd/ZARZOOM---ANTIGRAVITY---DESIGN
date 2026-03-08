@@ -11,6 +11,7 @@ import { ValidationError } from "@/lib/api/errors";
 
 export const GET = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const { NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = env();
@@ -45,6 +46,7 @@ export const GET = createApiHandler({
 
 export const PUT = createApiHandler({
   requiredRole: "admin",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();

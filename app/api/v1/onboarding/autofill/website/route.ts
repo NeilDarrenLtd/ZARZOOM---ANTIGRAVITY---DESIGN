@@ -45,6 +45,7 @@ export async function POST(request: Request) {
     // 1. Authenticate user
     const { supabase, user } = await requireAuthenticatedUser();
     userId = user.id;
+    const tenantId = request.headers.get("x-tenant-id")?.trim() || null;
 
     // 2. Check autofill usage (2/day combined, degrade after 10 lifetime)
     const usage = await checkAutofillUsage(supabase, userId);
@@ -137,7 +138,11 @@ export async function POST(request: Request) {
         "website",
         url,
         "fail",
-        `SSRF blocked: ${ssrfError.message}`
+        `SSRF blocked: ${ssrfError.message}`,
+        undefined,
+        undefined,
+        undefined,
+        tenantId
       );
 
       return NextResponse.json(
@@ -176,7 +181,11 @@ export async function POST(request: Request) {
         "website",
         url,
         "fail",
-        "Insufficient content extracted from website"
+        "Insufficient content extracted from website",
+        undefined,
+        undefined,
+        undefined,
+        tenantId
       );
 
       return NextResponse.json(
@@ -235,7 +244,8 @@ export async function POST(request: Request) {
           analysis.error || analysis.message,
           0,
           undefined,
-          analysis.debug
+          analysis.debug,
+          tenantId
         );
 
         return NextResponse.json(
@@ -257,7 +267,7 @@ export async function POST(request: Request) {
       analysisDebug = analysis.debug;
     }
 
-    // 8. Persist results to database
+    // 8. Persist results to database (workspace-scoped when X-Tenant-Id is sent)
     let persistError: string | undefined;
     if (analysisData && Object.keys(analysisData).length > 0) {
       try {
@@ -266,7 +276,8 @@ export async function POST(request: Request) {
           userId,
           analysisData as any,
           "website",
-          url
+          url,
+          tenantId
         );
       } catch (err) {
         // Don't fail the whole request - the analysis succeeded, persist can be retried
@@ -278,7 +289,7 @@ export async function POST(request: Request) {
     // 9. Increment usage counter (counts regardless of degraded/premium)
     await incrementAutofillUsage(supabase, userId);
 
-    // 10. Log audit with debug data
+    // 10. Log audit with debug data (workspace-scoped when X-Tenant-Id sent)
     await logAutofillAudit(
       supabase,
       userId,
@@ -288,7 +299,8 @@ export async function POST(request: Request) {
       persistError,
       analysisData ? Object.keys(analysisData).length : 0,
       analysisConfidence,
-      analysisDebug
+      analysisDebug,
+      tenantId
     );
 
     const duration = Date.now() - startTime;
@@ -317,13 +329,18 @@ export async function POST(request: Request) {
     if (userId && url) {
       try {
         const { supabase } = await requireAuthenticatedUser();
+        const failTenantId = request.headers.get("x-tenant-id")?.trim() || undefined;
         await logAutofillAudit(
           supabase,
           userId,
           "website",
           url,
           "fail",
-          error instanceof Error ? error.message : "Unknown error"
+          error instanceof Error ? error.message : "Unknown error",
+          undefined,
+          undefined,
+          undefined,
+          failTenantId
         );
       } catch (auditError) {
         console.error("[v0] Failed to log audit:", auditError);

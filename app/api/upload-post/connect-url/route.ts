@@ -157,20 +157,34 @@ export async function GET(req: NextRequest) {
       return jsonError(502, "No accessUrl in provider response", requestId);
     }
 
-    // ── 7. Upsert audit trail (non-fatal) ────────────────────────────────
-    admin
-      .from("upload_post_mapping")
-      .upsert(
-        {
-          user_id: user.id,
-          upload_post_username: user.id,
-          last_connect_url_generated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id" }
-      )
-      .then(({ error: e }) => {
-        if (e) upWarn("mapping upsert failed:", e.message);
-      });
+    // ── 7. Upsert audit trail per workspace (non-fatal) ─────────────────────
+    const tenantId = req.headers.get("x-tenant-id")?.trim();
+    if (tenantId) {
+      const { data: mem } = await admin
+        .from("tenant_memberships")
+        .select("tenant_id")
+        .eq("tenant_id", tenantId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (mem) {
+        admin
+          .from("upload_post_mapping")
+          .upsert(
+            {
+              tenant_id: tenantId,
+              user_id: user.id,
+              upload_post_username: user.id,
+              last_connect_url_generated_at: new Date().toISOString(),
+            },
+            { onConflict: "tenant_id,user_id" }
+          )
+          .then(({ error: e }) => {
+            if (e) upWarn("mapping upsert failed:", e.message);
+          });
+      }
+    } else {
+      upWarn("no X-Tenant-Id header — upload_post_mapping not updated (workspace-scoped)");
+    }
 
     // ── 8. Return ────────────────────────────────────────────────────────
     upLog("success — accessUrl obtained");

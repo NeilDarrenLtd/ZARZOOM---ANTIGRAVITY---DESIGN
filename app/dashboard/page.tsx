@@ -1,30 +1,45 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
-import { useWorkspaceFetch, useActiveWorkspace } from "@/lib/workspace/context";
+import {
+  useWorkspaceFetch,
+  useActiveWorkspace,
+  useSetActiveWorkspaceAndInvalidate,
+  useWorkspaceSwitchKey,
+} from "@/lib/workspace/context";
+import { ACTIVE_WORKSPACE_COOKIE } from "@/lib/workspace/active";
 import { createClient } from "@/lib/supabase/client";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2 } from "lucide-react";
 import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
 import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import WorkspaceSwitcher, { type Workspace } from "@/components/dashboard/WorkspaceSwitcher";
+import { languages } from "@/lib/i18n";
 
 
 export default function DashboardPage() {
   const { t } = useI18n();
+  const router = useRouter();
   const workspaceFetch = useWorkspaceFetch();
   const activeWorkspaceId = useActiveWorkspace();
+  const setActiveWorkspaceAndInvalidate = useSetActiveWorkspaceAndInvalidate();
+  const workspaceSwitchKey = useWorkspaceSwitchKey();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [restarting, setRestarting] = useState(false);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-  const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string | null>(activeWorkspaceId);
   const [addWorkspaceLoading, setAddWorkspaceLoading] = useState(false);
   const [addWorkspaceError, setAddWorkspaceError] = useState<string | null>(null);
+  const [deleteConfirmWorkspace, setDeleteConfirmWorkspace] = useState<Workspace | null>(null);
+  const [deleteWorkspaceLoading, setDeleteWorkspaceLoading] = useState(false);
+  const [deleteWorkspaceError, setDeleteWorkspaceError] = useState<string | null>(null);
+  const [addWorkspaceModalOpen, setAddWorkspaceModalOpen] = useState(false);
+  const [addWorkspaceName, setAddWorkspaceName] = useState("Un-Named");
   const showSuccessBanner = useUploadPostSuccess();
 
   const fetchWorkspaces = useCallback(async () => {
@@ -54,51 +69,75 @@ export default function DashboardPage() {
     fetchWorkspaces();
   }, [fetchWorkspaces]);
 
-  // Keep currentWorkspaceId in sync with context
+  // Reset modal and form state when workspace changes so we don't retain workspace-A state on switch to B
   useEffect(() => {
-    if (activeWorkspaceId) setCurrentWorkspaceId(activeWorkspaceId);
-  }, [activeWorkspaceId]);
+    setAddWorkspaceModalOpen(false);
+    setAddWorkspaceName("Un-Named");
+    setDeleteConfirmWorkspace(null);
+    setAddWorkspaceError(null);
+    setDeleteWorkspaceError(null);
+  }, [workspaceSwitchKey]);
+
+  // When there is only one workspace, ensure it is selected (set cookie and reload so layout picks it up).
+  // Skip while a workspace is being created — otherwise the effect races with the redirect to /onboarding
+  // by overwriting the cookie and navigating back to /dashboard before the page unloads.
+  useEffect(() => {
+    if (addWorkspaceLoading) return;
+    if (workspaces.length !== 1) return;
+    const singleId = workspaces[0].id;
+    if (activeWorkspaceId === singleId) return;
+    document.cookie = `active_workspace_id=${encodeURIComponent(singleId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    window.location.href = "/dashboard";
+  }, [workspaces, activeWorkspaceId, addWorkspaceLoading]);
 
   async function handleSwitchWorkspace(workspaceId: string) {
-    if (workspaceId === currentWorkspaceId) return;
+    if (workspaceId === activeWorkspaceId) return;
+    const cookieValue = `active_workspace_id=${encodeURIComponent(workspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
     try {
-      const res = await workspaceFetch("/api/v1/workspace/switch", {
+      await workspaceFetch("/api/v1/workspace/switch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ workspace_id: workspaceId }),
       });
-      if (res.ok) {
-        window.location.href = "/dashboard";
-        return;
-      }
     } catch {
-      // fallback: set cookie client-side and reload
+      // non-fatal; cookie switch is enough
     }
-    setCurrentWorkspaceId(workspaceId);
-    document.cookie = `active_workspace_id=${workspaceId}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    // Set cookie then do a full reload so the server layout re-resolves the workspace
+    // and ActiveWorkspaceProvider gets the correct initialActiveWorkspaceId.
+    document.cookie = cookieValue;
     window.location.href = "/dashboard";
   }
 
-  async function handleAddWorkspace() {
-    const rawName = typeof window !== "undefined"
-      ? window.prompt(t("dashboard.workspaceNamePrompt") ?? "Workspace name?", "My Workspace")
-      : "My Workspace";
-    if (rawName === null) return; // user cancelled
-    const name = rawName.trim() || "My Workspace";
-
+  async function doCreateWorkspace(name: string, copyFromCurrent: boolean) {
     setAddWorkspaceError(null);
     setAddWorkspaceLoading(true);
     try {
+      const body: { name: string; copy_onboarding_from_workspace_id?: string } = { name: name.slice(0, 200) };
+      if (copyFromCurrent && activeWorkspaceId) {
+        body.copy_onboarding_from_workspace_id = activeWorkspaceId;
+      }
       const res = await workspaceFetch("/api/v1/workspaces", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.slice(0, 200) }),
+        body: JSON.stringify(body),
         credentials: "include",
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        // API sets active_workspace_id cookie to the new workspace; full redirect so layout picks up cookie
-        window.location.href = "/dashboard/profile";
+        const newWorkspaceId = (data as { workspace?: { id?: string } })?.workspace?.id;
+        if (typeof newWorkspaceId === "string") {
+          document.cookie = `${ACTIVE_WORKSPACE_COOKIE}=${encodeURIComponent(newWorkspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+          // Do NOT call setActiveWorkspaceAndInvalidate here — we are about to do a full
+          // page redirect. Updating React context would trigger the "single workspace"
+          // effect which races with the redirect and overwrites the cookie / navigates
+          // back to /dashboard before the browser can navigate to /onboarding.
+        }
+        if (copyFromCurrent) {
+          window.location.href = "/dashboard/profile";
+        } else {
+          const q = typeof newWorkspaceId === "string" ? `?workspace=${encodeURIComponent(newWorkspaceId)}` : "";
+          window.location.href = `/onboarding${q}`;
+        }
         return;
       }
       const message = (data as { error?: { message?: string } })?.error?.message ?? res.statusText ?? "Failed to create workspace";
@@ -110,7 +149,49 @@ export default function DashboardPage() {
     }
   }
 
+  function handleAddWorkspaceClick() {
+    setAddWorkspaceError(null);
+    setAddWorkspaceName("Un-Named");
+    setAddWorkspaceModalOpen(true);
+  }
 
+  async function handleAddWorkspaceSubmit(copyFromCurrent: boolean) {
+    const name = addWorkspaceName.trim() || "Un-Named";
+    await doCreateWorkspace(name, copyFromCurrent);
+    // Modal stays open on error (error shown inside modal). On success, doCreateWorkspace redirects.
+  }
+
+  async function handleDeleteWorkspace(workspace: Workspace) {
+    if (workspaces.length <= 1) {
+      setDeleteWorkspaceError("Your account must have at least one workspace. Add another workspace first if you want to remove this one.");
+      return;
+    }
+    setDeleteWorkspaceError(null);
+    setDeleteWorkspaceLoading(true);
+    try {
+      const res = await workspaceFetch(`/api/v1/workspaces/${workspace.id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setDeleteConfirmWorkspace(null);
+        await fetchWorkspaces();
+        if (workspace.id === activeWorkspaceId) {
+          document.cookie = `active_workspace_id=; path=/; max-age=0`;
+          window.location.href = "/dashboard";
+          return;
+        }
+      } else {
+        const message = (data as { error?: { message?: string } })?.error?.message ?? res.statusText ?? "Failed to delete workspace";
+        setDeleteWorkspaceError(message);
+      }
+    } catch {
+      setDeleteWorkspaceError("Network error. Please try again.");
+    } finally {
+      setDeleteWorkspaceLoading(false);
+    }
+  }
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -121,13 +202,20 @@ export default function DashboardPage() {
   async function handleRestartOnboarding() {
     setRestarting(true);
     try {
-      const res = await workspaceFetch("/api/v1/onboarding/restart", { method: "POST" });
+      const res = await workspaceFetch("/api/v1/onboarding/restart", {
+        method: "POST",
+        credentials: "include",
+      });
       if (res.ok) {
         window.location.href = "/onboarding";
-      } else {
-        setRestarting(false);
+        return;
       }
-    } catch {
+      const body = await res.json().catch(() => ({}));
+      const msg = (body as { error?: string })?.error ?? res.statusText ?? "Failed to restart setup";
+      console.error("[dashboard] Restart onboarding failed:", res.status, msg);
+    } catch (err) {
+      console.error("[dashboard] Restart onboarding error:", err);
+    } finally {
       setRestarting(false);
     }
   }
@@ -166,9 +254,9 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <WorkspaceSwitcher
               workspaces={workspaces}
-              activeWorkspaceId={currentWorkspaceId}
+              activeWorkspaceId={activeWorkspaceId}
               onSwitch={handleSwitchWorkspace}
-              onAddWorkspace={handleAddWorkspace}
+              onAddWorkspace={handleAddWorkspaceClick}
               addWorkspaceLoading={addWorkspaceLoading}
             />
             <button
@@ -193,7 +281,7 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-bold text-gray-900">Workspaces</h2>
               </div>
               <button
-                onClick={handleAddWorkspace}
+                onClick={handleAddWorkspaceClick}
                 disabled={addWorkspaceLoading}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-green-400 text-sm font-medium text-green-600 hover:bg-green-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -213,8 +301,7 @@ export default function DashboardPage() {
             )}
 
             <p className="text-sm text-gray-500 leading-relaxed mb-5">
-              Manage multiple brands, businesses, or projects from a single ZARZOOM account.{" "}
-              Each workspace has its own social accounts, content, analytics, API access, and billing.
+              Add multiple brands, regions, campaigns — and especially LANGUAGES — all from one ZARZOOM account. E.g. Nike – Global, Nike – French, Nike – Japanese, Reebok – French, Reebok – Japanese. Each one has its own 10 socials, analytics, API, and billing.
             </p>
 
             {workspaces.length === 0 ? (
@@ -224,7 +311,7 @@ export default function DashboardPage() {
             ) : (
               <div className="flex flex-wrap gap-3">
                 {workspaces.map((ws) => {
-                  const isActive = ws.id === currentWorkspaceId;
+                  const isActive = ws.id === activeWorkspaceId;
                   const statusColors: Record<string, string> = {
                     active: "bg-green-100 text-green-700",
                     setup_incomplete: "bg-amber-100 text-amber-700",
@@ -238,43 +325,86 @@ export default function DashboardPage() {
                   const StatusIcon = ws.status === "active" ? Check : AlertCircle;
 
                   return (
-                    <button
+                    <div
                       key={ws.id}
-                      onClick={() => handleSwitchWorkspace(ws.id)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all text-left ${
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
                         isActive
                           ? "border-green-500 bg-green-50"
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }`}
                     >
-                      <div
-                        className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          isActive ? "bg-green-600" : "bg-gray-100"
-                        }`}
+                      <button
+                        type="button"
+                        onClick={() => handleSwitchWorkspace(ws.id)}
+                        className="flex items-center gap-3 min-w-0 flex-1 text-left"
                       >
-                        <Building2
-                          className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-500"}`}
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <p className={`text-sm font-semibold truncate ${isActive ? "text-green-700" : "text-gray-900"}`}>
-                          {ws.name}
-                        </p>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium ${statusColors[ws.status] ?? "bg-gray-100 text-gray-600"}`}>
-                            <StatusIcon className="w-3 h-3" />
-                            {statusLabels[ws.status] ?? ws.status}
-                          </span>
-                          {ws.role && (
-                            <span className="text-[10px] text-gray-400 capitalize">{ws.role}</span>
-                          )}
+                        <div
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                            isActive ? "bg-green-600" : "bg-gray-100"
+                          }`}
+                        >
+                          <Building2
+                            className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-500"}`}
+                          />
                         </div>
-                      </div>
-                      {isActive && <Check className="w-4 h-4 text-green-500 flex-shrink-0 ml-1" />}
-                    </button>
+                        <div className="min-w-0">
+                          <p className={`text-sm font-semibold truncate ${isActive ? "text-green-700" : "text-gray-900"}`}>
+                            {ws.name}
+                            {ws.content_language && (
+                              <span className="text-gray-500 font-normal">
+                                {" "}
+                                ({languages.find((l) => l.code === ws.content_language)?.name ?? ws.content_language})
+                              </span>
+                            )}
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium ${statusColors[ws.status] ?? "bg-gray-100 text-gray-600"}`}>
+                              <StatusIcon className="w-3 h-3" />
+                              {statusLabels[ws.status] ?? ws.status}
+                            </span>
+                            {ws.role && (
+                              <span className="text-[10px] text-gray-400 capitalize">{ws.role}</span>
+                            )}
+                          </div>
+                        </div>
+                        {isActive && <Check className="w-4 h-4 text-green-500 flex-shrink-0 ml-1" />}
+                      </button>
+                      {ws.role === "owner" && (
+                        workspaces.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setDeleteConfirmWorkspace(ws);
+                              setDeleteWorkspaceError(null);
+                            }}
+                            className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0"
+                            title="Delete workspace"
+                            aria-label={`Delete workspace ${ws.name}`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <span
+                            className="p-2 rounded-lg text-gray-300 cursor-not-allowed flex-shrink-0 inline-flex"
+                            title="Your account must have at least one workspace. Add another workspace first if you want to remove this one."
+                            aria-label="Delete workspace (disabled: at least one workspace is required)"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </span>
+                        )
+                      )}
+                    </div>
                   );
                 })}
               </div>
+            )}
+
+            {workspaces.length === 1 && (
+              <p className="text-xs text-gray-500 mt-3">
+                Your account must have at least one workspace. Add another workspace first if you want to remove or replace this one.
+              </p>
             )}
           </div>
 
@@ -367,6 +497,7 @@ export default function DashboardPage() {
         {/* Quick links */}
         <div className="mt-8 flex flex-wrap gap-3">
           <button
+            type="button"
             onClick={handleRestartOnboarding}
             disabled={restarting}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
@@ -388,6 +519,125 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Add workspace modal: name + New/Blank vs Copy from existing (same style as delete confirmation) */}
+      {addWorkspaceModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-workspace-title"
+        >
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+            <h2 id="add-workspace-title" className="text-lg font-bold text-gray-900 mb-2">
+              Add workspace
+            </h2>
+            <label htmlFor="add-workspace-name" className="block text-sm font-medium text-gray-700 mb-1">
+              Workspace name
+            </label>
+            <input
+              id="add-workspace-name"
+              type="text"
+              value={addWorkspaceName}
+              onChange={(e) => setAddWorkspaceName(e.target.value.slice(0, 200))}
+              placeholder="Un-Named"
+              className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none text-gray-900 mb-4"
+            />
+            <p className="text-sm text-gray-600 mb-3">
+              How should the setup form start for this workspace?
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                onClick={() => handleAddWorkspaceSubmit(false)}
+                disabled={addWorkspaceLoading}
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 text-left text-sm font-medium text-gray-800 transition-colors disabled:opacity-50 flex items-center gap-3"
+              >
+                <span className="flex h-9 w-9 rounded-lg bg-gray-100 items-center justify-center text-gray-600 font-bold">1</span>
+                <span><strong>New/Blank form</strong> — Start from scratch with no previous details</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleAddWorkspaceSubmit(true)}
+                disabled={addWorkspaceLoading}
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 text-left text-sm font-medium text-gray-800 transition-colors disabled:opacity-50 flex items-center gap-3"
+              >
+                <span className="flex h-9 w-9 rounded-lg bg-gray-100 items-center justify-center text-gray-600 font-bold">2</span>
+                <span><strong>Existing brand form</strong> — Copy details from {activeWorkspaceId ? (workspaces.find((w) => w.id === activeWorkspaceId)?.name ?? "current workspace") : "current workspace"}</span>
+              </button>
+            </div>
+            {addWorkspaceError && (
+              <p className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2" role="alert">
+                {addWorkspaceError}
+              </p>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                setAddWorkspaceModalOpen(false);
+                setAddWorkspaceError(null);
+              }}
+              disabled={addWorkspaceLoading}
+              className="mt-4 w-full py-2 text-sm text-gray-500 hover:text-gray-700"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Delete workspace confirmation modal */}
+      {deleteConfirmWorkspace && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-workspace-title"
+        >
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+            <h2 id="delete-workspace-title" className="text-lg font-bold text-gray-900 mb-2">
+              Delete workspace?
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              This action is <strong>irreversible</strong>. The workspace &quot;{deleteConfirmWorkspace.name}&quot; and all its data — social accounts, content, analytics, API keys, and billing — will be permanently removed and cannot be recovered.
+            </p>
+            <p className="text-sm text-gray-600 mb-6">
+              Are you sure you want to delete this workspace?
+            </p>
+            {deleteWorkspaceError && (
+              <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2" role="alert">
+                {deleteWorkspaceError}
+              </p>
+            )}
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteConfirmWorkspace(null);
+                  setDeleteWorkspaceError(null);
+                }}
+                disabled={deleteWorkspaceLoading}
+                className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteWorkspace(deleteConfirmWorkspace)}
+                disabled={deleteWorkspaceLoading}
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {deleteWorkspaceLoading ? (
+                  <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                Delete workspace
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>

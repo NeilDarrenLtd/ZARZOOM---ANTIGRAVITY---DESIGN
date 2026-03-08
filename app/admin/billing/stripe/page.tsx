@@ -9,6 +9,7 @@ import {
   type DedupeRow,
   type SubRow,
 } from "./actions";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 import {
   CheckCircle2,
   XCircle,
@@ -87,10 +88,11 @@ export default function AdminBillingStripePage() {
     setLoading(true);
     setError(null);
 
+    const workspaceId = getActiveWorkspaceIdFromCookie();
     const [envResult, dedupeResult, subResult] = await Promise.all([
       fetchEnvStatus(),
       fetchRecentDedupeEvents(),
-      fetchCurrentSubscription(),
+      fetchCurrentSubscription(workspaceId),
     ]);
 
     if (envResult.error) setError(envResult.error);

@@ -41,6 +41,7 @@ import { videoGenerateSchema } from "@/lib/videos";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   requiredEntitlement: "video_generate",
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {

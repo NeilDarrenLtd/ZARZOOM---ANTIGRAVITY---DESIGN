@@ -12,6 +12,7 @@ import { publishPost } from "@/lib/social/publish";
  */
 export const POST = createApiHandler({
   requiredRole: "member",
+  requireExplicitTenant: true,
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     let body: unknown;

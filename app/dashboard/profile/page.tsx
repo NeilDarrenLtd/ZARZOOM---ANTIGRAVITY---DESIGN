@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useI18n, languages } from "@/lib/i18n";
-import { useWorkspaceFetch } from "@/lib/workspace/context";
+import { useWorkspaceFetch, useActiveWorkspace, useWorkspaceSwitchKey } from "@/lib/workspace/context";
 import { createClient } from "@/lib/supabase/client";
 import {
   ARTICLE_STYLE_OPTIONS,
@@ -63,12 +63,15 @@ const inputClass =
 
 export default function ProfilePage() {
   const { t } = useI18n();
+  const activeWorkspaceId = useActiveWorkspace();
+  const workspaceSwitchKey = useWorkspaceSwitchKey();
   const workspaceFetch = useWorkspaceFetch();
   const showSuccessBanner = useUploadPostSuccess();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [data, setData] = useState<OnboardingUpdate>({});
+  const [activeWorkspaceName, setActiveWorkspaceName] = useState<string | null>(null);
   const [investigating, setInvestigating] = useState(false);
   const [websiteStatus, setWebsiteStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
   const [fileStatus, setFileStatus] = useState<"idle" | "loading" | "success" | "partial" | "error">("idle");
@@ -93,24 +96,53 @@ export default function ProfilePage() {
     return () => { mounted = false; };
   }, [t]);
 
-  // ── Load profile ───────────────────────────────────────
+  // ── Load workspace name (for header: link profile to current workspace) ─────
   useEffect(() => {
+    if (!activeWorkspaceId) {
+      setActiveWorkspaceName(null);
+      return;
+    }
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await workspaceFetch("/api/v1/workspaces");
+        if (!mounted) return;
+        if (!res.ok) return;
+        const body = await res.json();
+        const workspaces = body?.workspaces ?? [];
+        const ws = workspaces.find((w: { id: string; name?: string }) => w.id === activeWorkspaceId);
+        if (mounted) setActiveWorkspaceName(ws?.name ?? null);
+      } catch {
+        if (mounted) setActiveWorkspaceName(null);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [activeWorkspaceId, workspaceFetch]);
+
+  // ── Load profile (re-fetch when active workspace changes) ─────
+  useEffect(() => {
+    if (!activeWorkspaceId) return;
+    let mounted = true;
     async function load() {
       try {
-        // Load profile data
-        const profileRes = await workspaceFetch("/api/v1/onboarding");
+        const profileRes = await workspaceFetch(`/api/v1/onboarding?_ws=${encodeURIComponent(activeWorkspaceId)}`);
+        if (!mounted) return;
         if (!profileRes.ok) throw new Error("load failed");
         const profileBody = await profileRes.json();
         setData(profileBody.data ?? {});
       } catch (err) {
-        console.error("[v0] Profile load error:", err);
-        showToast("error", t("profile.loadFailed"));
+        if (mounted) {
+          console.error("[v0] Profile load error:", err);
+          showToast("error", t("profile.loadFailed"));
+        }
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     }
+    setLoading(true);
     load();
-  }, [t, workspaceFetch]);
+    return () => { mounted = false; };
+  }, [t, activeWorkspaceId, workspaceFetch]);
 
   function showToast(type: "success" | "error", message: string) {
     setToast({ type, message });
@@ -132,7 +164,9 @@ export default function ProfilePage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error((body as { error?: string }).error ?? "save failed");
+        const msg = (body as { error?: string }).error ?? "save failed";
+        showToast("error", msg);
+        return;
       }
       const body = await res.json();
       setData(body.data ?? data);
@@ -147,7 +181,10 @@ export default function ProfilePage() {
   // ── Reload data from server ─────────────────────────────
   async function reloadProfileData() {
     try {
-      const res = await workspaceFetch("/api/v1/onboarding");
+      const url = activeWorkspaceId
+        ? `/api/v1/onboarding?_ws=${encodeURIComponent(activeWorkspaceId)}`
+        : "/api/v1/onboarding";
+      const res = await workspaceFetch(url);
       if (!res.ok) throw new Error("reload failed");
       const body = await res.json();
       setData(body.data ?? {});
@@ -354,7 +391,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="bg-gray-50 min-h-screen flex flex-col">
+    <main key={workspaceSwitchKey} className="bg-gray-50 min-h-screen flex flex-col">
       <UploadPostSuccessBanner show={showSuccessBanner} />
       <DynamicSEO />
       <SiteNavbar />
@@ -370,8 +407,14 @@ export default function ProfilePage() {
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </Link>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">{t("profile.title")}</h1>
-            <p className="text-gray-500 mt-1 text-sm">{t("profile.subtitle")}</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {activeWorkspaceName ? `${t("profile.title")} — ${activeWorkspaceName}` : t("profile.title")}
+            </h1>
+            <p className="text-gray-500 mt-1 text-sm">
+              {activeWorkspaceName
+                ? t("profile.subtitleWorkspace") || "Brand profile for this workspace. The business name and details below belong to this workspace."
+                : t("profile.subtitle")}
+            </p>
           </div>
           <button
             onClick={handleSave}

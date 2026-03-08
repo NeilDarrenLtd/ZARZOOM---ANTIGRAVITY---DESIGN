@@ -64,8 +64,42 @@ export const GET = createApiHandler({
       return serverError(ctx.requestId, "Failed to fetch workspaces");
     }
 
+    // Ensure every user has at least one workspace ("Un-Named")
     if (!memberships || memberships.length === 0) {
-      return ok({ workspaces: [] }, ctx.requestId);
+      let admin;
+      try {
+        admin = await createAdminClient();
+      } catch {
+        return ok({ workspaces: [] }, ctx.requestId);
+      }
+      const { data: newTenant, error: tenantError } = await admin
+        .from("tenants")
+        .insert({ name: "Un-Named", status: "draft" })
+        .select("id")
+        .single();
+      if (tenantError || !newTenant) {
+        return ok({ workspaces: [] }, ctx.requestId);
+      }
+      const { error: memError } = await admin.from("tenant_memberships").insert({
+        tenant_id: newTenant.id,
+        user_id: userId,
+        role: "owner",
+      });
+      if (memError) {
+        return ok({ workspaces: [] }, ctx.requestId);
+      }
+      // Re-fetch memberships so we return the new workspace
+      const { data: refetched, error: refetchError } = await supabase
+        .from("tenant_memberships")
+        .select("tenant_id, role, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: true });
+      if (refetchError || !refetched?.length) {
+        return ok({ workspaces: [] }, ctx.requestId);
+      }
+      // Fall through with refetched as memberships
+      memberships.length = 0;
+      memberships.push(...refetched);
     }
 
     const tenantIds = memberships.map((m) => m.tenant_id);
@@ -90,12 +124,40 @@ export const GET = createApiHandler({
       (subscriptions ?? []).map((s) => [s.tenant_id, s.status])
     );
 
+    // Content language per workspace (from onboarding_profiles; legacy schema has one row per user)
+    let contentLanguageByTenant = new Map<string, string>();
+    const onboardingResult = await supabase
+      .from("onboarding_profiles")
+      .select("tenant_id, content_language")
+      .eq("user_id", userId)
+      .in("tenant_id", tenantIds);
+    if (!onboardingResult.error && onboardingResult.data?.length) {
+      for (const row of onboardingResult.data) {
+        const tid = (row as { tenant_id?: string }).tenant_id;
+        const lang = (row as { content_language?: string }).content_language;
+        if (tid && lang) contentLanguageByTenant.set(tid, lang);
+      }
+    }
+    // Legacy: when no per-tenant onboarding_profiles exist (e.g. migration 016 not applied),
+    // one row per user; we assign that language to the first workspace only to avoid
+    // cross-workspace assumptions. Do not use for workspace-scoped writes.
+    if (contentLanguageByTenant.size === 0) {
+      const { data: legacyProfile } = await supabase
+        .from("onboarding_profiles")
+        .select("content_language")
+        .eq("user_id", userId)
+        .maybeSingle();
+      const lang = (legacyProfile as { content_language?: string } | null)?.content_language;
+      if (lang && tenantIds[0]) contentLanguageByTenant.set(tenantIds[0], lang);
+    }
+
     const workspaces = memberships.map((m) => {
       const tenant = tenantMap.get(m.tenant_id);
       const name = tenant?.name ?? "Workspace";
       const tenantStatus = tenant?.status ?? "draft";
       const subStatus = subMap.get(m.tenant_id);
       const status = toWorkspaceStatus(tenantStatus, subStatus);
+      const content_language = contentLanguageByTenant.get(m.tenant_id) ?? null;
 
       return {
         id: m.tenant_id,
@@ -103,6 +165,7 @@ export const GET = createApiHandler({
         status,
         role: m.role as "owner" | "admin" | "member" | "viewer",
         created_at: m.created_at,
+        content_language,
       };
     });
 
@@ -124,11 +187,15 @@ export const POST = createApiHandler({
   handler: async (ctx) => {
     const userId = ctx.user!.id;
 
-    let name = "My Workspace";
+    let name = "Un-Named";
+    let copyOnboardingFromWorkspaceId: string | null = null;
     try {
       const body = await ctx.req.json().catch(() => ({}));
       if (body?.name && typeof body.name === "string" && body.name.trim()) {
         name = body.name.trim().slice(0, 200);
+      }
+      if (body?.copy_onboarding_from_workspace_id && typeof body.copy_onboarding_from_workspace_id === "string") {
+        copyOnboardingFromWorkspaceId = body.copy_onboarding_from_workspace_id.trim() || null;
       }
     } catch {
       // use default name
@@ -169,6 +236,65 @@ export const POST = createApiHandler({
     if (membershipError) {
       console.error("[workspaces POST] membership insert failed:", membershipError.message);
       return fail(ctx, "Failed to add workspace membership", membershipError.message);
+    }
+
+    // Onboarding for new workspace: copy only brand/profile from existing, or create blank
+    if (copyOnboardingFromWorkspaceId) {
+      const supabase = ctx.supabase!;
+      const { data: membership } = await supabase
+        .from("tenant_memberships")
+        .select("tenant_id")
+        .eq("tenant_id", copyOnboardingFromWorkspaceId)
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (membership?.tenant_id) {
+        const { data: sourceProfile, error: fetchErr } = await admin
+          .from("onboarding_profiles")
+          .select("*")
+          .eq("tenant_id", copyOnboardingFromWorkspaceId)
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (!fetchErr && sourceProfile && typeof sourceProfile === "object") {
+          const src = sourceProfile as Record<string, unknown>;
+          // Copy only brand/profile fields. New workspace gets new name and fresh onboarding state.
+          const brandOnlyFields = [
+            "business_description", "website_url", "content_language", "auto_publish",
+            "article_styles", "article_style_links", "brand_color_hex", "logo_url",
+            "goals", "website_or_landing_url", "product_or_sales_url", "selected_plan",
+            "discount_opt_in", "approval_preference", "additional_notes",
+          ] as const;
+          const copied: Record<string, unknown> = {};
+          for (const key of brandOnlyFields) {
+            if (src[key] !== undefined) copied[key] = src[key];
+          }
+          const insertPayload = {
+            tenant_id: tenant.id,
+            user_id: userId,
+            onboarding_status: "not_started",
+            onboarding_step: 1,
+            business_name: name.slice(0, 200),
+            ...copied,
+          };
+          const { error: copyErr } = await admin
+            .from("onboarding_profiles")
+            .insert(insertPayload);
+          if (copyErr) {
+            console.warn("[workspaces POST] copy onboarding skipped:", copyErr.message);
+          }
+        }
+      }
+    } else {
+      // Blank workspace: create onboarding row with workspace name as business_name so wizard pre-fills
+      const { error: blankErr } = await admin.from("onboarding_profiles").insert({
+        tenant_id: tenant.id,
+        user_id: userId,
+        onboarding_status: "not_started",
+        onboarding_step: 1,
+        business_name: name.slice(0, 200),
+      });
+      if (blankErr) {
+        console.warn("[workspaces POST] blank onboarding insert skipped:", blankErr.message);
+      }
     }
 
     const response = created(

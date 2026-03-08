@@ -16,6 +16,7 @@ import {
   saveDiscountPreference,
   getDiscountPreference,
 } from "@/lib/pricing/geolocation";
+import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
 
 // Advertising partnership discount settings
 const DISCOUNT_PERCENT = 15; // 15% discount
@@ -47,6 +48,8 @@ export default function PricingSection({
   const [isInitialized, setIsInitialized] = useState(false);
   const [activePlan, setActivePlan] = useState<string | null>(selectedPlanKey || null);
 
+  const workspaceId = getActiveWorkspaceIdFromCookie();
+
   console.log("[v0] PricingSection: Rendering with selectedPlanKey:", selectedPlanKey, "currency:", selectedCurrency);
 
   // Fetch displayable plans on mount
@@ -70,19 +73,18 @@ export default function PricingSection({
         const available = CURRENCIES.filter((c) => currencies.has(c));
         setAvailableCurrencies(available);
 
-        // Initialize currency with wizard selection, geolocation, or saved preference
+        // Initialize currency with wizard selection, geolocation, or saved preference (workspace-scoped when in app)
         let initialCurrency: Currency;
         if (selectedCurrency && available.includes(selectedCurrency as Currency)) {
           initialCurrency = selectedCurrency as Currency;
           console.log("[v0] PricingSection: Using wizard-selected currency:", selectedCurrency);
         } else {
-          initialCurrency = await detectUserCurrency(available);
+          initialCurrency = await detectUserCurrency(available, workspaceId);
           console.log("[v0] PricingSection: Detected currency:", initialCurrency);
         }
         setCurrency(initialCurrency);
 
-        // Load discount preference
-        const savedDiscount = getDiscountPreference();
+        const savedDiscount = getDiscountPreference(workspaceId);
         setDiscountEnabled(initialDiscountEnabled || savedDiscount);
 
         setIsInitialized(true);
@@ -94,24 +96,24 @@ export default function PricingSection({
       }
     }
     loadPlans();
-  }, [t, selectedCurrency, initialDiscountEnabled]);
+  }, [t, selectedCurrency, initialDiscountEnabled, workspaceId]);
 
   const handleCurrencyChange = useCallback(
     (newCurrency: Currency) => {
       setCurrency(newCurrency);
-      saveCurrencyPreference(newCurrency);
+      saveCurrencyPreference(newCurrency, workspaceId);
       console.log("[v0] PricingSection: Currency changed to", newCurrency);
     },
-    []
+    [workspaceId]
   );
 
   const handleDiscountChange = useCallback(
     (enabled: boolean) => {
       setDiscountEnabled(enabled);
-      saveDiscountPreference(enabled);
+      saveDiscountPreference(enabled, workspaceId);
       console.log("[v0] PricingSection: Discount", enabled ? "enabled" : "disabled");
     },
-    []
+    [workspaceId]
   );
 
   const handleSelectPlan = useCallback((planKey: string) => {

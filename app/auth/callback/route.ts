@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { resolvePostAuthRedirect } from "@/lib/auth/postAuthRedirect";
+import {
+  ACTIVE_WORKSPACE_COOKIE,
+  getActiveWorkspaceCookieOptions,
+} from "@/lib/workspace/active";
 import { NextResponse } from "next/server";
 
 function getBaseUrl(requestUrl: string): string {
@@ -41,9 +46,46 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${baseUrl}${explicitNext}`);
       }
 
-      // Use centralised onboarding-aware redirect
-      const destination = await resolvePostAuthRedirect(data.user.id);
-      return NextResponse.redirect(`${baseUrl}${destination}`);
+      // Ensure every user has at least one workspace ("Un-Named")
+      const { data: memberships, error: memError } = await supabase
+        .from("tenant_memberships")
+        .select("tenant_id")
+        .eq("user_id", data.user.id)
+        .order("created_at", { ascending: true });
+
+      let activeWorkspaceId: string | null = null;
+
+      if (memError || !memberships?.length) {
+        try {
+          const admin = await createAdminClient();
+          const { data: tenant, error: tenantError } = await admin
+            .from("tenants")
+            .insert({ name: "Un-Named", status: "draft" })
+            .select("id")
+            .single();
+          if (!tenantError && tenant) {
+            await admin.from("tenant_memberships").insert({
+              tenant_id: tenant.id,
+              user_id: data.user.id,
+              role: "owner",
+            });
+            activeWorkspaceId = tenant.id;
+          }
+        } catch {
+          // continue without setting cookie; GET /api/v1/workspaces will create workspace later
+        }
+      } else {
+        // Use first membership only to set initial cookie and redirect target (not for workspace-scoped data).
+        activeWorkspaceId = memberships[0].tenant_id;
+      }
+
+      const destination = await resolvePostAuthRedirect(data.user.id, activeWorkspaceId);
+      const res = NextResponse.redirect(`${baseUrl}${destination}`);
+      if (activeWorkspaceId) {
+        const opts = getActiveWorkspaceCookieOptions();
+        res.cookies.set(ACTIVE_WORKSPACE_COOKIE, activeWorkspaceId, opts);
+      }
+      return res;
     }
   }
 
