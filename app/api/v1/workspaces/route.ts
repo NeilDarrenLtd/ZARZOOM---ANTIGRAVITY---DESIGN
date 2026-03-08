@@ -124,12 +124,11 @@ export const GET = createApiHandler({
       (subscriptions ?? []).map((s) => [s.tenant_id, s.status])
     );
 
-    // Content language per workspace (from onboarding_profiles; legacy schema has one row per user)
-    let contentLanguageByTenant = new Map<string, string>();
+    // Content language per workspace (from onboarding_profiles, keyed by tenant_id)
+    const contentLanguageByTenant = new Map<string, string>();
     const onboardingResult = await supabase
       .from("onboarding_profiles")
       .select("tenant_id, content_language")
-      .eq("user_id", userId)
       .in("tenant_id", tenantIds);
     if (!onboardingResult.error && onboardingResult.data?.length) {
       for (const row of onboardingResult.data) {
@@ -137,18 +136,6 @@ export const GET = createApiHandler({
         const lang = (row as { content_language?: string }).content_language;
         if (tid && lang) contentLanguageByTenant.set(tid, lang);
       }
-    }
-    // Legacy: when no per-tenant onboarding_profiles exist (e.g. migration 016 not applied),
-    // one row per user; we assign that language to the first workspace only to avoid
-    // cross-workspace assumptions. Do not use for workspace-scoped writes.
-    if (contentLanguageByTenant.size === 0) {
-      const { data: legacyProfile } = await supabase
-        .from("onboarding_profiles")
-        .select("content_language")
-        .eq("user_id", userId)
-        .maybeSingle();
-      const lang = (legacyProfile as { content_language?: string } | null)?.content_language;
-      if (lang && tenantIds[0]) contentLanguageByTenant.set(tenantIds[0], lang);
     }
 
     const workspaces = memberships.map((m) => {
@@ -252,7 +239,6 @@ export const POST = createApiHandler({
           .from("onboarding_profiles")
           .select("*")
           .eq("tenant_id", copyOnboardingFromWorkspaceId)
-          .eq("user_id", userId)
           .maybeSingle();
         if (!fetchErr && sourceProfile && typeof sourceProfile === "object") {
           const src = sourceProfile as Record<string, unknown>;

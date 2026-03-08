@@ -15,7 +15,12 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2 } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2, Circle, ChevronRight } from "lucide-react";
+import {
+  checkProfileCompleteness,
+  type CompletenessResult,
+} from "@/lib/workspace/profile-completeness";
+import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
 import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import WorkspaceSwitcher, { type Workspace } from "@/components/dashboard/WorkspaceSwitcher";
@@ -41,6 +46,7 @@ export default function DashboardPage() {
   const [addWorkspaceModalOpen, setAddWorkspaceModalOpen] = useState(false);
   const [addWorkspaceName, setAddWorkspaceName] = useState("Un-Named");
   const showSuccessBanner = useUploadPostSuccess();
+  const [profileCompleteness, setProfileCompleteness] = useState<CompletenessResult | null>(null);
 
   const fetchWorkspaces = useCallback(async () => {
     try {
@@ -68,6 +74,30 @@ export default function DashboardPage() {
     getUser();
     fetchWorkspaces();
   }, [fetchWorkspaces]);
+
+  // Fetch profile completeness for active workspace
+  useEffect(() => {
+    if (!activeWorkspaceId) {
+      setProfileCompleteness(null);
+      return;
+    }
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await workspaceFetch(
+          `/api/v1/onboarding?_ws=${encodeURIComponent(activeWorkspaceId)}`
+        );
+        if (!mounted) return;
+        if (!res.ok) return;
+        const body = await res.json();
+        const data: OnboardingUpdate = body?.data ?? {};
+        if (mounted) setProfileCompleteness(checkProfileCompleteness(data));
+      } catch {
+        if (mounted) setProfileCompleteness(null);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [activeWorkspaceId, workspaceFetch]);
 
   // Reset modal and form state when workspace changes so we don't retain workspace-A state on switch to B
   useEffect(() => {
@@ -408,33 +438,95 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Account settings card */}
+          {/* Brand Basics card */}
           <Link
             href="/dashboard/profile"
-            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-green-300 hover:shadow-md transition-all block"
+            className={`bg-white rounded-2xl border shadow-sm overflow-hidden hover:shadow-md transition-all block ${
+              profileCompleteness && !profileCompleteness.isComplete
+                ? "border-amber-200 hover:border-amber-300"
+                : "border-gray-200 hover:border-green-300"
+            }`}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Settings className="w-5 h-5 text-blue-600" />
+            {/* Mini progress bar */}
+            {profileCompleteness && (
+              <div className="h-1 bg-gray-100">
+                <div
+                  className={`h-full transition-all duration-500 rounded-r-full ${
+                    profileCompleteness.percentage === 100
+                      ? "bg-green-500"
+                      : profileCompleteness.percentage >= 60
+                        ? "bg-amber-400"
+                        : "bg-red-400"
+                  }`}
+                  style={{ width: `${profileCompleteness.percentage}%` }}
+                />
               </div>
-              <h2 className="text-lg font-bold text-gray-900">
-                {t("dashboard.profile")}
-              </h2>
-            </div>
-            <div className="flex flex-col gap-2 text-sm text-gray-500">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                <span>{user?.email}</span>
+            )}
+
+            <div className="p-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  profileCompleteness && profileCompleteness.isComplete
+                    ? "bg-green-100"
+                    : "bg-amber-100"
+                }`}>
+                  {profileCompleteness && profileCompleteness.isComplete ? (
+                    <Check className="w-5 h-5 text-green-600" />
+                  ) : (
+                    <Settings className="w-5 h-5 text-amber-600" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    {t("dashboard.profile")}
+                  </h2>
+                  {profileCompleteness && (
+                    <p className={`text-xs font-medium ${
+                      profileCompleteness.isComplete ? "text-green-600" : "text-amber-600"
+                    }`}>
+                      {profileCompleteness.percentage}% complete
+                    </p>
+                  )}
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
               </div>
-              {user?.created_at && (
-                <p>
-                  {t("dashboard.memberSince")}{" "}
-                  {new Date(user.created_at).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
+
+              {/* Missing items */}
+              {profileCompleteness && profileCompleteness.missing.length > 0 ? (
+                <div className="flex flex-col gap-1.5 mt-1">
+                  {profileCompleteness.missing.slice(0, 4).map((item) => (
+                    <div
+                      key={item.key}
+                      className="flex items-center gap-2 text-xs"
+                    >
+                      <Circle className={`w-3 h-3 flex-shrink-0 ${
+                        item.priority === "required" ? "text-amber-400" : "text-gray-300"
+                      }`} />
+                      <span className={
+                        item.priority === "required" ? "text-amber-700" : "text-gray-500"
+                      }>
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                  {profileCompleteness.missing.length > 4 && (
+                    <p className="text-[10px] text-gray-400 ml-5">
+                      +{profileCompleteness.missing.length - 4} more
+                    </p>
+                  )}
+                </div>
+              ) : profileCompleteness?.isComplete ? (
+                <p className="text-sm text-green-600 flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5" />
+                  All profile fields are complete
                 </p>
+              ) : (
+                <div className="flex flex-col gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span>{user?.email}</span>
+                  </div>
+                </div>
               )}
             </div>
           </Link>

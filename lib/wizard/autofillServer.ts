@@ -392,8 +392,7 @@ export async function persistAutofillResults(
   const { error } = await adminSb
     .from("onboarding_profiles")
     .update(payload)
-    .eq("tenant_id", trimmedTenantId)
-    .eq("user_id", userId);
+    .eq("tenant_id", trimmedTenantId);
 
   if (error) {
     console.error("[v0] onboarding_profiles update failed:", error);

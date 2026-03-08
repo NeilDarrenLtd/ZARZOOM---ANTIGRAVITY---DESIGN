@@ -49,8 +49,7 @@ export async function GET(request: NextRequest) {
       .from("onboarding_profiles")
       .select("uploadpost_profile_username, socials_connected")
       .eq("tenant_id", tenantId)
-      .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (!profile?.uploadpost_profile_username) {
       return NextResponse.json({
@@ -112,8 +111,7 @@ export async function GET(request: NextRequest) {
       await supabase
         .from("onboarding_profiles")
         .update({ socials_connected: connected })
-        .eq("tenant_id", tenantId)
-        .eq("user_id", user.id);
+        .eq("tenant_id", tenantId);
     }
 
     return NextResponse.json({

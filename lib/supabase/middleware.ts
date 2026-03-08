@@ -101,7 +101,6 @@ export async function updateSession(request: NextRequest) {
           .from('onboarding_profiles')
           .select('onboarding_status')
           .eq('tenant_id', activeWorkspaceId)
-          .eq('user_id', user.id)
           .maybeSingle()
 
         const status = profile?.onboarding_status ?? 'not_started'

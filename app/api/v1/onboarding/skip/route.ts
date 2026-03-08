@@ -69,8 +69,7 @@ export async function POST(request: NextRequest) {
       .from("onboarding_profiles")
       .select("onboarding_status")
       .eq("tenant_id", tenantId)
-      .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (currentProfile?.onboarding_status === "completed") {
       return NextResponse.json(
@@ -83,7 +82,6 @@ export async function POST(request: NextRequest) {
       .from("onboarding_profiles")
       .update(updateData)
       .eq("tenant_id", tenantId)
-      .eq("user_id", user.id)
       .select("*")
       .single();
 

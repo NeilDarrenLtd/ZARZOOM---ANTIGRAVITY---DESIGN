@@ -63,8 +63,7 @@ export async function POST(request: NextRequest) {
       .from("onboarding_profiles")
       .select("uploadpost_profile_username")
       .eq("tenant_id", tenantId)
-      .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     const username =
       profile?.uploadpost_profile_username || deriveUsername(user.id);
@@ -74,8 +73,7 @@ export async function POST(request: NextRequest) {
       await supabase
         .from("onboarding_profiles")
         .update({ uploadpost_profile_username: username })
-        .eq("tenant_id", tenantId)
-        .eq("user_id", user.id);
+        .eq("tenant_id", tenantId);
     }
 
     // 3. Attempt Upload-Post API calls (gracefully degrade if not configured)

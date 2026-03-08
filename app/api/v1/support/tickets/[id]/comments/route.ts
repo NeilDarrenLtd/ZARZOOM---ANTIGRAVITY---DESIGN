@@ -1,7 +1,7 @@
 import { createApiHandler, ok } from "@/lib/api";
-import { ValidationError } from "@/lib/api/errors";
+import { ValidationError, NotFoundError } from "@/lib/api/errors";
 import { addCommentSchema } from "@/lib/validation/support";
-import { verifyTicketOwnership, isUserAdmin } from "@/lib/auth/support";
+import { isUserAdmin } from "@/lib/auth/support";
 import {
   sendUserCommentNotification,
   sendAdminCommentNotification,
@@ -10,14 +10,16 @@ import {
 /**
  * POST /api/v1/support/tickets/[id]/comments
  * Add a comment to a ticket.
+ * Workspace-scoped: ticket must belong to the active workspace.
  */
 export const POST = createApiHandler({
   auth: true,
-  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
+  tenantOptional: false,
   rateLimit: { maxRequests: 30, windowMs: 60_000 },
   handler: async (ctx) => {
     const ticketId = ctx.req.nextUrl.pathname.split("/")[5]!;
     const userId = ctx.user!.id;
+    const tenantId = ctx.membership!.tenantId;
 
     const body = await ctx.req.json();
     const parsed = addCommentSchema.safeParse(body);
@@ -28,15 +30,22 @@ export const POST = createApiHandler({
 
     const { message } = parsed.data;
 
-    // Check if user is admin
     const isAdmin = await isUserAdmin(ctx.supabase!, userId);
 
-    // Verify ownership (or admin access)
+    // Verify ticket belongs to this workspace (or admin can access any)
     if (!isAdmin) {
-      await verifyTicketOwnership(ctx.supabase!, userId, ticketId);
+      const { data: ticket, error: ticketError } = await ctx.supabase!
+        .from("support_tickets")
+        .select("id")
+        .eq("id", ticketId)
+        .eq("tenant_id", tenantId)
+        .single();
+
+      if (ticketError || !ticket) {
+        throw new NotFoundError("Ticket");
+      }
     }
 
-    // Add comment
     const { data: comment, error: commentError } = await ctx.supabase!
       .from("support_comments")
       .insert({
@@ -52,13 +61,11 @@ export const POST = createApiHandler({
       throw new Error(`Failed to add comment: ${commentError?.message ?? "unknown"}`);
     }
 
-    // Update ticket's last_activity_at (trigger should handle this, but be explicit)
     await ctx.supabase!
       .from("support_tickets")
       .update({ last_activity_at: new Date().toISOString() })
       .eq("id", ticketId);
 
-    // Fetch ticket details and owner email for email notification
     const { data: ticket } = await ctx.supabase!
       .from("support_tickets")
       .select("subject, user_id, profiles!support_tickets_user_id_fkey(email)")
@@ -67,7 +74,6 @@ export const POST = createApiHandler({
 
     if (ticket) {
       if (isAdmin) {
-        // Admin comment → Email to ticket owner (user)
         const userEmail = (ticket.profiles as any)?.email || 'unknown@example.com';
         sendAdminCommentNotification({
           ticketId,
@@ -78,7 +84,6 @@ export const POST = createApiHandler({
           console.error("[Support] Failed to send admin comment email:", err);
         });
       } else {
-        // User comment → Email to support team
         sendUserCommentNotification({
           ticketId,
           ticketSubject: ticket.subject,

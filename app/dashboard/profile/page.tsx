@@ -40,7 +40,13 @@ import {
   Sparkles,
   FileText,
   AlertCircle,
+  Info,
 } from "lucide-react";
+import {
+  checkProfileCompleteness,
+  getSectionLabel,
+  type MissingItem,
+} from "@/lib/workspace/profile-completeness";
 
 // ── Goal icons (matches Step3) ────────────────────────────
 const GOAL_ICONS: Record<Goal, React.ReactNode> = {
@@ -431,6 +437,92 @@ export default function ProfilePage() {
             )}
           </button>
         </div>
+
+        {/* Profile completeness banner */}
+        {(() => {
+          const completeness = checkProfileCompleteness(data);
+          if (completeness.isComplete && completeness.missing.length === 0) return null;
+
+          const required = completeness.missing.filter((m) => m.priority === "required");
+          const recommended = completeness.missing.filter((m) => m.priority === "recommended");
+
+          return (
+            <div className="mb-6 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 overflow-hidden">
+              {/* Progress bar */}
+              <div className="h-1.5 bg-amber-100">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-400 to-green-500 transition-all duration-500 rounded-r-full"
+                  style={{ width: `${completeness.percentage}%` }}
+                />
+              </div>
+
+              <div className="p-5">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Info className="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="text-sm font-bold text-amber-900">
+                        Profile {completeness.percentage}% complete
+                      </h3>
+                      <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                        {completeness.missing.length} item{completeness.missing.length !== 1 ? "s" : ""} remaining
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-amber-800 mt-1 mb-3">
+                      Complete the items below to unlock your full workspace.
+                    </p>
+
+                    {/* Required items */}
+                    {required.length > 0 && (
+                      <div className="mb-2">
+                        <p className="text-[10px] uppercase tracking-wider font-semibold text-amber-600 mb-1.5">
+                          Required
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {required.map((item) => (
+                            <span
+                              key={item.key}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-amber-200 text-xs font-medium text-amber-800"
+                            >
+                              <Circle className="w-3 h-3 text-amber-400" />
+                              {item.label}
+                              <span className="text-[10px] text-amber-500">
+                                ({getSectionLabel(item.section)})
+                              </span>
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Recommended items */}
+                    {recommended.length > 0 && (
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider font-semibold text-amber-500 mb-1.5">
+                          Recommended
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {recommended.map((item) => (
+                            <span
+                              key={item.key}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/60 border border-amber-100 text-xs font-medium text-amber-700"
+                            >
+                              <Circle className="w-3 h-3 text-amber-300" />
+                              {item.label}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Toast */}
         {toast && (

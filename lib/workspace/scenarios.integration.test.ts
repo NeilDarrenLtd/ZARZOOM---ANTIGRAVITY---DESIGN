@@ -1,14 +1,15 @@
 /**
- * Integration-style tests for the exact workspace isolation scenarios.
+ * Integration-style tests for workspace isolation scenarios.
  * Uses an in-memory store that mirrors API rules (create workspace, rename,
- * onboarding get/update, workspace list) so we can verify cross-workspace
- * invariants without a real DB or auth.
+ * onboarding get/update, workspace list, support tickets) so we can verify
+ * cross-workspace invariants without a real DB or auth.
  *
- * The real API (POST/GET /api/v1/workspaces, PATCH /api/v1/workspaces/[id],
- * GET/PUT /api/v1/onboarding with X-Tenant-Id) is expected to enforce the
- * same tenant_id scoping and copy-from semantics. These tests fail if the
- * isolation logic is broken (e.g. rename B changing A, or business name
- * leaking between workspaces).
+ * The real API is expected to enforce the same tenant_id scoping and
+ * copy-from semantics. These tests fail if isolation logic is broken.
+ *
+ * Architecture: tenant_id is the sole PK for onboarding_profiles (one profile
+ * per workspace). user_id is metadata only. All queries use tenant_id as the
+ * primary filter.
  */
 
 import { describe, it, expect, beforeEach } from "@jest/globals";
@@ -27,11 +28,19 @@ type OnboardingProfile = {
   business_name: string | null;
   [key: string]: unknown;
 };
+type SupportTicket = {
+  id: string;
+  tenant_id: string;
+  user_id: string;
+  subject: string;
+  status: string;
+};
 
 const store = {
   tenants: [] as Tenant[],
   memberships: [] as Membership[],
   onboarding: [] as OnboardingProfile[],
+  tickets: [] as SupportTicket[],
 };
 
 let idCounter = 0;
@@ -43,6 +52,7 @@ function resetStore(): void {
   store.tenants.length = 0;
   store.memberships.length = 0;
   store.onboarding.length = 0;
+  store.tickets.length = 0;
   idCounter = 0;
 }
 
@@ -63,9 +73,9 @@ function createWorkspace(
       (m) => m.tenant_id === copyOnboardingFromWorkspaceId && m.user_id === userId
     );
     if (membership) {
+      // Lookup by tenant_id only (PK is tenant_id)
       const source = store.onboarding.find(
-        (o) =>
-          o.tenant_id === copyOnboardingFromWorkspaceId && o.user_id === userId
+        (o) => o.tenant_id === copyOnboardingFromWorkspaceId
       );
       if (source) {
         const brandOnlyKeys = [
@@ -114,8 +124,9 @@ function renameWorkspace(
   if (!tenant) throw new Error("Not found");
   const trimmed = name.slice(0, 200);
   tenant.name = trimmed;
+  // Lookup by tenant_id only (PK is tenant_id)
   const onboarding = store.onboarding.find(
-    (o) => o.tenant_id === workspaceId && o.user_id === userId
+    (o) => o.tenant_id === workspaceId
   );
   if (onboarding) onboarding.business_name = trimmed;
 }
@@ -129,31 +140,22 @@ function getWorkspaces(userId: string): { id: string; name: string }[] {
   });
 }
 
-/** Get onboarding profile for workspace + user. */
-function getOnboarding(
-  tenantId: string,
-  userId: string
-): OnboardingProfile | null {
-  return (
-    store.onboarding.find(
-      (o) => o.tenant_id === tenantId && o.user_id === userId
-    ) ?? null
-  );
+/** Get onboarding profile for workspace (by tenant_id only — sole PK). */
+function getOnboarding(tenantId: string): OnboardingProfile | null {
+  return store.onboarding.find((o) => o.tenant_id === tenantId) ?? null;
 }
 
 /** Update onboarding (same scoping as PUT /api/v1/onboarding with X-Tenant-Id); syncs workspace name when business_name changes. */
 function updateOnboarding(
   tenantId: string,
-  userId: string,
+  _userId: string,
   data: Partial<OnboardingProfile>
 ): void {
-  const row = store.onboarding.find(
-    (o) => o.tenant_id === tenantId && o.user_id === userId
-  );
+  const row = store.onboarding.find((o) => o.tenant_id === tenantId);
   if (!row) {
     const inserted = {
       tenant_id: tenantId,
-      user_id: userId,
+      user_id: _userId,
       onboarding_status: "not_started",
       onboarding_step: 1,
       business_name: null,
@@ -174,10 +176,33 @@ function updateOnboarding(
 }
 
 /** Banner shown when status is skipped or in_progress (per workspace). */
-function needsBanner(tenantId: string, userId: string): boolean {
-  const p = getOnboarding(tenantId, userId);
+function needsBanner(tenantId: string): boolean {
+  const p = getOnboarding(tenantId);
   const status = p?.onboarding_status ?? "not_started";
   return status === "skipped" || status === "in_progress";
+}
+
+/** Create a support ticket scoped to a workspace. */
+function createTicket(
+  tenantId: string,
+  userId: string,
+  subject: string
+): SupportTicket {
+  const id = nextId();
+  const ticket: SupportTicket = {
+    id,
+    tenant_id: tenantId,
+    user_id: userId,
+    subject,
+    status: "open",
+  };
+  store.tickets.push(ticket);
+  return ticket;
+}
+
+/** Get tickets for a workspace (filtered by tenant_id, not user_id). */
+function getTickets(tenantId: string): SupportTicket[] {
+  return store.tickets.filter((t) => t.tenant_id === tenantId);
 }
 
 /* ------------------------------------------------------------------ */
@@ -217,7 +242,7 @@ describe("Scenario 2: Business name per workspace", () => {
 
     updateOnboarding(a.id, TEST_USER, { business_name: "A Business Name" });
 
-    const profileB = getOnboarding(b.id, TEST_USER);
+    const profileB = getOnboarding(b.id);
     expect(profileB?.business_name).toBe("B Original");
     expect(profileB?.business_name).not.toBe("A Business Name");
   });
@@ -242,7 +267,7 @@ describe("Scenario 3: Brand/API/settings per workspace", () => {
       content_language: "de",
     });
 
-    const profileA = getOnboarding(a.id, TEST_USER);
+    const profileA = getOnboarding(a.id);
     expect(profileA?.business_name).toBe("A Original");
     expect(profileA?.content_language).toBe("en");
   });
@@ -260,8 +285,8 @@ describe("Scenario 4: Onboarding banner per workspace", () => {
     updateOnboarding(a.id, TEST_USER, { onboarding_status: "completed" });
     updateOnboarding(b.id, TEST_USER, { onboarding_status: "in_progress" });
 
-    expect(needsBanner(a.id, TEST_USER)).toBe(false);
-    expect(needsBanner(b.id, TEST_USER)).toBe(true);
+    expect(needsBanner(a.id)).toBe(false);
+    expect(needsBanner(b.id)).toBe(true);
   });
 });
 
@@ -278,7 +303,7 @@ describe("Scenario 5: Blank workspace wizard", () => {
     updateOnboarding(b.id, TEST_USER, { onboarding_status: "skipped" });
 
     const c = createWorkspace(TEST_USER, "Workspace C");
-    const profileC = getOnboarding(c.id, TEST_USER);
+    const profileC = getOnboarding(c.id);
     expect(profileC?.onboarding_step).toBe(1);
     expect(profileC?.onboarding_status).toBe("not_started");
     expect(profileC?.business_name).toBe("Workspace C");
@@ -304,7 +329,7 @@ describe("Scenario 6: Pre-filled from existing workspace", () => {
     });
 
     const d = createWorkspace(TEST_USER, "Workspace D", a.id);
-    const profileDInitial = getOnboarding(d.id, TEST_USER);
+    const profileDInitial = getOnboarding(d.id);
     expect(profileDInitial?.business_name).toBe("Workspace D");
     expect(profileDInitial?.onboarding_step).toBe(1);
     expect(profileDInitial?.onboarding_status).toBe("not_started");
@@ -316,7 +341,7 @@ describe("Scenario 6: Pre-filled from existing workspace", () => {
       onboarding_step: 3,
     });
 
-    const profileA = getOnboarding(a.id, TEST_USER);
+    const profileA = getOnboarding(a.id);
     expect(profileA?.business_name).toBe("A Business");
     expect(profileA?.onboarding_step).toBe(2);
   });
@@ -348,7 +373,63 @@ describe("Scenario 8: Workspace rename updates business name", () => {
   it("rename workspace: profile business_name updates to match", () => {
     const b = createWorkspace(TEST_USER, "Beta");
     renameWorkspace(b.id, "Beta Renamed", TEST_USER);
-    const profile = getOnboarding(b.id, TEST_USER);
+    const profile = getOnboarding(b.id);
     expect(profile?.business_name).toBe("Beta Renamed");
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Scenario 9: Support tickets are workspace-scoped                   */
+/* ------------------------------------------------------------------ */
+describe("Scenario 9: Support ticket workspace isolation", () => {
+  beforeEach(resetStore);
+
+  it("ticket in WS-A is not visible when listing WS-B tickets", () => {
+    const a = createWorkspace(TEST_USER, "Workspace A");
+    const b = createWorkspace(TEST_USER, "Workspace B");
+
+    createTicket(a.id, TEST_USER, "Issue in workspace A");
+    createTicket(a.id, TEST_USER, "Another issue in workspace A");
+    createTicket(b.id, TEST_USER, "Issue in workspace B");
+
+    const ticketsA = getTickets(a.id);
+    const ticketsB = getTickets(b.id);
+
+    expect(ticketsA).toHaveLength(2);
+    expect(ticketsB).toHaveLength(1);
+    expect(ticketsA[0].subject).toBe("Issue in workspace A");
+    expect(ticketsB[0].subject).toBe("Issue in workspace B");
+  });
+
+  it("tickets from one workspace do not leak into another", () => {
+    const a = createWorkspace(TEST_USER, "Workspace A");
+    const b = createWorkspace(TEST_USER, "Workspace B");
+
+    createTicket(a.id, TEST_USER, "Secret issue A");
+
+    const ticketsB = getTickets(b.id);
+    expect(ticketsB).toHaveLength(0);
+    expect(ticketsB.some((t) => t.subject === "Secret issue A")).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Scenario 10: Profile lookup by tenant_id only (not composite PK)   */
+/* ------------------------------------------------------------------ */
+describe("Scenario 10: Profile lookup uses tenant_id as sole key", () => {
+  beforeEach(resetStore);
+
+  it("getOnboarding uses tenant_id only, not tenant_id+user_id", () => {
+    const a = createWorkspace(TEST_USER, "Workspace A");
+    updateOnboarding(a.id, TEST_USER, {
+      business_name: "Test Business",
+      content_language: "fr",
+    });
+
+    // tenant_id alone is sufficient to find the profile
+    const profile = getOnboarding(a.id);
+    expect(profile).not.toBeNull();
+    expect(profile?.business_name).toBe("Test Business");
+    expect(profile?.content_language).toBe("fr");
   });
 });

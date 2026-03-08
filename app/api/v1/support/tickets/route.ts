@@ -5,17 +5,18 @@ import { sendNewTicketNotification } from "@/lib/email/supportMailer";
 
 /**
  * GET /api/v1/support/tickets
- * List current user's tickets.
+ * List tickets for the active workspace.
  */
 export const GET = createApiHandler({
   auth: true,
-  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
+  tenantOptional: false,
   rateLimit: { maxRequests: 60, windowMs: 60_000 },
   handler: async (ctx) => {
+    const tenantId = ctx.membership!.tenantId;
     const { data: tickets, error } = await ctx.supabase!
       .from("support_tickets")
       .select("id, subject, status, priority, category, last_activity_at, created_at")
-      .eq("user_id", ctx.user!.id)
+      .eq("tenant_id", tenantId)
       .order("last_activity_at", { ascending: false });
 
     if (error) {
@@ -33,11 +34,11 @@ export const GET = createApiHandler({
 
 /**
  * POST /api/v1/support/tickets
- * Create a new support ticket with initial comment.
+ * Create a new support ticket with initial comment, scoped to the active workspace.
  */
 export const POST = createApiHandler({
   auth: true,
-  tenantOptional: true, // Support tickets are user-scoped, not tenant-scoped
+  tenantOptional: false,
   rateLimit: { maxRequests: 10, windowMs: 60_000 },
   handler: async (ctx) => {
     const body = await ctx.req.json();
@@ -49,11 +50,13 @@ export const POST = createApiHandler({
 
     const { subject, description, category, priority } = parsed.data;
     const userId = ctx.user!.id;
+    const tenantId = ctx.membership!.tenantId;
 
     const { data: ticket, error: ticketError } = await ctx.supabase!
       .from("support_tickets")
       .insert({
         user_id: userId,
+        tenant_id: tenantId,
         subject,
         status: "open",
         priority: priority || "normal",
@@ -88,7 +91,7 @@ export const POST = createApiHandler({
 
       throw new Error(`Failed to create initial comment: ${commentError?.message ?? "unknown"}`);
     }
-    
+
     // Send email notification to support team (async, don't block response)
     sendNewTicketNotification({
       ticketId: ticket.id,

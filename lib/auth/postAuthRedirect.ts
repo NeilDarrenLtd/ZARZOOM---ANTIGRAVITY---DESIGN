@@ -27,7 +27,6 @@ export async function resolvePostAuthRedirect(
       .from("onboarding_profiles")
       .select("onboarding_status")
       .eq("tenant_id", tenantId)
-      .eq("user_id", userId)
       .maybeSingle();
 
     if (error || !profile) {

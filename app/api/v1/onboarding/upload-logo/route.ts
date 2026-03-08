@@ -101,8 +101,7 @@ export async function POST(request: NextRequest) {
         await supabase
           .from("onboarding_profiles")
           .update({ logo_url: publicUrl })
-          .eq("tenant_id", tenantId)
-          .eq("user_id", user.id);
+          .eq("tenant_id", tenantId);
       }
     }
 
