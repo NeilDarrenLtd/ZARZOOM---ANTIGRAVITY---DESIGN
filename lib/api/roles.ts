@@ -6,7 +6,7 @@ import { ForbiddenError } from "./errors";
  *
  * A role at index N is considered "higher" than any role at index N+1.
  */
-const ROLE_HIERARCHY = ["super_admin", "admin", "member", "viewer"] as const;
+const ROLE_HIERARCHY = ["super_admin", "owner", "admin", "member", "viewer"] as const;
 export type Role = (typeof ROLE_HIERARCHY)[number];
 
 /**

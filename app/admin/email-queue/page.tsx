@@ -1,37 +1,38 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
-  Mail,
   Search,
-  ChevronLeft,
-  ChevronRight,
-  X,
   AlertCircle,
+  Eye,
+  X,
+  RefreshCw,
+  Inbox,
   Clock,
   CheckCircle2,
-  Loader2,
   XCircle,
-  RefreshCw,
-  Eye,
+  Loader2,
+  Ban,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type EmailStatus = "pending" | "processing" | "sent" | "failed" | "cancelled";
-
-interface EmailQueueItem {
+type QueuedEmail = {
   id: string;
-  status: EmailStatus;
+  status: string;
   to_email: string;
   to_name: string | null;
+  from_email: string | null;
+  from_name: string | null;
   subject: string;
-  html_body: string;
-  text_body: string | null;
+  html_body?: string;
+  text_body?: string | null;
   email_type: string;
   related_type: string | null;
   related_id: string | null;
+  tenant_id: string | null;
+  created_by: string | null;
   retry_count: number;
   max_retries: number;
   error_message: string | null;
@@ -42,326 +43,10 @@ interface EmailQueueItem {
   scheduled_for: string;
   sent_at: string | null;
   failed_at: string | null;
-}
-
-interface SummaryCounts {
-  pending: number;
-  processing: number;
-  sent: number;
-  failed: number;
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-function formatDate(iso: string | null): string {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function formatDateShort(iso: string | null): string {
-  if (!iso) return "—";
-  const d = new Date(iso);
-  const now = new Date();
-  const diff = now.getTime() - d.getTime();
-  const mins = Math.floor(diff / 60000);
-  const hours = Math.floor(mins / 60);
-  const days = Math.floor(hours / 24);
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-  return d.toLocaleDateString();
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-}
-
-// ── Status Badge ──────────────────────────────────────────────────────────────
-
-const statusConfig: Record<
-  EmailStatus,
-  { label: string; className: string; Icon: React.ElementType }
-> = {
-  pending: {
-    label: "Pending",
-    className: "bg-amber-50 text-amber-700 border border-amber-200",
-    Icon: Clock,
-  },
-  processing: {
-    label: "Processing",
-    className: "bg-blue-50 text-blue-700 border border-blue-200",
-    Icon: Loader2,
-  },
-  sent: {
-    label: "Sent",
-    className: "bg-green-50 text-green-700 border border-green-200",
-    Icon: CheckCircle2,
-  },
-  failed: {
-    label: "Failed",
-    className: "bg-red-50 text-red-700 border border-red-200",
-    Icon: XCircle,
-  },
-  cancelled: {
-    label: "Cancelled",
-    className: "bg-gray-100 text-gray-600 border border-gray-200",
-    Icon: X,
-  },
 };
 
-function StatusBadge({ status }: { status: EmailStatus }) {
-  const cfg = statusConfig[status] ?? statusConfig.pending;
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${cfg.className}`}
-    >
-      <cfg.Icon
-        className={`w-3 h-3 ${status === "processing" ? "animate-spin" : ""}`}
-      />
-      {cfg.label}
-    </span>
-  );
-}
-
-// ── Detail Drawer ─────────────────────────────────────────────────────────────
-
-function EmailDetailDrawer({
-  email,
-  onClose,
-}: {
-  email: EmailQueueItem;
-  onClose: () => void;
-}) {
-  const [showHtml, setShowHtml] = useState(false);
-
-  useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [onClose]);
-
-  const fieldClass = "text-sm text-gray-900 break-all";
-  const labelClass = "text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5";
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/30 z-40"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      {/* Drawer */}
-      <aside
-        role="dialog"
-        aria-modal="true"
-        aria-label="Email Details"
-        className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-white shadow-2xl z-50 flex flex-col overflow-hidden"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center">
-              <Mail className="w-4 h-4 text-amber-600" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-900 truncate max-w-xs">
-                {email.subject}
-              </p>
-              <p className="text-xs text-gray-500">{email.to_email}</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors rounded-lg p-1.5 hover:bg-gray-100"
-            aria-label="Close drawer"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
-          {/* Status + meta */}
-          <div className="flex flex-wrap items-center gap-3">
-            <StatusBadge status={email.status} />
-            {email.retry_count > 0 && (
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-                Attempt {email.retry_count}/{email.max_retries}
-              </span>
-            )}
-            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-              Priority {email.priority}
-            </span>
-          </div>
-
-          {/* Recipient */}
-          <div className="bg-gray-50 rounded-xl p-4 flex flex-col gap-3">
-            <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">
-              Recipient
-            </h3>
-            <div>
-              <p className={labelClass}>To</p>
-              <p className={fieldClass}>
-                {email.to_name ? `${email.to_name} <${email.to_email}>` : email.to_email}
-              </p>
-            </div>
-            <div>
-              <p className={labelClass}>Subject</p>
-              <p className={fieldClass}>{email.subject}</p>
-            </div>
-          </div>
-
-          {/* Classification */}
-          <div className="bg-gray-50 rounded-xl p-4 flex flex-col gap-3">
-            <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">
-              Classification
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className={labelClass}>Email Type</p>
-                <p className={fieldClass}>{email.email_type || "—"}</p>
-              </div>
-              <div>
-                <p className={labelClass}>Related Type</p>
-                <p className={fieldClass}>{email.related_type || "—"}</p>
-              </div>
-              {email.related_id && (
-                <div className="col-span-2">
-                  <p className={labelClass}>Related ID</p>
-                  <p className="text-xs font-mono text-gray-600 break-all">
-                    {email.related_id}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Timestamps */}
-          <div className="bg-gray-50 rounded-xl p-4 flex flex-col gap-3">
-            <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">
-              Timestamps
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className={labelClass}>Created</p>
-                <p className={fieldClass}>{formatDate(email.created_at)}</p>
-              </div>
-              <div>
-                <p className={labelClass}>Scheduled For</p>
-                <p className={fieldClass}>{formatDate(email.scheduled_for)}</p>
-              </div>
-              {email.sent_at && (
-                <div>
-                  <p className={labelClass}>Sent At</p>
-                  <p className={fieldClass}>{formatDate(email.sent_at)}</p>
-                </div>
-              )}
-              {email.failed_at && (
-                <div>
-                  <p className={labelClass}>Failed At</p>
-                  <p className={fieldClass}>{formatDate(email.failed_at)}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Error */}
-          {email.error_message && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-              <h3 className="text-xs font-bold text-red-700 uppercase tracking-wide mb-2">
-                Error Message
-              </h3>
-              <p className="text-sm text-red-700 font-mono leading-relaxed break-words">
-                {email.error_message}
-              </p>
-            </div>
-          )}
-
-          {/* Body Preview */}
-          <div className="bg-gray-50 rounded-xl p-4 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wide">
-                Body Preview
-              </h3>
-              <button
-                onClick={() => setShowHtml(!showHtml)}
-                className="text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
-              >
-                {showHtml ? "Show Plain Text" : "Show HTML Source"}
-              </button>
-            </div>
-            <div className="bg-white border border-gray-200 rounded-lg p-3 max-h-60 overflow-y-auto">
-              {showHtml ? (
-                <pre className="text-xs text-gray-600 whitespace-pre-wrap break-words font-mono leading-relaxed">
-                  {email.html_body}
-                </pre>
-              ) : (
-                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {email.text_body || stripHtml(email.html_body)}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </aside>
-    </>
-  );
-}
-
-// ── Summary Card ──────────────────────────────────────────────────────────────
-
-function SummaryCard({
-  label,
-  count,
-  icon: Icon,
-  colorClass,
-  bgClass,
-  active,
-  onClick,
-}: {
-  label: string;
-  count: number;
-  icon: React.ElementType;
-  colorClass: string;
-  bgClass: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex flex-col gap-2 p-4 rounded-xl border transition-all text-left w-full ${
-        active
-          ? "border-green-400 bg-green-50 shadow-sm"
-          : "bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm"
-      }`}
-    >
-      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${bgClass}`}>
-        <Icon className={`w-4 h-4 ${colorClass}`} />
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-gray-900">{count.toLocaleString()}</p>
-        <p className="text-xs font-medium text-gray-500">{label}</p>
-      </div>
-    </button>
-  );
-}
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
-
-const PAGE_SIZE_OPTIONS = [10, 50, 100, 500];
-const STATUS_FILTERS: Array<{ value: string; label: string }> = [
-  { value: "all", label: "All" },
+const STATUS_OPTIONS = [
+  { value: "all", label: "All Statuses" },
   { value: "pending", label: "Pending" },
   { value: "processing", label: "Processing" },
   { value: "sent", label: "Sent" },
@@ -369,354 +54,784 @@ const STATUS_FILTERS: Array<{ value: string; label: string }> = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
-export default function EmailQueuePage() {
-  const [emails, setEmails] = useState<EmailQueueItem[]>([]);
-  const [counts, setCounts] = useState<SummaryCounts>({
-    pending: 0,
-    processing: 0,
-    sent: 0,
-    failed: 0,
+const TYPE_OPTIONS = [
+  { value: "all", label: "All Types" },
+  { value: "support_new_ticket", label: "Support: New Ticket" },
+  { value: "support_user_comment", label: "Support: User Comment" },
+  { value: "support_admin_comment", label: "Support: Admin Comment" },
+  { value: "support_status_change", label: "Support: Status Change" },
+  { value: "contact_form", label: "Contact Form" },
+  { value: "user_welcome", label: "User: Welcome" },
+  { value: "user_invite", label: "User: Invite" },
+  { value: "user_password_reset", label: "User: Password Reset" },
+  { value: "user_email_verify", label: "User: Email Verify" },
+  { value: "user_account_update", label: "User: Account Update" },
+  { value: "post_scheduled", label: "Posting: Scheduled" },
+  { value: "post_published", label: "Posting: Published" },
+  { value: "post_failed", label: "Posting: Failed" },
+  { value: "post_reminder", label: "Posting: Reminder" },
+  { value: "social_connected", label: "Social: Connected" },
+  { value: "social_disconnected", label: "Social: Disconnected" },
+  { value: "social_auth_expiring", label: "Social: Auth Expiring" },
+  { value: "billing_invoice", label: "Billing: Invoice" },
+  { value: "billing_payment_failed", label: "Billing: Payment Failed" },
+  { value: "billing_plan_changed", label: "Billing: Plan Changed" },
+  { value: "system_alert", label: "System: Alert" },
+  { value: "system_maintenance", label: "System: Maintenance" },
+  { value: "general", label: "General" },
+];
+
+const PAGE_SIZE_OPTIONS = [10, 50, 100, 500];
+
+function getStatusStyle(status: string) {
+  switch (status) {
+    case "pending":
+      return "bg-amber-100 text-amber-700";
+    case "processing":
+      return "bg-blue-100 text-blue-700";
+    case "sent":
+      return "bg-green-100 text-green-700";
+    case "failed":
+      return "bg-red-100 text-red-700";
+    case "cancelled":
+      return "bg-gray-100 text-gray-500";
+    default:
+      return "bg-gray-100 text-gray-600";
+  }
+}
+
+function getStatusIcon(status: string) {
+  switch (status) {
+    case "pending":
+      return <Clock className="w-3.5 h-3.5" />;
+    case "processing":
+      return <Loader2 className="w-3.5 h-3.5 animate-spin" />;
+    case "sent":
+      return <CheckCircle2 className="w-3.5 h-3.5" />;
+    case "failed":
+      return <XCircle className="w-3.5 h-3.5" />;
+    case "cancelled":
+      return <Ban className="w-3.5 h-3.5" />;
+    default:
+      return null;
+  }
+}
+
+function capitalise(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function formatTypeLabel(emailType: string) {
+  const found = TYPE_OPTIONS.find((t) => t.value === emailType);
+  if (found) return found.label;
+  return emailType
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function formatRelativeTime(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const mins = Math.floor(diffMs / 60_000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
+}
+
+function formatFullDate(dateString: string | null) {
+  if (!dateString) return "—";
+  return new Date(dateString).toLocaleString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
+function buildPageNumbers(current: number, total: number): (number | "...")[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | "...")[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) pages.push("...");
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push("...");
+  pages.push(total);
+  return pages;
+}
+
+export default function AdminEmailQueuePage() {
+  const [emails, setEmails] = useState<QueuedEmail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<EmailQueueItem | null>(null);
-
-  // Filters
   const [statusFilter, setStatusFilter] = useState("all");
-  const [search, setSearch] = useState("");
-  const [pageSize, setPageSize] = useState(50);
-  const [page, setPage] = useState(1);
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(50);
+  const [totalPages, setTotalPages] = useState(1);
+  const [statusCounts, setStatusCounts] = useState<Record<string, number>>({});
 
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const [selectedEmail, setSelectedEmail] = useState<QueuedEmail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [cancelling, setCancelling] = useState<string | null>(null);
+  const [bodyTab, setBodyTab] = useState<"html" | "text">("html");
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  // Debounce search input
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+    }, 350);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchInput]);
+
+  const loadEmails = useCallback(async () => {
     try {
-      const supabase = createClient();
+      setLoading(true);
+      setError(null);
 
-      // Build query
-      let query = supabase
-        .from("email_queue")
-        .select("*", { count: "exact" })
-        .order("created_at", { ascending: false })
-        .range((page - 1) * pageSize, page * pageSize - 1);
+      const params = new URLSearchParams();
+      if (statusFilter !== "all") params.set("status", statusFilter);
+      if (typeFilter !== "all") params.set("email_type", typeFilter);
+      if (debouncedSearch.trim()) params.set("search", debouncedSearch.trim());
+      params.set("page", String(page));
+      params.set("limit", String(pageSize));
 
-      if (statusFilter !== "all") {
-        query = query.eq("status", statusFilter);
-      }
-      if (search.trim()) {
-        query = query.or(
-          `to_email.ilike.%${search.trim()}%,subject.ilike.%${search.trim()}%,related_type.ilike.%${search.trim()}%`
+      const res = await fetch(`/api/v1/admin/email-queue?${params.toString()}`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(
+          body?.error?.message || `Failed to load queue (${res.status})`
         );
       }
 
-      const { data, error: qErr, count } = await query;
-      if (qErr) throw qErr;
-      setEmails((data as EmailQueueItem[]) ?? []);
-      setTotal(count ?? 0);
-
-      // Fetch counts for summary cards (no filter)
-      const { data: allRows } = await supabase
-        .from("email_queue")
-        .select("status");
-
-      const c: SummaryCounts = { pending: 0, processing: 0, sent: 0, failed: 0 };
-      (allRows ?? []).forEach((r: { status: string }) => {
-        if (r.status === "pending") c.pending++;
-        else if (r.status === "processing") c.processing++;
-        else if (r.status === "sent") c.sent++;
-        else if (r.status === "failed") c.failed++;
-      });
-      setCounts(c);
+      const body = await res.json();
+      const data = body.data ?? body;
+      setEmails(data.emails ?? []);
+      setTotal(data.pagination?.total ?? 0);
+      setTotalPages(data.pagination?.totalPages ?? 1);
+      if (data.statusCounts) setStatusCounts(data.statusCounts);
     } catch (err: any) {
-      setError(err?.message ?? "Failed to load email queue.");
+      setError(err.message || "Failed to load email queue");
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, search, page, pageSize]);
+  }, [statusFilter, typeFilter, debouncedSearch, page, pageSize]);
 
+  useEffect(() => {
+    loadEmails();
+  }, [loadEmails]);
+
+  // Reset to page 1 when filters/search/pageSize change
   useEffect(() => {
     setPage(1);
-  }, [statusFilter, search, pageSize]);
+  }, [statusFilter, typeFilter, debouncedSearch, pageSize]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  function handleSummaryClick(status: string) {
-    setStatusFilter((prev) => (prev === status ? "all" : status));
+  async function openDetail(emailId: string) {
+    setDetailLoading(true);
+    setBodyTab("html");
+    try {
+      const res = await fetch(`/api/v1/admin/email-queue/${emailId}`);
+      if (!res.ok) throw new Error("Failed to load email details");
+      const body = await res.json();
+      setSelectedEmail(body.data?.email ?? body.email);
+    } catch {
+      setSelectedEmail(emails.find((e) => e.id === emailId) ?? null);
+    } finally {
+      setDetailLoading(false);
+    }
   }
+
+  async function handleCancel(emailId: string) {
+    setCancelling(emailId);
+    try {
+      const res = await fetch("/api/v1/admin/email-queue", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: emailId, action: "cancel" }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error?.message || "Failed to cancel");
+      }
+      await loadEmails();
+      if (selectedEmail?.id === emailId) {
+        setSelectedEmail((prev) =>
+          prev ? { ...prev, status: "cancelled" } : null
+        );
+      }
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setCancelling(null);
+    }
+  }
+
+  function getRelatedLink(
+    relatedType: string | null,
+    relatedId: string | null
+  ) {
+    if (!relatedType || !relatedId) return null;
+    if (relatedType === "support_ticket") {
+      return `/admin/support/tickets/${relatedId}`;
+    }
+    return null;
+  }
+
+  const rangeStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
+  const rangeEnd = Math.min(page * pageSize, total);
 
   return (
     <div>
-      {/* Page header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
-            <Mail className="w-5 h-5 text-amber-600" />
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+        <div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-2xl font-bold text-gray-900">Email Queue</h1>
+            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+              {total} total
+            </span>
+            {(statusCounts.pending ?? 0) > 0 && (
+              <span className="text-xs font-medium text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                {statusCounts.pending} pending
+              </span>
+            )}
+            {(statusCounts.processing ?? 0) > 0 && (
+              <span className="text-xs font-medium text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
+                {statusCounts.processing} processing
+              </span>
+            )}
+            {(statusCounts.failed ?? 0) > 0 && (
+              <span className="text-xs font-medium text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+                {statusCounts.failed} failed
+              </span>
+            )}
           </div>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">Email Queue</h1>
-            <p className="text-xs text-gray-500">
-              Inspect outgoing emails managed by the send engine.
-            </p>
-          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            Queued emails waiting for the sending engine. Inspect status,
+            recipient, and content.
+          </p>
         </div>
         <button
-          onClick={load}
+          onClick={loadEmails}
           disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-          aria-label="Refresh"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
         </button>
       </div>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <SummaryCard
-          label="Pending"
-          count={counts.pending}
-          icon={Clock}
-          colorClass="text-amber-600"
-          bgClass="bg-amber-50"
-          active={statusFilter === "pending"}
-          onClick={() => handleSummaryClick("pending")}
-        />
-        <SummaryCard
-          label="Processing"
-          count={counts.processing}
-          icon={Loader2}
-          colorClass="text-blue-600"
-          bgClass="bg-blue-50"
-          active={statusFilter === "processing"}
-          onClick={() => handleSummaryClick("processing")}
-        />
-        <SummaryCard
-          label="Sent"
-          count={counts.sent}
-          icon={CheckCircle2}
-          colorClass="text-green-600"
-          bgClass="bg-green-50"
-          active={statusFilter === "sent"}
-          onClick={() => handleSummaryClick("sent")}
-        />
-        <SummaryCard
-          label="Failed"
-          count={counts.failed}
-          icon={XCircle}
-          colorClass="text-red-600"
-          bgClass="bg-red-50"
-          active={statusFilter === "failed"}
-          onClick={() => handleSummaryClick("failed")}
-        />
-      </div>
-
-      {/* Filters bar */}
-      <div className="bg-white border border-gray-200 rounded-xl p-4 mb-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-        {/* Search */}
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search by recipient, subject, or type..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
-          />
+      {/* Filters */}
+      <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search by recipient or subject..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+            {STATUS_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+            {TYPE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={pageSize}
+            onChange={(e) => setPageSize(Number(e.target.value))}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          >
+            {PAGE_SIZE_OPTIONS.map((size) => (
+              <option key={size} value={size}>
+                {size} per page
+              </option>
+            ))}
+          </select>
         </div>
-
-        {/* Status filter */}
-        <div className="flex flex-wrap gap-1.5">
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setStatusFilter(f.value)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                statusFilter === f.value
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Page size */}
-        <select
-          value={pageSize}
-          onChange={(e) => setPageSize(Number(e.target.value))}
-          className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white flex-shrink-0"
-          aria-label="Page size"
-        >
-          {PAGE_SIZE_OPTIONS.map((n) => (
-            <option key={n} value={n}>
-              Show {n}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Table */}
       {loading ? (
         <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
-          <div className="animate-pulse text-gray-400 text-sm">
-            Loading email queue...
-          </div>
+          <Loader2 className="w-8 h-8 text-gray-300 mx-auto mb-3 animate-spin" />
+          <p className="text-sm text-gray-400">Loading email queue...</p>
         </div>
       ) : error ? (
         <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-          <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
-          <p className="text-sm text-red-600 mb-4">{error}</p>
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <p className="text-sm text-red-600">{error}</p>
           <button
-            onClick={load}
-            className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
+            onClick={loadEmails}
+            className="mt-4 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
           >
             Try Again
           </button>
         </div>
       ) : emails.length === 0 ? (
         <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
-          <Mail className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-          <p className="text-sm text-gray-500 font-medium">No emails found</p>
+          <Inbox className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-sm text-gray-500 font-medium">
+            {statusFilter !== "all" || typeFilter !== "all" || debouncedSearch
+              ? "No emails match your filters"
+              : "No emails in queue"}
+          </p>
           <p className="text-xs text-gray-400 mt-1">
-            {search || statusFilter !== "all"
-              ? "Try adjusting your filters."
-              : "The email queue is empty."}
+            {statusFilter !== "all" || typeFilter !== "all" || debouncedSearch
+              ? "Try adjusting your filters or search query."
+              : "Emails will appear here when support tickets are created or comments are added."}
           </p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px]">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  {[
-                    "Status",
-                    "To",
-                    "Subject",
-                    "Related Type",
-                    "Created",
-                    "Sent / Failed At",
-                    "",
-                  ].map((col) => (
-                    <th
-                      key={col}
-                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap"
-                    >
-                      {col}
+        <>
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full table-fixed">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="w-[110px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
                     </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {emails.map((email) => (
-                  <tr
-                    key={email.id}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => setSelected(email)}
-                  >
-                    <td className="px-4 py-3">
-                      <StatusBadge status={email.status} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="text-sm text-gray-900 max-w-[180px] truncate">
-                        {email.to_email}
-                      </div>
-                      {email.to_name && (
-                        <div className="text-xs text-gray-400 truncate max-w-[180px]">
-                          {email.to_name}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="text-sm text-gray-900 max-w-[220px] truncate">
-                        {email.subject}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      {email.related_type ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                          {email.related_type}
-                        </span>
-                      ) : (
-                        <span className="text-xs text-gray-400">—</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
-                      {formatDateShort(email.created_at)}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
-                      {email.sent_at
-                        ? formatDateShort(email.sent_at)
-                        : email.failed_at
-                        ? formatDateShort(email.failed_at)
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelected(email);
-                        }}
-                        className="inline-flex items-center gap-1 text-xs text-green-600 hover:text-green-700 font-medium transition-colors"
-                        aria-label="View email details"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                        View
-                      </button>
-                    </td>
+                    <th className="w-[110px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Type
+                    </th>
+                    <th className="w-[180px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      To
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Subject
+                    </th>
+                    <th className="w-[140px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Reference
+                    </th>
+                    <th className="w-[100px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Created
+                    </th>
+                    <th className="w-[70px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Tries
+                    </th>
+                    <th className="w-[130px] px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {emails.map((email) => {
+                    const refLink = getRelatedLink(
+                      email.related_type,
+                      email.related_id
+                    );
+                    return (
+                      <tr
+                        key={email.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusStyle(
+                              email.status
+                            )}`}
+                          >
+                            {getStatusIcon(email.status)}
+                            {capitalise(email.status)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-600 truncate">
+                          {formatTypeLabel(email.email_type)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-900 truncate">
+                          {email.to_email}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700 truncate">
+                          {email.subject}
+                        </td>
+                        <td className="px-4 py-3 text-xs truncate">
+                          {refLink ? (
+                            <a
+                              href={refLink}
+                              className="text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1"
+                            >
+                              <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                              <span className="truncate">
+                                #{email.related_id?.slice(0, 8)}
+                              </span>
+                            </a>
+                          ) : email.related_type ? (
+                            <span className="text-gray-500">
+                              {email.related_type}
+                            </span>
+                          ) : (
+                            <span className="text-gray-300">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                          {formatRelativeTime(email.created_at)}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                          {email.retry_count}/{email.max_retries}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => openDetail(email.id)}
+                              className="inline-flex items-center gap-1 text-sm text-green-600 hover:text-green-700 font-medium"
+                            >
+                              <Eye className="w-4 h-4" />
+                              View
+                            </button>
+                            {email.status === "pending" && (
+                              <button
+                                onClick={() => handleCancel(email.id)}
+                                disabled={cancelling === email.id}
+                                className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-600 font-medium disabled:opacity-50"
+                              >
+                                {cancelling === email.id ? (
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                ) : (
+                                  <Ban className="w-3 h-3" />
+                                )}
+                                Cancel
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="border-t border-gray-200 px-4 py-3 flex items-center justify-between bg-gray-50">
-              <p className="text-xs text-gray-500">
-                Showing{" "}
-                <span className="font-medium text-gray-700">
-                  {(page - 1) * pageSize + 1}–
-                  {Math.min(page * pageSize, total)}
-                </span>{" "}
-                of <span className="font-medium text-gray-700">{total}</span>
-              </p>
+          <div className="flex items-center justify-between mt-4 flex-wrap gap-3">
+            <p className="text-sm text-gray-500">
+              Showing {rangeStart}–{rangeEnd} of {total}
+            </p>
+            {totalPages > 1 && (
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  disabled={page <= 1}
+                  className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                   aria-label="Previous page"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-xs text-gray-700 px-2">
-                  {page} / {totalPages}
-                </span>
+                {buildPageNumbers(page, totalPages).map((n, i) =>
+                  n === "..." ? (
+                    <span
+                      key={`dots-${i}`}
+                      className="px-1.5 text-xs text-gray-400"
+                    >
+                      ...
+                    </span>
+                  ) : (
+                    <button
+                      key={n}
+                      onClick={() => setPage(n)}
+                      className={`min-w-[32px] h-8 rounded-lg text-xs font-medium transition-colors ${
+                        n === page
+                          ? "bg-green-600 text-white"
+                          : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  )
+                )}
                 <button
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page === totalPages}
-                  className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  onClick={() =>
+                    setPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={page >= totalPages}
+                  className="p-1.5 rounded-lg border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                   aria-label="Next page"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </>
       )}
 
-      {/* Detail Drawer */}
-      {selected && (
-        <EmailDetailDrawer email={selected} onClose={() => setSelected(null)} />
+      {/* Detail modal */}
+      {selectedEmail && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-16 bg-black/50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedEmail(null);
+          }}
+        >
+          <div className="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col overflow-hidden">
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 flex-shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <span
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium flex-shrink-0 ${getStatusStyle(
+                    selectedEmail.status
+                  )}`}
+                >
+                  {getStatusIcon(selectedEmail.status)}
+                  {capitalise(selectedEmail.status)}
+                </span>
+                <h2 className="text-lg font-bold text-gray-900 truncate">
+                  {selectedEmail.subject}
+                </h2>
+              </div>
+              <button
+                onClick={() => setSelectedEmail(null)}
+                className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors flex-shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {detailLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="w-8 h-8 text-gray-300 animate-spin" />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-6">
+                  {/* Metadata grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="To" value={selectedEmail.to_email} />
+                    <Field
+                      label="From"
+                      value={
+                        selectedEmail.from_name && selectedEmail.from_email
+                          ? `${selectedEmail.from_name} <${selectedEmail.from_email}>`
+                          : selectedEmail.from_email || "—"
+                      }
+                    />
+                    <Field
+                      label="Type"
+                      value={formatTypeLabel(selectedEmail.email_type)}
+                    />
+                    <Field
+                      label="Priority"
+                      value={
+                        selectedEmail.priority === 0
+                          ? "Normal"
+                          : selectedEmail.priority > 0
+                            ? `High (${selectedEmail.priority})`
+                            : `Low (${selectedEmail.priority})`
+                      }
+                    />
+                    <Field
+                      label="Created"
+                      value={formatFullDate(selectedEmail.created_at)}
+                    />
+                    <Field
+                      label="Sent"
+                      value={formatFullDate(selectedEmail.sent_at)}
+                    />
+                    <Field
+                      label="Attempts"
+                      value={`${selectedEmail.retry_count} / ${selectedEmail.max_retries}`}
+                    />
+                    {selectedEmail.related_type && (
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 mb-1">
+                          Reference
+                        </p>
+                        {(() => {
+                          const link = getRelatedLink(
+                            selectedEmail.related_type,
+                            selectedEmail.related_id
+                          );
+                          if (link) {
+                            return (
+                              <a
+                                href={link}
+                                className="text-sm text-green-600 hover:text-green-700 font-medium inline-flex items-center gap-1"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                {selectedEmail.related_type} #
+                                {selectedEmail.related_id?.slice(0, 8)}
+                              </a>
+                            );
+                          }
+                          return (
+                            <p className="text-sm text-gray-700">
+                              {selectedEmail.related_type}{" "}
+                              {selectedEmail.related_id
+                                ? `#${selectedEmail.related_id.slice(0, 8)}`
+                                : ""}
+                            </p>
+                          );
+                        })()}
+                      </div>
+                    )}
+                    {selectedEmail.tenant_id && (
+                      <Field
+                        label="Workspace"
+                        value={selectedEmail.tenant_id.slice(0, 8) + "..."}
+                        mono
+                      />
+                    )}
+                    {selectedEmail.created_by && (
+                      <Field
+                        label="Triggered by"
+                        value={selectedEmail.created_by.slice(0, 8) + "..."}
+                        mono
+                      />
+                    )}
+                  </div>
+
+                  {/* Error message */}
+                  {selectedEmail.error_message && (
+                    <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+                      <p className="text-[10px] uppercase tracking-wider font-semibold text-red-500 mb-1">
+                        Error
+                      </p>
+                      <p className="text-sm text-red-700 font-mono whitespace-pre-wrap break-all">
+                        {selectedEmail.error_message}
+                      </p>
+                      {selectedEmail.failed_at && (
+                        <p className="text-xs text-red-400 mt-2">
+                          Failed at: {formatFullDate(selectedEmail.failed_at)}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Body preview */}
+                  {(selectedEmail.html_body || selectedEmail.text_body) && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <p className="text-[10px] uppercase tracking-wider font-semibold text-gray-400">
+                          Email Body
+                        </p>
+                        <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+                          <button
+                            onClick={() => setBodyTab("html")}
+                            className={`px-3 py-1 text-xs font-medium transition-colors ${
+                              bodyTab === "html"
+                                ? "bg-green-50 text-green-700"
+                                : "text-gray-500 hover:bg-gray-50"
+                            }`}
+                          >
+                            HTML
+                          </button>
+                          <button
+                            onClick={() => setBodyTab("text")}
+                            className={`px-3 py-1 text-xs font-medium transition-colors border-l border-gray-200 ${
+                              bodyTab === "text"
+                                ? "bg-green-50 text-green-700"
+                                : "text-gray-500 hover:bg-gray-50"
+                            }`}
+                          >
+                            Text
+                          </button>
+                        </div>
+                      </div>
+
+                      {bodyTab === "html" && selectedEmail.html_body ? (
+                        <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+                          <iframe
+                            srcDoc={selectedEmail.html_body}
+                            title="Email HTML preview"
+                            className="w-full border-0"
+                            style={{ minHeight: 300 }}
+                            sandbox="allow-same-origin"
+                          />
+                        </div>
+                      ) : (
+                        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 max-h-[400px] overflow-y-auto">
+                          <pre className="text-sm text-gray-700 whitespace-pre-wrap break-words font-mono">
+                            {selectedEmail.text_body || "(no text body)"}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Cancel action */}
+                  {selectedEmail.status === "pending" && (
+                    <div className="flex justify-end pt-2 border-t border-gray-100">
+                      <button
+                        onClick={() => handleCancel(selectedEmail.id)}
+                        disabled={cancelling === selectedEmail.id}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors disabled:opacity-50"
+                      >
+                        {cancelling === selectedEmail.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Ban className="w-4 h-4" />
+                        )}
+                        Cancel this email
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
+    </div>
+  );
+}
+
+function Field({
+  label,
+  value,
+  mono,
+}: {
+  label: string;
+  value: string;
+  mono?: boolean;
+}) {
+  return (
+    <div>
+      <p className="text-[10px] uppercase tracking-wider font-semibold text-gray-400 mb-1">
+        {label}
+      </p>
+      <p className={`text-sm text-gray-700 break-all ${mono ? "font-mono" : ""}`}>
+        {value}
+      </p>
     </div>
   );
 }
