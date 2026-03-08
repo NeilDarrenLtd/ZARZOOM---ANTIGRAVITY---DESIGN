@@ -131,7 +131,7 @@ export default function ProfilePage() {
     let mounted = true;
     async function load() {
       try {
-        const profileRes = await workspaceFetch(`/api/v1/onboarding?_ws=${encodeURIComponent(activeWorkspaceId)}`);
+        const profileRes = await workspaceFetch(`/api/v1/onboarding?_ws=${encodeURIComponent(activeWorkspaceId!)}`);
         if (!mounted) return;
         if (!profileRes.ok) throw new Error("load failed");
         const profileBody = await profileRes.json();
