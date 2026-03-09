@@ -3,11 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
-import { signInWithEmail, signUpWithEmail, signInWithOAuth } from "./actions";
+import {
+  signInWithEmail,
+  signUpWithEmail,
+  signInWithOAuth,
+  requestPasswordReset,
+} from "./actions";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
-import { Eye, EyeOff, Check, X } from "lucide-react";
+import { Eye, EyeOff, Check, X, ArrowLeft, Mail, Clock } from "lucide-react";
 
 function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
   return (
@@ -64,6 +69,15 @@ export default function AuthPage() {
   const [regLoading, setRegLoading] = useState(false);
   const [showRegPassword, setShowRegPassword] = useState(false);
   const [showRegConfirm, setShowRegConfirm] = useState(false);
+
+  // Forgot password state
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotStatus, setForgotStatus] = useState<
+    "idle" | "sent_direct" | "sent_queued" | "not_found" | "error"
+  >("idle");
+  const [forgotMessage, setForgotMessage] = useState("");
 
   // Password validation
   const passwordChecks = {
@@ -130,6 +144,25 @@ export default function AuthPage() {
     }
   }
 
+  async function handleForgotPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setForgotStatus("idle");
+    setForgotMessage("");
+
+    if (!forgotEmail.trim()) {
+      setForgotStatus("error");
+      setForgotMessage("Please enter your email address to continue.");
+      return;
+    }
+
+    setForgotLoading(true);
+
+    const result = await requestPasswordReset(forgotEmail);
+    setForgotStatus(result.status);
+    if (result.message) setForgotMessage(result.message);
+    setForgotLoading(false);
+  }
+
   const inputClass =
     "w-full px-4 py-3 rounded-lg border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-sm";
 
@@ -149,6 +182,124 @@ export default function AuthPage() {
             />
           </div>
 
+          {showForgotPassword ? (
+            <>
+              {/* Forgot password card */}
+              <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setForgotStatus("idle");
+                  }}
+                  className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 font-medium mb-4"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Back to login
+                </button>
+
+                <h1 className="text-2xl font-bold text-gray-900 text-center">
+                  Reset your password
+                </h1>
+                <p className="text-sm text-gray-500 text-center mt-1">
+                  Enter your email and we'll send you a reset link.
+                </p>
+
+                {forgotStatus === "sent_direct" ? (
+                  <div className="mt-6 flex flex-col items-center gap-3 text-center">
+                    <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-green-600" />
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      Check your inbox
+                    </p>
+                    <p className="text-xs text-gray-500 leading-relaxed">
+                      We've sent a password reset link to{" "}
+                      <span className="font-medium text-gray-700">{forgotEmail}</span>.
+                      The link will expire in 24 hours.
+                    </p>
+                  </div>
+                ) : forgotStatus === "sent_queued" ? (
+                  <div className="mt-6 flex flex-col items-center gap-3 text-center">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      Reset link queued
+                    </p>
+                    <p className="text-xs text-gray-500 leading-relaxed">
+                      A password reset link for{" "}
+                      <span className="font-medium text-gray-700">{forgotEmail}</span>{" "}
+                      has been queued for delivery. It may take a few minutes to arrive.
+                      Please check your inbox shortly.
+                    </p>
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={handleForgotPassword}
+                    className="mt-6 flex flex-col gap-4"
+                  >
+                    <div>
+                      <label
+                        htmlFor="forgot-email"
+                        className="block text-xs font-medium text-gray-700 mb-1"
+                      >
+                        {t("auth.email")}
+                      </label>
+                      <input
+                        id="forgot-email"
+                        type="email"
+                        autoComplete="email"
+                        value={forgotEmail}
+                        onChange={(e) => {
+                          setForgotEmail(e.target.value);
+                          if (forgotStatus === "error") {
+                            setForgotStatus("idle");
+                            setForgotMessage("");
+                          }
+                        }}
+                        className={inputClass}
+                        placeholder="you@example.com"
+                      />
+                    </div>
+
+                    {forgotStatus === "not_found" && (
+                      <p className="text-xs text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
+                        We couldn't find an account with that email address. Please
+                        check and try again, or{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowForgotPassword(false);
+                            setActiveTab("register");
+                          }}
+                          className="text-green-600 hover:text-green-700 font-semibold"
+                        >
+                          create a new account
+                        </button>
+                        .
+                      </p>
+                    )}
+
+                    {forgotStatus === "error" && forgotMessage && (
+                      <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                        {forgotMessage}
+                      </p>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={forgotLoading}
+                      className="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-sm uppercase tracking-wide"
+                    >
+                      {forgotLoading ? "..." : "Send Reset Link"}
+                    </button>
+                  </form>
+                )}
+              </section>
+            </>
+          ) : (
+            <>
           {/* Tabs */}
           <div className="flex rounded-xl bg-gray-100 p-1">
             <button
@@ -256,6 +407,12 @@ export default function AuthPage() {
                     </label>
                     <button
                       type="button"
+                      onClick={() => {
+                        setShowForgotPassword(true);
+                        setForgotEmail(loginEmail);
+                        setForgotStatus("idle");
+                        setForgotMessage("");
+                      }}
                       className="text-xs text-green-600 hover:text-green-700 font-medium"
                     >
                       {t("auth.forgotLogin")}
@@ -511,6 +668,8 @@ export default function AuthPage() {
               </button>
             </p>
           </section>
+            </>
+          )}
         </div>
       </div>
 
