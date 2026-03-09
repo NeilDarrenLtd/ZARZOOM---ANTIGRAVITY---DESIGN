@@ -192,7 +192,7 @@ export async function requestPasswordReset(
         },
       });
 
-    if (linkError || !linkData?.properties?.action_link) {
+    if (linkError || !linkData?.properties?.hashed_token) {
       console.error("[Auth] generateLink error:", linkError?.message);
       return {
         status: "error",
@@ -200,7 +200,7 @@ export async function requestPasswordReset(
       };
     }
 
-    const resetLink = linkData.properties.action_link;
+    const resetLink = `${baseUrl}/auth/reset-password?token_hash=${encodeURIComponent(linkData.properties.hashed_token)}&type=recovery`;
     const subject = "Reset your ZARZOOM password";
 
     const html = `

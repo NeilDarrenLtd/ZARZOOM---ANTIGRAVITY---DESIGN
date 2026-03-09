@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/client";
 import SiteNavbar from "@/components/SiteNavbar";
@@ -24,6 +24,7 @@ function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
 export default function ResetPasswordPage() {
   const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [checking, setChecking] = useState(true);
@@ -34,6 +35,7 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [linkExpired, setLinkExpired] = useState(false);
 
   const passwordChecks = {
     minLength: password.length >= 8,
@@ -46,14 +48,29 @@ export default function ResetPasswordPage() {
   const passwordsMatch = password === confirm && confirm.length > 0;
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) {
-        router.replace("/auth");
-      } else {
-        setChecking(false);
-      }
-    });
-  }, [supabase, router]);
+    const tokenHash = searchParams.get("token_hash");
+    const type = searchParams.get("type");
+
+    if (tokenHash && type === "recovery") {
+      supabase.auth
+        .verifyOtp({ token_hash: tokenHash, type: "recovery" })
+        .then(({ error: otpError }) => {
+          if (otpError) {
+            console.error("[ResetPassword] OTP verification failed:", otpError.message);
+            setLinkExpired(true);
+          }
+          setChecking(false);
+        });
+    } else {
+      supabase.auth.getUser().then(({ data }) => {
+        if (!data.user) {
+          router.replace("/auth");
+        } else {
+          setChecking(false);
+        }
+      });
+    }
+  }, [supabase, router, searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -116,7 +133,26 @@ export default function ResetPasswordPage() {
           </div>
 
           <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
-            {success ? (
+            {linkExpired ? (
+              <div className="flex flex-col items-center gap-4 text-center py-4">
+                <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center">
+                  <X className="w-7 h-7 text-amber-600" />
+                </div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Link expired
+                </h1>
+                <p className="text-sm text-gray-500">
+                  This password reset link is invalid or has expired. Please
+                  request a new one from the login page.
+                </p>
+                <button
+                  onClick={() => router.push("/auth")}
+                  className="mt-2 bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-colors text-sm uppercase tracking-wide"
+                >
+                  Back to Login
+                </button>
+              </div>
+            ) : success ? (
               <div className="flex flex-col items-center gap-4 text-center py-4">
                 <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
                   <Check className="w-7 h-7 text-green-600" />
