@@ -60,14 +60,9 @@ export const POST = createApiHandler({
 
     const supabase = await createAdminClient();
 
-    const selectFields =
-      flow === "subscription_cancel"
-        ? "billing_provider_customer_id, billing_provider_subscription_id"
-        : "billing_provider_customer_id";
-
     const { data: sub } = await supabase
       .from("tenant_subscriptions")
-      .select(selectFields)
+      .select("billing_provider_customer_id, billing_provider_subscription_id")
       .eq("tenant_id", tenantId)
       .not("billing_provider_customer_id", "is", null)
       .order("created_at", { ascending: false })
@@ -91,8 +86,7 @@ export const POST = createApiHandler({
     };
 
     if (flow === "subscription_cancel") {
-      const subId = (sub as Record<string, unknown>)
-        .billing_provider_subscription_id as string | null;
+      const subId = sub.billing_provider_subscription_id ?? null;
 
       if (!subId) {
         return badRequest(
