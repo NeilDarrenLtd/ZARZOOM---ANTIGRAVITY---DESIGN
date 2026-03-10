@@ -279,6 +279,7 @@ export async function updatePlanData(
     entitlements: Record<string, boolean>;
     quota_policy: Record<string, number>;
     features: string[];
+    stripe_price_id: string | null;
   }>
 ): Promise<void> {
   const { createAdminClient } = await import("@/lib/supabase/server");
