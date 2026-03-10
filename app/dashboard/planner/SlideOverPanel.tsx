@@ -6,6 +6,7 @@ import {
   TYPE_COLORS,
   TYPE_LABELS,
   STATUS_COLORS,
+  STATUS_LABELS,
   type PlannerItem,
   type ContentType,
   type PlannerItemStatus,
@@ -32,10 +33,12 @@ const ALL_TYPES: ContentType[] = [
 ];
 
 const ALL_STATUSES: { value: PlannerItemStatus; label: string }[] = [
-  { value: "draft",     label: "Draft" },
-  { value: "review",    label: "In Review" },
-  { value: "scheduled", label: "Scheduled" },
-  { value: "published", label: "Published" },
+  { value: "draft",        label: "Draft" },
+  { value: "planned",      label: "Planned" },
+  { value: "ready",        label: "Ready" },
+  { value: "scheduled",    label: "Scheduled" },
+  { value: "needs_review", label: "Needs Review" },
+  { value: "posted",       label: "Posted" },
 ];
 
 const ALL_PLATFORMS = [
@@ -346,12 +349,7 @@ export default function SlideOverPanel({ item, onClose }: SlideOverPanelProps) {
               <span
                 className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[form.status]}`}
               >
-                {{
-                  draft: "Draft",
-                  review: "In Review",
-                  scheduled: "Scheduled",
-                  published: "Published",
-                }[form.status]}
+                {STATUS_LABELS[form.status]}
               </span>
             </div>
 

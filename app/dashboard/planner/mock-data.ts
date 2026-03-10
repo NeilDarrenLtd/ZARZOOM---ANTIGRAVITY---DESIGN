@@ -14,7 +14,13 @@ export type ContentType =
   | "Announcement"
   | "Trend Reaction";
 
-export type PlannerItemStatus = "draft" | "scheduled" | "published" | "review";
+export type PlannerItemStatus =
+  | "draft"
+  | "planned"
+  | "ready"
+  | "scheduled"
+  | "needs_review"
+  | "posted";
 
 export interface PlannerItem {
   id: string;
@@ -63,10 +69,31 @@ export const TYPE_LABELS: Record<ContentType, string> = {
 };
 
 export const STATUS_COLORS: Record<PlannerItemStatus, string> = {
-  draft:     "bg-gray-100  text-gray-600",
-  scheduled: "bg-blue-100  text-blue-700",
-  published: "bg-green-100 text-green-700",
-  review:    "bg-amber-100 text-amber-700",
+  draft:        "bg-gray-100   text-gray-500",
+  planned:      "bg-blue-50    text-blue-600",
+  ready:        "bg-teal-50    text-teal-700",
+  scheduled:    "bg-indigo-50  text-indigo-700",
+  needs_review: "bg-amber-50   text-amber-700",
+  posted:       "bg-green-100  text-green-700",
+};
+
+// Dot color for the left-border / status indicator on pills
+export const STATUS_DOT: Record<PlannerItemStatus, string> = {
+  draft:        "bg-gray-300",
+  planned:      "bg-blue-400",
+  ready:        "bg-teal-400",
+  scheduled:    "bg-indigo-400",
+  needs_review: "bg-amber-400",
+  posted:       "bg-green-500",
+};
+
+export const STATUS_LABELS: Record<PlannerItemStatus, string> = {
+  draft:        "Draft",
+  planned:      "Planned",
+  ready:        "Ready",
+  scheduled:    "Scheduled",
+  needs_review: "Needs Review",
+  posted:       "Posted",
 };
 
 // ─── Mock Data ─────────────────────────────────────────────────────────────────
@@ -79,7 +106,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "feb-1",
       hook: "Love your audience back this Valentine's Day",
       type: "Promotional Post",
-      status: "published",
+      status: "posted",
       platform: "Multi-platform",
       time: "09:00",
       description: "Valentine's Day themed campaign across all platforms celebrating our community.",
@@ -92,7 +119,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "feb-2",
       hook: "5 AI trends reshaping social media in 2026",
       type: "Article",
-      status: "published",
+      status: "posted",
       platform: "LinkedIn",
       time: "11:00",
       description: "Weekly thread covering AI trends in social media automation.",
@@ -103,7 +130,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "feb-3",
       hook: "Watch how we edit 30 posts in under 2 minutes",
       type: "Faceless Video",
-      status: "published",
+      status: "posted",
       platform: "TikTok",
       time: "15:00",
       description: "Screen-recorded walkthrough of bulk-scheduling in ZARZOOM.",
@@ -116,7 +143,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "feb-4",
       hook: "Real creator. Real results. No filters.",
       type: "Testimonial",
-      status: "published",
+      status: "posted",
       platform: "Instagram",
       time: "14:00",
       description: "Customer spotlight on a creator who doubled engagement using ZARZOOM.",
@@ -131,7 +158,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-1",
       hook: "Something big is dropping this week",
       type: "Story Post",
-      status: "scheduled",
+      status: "planned",
       platform: "Instagram",
       time: "09:00",
       description: "Behind-the-scenes story teasing the upcoming product drop.",
@@ -144,7 +171,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-2",
       hook: "How to 10x your reach without paying for ads",
       type: "Educational Post",
-      status: "scheduled",
+      status: "ready",
       platform: "X (Twitter)",
       time: "11:30",
       description: "Thread covering organic growth tactics powered by AI scheduling.",
@@ -155,7 +182,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-3",
       hook: "This is what working in our office really looks like",
       type: "B-Roll Video",
-      status: "review",
+      status: "needs_review",
       platform: "Instagram",
       time: "18:00",
       description: "Cinematic B-roll of our team working and brainstorming sessions.",
@@ -168,7 +195,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-4",
       hook: "We grew a client 300% in 90 days — here's the playbook",
       type: "Article",
-      status: "draft",
+      status: "planned",
       platform: "LinkedIn",
       time: "08:00",
       description: "In-depth case study on how our client grew using ZARZOOM automation.",
@@ -192,7 +219,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-6",
       hook: "Ask me anything — drop your question below",
       type: "Story Post",
-      status: "scheduled",
+      status: "needs_review",
       platform: "Instagram",
       time: "14:00",
       description: "Story slide inviting followers to submit questions for next week's live Q&A.",
@@ -218,7 +245,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-8",
       hook: "Which format gets the most saves? The answer surprised us",
       type: "Carousel",
-      status: "review",
+      status: "needs_review",
       platform: "Instagram",
       time: "11:00",
       description: "Data-driven carousel breaking down top-performing post formats.",
@@ -242,7 +269,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-10",
       hook: "Should brands be funny on social media? Vote now.",
       type: "Promotional Post",
-      status: "published",
+      status: "posted",
       platform: "Facebook",
       time: "12:00",
       description: "Poll-style post to drive engagement and gather audience feedback.",
@@ -255,7 +282,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-11",
       hook: "One idea. 12 pieces of content. Here's how.",
       type: "Talking Head Video",
-      status: "draft",
+      status: "ready",
       platform: "YouTube",
       time: "16:00",
       description: "Talking head video walking through a content repurposing strategy.",
@@ -279,7 +306,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-13",
       hook: "Set up auto-posting in under 60 seconds",
       type: "Short Clip",
-      status: "draft",
+      status: "planned",
       platform: "TikTok",
       time: "16:00",
       description: "Tutorial showing how to set up auto-posting with ZARZOOM in under 60 seconds.",
@@ -290,7 +317,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-13b",
       hook: "Our tool does in 2 mins what takes others 2 hours",
       type: "Faceless Video",
-      status: "review",
+      status: "needs_review",
       platform: "Instagram",
       time: "18:00",
       description: "Screen recording demo of ZARZOOM's bulk scheduler feature.",
@@ -303,7 +330,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-14",
       hook: "Client grew 40K followers in 60 days — their story",
       type: "Testimonial",
-      status: "review",
+      status: "needs_review",
       platform: "Instagram",
       time: "13:00",
       description: "Video testimonial from a creator who scaled their audience with ZARZOOM.",
@@ -329,7 +356,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "mar-16",
       hook: "Meet the creator turning 3 posts a week into a full-time income",
       type: "Testimonial",
-      status: "review",
+      status: "needs_review",
       platform: "LinkedIn",
       time: "11:00",
       description: "Feature post highlighting a power user's success story with ZARZOOM.",
@@ -455,7 +482,7 @@ export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
       id: "apr-5",
       hook: "Which content type do you actually prefer? Vote.",
       type: "Story Post",
-      status: "review",
+      status: "needs_review",
       platform: "Instagram",
       time: "12:00",
       description: "Interactive story poll asking audience about preferred content formats.",

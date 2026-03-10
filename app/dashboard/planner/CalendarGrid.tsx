@@ -1,6 +1,6 @@
 "use client";
 
-import { MOCK_ITEMS, TYPE_COLORS, TYPE_LABELS, type PlannerItem } from "./mock-data";
+import { MOCK_ITEMS, TYPE_COLORS, TYPE_LABELS, STATUS_DOT, type PlannerItem } from "./mock-data";
 
 interface CalendarGridProps {
   currentDate: Date;
@@ -98,12 +98,18 @@ function ItemPill({
         dimmed ? "opacity-40" : ""
       } ${isSelected ? "ring-2 ring-green-500 ring-offset-1" : ""}`}
     >
-      {/* Row 1: type badge + viral dots */}
+      {/* Row 1: type badge + status dot + viral dots */}
       <div className="flex items-center justify-between gap-1 mb-0.5">
         <span className="text-[9px] font-semibold uppercase tracking-wide leading-none opacity-75 truncate">
           {label}
         </span>
-        <ViralDots strength={item.viralStrength} />
+        <div className="flex items-center gap-1 shrink-0">
+          <span
+            className={`inline-block h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status]}`}
+            aria-label={item.status.replace("_", " ")}
+          />
+          <ViralDots strength={item.viralStrength} />
+        </div>
       </div>
       {/* Row 2: hook text */}
       <p className="text-[11px] font-medium leading-tight line-clamp-2 group-hover:line-clamp-none transition-all">
