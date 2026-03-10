@@ -98,7 +98,7 @@ export const POST = createApiHandler({
       recordId: plan.id,
       action: "plan_created",
       before: null,
-      after: plan,
+      after: plan as unknown as Record<string, unknown>,
     });
 
     return created({ plan }, ctx.requestId);
