@@ -351,11 +351,11 @@ export default function BillingPage() {
                   {t("billing.cancellation.pendingTitle")}
                 </h2>
                 <p className="text-xs text-amber-800 mt-1">
-                  {t("billing.cancellation.pendingDescription", {
-                    date:
-                      formattedNextBilling ??
-                      t("billing.overview.nextBillingDateUnknown"),
-                  })}
+                  {t("billing.cancellation.pendingDescription").replace(
+                    "{date}",
+                    formattedNextBilling ??
+                      t("billing.overview.nextBillingDateUnknown")
+                  )}
                 </p>
               </div>
             </div>
@@ -585,10 +585,9 @@ export default function BillingPage() {
                     </p>
                     <p className="text-xs text-gray-500">
                       {formattedPrice
-                        ? t("billing.currentPlan.priceWithInterval", {
-                            price: formattedPrice,
-                            interval: billingIntervalLabel,
-                          })
+                        ? t("billing.currentPlan.priceWithInterval")
+                            .replace("{price}", formattedPrice)
+                            .replace("{interval}", billingIntervalLabel)
                         : t("billing.currentPlan.priceUnknown")}
                     </p>
                   </div>
