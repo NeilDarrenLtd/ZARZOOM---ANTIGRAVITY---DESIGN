@@ -289,7 +289,7 @@ export function PlanEditorForm({ plan, onRefresh }: PlanEditorFormProps) {
             plan_id: p.plan_id,
             currency: p.currency,
             interval: p.interval,
-            unit_amount: p.amount_minor,
+            amount_minor: p.amount_minor,
             billing_provider_price_id: p.billing_provider_price_id,
             is_active: p.is_active,
             effective_from: p.effective_from,
