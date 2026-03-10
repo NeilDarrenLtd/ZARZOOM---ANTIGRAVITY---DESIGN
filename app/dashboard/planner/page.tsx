@@ -10,14 +10,14 @@ import PlannerSummaryStrip from "./PlannerSummaryStrip";
 import CalendarGrid from "./CalendarGrid";
 import SlideOverPanel from "./SlideOverPanel";
 import type { PlannerItem } from "./mock-data";
-import { TYPE_COLORS } from "./mock-data";
+import { TYPE_COLORS, TYPE_LABELS, type ContentType } from "./mock-data";
 
-const LEGEND_ITEMS = [
-  { type: "post" as const, label: "Post" },
-  { type: "story" as const, label: "Story" },
-  { type: "reel" as const, label: "Reel" },
-  { type: "article" as const, label: "Article" },
-  { type: "campaign" as const, label: "Campaign" },
+const LEGEND_ITEMS: ContentType[] = [
+  "Short Clip",
+  "Carousel",
+  "Article",
+  "Story Post",
+  "Trend Reaction",
 ];
 
 export default function PlannerPage() {
@@ -77,12 +77,12 @@ export default function PlannerPage() {
 
           {/* Legend */}
           <div className="flex items-center gap-2 flex-wrap">
-            {LEGEND_ITEMS.map(({ type, label }) => (
+            {LEGEND_ITEMS.map((type) => (
               <span
                 key={type}
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${TYPE_COLORS[type]}`}
               >
-                {label}
+                {TYPE_LABELS[type]}
               </span>
             ))}
           </div>
