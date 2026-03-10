@@ -12,11 +12,6 @@ export interface PlannerItem {
   hashtags: string[];
 }
 
-export interface DayData {
-  date: number;
-  items: PlannerItem[];
-}
-
 export const TYPE_COLORS: Record<PlannerItemType, string> = {
   post: "bg-green-100 text-green-700 border-green-200",
   story: "bg-teal-100 text-teal-700 border-teal-200",
@@ -32,8 +27,9 @@ export const STATUS_COLORS: Record<PlannerItemStatus, string> = {
   review: "bg-amber-100 text-amber-700",
 };
 
-export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
-  3: [
+// Keys are ISO date strings: YYYY-MM-DD
+export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
+  "2026-03-03": [
     {
       id: "1",
       title: "Product launch teaser",
@@ -41,11 +37,11 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       status: "scheduled",
       platform: "Instagram",
       time: "09:00",
-      description: "Behind-the-scenes story teasing the upcoming product drop. Short, punchy visual content.",
+      description: "Behind-the-scenes story teasing the upcoming product drop.",
       hashtags: ["#launch", "#comingsoon", "#zarzoom"],
     },
   ],
-  5: [
+  "2026-03-05": [
     {
       id: "2",
       title: "Weekly AI tips thread",
@@ -53,7 +49,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       status: "draft",
       platform: "X (Twitter)",
       time: "11:30",
-      description: "A 5-tweet thread covering top AI automation tips for social media managers this week.",
+      description: "A 5-tweet thread covering top AI automation tips for social media managers.",
       hashtags: ["#AI", "#socialmedia", "#automation"],
     },
     {
@@ -67,7 +63,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#brand", "#culture", "#team"],
     },
   ],
-  8: [
+  "2026-03-08": [
     {
       id: "4",
       title: "Case study article",
@@ -79,7 +75,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#casestudy", "#growth", "#linkedin"],
     },
   ],
-  10: [
+  "2026-03-10": [
     {
       id: "5",
       title: "Spring campaign kickoff",
@@ -87,8 +83,8 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       status: "scheduled",
       platform: "Multi-platform",
       time: "10:00",
-      description: "Official campaign launch across all social channels. Coordinated push with email follow-up.",
-      hashtags: ["#spring2025", "#campaign", "#launch"],
+      description: "Official campaign launch across all social channels.",
+      hashtags: ["#spring2026", "#campaign", "#launch"],
     },
     {
       id: "6",
@@ -101,7 +97,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#QandA", "#liveqa", "#askme"],
     },
   ],
-  14: [
+  "2026-03-14": [
     {
       id: "7",
       title: "Engagement boost post",
@@ -113,7 +109,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#poll", "#community", "#feedback"],
     },
   ],
-  17: [
+  "2026-03-17": [
     {
       id: "8",
       title: "Midweek motivation",
@@ -135,7 +131,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#tutorial", "#autopost", "#zarzoomtips"],
     },
   ],
-  21: [
+  "2026-03-21": [
     {
       id: "10",
       title: "Weekend flash sale",
@@ -143,11 +139,11 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       status: "draft",
       platform: "Multi-platform",
       time: "08:00",
-      description: "Flash sale campaign with limited-time offers. Graphics and copy to be finalised.",
+      description: "Flash sale campaign with limited-time offers.",
       hashtags: ["#sale", "#flashsale", "#limitedtime"],
     },
   ],
-  24: [
+  "2026-03-24": [
     {
       id: "11",
       title: "User spotlight",
@@ -159,7 +155,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       hashtags: ["#spotlight", "#customerstory", "#success"],
     },
   ],
-  27: [
+  "2026-03-27": [
     {
       id: "12",
       title: "Month recap story",
@@ -167,7 +163,7 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       status: "draft",
       platform: "Instagram",
       time: "17:00",
-      description: "Story summarising the month's top content moments and engagement highlights.",
+      description: "Story summarising the month's top content moments.",
       hashtags: ["#monthlyrecap", "#highlights", "#zarzoom"],
     },
     {
@@ -179,6 +175,78 @@ export const MOCK_ITEMS: Record<number, PlannerItem[]> = {
       time: "09:00",
       description: "Long-form article reviewing content performance trends and AI-driven insights.",
       hashtags: ["#contentmarketing", "#insights", "#AI"],
+    },
+  ],
+  // April data so navigation into next month shows content
+  "2026-04-02": [
+    {
+      id: "14",
+      title: "April kick-off post",
+      type: "post",
+      status: "draft",
+      platform: "X (Twitter)",
+      time: "10:00",
+      description: "Opening the month with a bold statement post about what's coming in April.",
+      hashtags: ["#april", "#newmonth", "#zarzoom"],
+    },
+  ],
+  "2026-04-07": [
+    {
+      id: "15",
+      title: "Product demo reel",
+      type: "reel",
+      status: "scheduled",
+      platform: "TikTok",
+      time: "15:00",
+      description: "60-second product demo reel showcasing new ZARZOOM dashboard features.",
+      hashtags: ["#demo", "#product", "#zarzoom"],
+    },
+  ],
+  "2026-04-15": [
+    {
+      id: "16",
+      title: "Mid-month growth article",
+      type: "article",
+      status: "draft",
+      platform: "LinkedIn",
+      time: "08:30",
+      description: "Deep-dive into growth strategies using AI content scheduling.",
+      hashtags: ["#growth", "#AI", "#contentmarketing"],
+    },
+    {
+      id: "17",
+      title: "Audience poll story",
+      type: "story",
+      status: "review",
+      platform: "Instagram",
+      time: "12:00",
+      description: "Interactive story poll asking audience about preferred content formats.",
+      hashtags: ["#poll", "#audience", "#engagement"],
+    },
+  ],
+  // February data for navigating backwards
+  "2026-02-14": [
+    {
+      id: "18",
+      title: "Valentine's Day campaign",
+      type: "campaign",
+      status: "published",
+      platform: "Multi-platform",
+      time: "09:00",
+      description: "Valentine's Day themed campaign across all platforms.",
+      hashtags: ["#valentinesday", "#love", "#campaign"],
+    },
+  ],
+  "2026-02-20": [
+    {
+      id: "19",
+      title: "Weekly insights thread",
+      type: "post",
+      status: "published",
+      platform: "X (Twitter)",
+      time: "11:00",
+      description: "Weekly thread covering AI trends in social media automation.",
+      hashtags: ["#AI", "#trends", "#weekly"],
     },
   ],
 };
