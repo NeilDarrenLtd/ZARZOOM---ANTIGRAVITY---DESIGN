@@ -354,7 +354,9 @@ export default function BillingPage() {
                   {t("billing.cancellation.pendingDescription").replace(
                     "{date}",
                     formattedNextBilling ??
+
                       t("billing.overview.nextBillingDateUnknown")
+
                   )}
                 </p>
               </div>
