@@ -351,11 +351,11 @@ export default function BillingPage() {
                   {t("billing.cancellation.pendingTitle")}
                 </h2>
                 <p className="text-xs text-amber-800 mt-1">
-                  {t("billing.cancellation.pendingDescription", {
-                    date:
-                      formattedNextBilling ??
+                  {t("billing.cancellation.pendingDescription").replace(
+                    "{date}",
+                    formattedNextBilling ??
                       t("billing.overview.nextBillingDateUnknown"),
-                  })}
+                  )}
                 </p>
               </div>
             </div>
