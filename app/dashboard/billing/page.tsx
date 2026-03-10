@@ -585,10 +585,9 @@ export default function BillingPage() {
                     </p>
                     <p className="text-xs text-gray-500">
                       {formattedPrice
-                        ? t("billing.currentPlan.priceWithInterval", {
-                            price: formattedPrice,
-                            interval: billingIntervalLabel,
-                          })
+                        ? t("billing.currentPlan.priceWithInterval")
+                            .replace("{price}", formattedPrice)
+                            .replace("{interval}", billingIntervalLabel)
                         : t("billing.currentPlan.priceUnknown")}
                     </p>
                   </div>
