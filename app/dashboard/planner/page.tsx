@@ -6,6 +6,7 @@ import { ChevronRight, CalendarDays } from "lucide-react";
 import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import PlannerControlBar from "./PlannerControlBar";
+import PlannerSummaryStrip from "./PlannerSummaryStrip";
 import CalendarGrid from "./CalendarGrid";
 import SlideOverPanel from "./SlideOverPanel";
 import type { PlannerItem } from "./mock-data";
@@ -86,6 +87,9 @@ export default function PlannerPage() {
             ))}
           </div>
         </div>
+
+        {/* Summary strip */}
+        <PlannerSummaryStrip />
 
         {/* Control bar */}
         <div className="mb-4">
