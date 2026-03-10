@@ -15,7 +15,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2, Circle, ChevronRight } from "lucide-react";
+import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2, Circle, ChevronRight, BarChart3, CreditCard, CalendarDays } from "lucide-react";
 import {
   checkProfileCompleteness,
   type CompletenessResult,
@@ -308,7 +308,7 @@ export default function DashboardPage() {
                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                   <Building2 className="w-5 h-5 text-green-600" />
                 </div>
-                <h2 className="text-lg font-bold text-gray-900">Workspaces</h2>
+                <h2 className="text-lg font-bold text-gray-900">{t("dashboard.workspaces")}</h2>
               </div>
               <button
                 onClick={handleAddWorkspaceClick}
@@ -320,7 +320,7 @@ export default function DashboardPage() {
                 ) : (
                   <Plus className="w-4 h-4" />
                 )}
-                Add Workspace
+                {t("dashboard.addWorkspace")}
               </button>
             </div>
 
@@ -331,12 +331,12 @@ export default function DashboardPage() {
             )}
 
             <p className="text-sm text-gray-500 leading-relaxed mb-5">
-              Add multiple brands, regions, campaigns — and especially LANGUAGES — all from one ZARZOOM account. E.g. Nike – Global, Nike – French, Nike – Japanese, Reebok – French, Reebok – Japanese. Each one has its own 10 socials, analytics, API, and billing.
+              {t("dashboard.workspacesDescription")}
             </p>
 
             {workspaces.length === 0 ? (
               <p className="text-sm text-gray-400 text-center py-4">
-                No workspaces found. Click &quot;Add Workspace&quot; to get started.
+                {t("dashboard.noWorkspaces")}
               </p>
             ) : (
               <div className="flex flex-wrap gap-3">
@@ -348,9 +348,9 @@ export default function DashboardPage() {
                     payment_required: "bg-red-100 text-red-700",
                   };
                   const statusLabels: Record<string, string> = {
-                    active: "Paid",
-                    setup_incomplete: "Setup Incomplete",
-                    payment_required: "Payment Required",
+                    active: t("dashboard.statusPaid"),
+                    setup_incomplete: t("dashboard.statusSetupIncomplete"),
+                    payment_required: t("dashboard.statusPaymentRequired"),
                   };
                   const StatusIcon = ws.status === "active" ? Check : AlertCircle;
 
@@ -433,7 +433,7 @@ export default function DashboardPage() {
 
             {workspaces.length === 1 && (
               <p className="text-xs text-gray-500 mt-3">
-                Your account must have at least one workspace. Add another workspace first if you want to remove or replace this one.
+                {t("dashboard.minOneWorkspace")}
               </p>
             )}
           </div>
@@ -531,21 +531,21 @@ export default function DashboardPage() {
             </div>
           </Link>
 
-          {/* API & Integrations card */}
+          {/* Content Planner card */}
           <Link
-            href="/dashboard/api-keys"
-            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-emerald-300 hover:shadow-md transition-all block"
+            href="/dashboard/planner"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-teal-300 hover:shadow-md transition-all block"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                <Zap className="w-5 h-5 text-emerald-600" />
+              <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
+                <CalendarDays className="w-5 h-5 text-teal-600" />
               </div>
               <h2 className="text-lg font-bold text-gray-900">
-                API & Integrations
+                {t("dashboard.contentPlanner")}
               </h2>
             </div>
             <p className="text-sm text-gray-500 leading-relaxed">
-              Manage API keys, connect services, and configure integrations for your workspace.
+              {t("dashboard.contentPlannerDescription")}
             </p>
           </Link>
 
@@ -564,6 +564,60 @@ export default function DashboardPage() {
             </div>
             <p className="text-sm text-gray-500 leading-relaxed">
               {t("dashboard.comingSoon")}
+            </p>
+          </Link>
+
+          {/* Analytics card */}
+          <Link
+            href="/dashboard/analytics"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-sky-300 hover:shadow-md transition-all block"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-sky-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("dashboard.analytics")}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              {t("dashboard.analyticsDescription")}
+            </p>
+          </Link>
+
+          {/* Billing card */}
+          <Link
+            href="/dashboard/billing"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-orange-300 hover:shadow-md transition-all block"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                <CreditCard className="w-5 h-5 text-orange-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("dashboard.billing")}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              {t("dashboard.billingDescription")}
+            </p>
+          </Link>
+
+          {/* API & Integrations card */}
+          <Link
+            href="/dashboard/api-keys"
+            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-emerald-300 hover:shadow-md transition-all block"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                <Zap className="w-5 h-5 text-emerald-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900">
+                {t("dashboard.apiIntegrations")}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 leading-relaxed">
+              {t("dashboard.apiIntegrationsDescription")}
             </p>
           </Link>
 
@@ -622,10 +676,10 @@ export default function DashboardPage() {
         >
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
             <h2 id="add-workspace-title" className="text-lg font-bold text-gray-900 mb-2">
-              Add workspace
+              {t("dashboard.addWorkspaceTitle")}
             </h2>
             <label htmlFor="add-workspace-name" className="block text-sm font-medium text-gray-700 mb-1">
-              Workspace name
+              {t("dashboard.workspaceNameLabel")}
             </label>
             <input
               id="add-workspace-name"
@@ -636,7 +690,7 @@ export default function DashboardPage() {
               className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 outline-none text-gray-900 mb-4"
             />
             <p className="text-sm text-gray-600 mb-3">
-              How should the setup form start for this workspace?
+              {t("dashboard.setupFormPrompt")}
             </p>
             <div className="flex flex-col gap-3">
               <button
@@ -646,7 +700,7 @@ export default function DashboardPage() {
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 text-left text-sm font-medium text-gray-800 transition-colors disabled:opacity-50 flex items-center gap-3"
               >
                 <span className="flex h-9 w-9 rounded-lg bg-gray-100 items-center justify-center text-gray-600 font-bold">1</span>
-                <span><strong>New/Blank form</strong> — Start from scratch with no previous details</span>
+                <span><strong>{t("dashboard.newBlankForm")}</strong> — {t("dashboard.newBlankFormDescription")}</span>
               </button>
               <button
                 type="button"
@@ -655,7 +709,7 @@ export default function DashboardPage() {
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:bg-green-50 text-left text-sm font-medium text-gray-800 transition-colors disabled:opacity-50 flex items-center gap-3"
               >
                 <span className="flex h-9 w-9 rounded-lg bg-gray-100 items-center justify-center text-gray-600 font-bold">2</span>
-                <span><strong>Existing brand form</strong> — Copy details from {activeWorkspaceId ? (workspaces.find((w) => w.id === activeWorkspaceId)?.name ?? "current workspace") : "current workspace"}</span>
+                <span><strong>{t("dashboard.existingBrandForm")}</strong> — {t("dashboard.existingBrandFormDescription").replace("{name}", activeWorkspaceId ? (workspaces.find((w) => w.id === activeWorkspaceId)?.name ?? "current workspace") : "current workspace")}</span>
               </button>
             </div>
             {addWorkspaceError && (
@@ -672,7 +726,7 @@ export default function DashboardPage() {
               disabled={addWorkspaceLoading}
               className="mt-4 w-full py-2 text-sm text-gray-500 hover:text-gray-700"
             >
-              Cancel
+              {t("dashboard.cancel")}
             </button>
           </div>
         </div>
@@ -688,13 +742,13 @@ export default function DashboardPage() {
         >
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
             <h2 id="delete-workspace-title" className="text-lg font-bold text-gray-900 mb-2">
-              Delete workspace?
+              {t("dashboard.deleteWorkspaceTitle")}
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              This action is <strong>irreversible</strong>. The workspace &quot;{deleteConfirmWorkspace.name}&quot; and all its data — social accounts, content, analytics, API keys, and billing — will be permanently removed and cannot be recovered.
+              {t("dashboard.deleteWorkspaceWarning").replace("{name}", deleteConfirmWorkspace.name)}
             </p>
             <p className="text-sm text-gray-600 mb-6">
-              Are you sure you want to delete this workspace?
+              {t("dashboard.deleteWorkspaceConfirm")}
             </p>
             {deleteWorkspaceError && (
               <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2" role="alert">
@@ -711,7 +765,7 @@ export default function DashboardPage() {
                 disabled={deleteWorkspaceLoading}
                 className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
               >
-                Cancel
+                {t("dashboard.cancel")}
               </button>
               <button
                 type="button"
@@ -724,7 +778,7 @@ export default function DashboardPage() {
                 ) : (
                   <Trash2 className="w-4 h-4" />
                 )}
-                Delete workspace
+                {t("dashboard.deleteWorkspaceButton")}
               </button>
             </div>
           </div>
