@@ -52,10 +52,14 @@ export async function POST(req: NextRequest) {
       // If we can't check the session, proceed — the HMAC is sufficient
     }
 
-    // 3. Return sanitized returnTo
+    // 3. Return sanitized returnTo and workspace context
     const returnTo = sanitizeReturnTo(payload.returnTo);
 
-    return NextResponse.json({ success: true, returnTo });
+    return NextResponse.json({
+      success: true,
+      returnTo,
+      tenantId: payload.tenantId ?? null,
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json(

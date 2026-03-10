@@ -18,6 +18,8 @@ export interface StatePayload {
   returnTo: string;
   /** The authenticated user's ID — used to bind the session to this user. */
   userId: string;
+  /** The workspace/tenant ID — used to bind the flow to a specific workspace. */
+  tenantId: string;
   /** Unix timestamp (seconds) at which the token expires. */
   exp: number;
 }
@@ -70,17 +72,20 @@ function base64UrlDecode(str: string): Buffer {
  *
  * The token is structured as:  base64url(payload) + "." + base64url(signature)
  *
- * @param options.returnTo - Internal path to redirect to after connecting.
- * @param options.userId   - The current user's ID.
- * @param options.exp      - Optional explicit expiry (Unix seconds). Defaults to now + 10 min.
+ * @param options.returnTo  - Internal path to redirect to after connecting.
+ * @param options.userId    - The current user's ID.
+ * @param options.tenantId  - The workspace/tenant ID for this flow.
+ * @param options.exp       - Optional explicit expiry (Unix seconds). Defaults to now + 10 min.
  */
 export async function createState({
   returnTo,
   userId,
+  tenantId,
   exp,
 }: {
   returnTo: string;
   userId: string;
+  tenantId: string;
   exp?: number;
 }): Promise<string> {
   const secret = requireEnv("UPLOAD_POST_STATE_SECRET");
@@ -88,6 +93,7 @@ export async function createState({
   const payload: StatePayload = {
     returnTo: sanitizeReturnTo(returnTo),
     userId,
+    tenantId,
     exp: exp ?? Math.floor(Date.now() / 1000) + TTL_SECONDS,
   };
 

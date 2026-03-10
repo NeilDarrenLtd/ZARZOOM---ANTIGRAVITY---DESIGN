@@ -16,13 +16,17 @@ import { NextResponse } from "next/server";
  * their subscription (upgrade, downgrade, cancel, update payment method).
  *
  * Request body (optional):
- *   { returnUrl?: string }
+ *   { returnUrl?: string, flow?: "subscription_cancel" }
+ *
+ * When `flow` is "subscription_cancel", the session deep-links directly
+ * into the cancellation flow for the workspace's subscription and
+ * redirects back to `returnUrl` on completion.
  *
  * Response (200):
  *   { url: string }        -- Stripe Portal redirect URL
  *
  * Error responses:
- *   400 -- Stripe not configured
+ *   400 -- Stripe not configured / missing subscription for cancel flow
  *   404 -- no active subscription / no Stripe customer found
  *   500 -- Stripe API failure
  */
@@ -39,22 +43,31 @@ export const POST = createApiHandler({
 
     const tenantId = ctx.membership!.tenantId;
 
-    // Parse optional return URL
-    let returnUrl = SITE_URL + "/dashboard";
+    let returnUrl = SITE_URL + "/dashboard/billing";
+    let flow: string | undefined;
+
     try {
       const body = await ctx.req.json();
       if (body?.returnUrl && typeof body.returnUrl === "string") {
         returnUrl = body.returnUrl;
       }
+      if (body?.flow && typeof body.flow === "string") {
+        flow = body.flow;
+      }
     } catch {
-      // No body or invalid JSON -- use default returnUrl
+      // No body or invalid JSON -- use defaults
     }
 
-    // Look up the tenant's Stripe customer ID
     const supabase = await createAdminClient();
+
+    const selectFields =
+      flow === "subscription_cancel"
+        ? "billing_provider_customer_id, billing_provider_subscription_id"
+        : "billing_provider_customer_id";
+
     const { data: sub } = await supabase
       .from("tenant_subscriptions")
-      .select("billing_provider_customer_id")
+      .select(selectFields)
       .eq("tenant_id", tenantId)
       .not("billing_provider_customer_id", "is", null)
       .order("created_at", { ascending: false })
@@ -68,15 +81,40 @@ export const POST = createApiHandler({
       );
     }
 
-    // Create Stripe Portal session
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
       apiVersion: "2026-01-28.clover",
     });
 
-    const session = await stripe.billingPortal.sessions.create({
+    let sessionParams: Stripe.BillingPortal.SessionCreateParams = {
       customer: sub.billing_provider_customer_id,
       return_url: returnUrl,
-    });
+    };
+
+    if (flow === "subscription_cancel") {
+      const subId = (sub as Record<string, unknown>)
+        .billing_provider_subscription_id as string | null;
+
+      if (!subId) {
+        return badRequest(
+          ctx.requestId,
+          "No active subscription found for this workspace."
+        );
+      }
+
+      sessionParams = {
+        ...sessionParams,
+        flow_data: {
+          type: "subscription_cancel",
+          subscription_cancel: { subscription: subId },
+          after_completion: {
+            type: "redirect",
+            redirect: { return_url: returnUrl },
+          },
+        },
+      };
+    }
+
+    const session = await stripe.billingPortal.sessions.create(sessionParams);
 
     return NextResponse.json(
       { url: session.url },

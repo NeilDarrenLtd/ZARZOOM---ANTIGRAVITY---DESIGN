@@ -9,6 +9,8 @@ import {
   UPLOAD_POST_BASE,
 } from "@/lib/upload-post/http";
 import { getEffectivePlanForTenant } from "@/lib/billing/entitlements";
+import { deriveWorkspaceUploadPostUsername } from "@/lib/upload-post/identity";
+import { getServerTranslations } from "@/lib/i18n/server";
 
 const upDebug = process.env.UPLOAD_POST_DEBUG === "true";
 function upLog(...args: unknown[]) { if (upDebug) console.log("[upload-post]", ...args); }
@@ -53,7 +55,8 @@ function providerError(status: number, hint: string, snippet: string, requestId:
 /**
  * GET /api/upload-post/connect-url
  *
- * Returns an Upload-Post accessUrl for the authenticated user.
+ * Returns an Upload-Post accessUrl scoped to the selected workspace.
+ * The profile is created once per workspace and reused on subsequent calls.
  * SECURITY: Never exposes the API key to the browser.
  */
 export async function GET(req: NextRequest) {
@@ -102,7 +105,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Ensure singleton row
     await admin
       .from("app_settings")
       .upsert({ id: 1 }, { onConflict: "id", ignoreDuplicates: true });
@@ -142,51 +144,129 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // ── 3. Ensure Upload-Post user exists ────────────────────────────────
-    const ensureRes = await createUploadPostUser(apiKey, { username: user.id });
+    // ── 4. Resolve workspace Upload-Post identity ────────────────────────
+    const uploadPostUsername = deriveWorkspaceUploadPostUsername(tenantId);
 
-    // 409 = already exists → success
-    if (!ensureRes.ok && ensureRes.status !== 409) {
-      upError(`non-2xx op=create-user status=${ensureRes.status} body=${ensureRes.errorSnippet}`);
-      return providerError(ensureRes.status, "create-user", ensureRes.errorSnippet ?? "", requestId);
+    // Check if ANY user in this workspace already provisioned the profile
+    const { data: existingMapping } = await admin
+      .from("upload_post_mapping")
+      .select("upload_post_username")
+      .eq("tenant_id", tenantId)
+      .eq("upload_post_username", uploadPostUsername)
+      .limit(1)
+      .maybeSingle();
+
+    const alreadyProvisioned = !!existingMapping;
+
+    if (!alreadyProvisioned) {
+      upLog(`no provisioned profile for workspace ${tenantId}, attempting creation`);
+      const ensureRes = await createUploadPostUser(apiKey, {
+        username: uploadPostUsername,
+      });
+
+      // 201 = created, 409 = already exists — both are fine
+      // 403 = plan limit — the profile may already exist under this or an
+      //        older username format; we'll proceed to JWT generation and
+      //        let that step decide if there's a real problem.
+      if (!ensureRes.ok && ensureRes.status !== 409 && ensureRes.status !== 403) {
+        upError(`create-user failed status=${ensureRes.status} body=${ensureRes.errorSnippet}`);
+        return providerError(
+          ensureRes.status,
+          "create-user",
+          ensureRes.errorSnippet ?? "",
+          requestId
+        );
+      }
+
+      if (ensureRes.status === 403) {
+        upWarn("create-user returned 403 (limit) — profile may already exist, proceeding to JWT");
+      }
+
+      // Record the provisioned profile in the audit table (non-fatal)
+      admin
+        .from("upload_post_mapping")
+        .upsert(
+          {
+            tenant_id: tenantId,
+            user_id: user.id,
+            upload_post_username: uploadPostUsername,
+            last_connect_url_generated_at: new Date().toISOString(),
+          },
+          { onConflict: "tenant_id,user_id" }
+        )
+        .then(({ error: e }) => {
+          if (e) upWarn("mapping upsert failed:", e.message);
+        });
+    } else {
+      upLog(`profile already provisioned for workspace ${tenantId}, skipping creation`);
+      // Update last-connect timestamp (non-fatal)
+      admin
+        .from("upload_post_mapping")
+        .update({ last_connect_url_generated_at: new Date().toISOString() })
+        .eq("tenant_id", tenantId)
+        .eq("user_id", user.id)
+        .then(({ error: e }) => {
+          if (e) upWarn("mapping timestamp update failed:", e.message);
+        });
     }
 
-    // ── 4. Build signed state token ──────────────────────────────────────
+    // ── 5. Build signed state token ──────────────────────────────────────
     const rawReturnTo = req.nextUrl.searchParams.get("returnTo") ?? "/dashboard";
     const returnTo = sanitizeReturnTo(rawReturnTo);
 
     let state: string;
     try {
-      state = await createState({ returnTo, userId: user.id });
+      state = await createState({ returnTo, userId: user.id, tenantId });
     } catch (stateErr) {
       const msg = stateErr instanceof Error ? stateErr.message : String(stateErr);
       upError("createState failed:", msg);
       return jsonError(500, `State token error: ${msg}`, requestId);
     }
 
-    // ── 5. Build redirect URL ────────────────────────────────────────────
+    // ── 6. Build redirect URL ────────────────────────────────────────────
     const baseUrl = getBaseUrl();
     const redirectUrl = `${baseUrl}/integrations/upload-post/return?state=${encodeURIComponent(state)}`;
-    
+
     upLog(`redirect_url built: baseUrl=${baseUrl} redirectUrl=${redirectUrl.substring(0, 100)}...`);
 
-    // ── 6. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
+    // ── 7. Load locale-specific text for Upload-Post JWT fields ──────────
+    const locale = req.nextUrl.searchParams.get("locale") ?? "en";
+    const t = await getServerTranslations(locale);
+
+    const localizedTitle = t("connect.uploadPost.connectTitle");
+    const localizedDescription = t("connect.uploadPost.connectDescription");
+    const localizedButtonText = t("connect.uploadPost.redirectButtonText");
+
+    // ── 8. Fetch Upload-Post JWT / accessUrl ─────────────────────────────
     const uiConfig = getUploadPostUiConfig();
 
     const jwtBody: Parameters<typeof generateUploadPostJwt>[1] = {
-      username: user.id,
+      username: uploadPostUsername,
       redirect_url: redirectUrl,
       show_calendar: false,
-      ...(uiConfig.logoUrl            && { logo_image:            uiConfig.logoUrl }),
-      ...(uiConfig.connectTitle        && { connect_title:         uiConfig.connectTitle }),
-      ...(uiConfig.connectDescription  && { connect_description:   uiConfig.connectDescription }),
-      ...(uiConfig.redirectButtonText  && { redirect_button_text:  uiConfig.redirectButtonText }),
+      logo_image: uiConfig.logoUrl,
+      connect_title: localizedTitle,
+      connect_description: localizedDescription,
+      redirect_button_text: localizedButtonText,
       ...(uiConfig.defaultPlatforms?.length && { platforms: uiConfig.defaultPlatforms }),
     };
 
-    upLog(`generate-jwt request body keys: ${Object.keys(jwtBody).join(", ")} (show_calendar=false)`);
+    upLog(`generate-jwt request body keys: ${Object.keys(jwtBody).join(", ")} locale=${locale}`);
 
-    const jwtRes = await generateUploadPostJwt(apiKey, jwtBody);
+    let jwtRes = await generateUploadPostJwt(apiKey, jwtBody);
+
+    // If the workspace-scoped profile doesn't exist yet (404), fall back to
+    // the legacy user-based profile that may have been created before the
+    // workspace-scoped refactor.
+    if (!jwtRes.ok && jwtRes.status === 404) {
+      upWarn(`generate-jwt 404 for ${uploadPostUsername}, trying legacy user.id fallback`);
+      const legacyJwtBody = { ...jwtBody, username: user.id };
+      const legacyRes = await generateUploadPostJwt(apiKey, legacyJwtBody);
+      if (legacyRes.ok && legacyRes.data) {
+        upLog("legacy user.id profile found — using it");
+        jwtRes = legacyRes;
+      }
+    }
 
     if (!jwtRes.ok || !jwtRes.data) {
       return providerError(jwtRes.status, "generate-jwt", jwtRes.errorSnippet ?? "", requestId);
@@ -199,35 +279,7 @@ export async function GET(req: NextRequest) {
       return jsonError(502, "No accessUrl in provider response", requestId);
     }
 
-    // ── 7. Upsert audit trail per workspace (non-fatal) ─────────────────────
-    if (tenantId) {
-      const { data: mem } = await admin
-        .from("tenant_memberships")
-        .select("tenant_id")
-        .eq("tenant_id", tenantId)
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (mem) {
-        admin
-          .from("upload_post_mapping")
-          .upsert(
-            {
-              tenant_id: tenantId,
-              user_id: user.id,
-              upload_post_username: user.id,
-              last_connect_url_generated_at: new Date().toISOString(),
-            },
-            { onConflict: "tenant_id,user_id" }
-          )
-          .then(({ error: e }) => {
-            if (e) upWarn("mapping upsert failed:", e.message);
-          });
-      }
-    } else {
-      upWarn("no X-Tenant-Id header — upload_post_mapping not updated (workspace-scoped)");
-    }
-
-    // ── 8. Return ────────────────────────────────────────────────────────
+    // ── 9. Return ────────────────────────────────────────────────────────
     upLog("success — accessUrl obtained");
     return NextResponse.json(
       { accessUrl },

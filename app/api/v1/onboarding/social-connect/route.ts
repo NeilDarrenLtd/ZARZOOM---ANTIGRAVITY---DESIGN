@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getEffectivePlanForTenant } from "@/lib/billing/entitlements";
+import { deriveWorkspaceUploadPostUsername } from "@/lib/upload-post/identity";
 
 // ──────────────────────────────────────────────────────────────────
 // POST /api/v1/onboarding/social-connect
 //
 // Onboarding-scoped endpoint that:
-//   1. Derives a deterministic Upload-Post username from user_id
+//   1. Derives a deterministic Upload-Post username from workspace/tenant ID
 //   2. Persists it to onboarding_profiles.uploadpost_profile_username
 //   3. Calls Upload-Post to create the profile (if not already created)
 //   4. Calls Upload-Post to generate a JWT connect URL
@@ -16,11 +17,6 @@ import { getEffectivePlanForTenant } from "@/lib/billing/entitlements";
 // If Upload-Post env vars are missing, returns a fallback connect_url
 // so the UI can still render the modal in demo / staging mode.
 // ──────────────────────────────────────────────────────────────────
-
-function deriveUsername(userId: string): string {
-  // Deterministic: "u_" + first 8 chars of the UUID (hyphens stripped)
-  return `u_${userId.replace(/-/g, "").slice(0, 8)}`;
-}
 
 async function resolveTenantId(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -70,18 +66,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. Derive or reuse existing username for this workspace
+    // 1. Derive workspace-scoped username (or reuse if already stored and matches)
     const { data: profile } = await supabase
       .from("onboarding_profiles")
       .select("uploadpost_profile_username")
       .eq("tenant_id", tenantId)
       .maybeSingle();
 
+    const workspaceUsername = deriveWorkspaceUploadPostUsername(tenantId);
     const username =
-      profile?.uploadpost_profile_username || deriveUsername(user.id);
+      profile?.uploadpost_profile_username === workspaceUsername
+        ? profile.uploadpost_profile_username
+        : workspaceUsername;
 
-    // 2. Persist username to onboarding_profiles (if not already set)
-    if (!profile?.uploadpost_profile_username) {
+    // 2. Persist workspace-scoped username (update if stale or missing)
+    if (profile?.uploadpost_profile_username !== username) {
       await supabase
         .from("onboarding_profiles")
         .update({ uploadpost_profile_username: username })

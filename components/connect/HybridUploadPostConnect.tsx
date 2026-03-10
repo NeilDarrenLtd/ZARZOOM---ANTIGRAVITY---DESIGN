@@ -2,7 +2,14 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react";
+import {
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ExternalLink,
+  XCircle,
+  Link2,
+} from "lucide-react";
 import { openBlankCenteredPopup, navigatePopup } from "@/lib/ui/popup";
 import { useI18n } from "@/lib/i18n";
 import { getActiveWorkspaceIdFromCookie } from "@/lib/workspace/active";
@@ -14,6 +21,8 @@ type UIState =
   | "mobile_redirecting"
   | "desktop_waiting"
   | "success"
+  | "cancelled"
+  | "subscription_required"
   | "error";
 
 interface Props {
@@ -38,15 +47,21 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       if (event.origin !== window.location.origin) return;
       if (event.data?.type !== "UPLOADPOST_CONNECTED") return;
       setUiState("success");
-      const tenantId = getActiveWorkspaceIdFromCookie();
-      const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
-      fetch("/api/v1/onboarding/social-connect/status", { method: "GET", headers })
-        .catch(() => {/* non-fatal */})
-        .finally(() => router.refresh());
+      syncConnectionStatus();
     }
 
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
+  }, [router]);
+
+  /* ── Sync connection status with backend ────────────────────────────── */
+
+  const syncConnectionStatus = useCallback(() => {
+    const tenantId = getActiveWorkspaceIdFromCookie();
+    const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
+    fetch("/api/v1/onboarding/social-connect/status", { method: "GET", headers })
+      .catch(() => {})
+      .finally(() => router.refresh());
   }, [router]);
 
   /* ── Poll popup closed (desktop) ───────────────────────────────────────── */
@@ -57,22 +72,44 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
     const interval = setInterval(() => {
       if (popupRef.current?.closed) {
         clearInterval(interval);
-        // If no success message arrived, show soft error
-        setUiState((prev) =>
-          prev === "desktop_waiting" ? "error" : prev
-        );
-        setErrorMsg("Window was closed before completing the connection.");
+        if (uiState !== "desktop_waiting") return;
+
+        const tenantId = getActiveWorkspaceIdFromCookie();
+        const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
+        fetch("/api/v1/onboarding/social-connect/status", { method: "GET", headers })
+          .then((res) => res.json())
+          .then((body) => {
+            const connected = body?.data?.connected === true;
+            if (connected) {
+              setUiState("success");
+            } else {
+              setUiState("cancelled");
+            }
+            router.refresh();
+          })
+          .catch(() => {
+            setUiState("cancelled");
+          });
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [uiState]);
+  }, [uiState, router]);
 
-  /* ── Fetch access URL ──────────────────────────────────────────────────── */
+  /* ── Fetch access URL (with locale for localized JWT fields) ─────────── */
 
   const fetchAccessUrl = useCallback(async (): Promise<string | null> => {
     try {
       const params = new URLSearchParams({ returnTo });
+
+      const localeCookie = document.cookie
+        .split("; ")
+        .find((c) => c.startsWith("locale="));
+      const locale = localeCookie
+        ? decodeURIComponent(localeCookie.split("=")[1])
+        : "en";
+      params.set("locale", locale);
+
       const tenantId = getActiveWorkspaceIdFromCookie();
       const headers: HeadersInit = tenantId ? { "X-Tenant-Id": tenantId } : {};
       const res = await fetch(`/api/upload-post/connect-url?${params}`, { headers });
@@ -80,20 +117,25 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
 
       if (!res.ok) {
         const err = body?.error ?? {};
-        let msg: string;
 
+        if (err.code === "SUBSCRIPTION_REQUIRED") {
+          setUiState("subscription_required");
+          return null;
+        }
+
+        let msg: string;
         if (err.code === "NOT_CONFIGURED") {
-          msg = err.message ?? "Social connector is not configured. Please contact your administrator.";
+          msg = err.message ?? t("connect.errorTitle");
         } else if (err.code === "PROVIDER_ERROR") {
-          msg = `${err.message ?? "The social provider returned an error."}${err.hint ? ` (${err.hint})` : ""}`;
+          msg = `${err.message ?? t("connect.errorTitle")}${err.hint ? ` (${err.hint})` : ""}`;
         } else {
-          msg = err.message ?? `Something went wrong (HTTP ${res.status}).`;
+          msg = err.message ?? t("connect.errorTitle");
         }
 
         throw new Error(msg);
       }
 
-      if (!body.accessUrl) throw new Error("No access URL returned.");
+      if (!body.accessUrl) throw new Error(t("connect.errorTitle"));
       setAccessUrl(body.accessUrl);
       return body.accessUrl;
     } catch (err) {
@@ -102,7 +144,7 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       setUiState("error");
       return null;
     }
-  }, [returnTo]);
+  }, [returnTo, t]);
 
   /* ── Main connect handler ──────────────────────────────────────────────── */
 
@@ -116,18 +158,14 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
       return;
     }
 
-    // Desktop: open popup synchronously (must be inside click handler)
     const popup = openBlankCenteredPopup("uploadpost-connect");
     popupRef.current = popup;
 
     if (!popup) {
-      // Blocked — fetch URL and offer fallback link
       const url = await fetchAccessUrl();
       if (url) {
         setUiState("error");
-        setErrorMsg(
-          "Your browser blocked the popup. Use the link below to continue."
-        );
+        setErrorMsg(t("connect.popupBlocked"));
       }
       return;
     }
@@ -138,10 +176,9 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
     if (url) {
       navigatePopup(popup, url);
     } else {
-      // fetchAccessUrl already set error state
       popup.close();
     }
-  }, [fetchAccessUrl]);
+  }, [fetchAccessUrl, t]);
 
   /* ── Continue handler ──────────────────────────────────────────────────── */
 
@@ -161,8 +198,7 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
   /* ── Render ────────────────────────────────────────────────────────────── */
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-12 text-center">
-      {/* Origin label */}
+    <div className="flex flex-col items-center gap-6 text-center">
       {originLabel && (
         <p className="text-xs text-muted-foreground uppercase tracking-widest">
           {originLabel}
@@ -171,50 +207,57 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
 
       {/* ── IDLE ── */}
       {uiState === "idle" && (
-        <>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight text-balance">
-            {t("connect.heading")}
-          </h1>
-          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed text-pretty">
-            {t("connect.subheading")}
-          </p>
-          <div className="flex flex-col items-center gap-3 w-full max-w-sm mt-2">
+        <div className="flex flex-col items-center gap-5 w-full">
+          <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center">
+            <Link2 className="w-7 h-7 text-green-600" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-foreground">
+              {t("connect.heading")}
+            </h2>
+            <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
+              {t("connect.subheading")}
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-3 w-full max-w-sm mt-1">
             <button
               onClick={handleConnect}
-              className="w-full rounded-xl px-8 py-4 text-base font-bold text-white bg-green-600 hover:bg-green-700 transition-colors active:scale-[0.98]"
+              className="w-full rounded-xl px-8 py-3.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors active:scale-[0.98]"
             >
               {t("connect.connectAccounts")}
             </button>
             <button
               onClick={() => router.push(returnTo)}
-              className="w-full rounded-xl border border-border px-8 py-4 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("connect.back")}
             </button>
           </div>
-        </>
+        </div>
       )}
 
       {/* ── MOBILE REDIRECTING ── */}
       {uiState === "mobile_redirecting" && (
-        <>
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+        <div className="flex flex-col items-center gap-3 py-4">
+          <Loader2 className="w-7 h-7 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
-            Redirecting to connect…
+            {t("connect.redirecting")}
           </p>
-        </>
+        </div>
       )}
 
       {/* ── DESKTOP WAITING ── */}
       {uiState === "desktop_waiting" && (
-        <>
-          <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-          <h2 className="text-lg font-semibold text-foreground">
-            Popup opened — complete the connection in that window.
-          </h2>
-          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-            Once you finish, this page will update automatically.
-          </p>
+        <div className="flex flex-col items-center gap-4 py-4">
+          <Loader2 className="w-7 h-7 animate-spin text-green-600" />
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("connect.popupWaiting")}
+            </h2>
+            <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
+              {t("connect.popupWaitingHint")}
+            </p>
+          </div>
           {accessUrl && (
             <a
               href={accessUrl}
@@ -223,69 +266,144 @@ export default function HybridUploadPostConnect({ returnTo, originLabel }: Props
               className="flex items-center gap-1.5 text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" />
-              If nothing happens, click here to continue
+              {t("connect.popupFallbackLink")}
             </a>
           )}
-        </>
+        </div>
       )}
 
       {/* ── SUCCESS ── */}
       {uiState === "success" && (
-        <>
-          <CheckCircle2 className="w-10 h-10 text-green-600" />
-          <h2 className="text-lg font-semibold text-foreground">
-            Accounts connected
-          </h2>
-          <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-            Your social accounts have been linked successfully.
-          </p>
-          <button
-            onClick={handleContinue}
-            className="rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
-          >
-            Continue
-          </button>
-        </>
+        <div className="flex flex-col items-center gap-4 py-4">
+          <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-green-600" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("connect.successTitle")}
+            </h2>
+            <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
+              {t("connect.successBody")}
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-3 w-full max-w-xs mt-1">
+            <button
+              onClick={handleContinue}
+              className="w-full rounded-xl bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
+            >
+              {t("connect.continue")}
+            </button>
+            <button
+              onClick={handleRetry}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("connect.connectMore")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── CANCELLED (user closed popup without completing) ── */}
+      {uiState === "cancelled" && (
+        <div className="flex flex-col items-center gap-4 py-4">
+          <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center">
+            <XCircle className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("connect.cancelledTitle")}
+            </h2>
+            <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
+              {t("connect.cancelledBody")}
+            </p>
+          </div>
+          <div className="flex flex-col items-center gap-3 w-full max-w-xs mt-1">
+            <button
+              onClick={handleRetry}
+              className="w-full rounded-xl bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
+            >
+              {t("connect.cancelledRetry")}
+            </button>
+            <button
+              onClick={() => router.push(returnTo)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("connect.back")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── SUBSCRIPTION REQUIRED ── */}
+      {uiState === "subscription_required" && (
+        <div className="flex flex-col items-center gap-4 py-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-amber-500" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("connect.subscriptionRequired")}
+            </h2>
+          </div>
+          <div className="flex flex-col items-center gap-3 w-full max-w-xs mt-1">
+            <button
+              onClick={() => router.push("/pricing")}
+              className="w-full rounded-xl bg-green-600 px-6 py-3 text-sm font-semibold text-white hover:bg-green-700 transition-colors"
+            >
+              {t("connect.viewPlans")}
+            </button>
+            <button
+              onClick={() => router.push(returnTo)}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t("connect.back")}
+            </button>
+          </div>
+        </div>
       )}
 
       {/* ── ERROR ── */}
       {uiState === "error" && (
-        <>
-          <AlertCircle className="w-8 h-8 text-destructive" />
-          <h2 className="text-lg font-semibold text-foreground">
-            Connection not completed
-          </h2>
-          {errorMsg && (
-            <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-              {errorMsg}
-            </p>
-          )}
-          <div className="flex flex-col items-center gap-3 w-full max-w-xs">
+        <div className="flex flex-col items-center gap-4 py-4">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center">
+            <AlertCircle className="w-7 h-7 text-destructive" />
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-foreground">
+              {t("connect.errorTitle")}
+            </h2>
+            {errorMsg && (
+              <p className="mt-1 max-w-sm mx-auto text-sm text-muted-foreground leading-relaxed">
+                {errorMsg}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col items-center gap-3 w-full max-w-xs mt-1">
             <button
               onClick={handleRetry}
-              className="w-full rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
+              className="w-full rounded-xl bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
             >
-              Try again
+              {t("connect.retry")}
             </button>
             {accessUrl && (
               <a
                 href={accessUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 w-full rounded-lg border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+                className="flex items-center justify-center gap-1.5 w-full rounded-xl border border-border px-6 py-3 text-sm font-medium text-foreground hover:bg-accent transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
-                Open in new tab
+                {t("connect.openNewTab")}
               </a>
             )}
             <button
               onClick={() => router.push(returnTo)}
-              className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               {t("connect.back")}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

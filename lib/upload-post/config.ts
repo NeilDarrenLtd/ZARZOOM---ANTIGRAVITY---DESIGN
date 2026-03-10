@@ -114,14 +114,15 @@ export function getDefaultPlatforms(): string[] | undefined {
  */
 export function getUploadPostUiConfig() {
   return {
-    logoUrl: process.env.UPLOAD_POST_LOGO_URL ?? null,
+    logoUrl:
+      process.env.UPLOAD_POST_LOGO_URL || `${getBaseUrl()}/zarzoom-logo.png`,
     connectTitle:
-      process.env.UPLOAD_POST_CONNECT_TITLE ?? "Connect Social Accounts",
+      process.env.UPLOAD_POST_CONNECT_TITLE ?? "ZARZOOM — Connect Accounts",
     connectDescription:
       process.env.UPLOAD_POST_CONNECT_DESCRIPTION ??
-      "Link your social media accounts to enable publishing.",
+      "Link your social media accounts to start publishing with ZARZOOM.",
     redirectButtonText:
-      process.env.UPLOAD_POST_REDIRECT_BUTTON_TEXT ?? "Connect Accounts",
+      process.env.UPLOAD_POST_REDIRECT_BUTTON_TEXT ?? "Return to ZARZOOM",
     defaultPlatforms: getDefaultPlatforms(),
   };
 }

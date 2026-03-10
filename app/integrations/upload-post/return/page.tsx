@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 import UploadPostReturnContent from "./content";
 
-// Mark as dynamic since this page requires the 'state' query parameter from OAuth redirects
 export const dynamic = "force-dynamic";
 
 export default function UploadPostReturnPage() {
@@ -12,7 +12,7 @@ export default function UploadPostReturnPage() {
       fallback={
         <div className="flex min-h-screen items-center justify-center p-6">
           <div className="flex flex-col items-center text-center max-w-sm">
-            <p className="text-sm text-muted-foreground">Verifying connection…</p>
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
         </div>
       }

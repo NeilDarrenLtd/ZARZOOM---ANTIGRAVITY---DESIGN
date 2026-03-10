@@ -93,10 +93,42 @@
     "deleteWorkspaceButton": "Usuń przestrzeń roboczą"
   },
   "connect": {
+    "pageTitle": "Connected Accounts",
+    "pageDescription": "Link your social media accounts to enable automated posting, scheduling, and analytics for this workspace.",
+    "backToDashboard": "Back to Dashboard",
     "heading": "Połącz swoje konta",
     "subheading": "Połącz konta w social media, aby zacząć publikować automatycznie z ZARZOOM.",
     "connectAccounts": "Połącz konta",
-    "back": "Wstecz"
+    "connectMore": "Connect more accounts",
+    "back": "Wstecz",
+    "redirecting": "Redirecting to connect…",
+    "popupWaiting": "Complete the connection in the popup window",
+    "popupWaitingHint": "Once you finish, this page will update automatically.",
+    "popupFallbackLink": "If nothing happens, click here to continue",
+    "popupBlocked": "Your browser blocked the popup. Use the link below to continue.",
+    "successTitle": "Accounts connected",
+    "successBody": "Your social accounts have been linked successfully.",
+    "continue": "Continue",
+    "errorTitle": "Connection not completed",
+    "retry": "Try again",
+    "openNewTab": "Open in new tab",
+    "cancelledTitle": "Connection cancelled",
+    "cancelledBody": "You closed the window before finishing. Your existing connections are still active.",
+    "cancelledRetry": "Try again",
+    "subscriptionRequired": "An active subscription is required to connect social accounts.",
+    "viewPlans": "View Plans",
+    "returnVerifying": "Verifying connection…",
+    "returnSuccessPopup": "Accounts connected successfully.",
+    "returnSuccessPopupHint": "You can close this window and return to the app.",
+    "returnRedirecting": "Redirecting…",
+    "returnErrorTitle": "Connection not completed",
+    "returnErrorDefault": "The connection could not be verified. Please try again.",
+    "returnBackToConnect": "Back to Connect Accounts",
+    "uploadPost": {
+      "connectTitle": "ZARZOOM — Connect Accounts",
+      "connectDescription": "Link your social media accounts to start publishing with ZARZOOM.",
+      "redirectButtonText": "Return to ZARZOOM"
+    }
   },
   "brandSettings": {
     "autoFillFromFile": "Uzupełnij z pliku"
@@ -731,6 +763,20 @@
         "dedicatedSupport": "Dedykowany opiekun konta",
         "apiAccess": "Pełny dostęp do API"
       }
+    },
+    "cancellation": {
+      "title": "Subscription Management",
+      "subtitle": "Manage or cancel your workspace subscription.",
+      "cancelButton": "Cancel Subscription",
+      "cancelDescription": "Your subscription will remain active until the end of your current billing period. After that, your workspace will lose access to paid features.",
+      "cancelConfirmNote": "You'll be redirected to our secure billing portal to confirm cancellation.",
+      "pendingTitle": "Cancellation Scheduled",
+      "pendingDescription": "Your subscription is set to cancel. You'll continue to have full access until {date}.",
+      "reactivateButton": "Reactivate Subscription",
+      "reactivateDescription": "Changed your mind? Reactivate to keep your current plan.",
+      "reactivateNote": "You'll be redirected to our secure billing portal to reactivate.",
+      "canceledTitle": "Subscription Ended",
+      "canceledDescription": "This workspace no longer has an active subscription."
     }
   }
 }

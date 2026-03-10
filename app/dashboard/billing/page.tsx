@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useWorkspaceFetch, useActiveWorkspace } from "@/lib/workspace/context";
 import SiteNavbar from "@/components/SiteNavbar";
@@ -13,6 +13,9 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowLeft,
+  XCircle,
+  RotateCcw,
+  Clock,
 } from "lucide-react";
 
 interface SubscriptionInfo {
@@ -39,30 +42,33 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [sub, setSub] = useState<SubscriptionInfo | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [workspace, setWorkspace] = useState<WorkspaceSummary | null>(null);
 
-  // Load subscription + workspace summary for the active workspace
-  useEffect(() => {
-    if (!activeWorkspaceId) {
-      setLoading(false);
-      setSub(null);
-      setWorkspace(null);
-      return;
-    }
-    let mounted = true;
-    (async () => {
+  const fetchIdRef = useRef(0);
+
+  const fetchBillingData = useCallback(
+    async (signal?: AbortSignal) => {
+      if (!activeWorkspaceId) {
+        setSub(null);
+        setWorkspace(null);
+        setLoading(false);
+        return;
+      }
+
+      const id = ++fetchIdRef.current;
+
       try {
         const [statusRes, workspacesRes] = await Promise.allSettled([
-          workspaceFetch("/api/v1/billing/status"),
-          workspaceFetch("/api/v1/workspaces"),
+          workspaceFetch("/api/v1/billing/status", { signal }),
+          workspaceFetch("/api/v1/workspaces", { signal }),
         ]);
 
-        if (!mounted) return;
+        if (fetchIdRef.current !== id) return;
 
         if (statusRes.status === "fulfilled" && statusRes.value.ok) {
-          const data = await statusRes.value.json();
-          setSub(data);
+          setSub(await statusRes.value.json());
         } else {
           setSub(null);
         }
@@ -75,47 +81,106 @@ export default function BillingPage() {
               name: w.name ?? "Workspace",
             })
           );
-          const current = list.find((w) => w.id === activeWorkspaceId) ?? null;
-          setWorkspace(current);
+          setWorkspace(
+            list.find((w) => w.id === activeWorkspaceId) ?? null
+          );
         } else {
           setWorkspace(null);
         }
       } catch {
-        if (!mounted) return;
+        if (fetchIdRef.current !== id) return;
         setSub(null);
         setWorkspace(null);
       } finally {
-        if (mounted) setLoading(false);
+        if (fetchIdRef.current === id) setLoading(false);
       }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, [activeWorkspaceId, workspaceFetch]);
+    },
+    [activeWorkspaceId, workspaceFetch]
+  );
 
-  const handleManageBilling = useCallback(async () => {
-    setPortalLoading(true);
-    setPortalError(null);
-    try {
-      const res = await workspaceFetch("/api/v1/billing/portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ returnUrl: window.location.href }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-          return;
+  useEffect(() => {
+    setLoading(true);
+    const ac = new AbortController();
+    fetchBillingData(ac.signal);
+    return () => ac.abort();
+  }, [fetchBillingData]);
+
+  // Re-fetch after returning from Stripe portal
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("portal_return")) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("portal_return");
+      window.history.replaceState({}, "", url.toString());
+      fetchBillingData();
+    }
+  }, [fetchBillingData]);
+
+  const portalReturnUrl = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("portal_return", "1");
+    return url.toString();
+  }, []);
+
+  const openPortal = useCallback(
+    async (flow?: string) => {
+      const isCancel = flow === "subscription_cancel";
+      if (isCancel) {
+        setCancelLoading(true);
+      } else {
+        setPortalLoading(true);
+      }
+      setPortalError(null);
+
+      try {
+        const payload: Record<string, string> = {
+          returnUrl: portalReturnUrl,
+        };
+        if (flow) payload.flow = flow;
+
+        const res = await workspaceFetch("/api/v1/billing/portal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.url) {
+            window.location.href = data.url;
+            return;
+          }
+        }
+        setPortalError(t("billing.errors.portalOpenFailed"));
+      } catch {
+        setPortalError(t("billing.errors.generic"));
+      } finally {
+        if (isCancel) {
+          setCancelLoading(false);
+        } else {
+          setPortalLoading(false);
         }
       }
-      setPortalError(t("billing.errors.portalOpenFailed"));
-    } catch {
-      setPortalError(t("billing.errors.generic"));
-    } finally {
-      setPortalLoading(false);
-    }
-  }, [workspaceFetch, t]);
+    },
+    [workspaceFetch, t, portalReturnUrl]
+  );
+
+  const handleManageBilling = useCallback(
+    () => openPortal(),
+    [openPortal]
+  );
+
+  const handleCancelSubscription = useCallback(
+    () => openPortal("subscription_cancel"),
+    [openPortal]
+  );
+
+  const handleReactivate = useCallback(
+    () => openPortal(),
+    [openPortal]
+  );
 
   const status = sub?.status || "none";
 
@@ -147,7 +212,7 @@ export default function BillingPage() {
           chipBg: "bg-red-100 text-red-700",
           iconBg: "bg-red-100",
           iconColor: "text-red-600",
-          icon: AlertCircle,
+          icon: XCircle,
           labelKey: "billing.status.canceled",
         },
         incomplete: {
@@ -168,16 +233,20 @@ export default function BillingPage() {
     []
   );
 
-  const config = statusConfig[status as keyof typeof statusConfig] ?? statusConfig.none;
+  const config =
+    statusConfig[status as keyof typeof statusConfig] ?? statusConfig.none;
   const StatusIcon = config.icon;
 
-  const hasActiveSubscription = ["active", "trialing", "past_due"].includes(status);
+  const hasActiveSubscription = ["active", "trialing", "past_due"].includes(
+    status
+  );
+  const isCancelPending =
+    hasActiveSubscription && sub?.cancelAtPeriodEnd === true;
 
   const formattedNextBilling = useMemo(() => {
     if (!sub?.currentPeriodEnd) return null;
     try {
-      const date = new Date(sub.currentPeriodEnd);
-      return date.toLocaleDateString(undefined, {
+      return new Date(sub.currentPeriodEnd).toLocaleDateString(undefined, {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -213,7 +282,8 @@ export default function BillingPage() {
 
   const renderPlanFeatureList = () => {
     if (!currentPlanKey) return null;
-    if (!["basic", "pro", "advanced", "scale"].includes(currentPlanKey)) return null;
+    if (!["basic", "pro", "advanced", "scale"].includes(currentPlanKey))
+      return null;
 
     const featureBase = `billing.features.${currentPlanKey}`;
 
@@ -221,11 +291,134 @@ export default function BillingPage() {
       <ul className="mt-3 space-y-1.5 text-sm text-gray-600">
         <li>• {t(`${featureBase}.socialProfiles`)}</li>
         <li>• {t(`${featureBase}.postsPerMonth`)}</li>
-        {currentPlanKey === "basic" && <li>• {t(`${featureBase}.emailSupport`)}</li>}
+        {currentPlanKey === "basic" && (
+          <li>• {t(`${featureBase}.emailSupport`)}</li>
+        )}
         {currentPlanKey !== "basic" && (
-          <li>• {t(`${featureBase}.analytics`, t("billing.currentPlan.defaultFeatureAnalytics"))}</li>
+          <li>
+            •{" "}
+            {t(
+              `${featureBase}.analytics`,
+              t("billing.currentPlan.defaultFeatureAnalytics")
+            )}
+          </li>
         )}
       </ul>
+    );
+  };
+
+  const renderCancellationCard = () => {
+    if (status === "none") return null;
+
+    if (status === "canceled" && !isCancelPending) {
+      return (
+        <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <XCircle className="w-5 h-5 text-red-600" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-sm font-semibold text-gray-900">
+                {t("billing.cancellation.canceledTitle")}
+              </h2>
+              <p className="text-xs text-gray-500 mt-1">
+                {t("billing.cancellation.canceledDescription")}
+              </p>
+              <div className="mt-4">
+                <Link
+                  href="/pricing"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white text-xs font-semibold hover:bg-gray-800 transition-colors"
+                >
+                  {t("billing.actions.viewPlans")}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (isCancelPending) {
+      return (
+        <section className="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
+          <div className="bg-amber-50 border-b border-amber-200 px-6 py-4">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Clock className="w-5 h-5 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-sm font-semibold text-amber-900">
+                  {t("billing.cancellation.pendingTitle")}
+                </h2>
+                <p className="text-xs text-amber-800 mt-1">
+                  {t("billing.cancellation.pendingDescription", {
+                    date:
+                      formattedNextBilling ??
+                      t("billing.overview.nextBillingDateUnknown"),
+                  })}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="px-6 py-4">
+            <p className="text-xs text-gray-500 mb-3">
+              {t("billing.cancellation.reactivateDescription")}
+            </p>
+            <p className="text-xs text-gray-400 mb-4">
+              {t("billing.cancellation.reactivateNote")}
+            </p>
+            <button
+              type="button"
+              onClick={handleReactivate}
+              disabled={portalLoading}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors disabled:opacity-50"
+            >
+              {portalLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RotateCcw className="w-4 h-4" />
+              )}
+              {t("billing.cancellation.reactivateButton")}
+            </button>
+          </div>
+        </section>
+      );
+    }
+
+    if (!hasActiveSubscription) return null;
+
+    return (
+      <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <h2 className="text-sm font-semibold text-gray-900 mb-1">
+          {t("billing.cancellation.title")}
+        </h2>
+        <p className="text-xs text-gray-500 mb-4">
+          {t("billing.cancellation.subtitle")}
+        </p>
+
+        <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 mb-4">
+          <p className="text-xs text-gray-600 leading-relaxed">
+            {t("billing.cancellation.cancelDescription")}
+          </p>
+          <p className="text-xs text-gray-400 mt-2">
+            {t("billing.cancellation.cancelConfirmNote")}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleCancelSubscription}
+          disabled={cancelLoading}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-red-200 bg-white text-xs font-semibold text-red-700 hover:bg-red-50 transition-colors disabled:opacity-50"
+        >
+          {cancelLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <XCircle className="w-4 h-4" />
+          )}
+          {t("billing.cancellation.cancelButton")}
+        </button>
+      </section>
     );
   };
 
@@ -262,12 +455,15 @@ export default function BillingPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-green-600" aria-label={t("billing.loading")} />
+            <Loader2
+              className="w-8 h-8 animate-spin text-green-600"
+              aria-label={t("billing.loading")}
+            />
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Subscription status messaging */}
-            {!hasActiveSubscription && (
+            {/* No-subscription banner */}
+            {!hasActiveSubscription && status !== "canceled" && (
               <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
@@ -301,19 +497,26 @@ export default function BillingPage() {
 
                 <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
                   <div>
-                    <dt className="text-gray-500">{t("billing.overview.workspace")}</dt>
+                    <dt className="text-gray-500">
+                      {t("billing.overview.workspace")}
+                    </dt>
                     <dd className="font-medium text-gray-900">
-                      {workspace?.name ?? t("billing.overview.unknownWorkspace")}
+                      {workspace?.name ??
+                        t("billing.overview.unknownWorkspace")}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-500">{t("billing.overview.currentPlan")}</dt>
+                    <dt className="text-gray-500">
+                      {t("billing.overview.currentPlan")}
+                    </dt>
                     <dd className="font-medium text-gray-900">
                       {planDisplayName}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-500">{t("billing.overview.status")}</dt>
+                    <dt className="text-gray-500">
+                      {t("billing.overview.status")}
+                    </dt>
                     <dd className="mt-1">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.chipBg}`}
@@ -324,13 +527,17 @@ export default function BillingPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-500">{t("billing.overview.billingCycle")}</dt>
+                    <dt className="text-gray-500">
+                      {t("billing.overview.billingCycle")}
+                    </dt>
                     <dd className="font-medium text-gray-900">
                       {billingIntervalLabel}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-gray-500">{t("billing.overview.nextBillingDate")}</dt>
+                    <dt className="text-gray-500">
+                      {t("billing.overview.nextBillingDate")}
+                    </dt>
                     <dd className="font-medium text-gray-900">
                       {formattedNextBilling ??
                         t("billing.overview.nextBillingDateUnknown")}
@@ -365,8 +572,12 @@ export default function BillingPage() {
                 </p>
 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center ${config.iconBg}`}>
-                    <StatusIcon className={`w-5 h-5 ${config.iconColor}`} />
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center ${config.iconBg}`}
+                  >
+                    <StatusIcon
+                      className={`w-5 h-5 ${config.iconColor}`}
+                    />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
@@ -443,6 +654,9 @@ export default function BillingPage() {
                 </p>
               )}
             </section>
+
+            {/* Subscription management / cancellation */}
+            {renderCancellationCard()}
 
             {/* Billing history placeholder */}
             <section className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">

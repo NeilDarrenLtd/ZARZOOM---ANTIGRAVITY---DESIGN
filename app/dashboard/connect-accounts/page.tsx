@@ -26,28 +26,43 @@ export default async function ConnectAccountsPage({ searchParams }: PageProps) {
   const raw = typeof params.returnTo === "string" ? params.returnTo : "";
   const returnTo = sanitizeReturnTo(raw);
 
+  const cookieStore = await cookies();
+  const locale = cookieStore.get("locale")?.value ?? "en";
+  const t = await getServerTranslations(locale);
+
   return (
-    <>
+    <main className="bg-gray-50 min-h-screen flex flex-col">
       <SiteNavbar />
-      <main
-        className="flex flex-col"
-        style={{
-          minHeight:
-            "calc(100vh - var(--navbar-height, 64px) - var(--footer-height, 0px))",
-        }}
-      >
-        <div className="max-w-5xl mx-auto w-full px-4 pt-8 sm:px-6 lg:px-8">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
-          </Link>
+
+      <div className="flex-1 max-w-5xl mx-auto w-full px-4 py-10">
+        {/* Back link */}
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors mb-6"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {t("connect.backToDashboard")}
+        </Link>
+
+        {/* Page header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            {t("connect.pageTitle")}
+          </h1>
+          <p className="text-sm text-gray-500 mt-1 max-w-2xl">
+            {t("connect.pageDescription")}
+          </p>
         </div>
-        <HybridUploadPostConnect returnTo={returnTo} />
-      </main>
+
+        {/* Main card */}
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="px-6 py-8 sm:px-8">
+            <HybridUploadPostConnect returnTo={returnTo} />
+          </div>
+        </div>
+      </div>
+
       <Footer />
-    </>
+    </main>
   );
 }
