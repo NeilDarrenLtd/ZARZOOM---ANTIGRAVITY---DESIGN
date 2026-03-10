@@ -75,8 +75,8 @@ export const PUT = createApiHandler({
       tableName: "plans",
       recordId: planId,
       action: "plan_updated",
-      before,
-      after: updated,
+      before: before as Record<string, unknown>,
+      after: updated as Record<string, unknown>,
     });
 
     return ok({ plan: updated }, ctx.requestId);
@@ -106,8 +106,8 @@ export const DELETE = createApiHandler({
       tableName: "plans",
       recordId: planId,
       action: "plan_archived",
-      before: existing,
-      after: { ...existing, is_active: false },
+      before: existing as Record<string, unknown>,
+      after: { ...existing, is_active: false } as Record<string, unknown>,
     });
 
     return ok({ message: "Plan archived", id: planId }, ctx.requestId);
