@@ -1,27 +1,62 @@
 "use client";
 
-import { X, Clock, Tag, Globe, AlignLeft, Hash } from "lucide-react";
-import { TYPE_COLORS, STATUS_COLORS, type PlannerItem } from "./mock-data";
+import { X, Clock, Tag, Globe, AlignLeft, Hash, Zap } from "lucide-react";
+import { TYPE_COLORS, TYPE_LABELS, STATUS_COLORS, type PlannerItem } from "./mock-data";
 
 interface SlideOverPanelProps {
   item: PlannerItem | null;
   onClose: () => void;
 }
 
-const TYPE_LABELS: Record<string, string> = {
-  post: "Post",
-  story: "Story",
-  reel: "Reel",
-  article: "Article",
-  campaign: "Campaign",
-};
-
 const STATUS_LABELS: Record<string, string> = {
-  draft: "Draft",
+  draft:     "Draft",
   scheduled: "Scheduled",
   published: "Published",
-  review: "In Review",
+  review:    "In Review",
 };
+
+const VIRAL_LABELS: Record<number, string> = {
+  1: "Low",
+  2: "Moderate",
+  3: "Good",
+  4: "High",
+  5: "Strong",
+};
+
+const VIRAL_COLORS: Record<number, string> = {
+  1: "text-gray-500",
+  2: "text-gray-500",
+  3: "text-amber-600",
+  4: "text-green-600",
+  5: "text-green-600",
+};
+
+function ViralStrengthBar({ strength }: { strength: number }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-0.5">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <span
+            key={i}
+            className={`inline-block h-2 rounded-sm transition-colors ${
+              i <= strength
+                ? strength >= 4
+                  ? "bg-green-500"
+                  : strength === 3
+                  ? "bg-amber-400"
+                  : "bg-gray-400"
+                : "bg-gray-200"
+            }`}
+            style={{ width: "14px" }}
+          />
+        ))}
+      </div>
+      <span className={`text-xs font-semibold ${VIRAL_COLORS[strength]}`}>
+        {VIRAL_LABELS[strength]}
+      </span>
+    </div>
+  );
+}
 
 export default function SlideOverPanel({ item, onClose }: SlideOverPanelProps) {
   return (
@@ -62,20 +97,20 @@ export default function SlideOverPanel({ item, onClose }: SlideOverPanelProps) {
         {/* Content */}
         {item ? (
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
-            {/* Title */}
+            {/* Hook */}
             <div>
               <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
-                Title
+                Hook
               </p>
-              <p className="text-base font-bold text-gray-900 text-pretty">
-                {item.title}
+              <p className="text-base font-bold text-gray-900 text-pretty leading-snug">
+                {item.hook}
               </p>
             </div>
 
             {/* Type & Status badges */}
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold capitalize ${TYPE_COLORS[item.type]}`}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${TYPE_COLORS[item.type]}`}
               >
                 <Tag className="w-3 h-3" />
                 {TYPE_LABELS[item.type]}
@@ -89,6 +124,19 @@ export default function SlideOverPanel({ item, onClose }: SlideOverPanelProps) {
 
             {/* Divider */}
             <hr className="border-gray-100" />
+
+            {/* Viral Strength */}
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex-shrink-0 w-7 h-7 bg-green-50 rounded-lg flex items-center justify-center">
+                <Zap className="w-3.5 h-3.5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+                  Viral Potential
+                </p>
+                <ViralStrengthBar strength={item.viralStrength} />
+              </div>
+            </div>
 
             {/* Platform */}
             <div className="flex items-start gap-3">
@@ -163,7 +211,7 @@ export default function SlideOverPanel({ item, onClose }: SlideOverPanelProps) {
           </div>
         )}
 
-        {/* Footer actions (reserved for future edit/save) */}
+        {/* Footer actions */}
         {item && (
           <div className="px-6 py-4 border-t border-gray-100 flex gap-2">
             <button

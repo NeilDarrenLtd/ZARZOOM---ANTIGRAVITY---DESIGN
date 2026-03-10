@@ -1,252 +1,466 @@
-export type PlannerItemType = "post" | "story" | "reel" | "article" | "campaign";
+// ─── Content Types ────────────────────────────────────────────────────────────
+
+export type ContentType =
+  | "Article"
+  | "Carousel"
+  | "Talking Head Video"
+  | "Faceless Video"
+  | "B-Roll Video"
+  | "Short Clip"
+  | "Story Post"
+  | "Promotional Post"
+  | "Educational Post"
+  | "Testimonial"
+  | "Announcement"
+  | "Trend Reaction";
+
 export type PlannerItemStatus = "draft" | "scheduled" | "published" | "review";
 
 export interface PlannerItem {
   id: string;
-  title: string;
-  type: PlannerItemType;
+  hook: string;          // Short headline / hook
+  type: ContentType;
   status: PlannerItemStatus;
   platform: string;
   time: string;
   description: string;
+  viralStrength: 1 | 2 | 3 | 4 | 5; // 1 = Low, 5 = Strong
   hashtags: string[];
 }
 
-export const TYPE_COLORS: Record<PlannerItemType, string> = {
-  post: "bg-green-100 text-green-700 border-green-200",
-  story: "bg-teal-100 text-teal-700 border-teal-200",
-  reel: "bg-sky-100 text-sky-700 border-sky-200",
-  article: "bg-amber-100 text-amber-700 border-amber-200",
-  campaign: "bg-rose-100 text-rose-700 border-rose-200",
+// ─── Type badge colours ────────────────────────────────────────────────────────
+// Each entry: "bg text border" classes for the pill wrapper
+
+export const TYPE_COLORS: Record<ContentType, string> = {
+  "Article":           "bg-amber-50   text-amber-700   border-amber-200",
+  "Carousel":          "bg-violet-50  text-violet-700  border-violet-200",
+  "Talking Head Video":"bg-sky-50     text-sky-700     border-sky-200",
+  "Faceless Video":    "bg-indigo-50  text-indigo-700  border-indigo-200",
+  "B-Roll Video":      "bg-cyan-50    text-cyan-700    border-cyan-200",
+  "Short Clip":        "bg-teal-50    text-teal-700    border-teal-200",
+  "Story Post":        "bg-pink-50    text-pink-700    border-pink-200",
+  "Promotional Post":  "bg-rose-50    text-rose-700    border-rose-200",
+  "Educational Post":  "bg-green-50   text-green-700   border-green-200",
+  "Testimonial":       "bg-lime-50    text-lime-700    border-lime-200",
+  "Announcement":      "bg-orange-50  text-orange-700  border-orange-200",
+  "Trend Reaction":    "bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200",
+};
+
+// Abbreviated labels for the compact badge
+export const TYPE_LABELS: Record<ContentType, string> = {
+  "Article":           "Article",
+  "Carousel":          "Carousel",
+  "Talking Head Video":"Talking Head",
+  "Faceless Video":    "Faceless",
+  "B-Roll Video":      "B-Roll",
+  "Short Clip":        "Short Clip",
+  "Story Post":        "Story",
+  "Promotional Post":  "Promo",
+  "Educational Post":  "Edu",
+  "Testimonial":       "Testimonial",
+  "Announcement":      "Announce",
+  "Trend Reaction":    "Trend",
 };
 
 export const STATUS_COLORS: Record<PlannerItemStatus, string> = {
-  draft: "bg-gray-100 text-gray-600",
-  scheduled: "bg-blue-100 text-blue-700",
+  draft:     "bg-gray-100  text-gray-600",
+  scheduled: "bg-blue-100  text-blue-700",
   published: "bg-green-100 text-green-700",
-  review: "bg-amber-100 text-amber-700",
+  review:    "bg-amber-100 text-amber-700",
 };
 
+// ─── Mock Data ─────────────────────────────────────────────────────────────────
 // Keys are ISO date strings: YYYY-MM-DD
+
 export const MOCK_ITEMS: Record<string, PlannerItem[]> = {
-  "2026-03-03": [
-    {
-      id: "1",
-      title: "Product launch teaser",
-      type: "story",
-      status: "scheduled",
-      platform: "Instagram",
-      time: "09:00",
-      description: "Behind-the-scenes story teasing the upcoming product drop.",
-      hashtags: ["#launch", "#comingsoon", "#zarzoom"],
-    },
-  ],
-  "2026-03-05": [
-    {
-      id: "2",
-      title: "Weekly AI tips thread",
-      type: "post",
-      status: "draft",
-      platform: "X (Twitter)",
-      time: "11:30",
-      description: "A 5-tweet thread covering top AI automation tips for social media managers.",
-      hashtags: ["#AI", "#socialmedia", "#automation"],
-    },
-    {
-      id: "3",
-      title: "Behind the brand",
-      type: "reel",
-      status: "review",
-      platform: "Instagram",
-      time: "18:00",
-      description: "Short 30-second reel showing team culture and brand values.",
-      hashtags: ["#brand", "#culture", "#team"],
-    },
-  ],
-  "2026-03-08": [
-    {
-      id: "4",
-      title: "Case study article",
-      type: "article",
-      status: "draft",
-      platform: "LinkedIn",
-      time: "08:00",
-      description: "In-depth article on how our client grew 300% using ZARZOOM automation.",
-      hashtags: ["#casestudy", "#growth", "#linkedin"],
-    },
-  ],
-  "2026-03-10": [
-    {
-      id: "5",
-      title: "Spring campaign kickoff",
-      type: "campaign",
-      status: "scheduled",
-      platform: "Multi-platform",
-      time: "10:00",
-      description: "Official campaign launch across all social channels.",
-      hashtags: ["#spring2026", "#campaign", "#launch"],
-    },
-    {
-      id: "6",
-      title: "Q&A session promo",
-      type: "story",
-      status: "scheduled",
-      platform: "Instagram",
-      time: "14:00",
-      description: "Story slide inviting followers to submit questions for next week's live Q&A.",
-      hashtags: ["#QandA", "#liveqa", "#askme"],
-    },
-  ],
-  "2026-03-14": [
-    {
-      id: "7",
-      title: "Engagement boost post",
-      type: "post",
-      status: "published",
-      platform: "Facebook",
-      time: "12:00",
-      description: "Poll-style post to drive engagement and gather audience feedback.",
-      hashtags: ["#poll", "#community", "#feedback"],
-    },
-  ],
-  "2026-03-17": [
-    {
-      id: "8",
-      title: "Midweek motivation",
-      type: "post",
-      status: "scheduled",
-      platform: "X (Twitter)",
-      time: "09:00",
-      description: "Inspirational quote paired with a branded graphic for midweek engagement.",
-      hashtags: ["#motivation", "#wednesday", "#mindset"],
-    },
-    {
-      id: "9",
-      title: "Tutorial reel: Auto-posting",
-      type: "reel",
-      status: "draft",
-      platform: "TikTok",
-      time: "16:00",
-      description: "Tutorial showing how to set up auto-posting with ZARZOOM in under 60 seconds.",
-      hashtags: ["#tutorial", "#autopost", "#zarzoomtips"],
-    },
-  ],
-  "2026-03-21": [
-    {
-      id: "10",
-      title: "Weekend flash sale",
-      type: "campaign",
-      status: "draft",
-      platform: "Multi-platform",
-      time: "08:00",
-      description: "Flash sale campaign with limited-time offers.",
-      hashtags: ["#sale", "#flashsale", "#limitedtime"],
-    },
-  ],
-  "2026-03-24": [
-    {
-      id: "11",
-      title: "User spotlight",
-      type: "post",
-      status: "review",
-      platform: "LinkedIn",
-      time: "11:00",
-      description: "Feature post highlighting a power user's success story with ZARZOOM.",
-      hashtags: ["#spotlight", "#customerstory", "#success"],
-    },
-  ],
-  "2026-03-27": [
-    {
-      id: "12",
-      title: "Month recap story",
-      type: "story",
-      status: "draft",
-      platform: "Instagram",
-      time: "17:00",
-      description: "Story summarising the month's top content moments.",
-      hashtags: ["#monthlyrecap", "#highlights", "#zarzoom"],
-    },
-    {
-      id: "13",
-      title: "End-of-month article",
-      type: "article",
-      status: "draft",
-      platform: "LinkedIn",
-      time: "09:00",
-      description: "Long-form article reviewing content performance trends and AI-driven insights.",
-      hashtags: ["#contentmarketing", "#insights", "#AI"],
-    },
-  ],
-  // April data so navigation into next month shows content
-  "2026-04-02": [
-    {
-      id: "14",
-      title: "April kick-off post",
-      type: "post",
-      status: "draft",
-      platform: "X (Twitter)",
-      time: "10:00",
-      description: "Opening the month with a bold statement post about what's coming in April.",
-      hashtags: ["#april", "#newmonth", "#zarzoom"],
-    },
-  ],
-  "2026-04-07": [
-    {
-      id: "15",
-      title: "Product demo reel",
-      type: "reel",
-      status: "scheduled",
-      platform: "TikTok",
-      time: "15:00",
-      description: "60-second product demo reel showcasing new ZARZOOM dashboard features.",
-      hashtags: ["#demo", "#product", "#zarzoom"],
-    },
-  ],
-  "2026-04-15": [
-    {
-      id: "16",
-      title: "Mid-month growth article",
-      type: "article",
-      status: "draft",
-      platform: "LinkedIn",
-      time: "08:30",
-      description: "Deep-dive into growth strategies using AI content scheduling.",
-      hashtags: ["#growth", "#AI", "#contentmarketing"],
-    },
-    {
-      id: "17",
-      title: "Audience poll story",
-      type: "story",
-      status: "review",
-      platform: "Instagram",
-      time: "12:00",
-      description: "Interactive story poll asking audience about preferred content formats.",
-      hashtags: ["#poll", "#audience", "#engagement"],
-    },
-  ],
-  // February data for navigating backwards
+  // ── February 2026 ────────────────────────────────────────────────────────────
   "2026-02-14": [
     {
-      id: "18",
-      title: "Valentine's Day campaign",
-      type: "campaign",
+      id: "feb-1",
+      hook: "Love your audience back this Valentine's Day",
+      type: "Promotional Post",
       status: "published",
       platform: "Multi-platform",
       time: "09:00",
-      description: "Valentine's Day themed campaign across all platforms.",
+      description: "Valentine's Day themed campaign across all platforms celebrating our community.",
+      viralStrength: 4,
       hashtags: ["#valentinesday", "#love", "#campaign"],
     },
   ],
   "2026-02-20": [
     {
-      id: "19",
-      title: "Weekly insights thread",
-      type: "post",
+      id: "feb-2",
+      hook: "5 AI trends reshaping social media in 2026",
+      type: "Article",
       status: "published",
-      platform: "X (Twitter)",
+      platform: "LinkedIn",
       time: "11:00",
       description: "Weekly thread covering AI trends in social media automation.",
+      viralStrength: 3,
       hashtags: ["#AI", "#trends", "#weekly"],
+    },
+    {
+      id: "feb-3",
+      hook: "Watch how we edit 30 posts in under 2 minutes",
+      type: "Faceless Video",
+      status: "published",
+      platform: "TikTok",
+      time: "15:00",
+      description: "Screen-recorded walkthrough of bulk-scheduling in ZARZOOM.",
+      viralStrength: 5,
+      hashtags: ["#productivity", "#contentcreator", "#socialmediatips"],
+    },
+  ],
+  "2026-02-25": [
+    {
+      id: "feb-4",
+      hook: "Real creator. Real results. No filters.",
+      type: "Testimonial",
+      status: "published",
+      platform: "Instagram",
+      time: "14:00",
+      description: "Customer spotlight on a creator who doubled engagement using ZARZOOM.",
+      viralStrength: 4,
+      hashtags: ["#testimonial", "#success", "#zarzoom"],
+    },
+  ],
+
+  // ── March 2026 ────────────────────────────────────────────────────────────────
+  "2026-03-02": [
+    {
+      id: "mar-1",
+      hook: "Something big is dropping this week",
+      type: "Story Post",
+      status: "scheduled",
+      platform: "Instagram",
+      time: "09:00",
+      description: "Behind-the-scenes story teasing the upcoming product drop.",
+      viralStrength: 3,
+      hashtags: ["#launch", "#comingsoon", "#zarzoom"],
+    },
+  ],
+  "2026-03-04": [
+    {
+      id: "mar-2",
+      hook: "How to 10x your reach without paying for ads",
+      type: "Educational Post",
+      status: "scheduled",
+      platform: "X (Twitter)",
+      time: "11:30",
+      description: "Thread covering organic growth tactics powered by AI scheduling.",
+      viralStrength: 5,
+      hashtags: ["#organicgrowth", "#socialmedia", "#automation"],
+    },
+    {
+      id: "mar-3",
+      hook: "This is what working in our office really looks like",
+      type: "B-Roll Video",
+      status: "review",
+      platform: "Instagram",
+      time: "18:00",
+      description: "Cinematic B-roll of our team working and brainstorming sessions.",
+      viralStrength: 3,
+      hashtags: ["#brand", "#culture", "#team"],
+    },
+  ],
+  "2026-03-06": [
+    {
+      id: "mar-4",
+      hook: "We grew a client 300% in 90 days — here's the playbook",
+      type: "Article",
+      status: "draft",
+      platform: "LinkedIn",
+      time: "08:00",
+      description: "In-depth case study on how our client grew using ZARZOOM automation.",
+      viralStrength: 5,
+      hashtags: ["#casestudy", "#growth", "#linkedin"],
+    },
+  ],
+  "2026-03-09": [
+    {
+      id: "mar-5",
+      hook: "Spring into action — our biggest campaign yet",
+      type: "Announcement",
+      status: "scheduled",
+      platform: "Multi-platform",
+      time: "10:00",
+      description: "Official campaign launch across all social channels.",
+      viralStrength: 4,
+      hashtags: ["#spring2026", "#campaign", "#launch"],
+    },
+    {
+      id: "mar-6",
+      hook: "Ask me anything — drop your question below",
+      type: "Story Post",
+      status: "scheduled",
+      platform: "Instagram",
+      time: "14:00",
+      description: "Story slide inviting followers to submit questions for next week's live Q&A.",
+      viralStrength: 3,
+      hashtags: ["#QandA", "#liveqa", "#askme"],
+    },
+  ],
+  "2026-03-10": [
+    {
+      id: "mar-7",
+      hook: "POV: You finally stopped guessing your posting schedule",
+      type: "Trend Reaction",
+      status: "scheduled",
+      platform: "TikTok",
+      time: "12:00",
+      description: "Trend-format video reacting to the chaos of manual content scheduling.",
+      viralStrength: 5,
+      hashtags: ["#POV", "#contentcreator", "#zarzoom"],
+    },
+  ],
+  "2026-03-12": [
+    {
+      id: "mar-8",
+      hook: "Which format gets the most saves? The answer surprised us",
+      type: "Carousel",
+      status: "review",
+      platform: "Instagram",
+      time: "11:00",
+      description: "Data-driven carousel breaking down top-performing post formats.",
+      viralStrength: 4,
+      hashtags: ["#carousel", "#data", "#instagramtips"],
+    },
+    {
+      id: "mar-9",
+      hook: "We asked 500 creators. Here's what they said.",
+      type: "Educational Post",
+      status: "draft",
+      platform: "LinkedIn",
+      time: "09:30",
+      description: "Survey results on content creation pain points and automation desires.",
+      viralStrength: 3,
+      hashtags: ["#survey", "#creators", "#contentmarketing"],
+    },
+  ],
+  "2026-03-14": [
+    {
+      id: "mar-10",
+      hook: "Should brands be funny on social media? Vote now.",
+      type: "Promotional Post",
+      status: "published",
+      platform: "Facebook",
+      time: "12:00",
+      description: "Poll-style post to drive engagement and gather audience feedback.",
+      viralStrength: 2,
+      hashtags: ["#poll", "#community", "#feedback"],
+    },
+  ],
+  "2026-03-16": [
+    {
+      id: "mar-11",
+      hook: "One idea. 12 pieces of content. Here's how.",
+      type: "Talking Head Video",
+      status: "draft",
+      platform: "YouTube",
+      time: "16:00",
+      description: "Talking head video walking through a content repurposing strategy.",
+      viralStrength: 5,
+      hashtags: ["#repurposing", "#contentideas", "#youtube"],
+    },
+  ],
+  "2026-03-17": [
+    {
+      id: "mar-12",
+      hook: "Your 9am reminder: consistency beats perfection",
+      type: "Educational Post",
+      status: "scheduled",
+      platform: "X (Twitter)",
+      time: "09:00",
+      description: "Inspirational quote paired with a branded graphic for midweek engagement.",
+      viralStrength: 2,
+      hashtags: ["#motivation", "#wednesday", "#mindset"],
+    },
+    {
+      id: "mar-13",
+      hook: "Set up auto-posting in under 60 seconds",
+      type: "Short Clip",
+      status: "draft",
+      platform: "TikTok",
+      time: "16:00",
+      description: "Tutorial showing how to set up auto-posting with ZARZOOM in under 60 seconds.",
+      viralStrength: 5,
+      hashtags: ["#tutorial", "#autopost", "#zarzoomtips"],
+    },
+    {
+      id: "mar-13b",
+      hook: "Our tool does in 2 mins what takes others 2 hours",
+      type: "Faceless Video",
+      status: "review",
+      platform: "Instagram",
+      time: "18:00",
+      description: "Screen recording demo of ZARZOOM's bulk scheduler feature.",
+      viralStrength: 4,
+      hashtags: ["#productivity", "#zarzoom", "#demo"],
+    },
+  ],
+  "2026-03-19": [
+    {
+      id: "mar-14",
+      hook: "Client grew 40K followers in 60 days — their story",
+      type: "Testimonial",
+      status: "review",
+      platform: "Instagram",
+      time: "13:00",
+      description: "Video testimonial from a creator who scaled their audience with ZARZOOM.",
+      viralStrength: 5,
+      hashtags: ["#testimonial", "#socialgrowth", "#zarzoom"],
+    },
+  ],
+  "2026-03-21": [
+    {
+      id: "mar-15",
+      hook: "48 hours only — don't miss this",
+      type: "Promotional Post",
+      status: "draft",
+      platform: "Multi-platform",
+      time: "08:00",
+      description: "Flash sale campaign with limited-time offers.",
+      viralStrength: 4,
+      hashtags: ["#sale", "#flashsale", "#limitedtime"],
+    },
+  ],
+  "2026-03-24": [
+    {
+      id: "mar-16",
+      hook: "Meet the creator turning 3 posts a week into a full-time income",
+      type: "Testimonial",
+      status: "review",
+      platform: "LinkedIn",
+      time: "11:00",
+      description: "Feature post highlighting a power user's success story with ZARZOOM.",
+      viralStrength: 4,
+      hashtags: ["#spotlight", "#customerstory", "#success"],
+    },
+    {
+      id: "mar-16b",
+      hook: "The 5-post template that gets us 10% engagement every time",
+      type: "Carousel",
+      status: "draft",
+      platform: "Instagram",
+      time: "14:00",
+      description: "Swipe-through carousel revealing our internal content template.",
+      viralStrength: 5,
+      hashtags: ["#template", "#engagement", "#carousel"],
+    },
+  ],
+  "2026-03-26": [
+    {
+      id: "mar-17",
+      hook: "Trending audio + our product = pure gold",
+      type: "Trend Reaction",
+      status: "draft",
+      platform: "TikTok",
+      time: "17:00",
+      description: "Riding a trending audio format to showcase ZARZOOM in action.",
+      viralStrength: 5,
+      hashtags: ["#trendingnow", "#fyp", "#zarzoom"],
+    },
+  ],
+  "2026-03-27": [
+    {
+      id: "mar-18",
+      hook: "March done. Here's everything we posted this month.",
+      type: "Story Post",
+      status: "draft",
+      platform: "Instagram",
+      time: "17:00",
+      description: "Story summarising the month's top content moments.",
+      viralStrength: 2,
+      hashtags: ["#monthlyrecap", "#highlights", "#zarzoom"],
+    },
+    {
+      id: "mar-19",
+      hook: "Content performance in March — what the data actually shows",
+      type: "Article",
+      status: "draft",
+      platform: "LinkedIn",
+      time: "09:00",
+      description: "Long-form article reviewing content performance trends and AI-driven insights.",
+      viralStrength: 3,
+      hashtags: ["#contentmarketing", "#insights", "#AI"],
+    },
+  ],
+  "2026-03-31": [
+    {
+      id: "mar-20",
+      hook: "Q2 starts tomorrow. Is your content plan ready?",
+      type: "Announcement",
+      status: "draft",
+      platform: "Multi-platform",
+      time: "10:00",
+      description: "End-of-month announcement pushing users to start Q2 planning with ZARZOOM.",
+      viralStrength: 4,
+      hashtags: ["#Q2", "#contentplanning", "#zarzoom"],
+    },
+  ],
+
+  // ── April 2026 ────────────────────────────────────────────────────────────────
+  "2026-04-01": [
+    {
+      id: "apr-1",
+      hook: "No, this is not an April Fool's joke — it's real",
+      type: "Announcement",
+      status: "draft",
+      platform: "Multi-platform",
+      time: "09:00",
+      description: "Playful announcement of a real product feature dropping on April 1st.",
+      viralStrength: 5,
+      hashtags: ["#aprilfools", "#nojoke", "#zarzoom"],
+    },
+  ],
+  "2026-04-02": [
+    {
+      id: "apr-2",
+      hook: "New month. New strategy. Let's build.",
+      type: "Educational Post",
+      status: "draft",
+      platform: "X (Twitter)",
+      time: "10:00",
+      description: "Opening the month with a thread about content strategy for Q2.",
+      viralStrength: 3,
+      hashtags: ["#april", "#newmonth", "#zarzoom"],
+    },
+  ],
+  "2026-04-07": [
+    {
+      id: "apr-3",
+      hook: "We rebuilt our dashboard. Here's the 60-second tour.",
+      type: "Short Clip",
+      status: "scheduled",
+      platform: "TikTok",
+      time: "15:00",
+      description: "60-second product demo reel showcasing new ZARZOOM dashboard features.",
+      viralStrength: 5,
+      hashtags: ["#demo", "#product", "#zarzoom"],
+    },
+  ],
+  "2026-04-15": [
+    {
+      id: "apr-4",
+      hook: "Growth isn't luck — it's a system. Here's ours.",
+      type: "Article",
+      status: "draft",
+      platform: "LinkedIn",
+      time: "08:30",
+      description: "Deep-dive into growth strategies using AI content scheduling.",
+      viralStrength: 4,
+      hashtags: ["#growth", "#AI", "#contentmarketing"],
+    },
+    {
+      id: "apr-5",
+      hook: "Which content type do you actually prefer? Vote.",
+      type: "Story Post",
+      status: "review",
+      platform: "Instagram",
+      time: "12:00",
+      description: "Interactive story poll asking audience about preferred content formats.",
+      viralStrength: 2,
+      hashtags: ["#poll", "#audience", "#engagement"],
     },
   ],
 };
