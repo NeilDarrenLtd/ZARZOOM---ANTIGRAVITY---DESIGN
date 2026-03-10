@@ -7,11 +7,12 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import PlannerControlBar from "./PlannerControlBar";
 import PlannerSummaryStrip from "./PlannerSummaryStrip";
-import CalendarGrid from "./CalendarGrid";
-import SlideOverPanel from "./SlideOverPanel";
-import type { PlannerItem } from "./mock-data";
-import { TYPE_COLORS, TYPE_LABELS, type ContentType } from "./mock-data";
+import PlannerCalendar from "./PlannerCalendar";
+import PlannerDrawer from "./PlannerDrawer";
+import { TYPE_COLORS, TYPE_LABELS, type ContentType, type PlannerItem } from "@/lib/planner/types";
+import { usePlannerItems } from "@/lib/planner/hooks";
 
+// Subset of content types shown in the legend
 const LEGEND_ITEMS: ContentType[] = [
   "Short Clip",
   "Carousel",
@@ -20,9 +21,19 @@ const LEGEND_ITEMS: ContentType[] = [
   "Trend Reaction",
 ];
 
+// Helper: format year-month key for usePlannerItems
+function toYearMonth(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
 export default function PlannerPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedItem, setSelectedItem] = useState<PlannerItem | null>(null);
+
+  // TODO (workspace filtering): Pass workspaceId from workspace context once available
+  const { itemsByDate, updateItem, deleteItem } = usePlannerItems({
+    yearMonth: toYearMonth(currentDate),
+  });
 
   function handlePrevMonth() {
     setCurrentDate((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1));
@@ -43,7 +54,19 @@ export default function PlannerPage() {
     setSelectedItem((prev) => (prev?.id === item.id ? null : item));
   }
 
-  function handleClosePanel() {
+  function handleCloseDrawer() {
+    setSelectedItem(null);
+  }
+
+  function handleSave(updated: PlannerItem) {
+    // TODO (update planner item): updateItem is wired to usePlannerItems.updateItem
+    updateItem(updated.id, updated);
+    setSelectedItem(updated);
+  }
+
+  function handleDelete(id: string) {
+    // TODO (delete planner item): deleteItem is wired to usePlannerItems.deleteItem
+    deleteItem(id);
     setSelectedItem(null);
   }
 
@@ -52,6 +75,7 @@ export default function PlannerPage() {
       <SiteNavbar />
 
       <div className="flex-1 max-w-6xl mx-auto w-full px-4 py-10">
+
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-gray-400 mb-6">
           <Link href="/dashboard" className="hover:text-green-600 transition-colors font-medium">
@@ -75,7 +99,7 @@ export default function PlannerPage() {
             </p>
           </div>
 
-          {/* Legend */}
+          {/* Content type legend */}
           <div className="flex items-center gap-2 flex-wrap">
             {LEGEND_ITEMS.map((type) => (
               <span
@@ -88,10 +112,10 @@ export default function PlannerPage() {
           </div>
         </div>
 
-        {/* Summary strip */}
-        <PlannerSummaryStrip />
+        {/* Summary metrics strip — derives live values from itemsByDate */}
+        <PlannerSummaryStrip itemsByDate={itemsByDate} />
 
-        {/* Control bar */}
+        {/* Month navigation bar */}
         <div className="mb-4">
           <PlannerControlBar
             currentDate={currentDate}
@@ -102,15 +126,21 @@ export default function PlannerPage() {
         </div>
 
         {/* Calendar grid */}
-        <CalendarGrid
+        <PlannerCalendar
           currentDate={currentDate}
+          itemsByDate={itemsByDate}
           selectedItem={selectedItem}
           onSelectItem={handleSelectItem}
         />
       </div>
 
-      {/* Slide-over panel */}
-      <SlideOverPanel item={selectedItem} onClose={handleClosePanel} />
+      {/* Edit drawer */}
+      <PlannerDrawer
+        item={selectedItem}
+        onClose={handleCloseDrawer}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
 
       <Footer />
     </main>
