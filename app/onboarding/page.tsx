@@ -27,7 +27,7 @@ import Step3Goals from "@/components/onboarding/Step3Goals";
 import Step4Plan from "@/components/onboarding/Step4Plan";
 import Step5Connect from "@/components/onboarding/Step5Connect";
 
-import { ArrowLeft, ArrowRight, Rocket, LogOut, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Rocket, LogOut, Loader2, CheckCircle, X } from "lucide-react";
 import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
 import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 
@@ -52,27 +52,39 @@ export default function OnboardingPage() {
     approval_preference: "auto",
   });
   const [aiFilledFields, setAiFilledFields] = useState<string[]>([]);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [showCheckoutSuccess, setShowCheckoutSuccess] = useState(false);
 
-  // Persist the resolved workspace id so saveProgress / reloadWizardData always target the right workspace
   const resolvedWorkspaceRef = useRef<string | null>(null);
 
   // Load user + existing onboarding data
   useEffect(() => {
+    // Redirect to pricing to resume pending checkout from pre-auth plan selection
+    const pending = sessionStorage.getItem("pendingCheckout");
+    if (pending) {
+      window.location.href = "/pricing?resumeCheckout=1";
+      return;
+    }
+
     let cancelled = false;
 
     async function load() {
-      // Resolve workspace: prefer URL ?workspace= param, then cookie
       const workspaceFromUrl = searchParams.get("workspace")?.trim() || null;
+      const stepFromUrl = searchParams.get("step");
+      const checkoutResult = searchParams.get("checkout");
       const workspaceId = workspaceFromUrl ?? getActiveWorkspaceIdFromCookie();
 
-      // Ensure cookie matches the target workspace (may have been set by dashboard already, but be safe)
       if (workspaceId && typeof document !== "undefined") {
         document.cookie = `${ACTIVE_WORKSPACE_COOKIE}=${encodeURIComponent(workspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
       }
       resolvedWorkspaceRef.current = workspaceId;
 
-      // Strip ?workspace= from URL after persisting to cookie (cosmetic; does not interrupt load)
-      if (workspaceFromUrl) {
+      if (checkoutResult === "success") {
+        setShowCheckoutSuccess(true);
+      }
+
+      const hasUrlOverrides = workspaceFromUrl || stepFromUrl || checkoutResult;
+      if (hasUrlOverrides) {
         router.replace("/onboarding", { scroll: false });
       }
 
@@ -130,7 +142,10 @@ export default function OnboardingPage() {
               setAiFilledFields(profile.autofill_fields_filled);
             }
 
-            if (profile.onboarding_step && profile.onboarding_step >= 1 && profile.onboarding_step <= 5) {
+            const urlStep = stepFromUrl ? parseInt(stepFromUrl, 10) : NaN;
+            if (!isNaN(urlStep) && urlStep >= 1 && urlStep <= TOTAL_STEPS) {
+              setStep(urlStep);
+            } else if (profile.onboarding_step && profile.onboarding_step >= 1 && profile.onboarding_step <= 5) {
               setStep(profile.onboarding_step);
             }
           }
@@ -225,12 +240,54 @@ export default function OnboardingPage() {
   }
 
   async function handleNext() {
-    if (step < TOTAL_STEPS) {
-      const nextStep = step + 1;
-      await saveProgress(nextStep);
-      setStep(nextStep);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if (step >= TOTAL_STEPS) return;
+
+    if (step === 4 && data.selected_plan) {
+      await saveProgress(4);
+      setCheckoutLoading(true);
+      setError("");
+      try {
+        const tenantId = resolvedWorkspaceRef.current ?? getActiveWorkspaceIdFromCookie();
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (tenantId) headers["X-Tenant-Id"] = tenantId;
+
+        const res = await fetch("/api/v1/billing/checkout", {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            plan_code: data.selected_plan,
+            currency: data.selected_currency || "GBP",
+            interval: "month",
+            success_path: "/onboarding?step=5&checkout=success",
+            cancel_path: "/onboarding?step=4",
+          }),
+        });
+
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          setError((body as { error?: { message?: string } })?.error?.message || "Failed to start checkout. Please try again.");
+          setCheckoutLoading(false);
+          return;
+        }
+
+        const body = await res.json();
+        if (body.url) {
+          window.location.href = body.url;
+          return;
+        }
+        setError("Failed to create checkout session.");
+        setCheckoutLoading(false);
+      } catch {
+        setError("An error occurred starting checkout. Please try again.");
+        setCheckoutLoading(false);
+      }
+      return;
     }
+
+    const nextStep = step + 1;
+    await saveProgress(nextStep);
+    setStep(nextStep);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function handleBack() {
@@ -294,7 +351,19 @@ export default function OnboardingPage() {
   return (
     <main className="min-h-screen bg-gray-50">
       <UploadPostSuccessBanner show={showSuccessBanner} />
-      {/* Header */}
+      {showCheckoutSuccess && (
+        <div className="sticky top-0 z-40 flex items-center justify-center gap-3 bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-md">
+          <CheckCircle className="h-5 w-5 flex-shrink-0" />
+          <span>Payment successful! Complete your setup below.</span>
+          <button
+            type="button"
+            onClick={() => setShowCheckoutSuccess(false)}
+            className="ml-2 rounded-lg p-1 hover:bg-green-700 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       <header className="border-b border-gray-200 bg-white">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -391,11 +460,16 @@ export default function OnboardingPage() {
               <button
                 type="button"
                 onClick={handleNext}
-                disabled={saving}
+                disabled={saving || checkoutLoading}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-green-600 text-white text-sm font-bold hover:bg-green-700 transition-colors disabled:opacity-50 uppercase tracking-wide"
               >
-                {saving ? (
+                {saving || checkoutLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
+                ) : step === 4 && data.selected_plan ? (
+                  <>
+                    {t("onboarding.nav.subscribe", "Subscribe & Continue")}
+                    <ArrowRight className="w-4 h-4" />
+                  </>
                 ) : (
                   <>
                     {t("onboarding.nav.next")}

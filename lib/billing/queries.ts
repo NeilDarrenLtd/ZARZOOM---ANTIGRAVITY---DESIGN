@@ -1,8 +1,7 @@
 /**
  * lib/billing/queries.ts
  * 
- * Canonical pricing queries using the new schema (plans + plan_prices tables).
- * These queries replace the legacy subscription_plans structure.
+ * Canonical pricing queries using the plans + plan_prices tables.
  */
 
 import { createClient } from "@/lib/supabase/server";
@@ -318,129 +317,7 @@ export async function togglePlanStatus(
 }
 
 /**
- * LEGACY: Get plans using old schema (subscription_plans).
- * @deprecated Use getActivePlansWithPrices() instead
- */
-export async function getPlans(opts?: { status?: "active" | "all" | "archived" }) {
-  const supabase = await createClient();
-  
-  let query = supabase
-    .from("subscription_plans")
-    .select(`
-      *,
-      plan_prices:plan_prices(*)
-    `)
-    .order("display_order", { ascending: true });
-
-  if (opts?.status === "active") {
-    query = query.eq("is_active", true);
-  } else if (opts?.status === "archived") {
-    query = query.eq("is_active", false);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    console.error("[v0] Error fetching legacy plans:", error);
-    throw new Error(`Failed to fetch plans: ${error.message}`);
-  }
-
-  return data || [];
-}
-
-/**
- * LEGACY: Create plan using old schema
- * @deprecated Use createPlanWithPrices() instead
- */
-export async function createPlan(
-  planData: Record<string, unknown>,
-  prices: Array<{ currency: string; interval: string; unit_amount: number }>
-): Promise<{ id: string; plan_prices: unknown[] } & Record<string, unknown>> {
-  const { createAdminClient } = await import("@/lib/supabase/server");
-  const supabase = await createAdminClient();
-
-  const { data: plan, error: planError } = await supabase
-    .from("subscription_plans")
-    .insert(planData)
-    .select()
-    .single();
-
-  if (planError) {
-    console.error("[v0] Error creating legacy plan:", planError);
-    throw planError;
-  }
-
-  const priceRows = prices.map((p) => ({
-    plan_id: plan.id,
-    currency: p.currency,
-    interval: p.interval,
-    unit_amount: p.unit_amount,
-  }));
-
-  const { data: insertedPrices, error: pricesError } = await supabase
-    .from("plan_prices")
-    .insert(priceRows)
-    .select();
-
-  if (pricesError) {
-    console.error("[v0] Error creating legacy prices:", pricesError);
-    throw pricesError;
-  }
-
-  return {
-    ...plan,
-    plan_prices: insertedPrices || [],
-  };
-}
-
-/**
- * LEGACY: Update plan using old schema
- * @deprecated Use updatePlanData() instead
- */
-export async function updatePlan(
-  planId: string,
-  updates: Record<string, unknown>
-): Promise<Record<string, unknown>> {
-  const { createAdminClient } = await import("@/lib/supabase/server");
-  const supabase = await createAdminClient();
-
-  const { data, error } = await supabase
-    .from("subscription_plans")
-    .update(updates)
-    .eq("id", planId)
-    .select()
-    .single();
-
-  if (error) {
-    console.error("[v0] Error updating legacy plan:", error);
-    throw error;
-  }
-
-  return data;
-}
-
-/**
- * LEGACY: Archive plan using old schema
- * @deprecated Use togglePlanStatus() instead
- */
-export async function archivePlan(planId: string): Promise<void> {
-  const { createAdminClient } = await import("@/lib/supabase/server");
-  const supabase = await createAdminClient();
-
-  const { error } = await supabase
-    .from("subscription_plans")
-    .update({ is_active: false })
-    .eq("id", planId);
-
-  if (error) {
-    console.error("[v0] Error archiving legacy plan:", error);
-    throw error;
-  }
-}
-
-/**
- * LEGACY: Get tenant subscription
- * @deprecated Implement proper subscription queries
+ * Get tenant subscription by tenant ID.
  */
 export async function getTenantSubscription(
   tenantId: string
@@ -463,8 +340,7 @@ export async function getTenantSubscription(
 }
 
 /**
- * LEGACY: Get subscription stats
- * @deprecated Implement proper analytics queries
+ * Get aggregate subscription statistics (active count, total count).
  */
 export async function getSubscriptionStats(): Promise<Record<string, number>> {
   const { createAdminClient } = await import("@/lib/supabase/server");
@@ -486,8 +362,7 @@ export async function getSubscriptionStats(): Promise<Record<string, number>> {
 }
 
 /**
- * LEGACY: List subscriptions
- * @deprecated Implement proper subscription queries
+ * List tenant subscriptions with optional status filter and pagination.
  */
 export async function listSubscriptions(opts: {
   status?: string;
@@ -530,8 +405,7 @@ export async function listSubscriptions(opts: {
 }
 
 /**
- * LEGACY: Version a price
- * @deprecated Implement proper price versioning
+ * Update a plan_price row (e.g. for price versioning).
  */
 export async function versionPrice(
   priceId: string,
@@ -556,8 +430,7 @@ export async function versionPrice(
 }
 
 /**
- * LEGACY: Deactivate a price
- * @deprecated Use direct database updates
+ * Mark a plan_price as inactive.
  */
 export async function deactivatePrice(priceId: string): Promise<void> {
   const { createAdminClient } = await import("@/lib/supabase/server");

@@ -6,15 +6,15 @@ import type { PlanWithPrices, SubscriptionStatus } from "./types";
 /* ------------------------------------------------------------------ */
 
 export interface EffectivePlan {
-  /** The subscription_plans row ID. */
+  /** The canonical plans row ID. */
   planId: string;
   /** Human-readable name, e.g. "Pro". */
   planName: string;
-  /** URL-safe slug, e.g. "pro". */
+  /** URL-safe slug / key, e.g. "pro". */
   planSlug: string;
-  /** Quota policy from subscription_plans.quota_policy. */
+  /** Quota policy from plans.quota_policy. */
   quotaPolicy: Record<string, unknown>;
-  /** Feature flags from subscription_plans.entitlements. */
+  /** Feature flags from plans.entitlements. */
   entitlements: Record<string, unknown>;
   /** Subscription status (active, trialing, past_due, etc.). */
   subscriptionStatus: SubscriptionStatus;
@@ -108,8 +108,8 @@ export function invalidateEntitlements(tenantId: string): void {
 /**
  * Resolve the effective plan for a tenant.
  *
- * Looks up the tenant's active/trialing/past_due subscription, joins it to
- * the subscription_plans table, and returns a flat entitlements object that
+   * Looks up the tenant's active/trialing/past_due subscription, joins it to
+   * the canonical plans table, and returns a flat entitlements object that
  * the quota middleware can use directly.
  *
  * Results are cached in-memory for 60 seconds to avoid repeated DB hits on
@@ -138,10 +138,10 @@ export async function getEffectivePlanForTenant(
       price_id,
       current_period_end,
       cancel_at_period_end,
-      plan:subscription_plans (
+      plan:plans (
         id,
         name,
-        slug,
+        plan_key,
         quota_policy,
         entitlements
       )
@@ -167,7 +167,7 @@ export async function getEffectivePlanForTenant(
   const plan = data.plan as unknown as {
     id: string;
     name: string;
-    slug: string;
+    plan_key: string;
     quota_policy: Record<string, unknown>;
     entitlements: Record<string, unknown>;
   };
@@ -175,7 +175,7 @@ export async function getEffectivePlanForTenant(
   const result: EffectivePlan = {
     planId: plan.id,
     planName: plan.name,
-    planSlug: plan.slug,
+    planSlug: plan.plan_key,
     quotaPolicy: plan.quota_policy ?? {},
     entitlements: plan.entitlements ?? {},
     subscriptionStatus: data.status as SubscriptionStatus,

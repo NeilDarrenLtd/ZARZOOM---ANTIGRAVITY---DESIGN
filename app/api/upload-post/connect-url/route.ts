@@ -8,6 +8,7 @@ import {
   generateUploadPostJwt,
   UPLOAD_POST_BASE,
 } from "@/lib/upload-post/http";
+import { getEffectivePlanForTenant } from "@/lib/billing/entitlements";
 
 const upDebug = process.env.UPLOAD_POST_DEBUG === "true";
 function upLog(...args: unknown[]) { if (upDebug) console.log("[upload-post]", ...args); }
@@ -73,8 +74,33 @@ export async function GET(req: NextRequest) {
       return jsonError(401, "Authentication required", requestId);
     }
 
-    // ── 2. Resolve API key (DB → env fallback) ──────────────────────────
+    // ── 2. Resolve workspace + API key (DB → env fallback) ──────────────
     const admin = await createAdminClient();
+
+    const tenantId = req.headers.get("x-tenant-id")?.trim();
+    if (!tenantId) {
+      upWarn("no X-Tenant-Id header — rejecting connect-url (workspace required)");
+      return jsonError(
+        400,
+        "Workspace context required. Select a workspace before connecting accounts.",
+        requestId
+      );
+    }
+
+    const { data: membership } = await admin
+      .from("tenant_memberships")
+      .select("tenant_id")
+      .eq("tenant_id", tenantId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!membership) {
+      return jsonError(
+        403,
+        "You do not have access to this workspace.",
+        requestId
+      );
+    }
 
     // Ensure singleton row
     await admin
@@ -98,6 +124,22 @@ export async function GET(req: NextRequest) {
 
     if (!apiKey) {
       return notConfigured(requestId);
+    }
+
+    // ── 3. Enforce subscription gating per workspace ─────────────────────
+    const plan = await getEffectivePlanForTenant(tenantId);
+    if (plan.subscriptionStatus !== "active" && plan.subscriptionStatus !== "trialing") {
+      return NextResponse.json(
+        {
+          error: {
+            code: "SUBSCRIPTION_REQUIRED",
+            message:
+              "An active subscription is required to connect social accounts for this workspace.",
+            requestId,
+          },
+        },
+        { status: 402, headers: { "X-Request-Id": requestId } }
+      );
     }
 
     // ── 3. Ensure Upload-Post user exists ────────────────────────────────
@@ -158,7 +200,6 @@ export async function GET(req: NextRequest) {
     }
 
     // ── 7. Upsert audit trail per workspace (non-fatal) ─────────────────────
-    const tenantId = req.headers.get("x-tenant-id")?.trim();
     if (tenantId) {
       const { data: mem } = await admin
         .from("tenant_memberships")

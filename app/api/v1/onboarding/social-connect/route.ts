@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getEffectivePlanForTenant } from "@/lib/billing/entitlements";
 
 // ──────────────────────────────────────────────────────────────────
 // POST /api/v1/onboarding/social-connect
@@ -55,6 +56,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Workspace context required. Send X-Tenant-Id header." },
         { status: 400 }
+      );
+    }
+
+    const plan = await getEffectivePlanForTenant(tenantId);
+    if (plan.subscriptionStatus !== "active" && plan.subscriptionStatus !== "trialing") {
+      return NextResponse.json(
+        {
+          error:
+            "Subscription required to connect social accounts for this workspace. Choose a plan to continue.",
+        },
+        { status: 402 }
       );
     }
 

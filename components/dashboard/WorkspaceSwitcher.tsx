@@ -7,11 +7,9 @@ import {
   Plus,
   Check,
   Building2,
-  CreditCard,
-  AlertCircle,
-  Settings,
 } from "lucide-react";
 import { languages } from "@/lib/i18n";
+import WorkspaceStatusPills from "./WorkspaceStatusPills";
 
 export type WorkspaceStatus = "active" | "setup_incomplete" | "payment_required";
 
@@ -22,6 +20,8 @@ export interface Workspace {
   role?: "owner" | "admin" | "member" | "viewer";
   /** Content language code (e.g. en, fr) from onboarding; shown next to name as e.g. "ZARSK (English)" */
   content_language?: string | null;
+  /** Whether the automation service is paused for this workspace. */
+  is_paused?: boolean;
 }
 
 interface WorkspaceSwitcherProps {
@@ -31,35 +31,6 @@ interface WorkspaceSwitcherProps {
   onAddWorkspace: () => void;
   /** When true, Add Workspace button is disabled (e.g. create in progress). */
   addWorkspaceLoading?: boolean;
-}
-
-function getStatusConfig(status: WorkspaceStatus) {
-  switch (status) {
-    case "active":
-      return {
-        label: "Paid",
-        className: "bg-green-100 text-green-700",
-        icon: Check,
-      };
-    case "setup_incomplete":
-      return {
-        label: "Setup Incomplete",
-        className: "bg-amber-100 text-amber-700",
-        icon: Settings,
-      };
-    case "payment_required":
-      return {
-        label: "Payment Required",
-        className: "bg-red-100 text-red-700",
-        icon: AlertCircle,
-      };
-    default:
-      return {
-        label: "Unknown",
-        className: "bg-gray-100 text-gray-700",
-        icon: Building2,
-      };
-  }
 }
 
 const MOBILE_BREAKPOINT = 640;
@@ -134,39 +105,35 @@ export default function WorkspaceSwitcher({
     return () => document.removeEventListener("keydown", handleEscape);
   }, []);
 
-  const activeStatusConfig = activeWorkspace
-    ? getStatusConfig(activeWorkspace.status)
-    : null;
-
   return (
     <div ref={dropdownRef} className="relative">
       {/* Trigger Button */}
       <button
         ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 min-w-[180px] max-w-[240px]"
+        className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 min-w-[180px] max-w-[260px]"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-label="Switch workspace"
       >
-        {/* Workspace Icon */}
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0">
           <Building2 className="w-4 h-4 text-white" />
         </div>
 
-        {/* Workspace Info */}
         <div className="flex-1 min-w-0 text-left">
           <p className="text-sm font-semibold text-gray-900 truncate">
             {activeWorkspace?.name || "Select workspace"}
           </p>
-          {activeStatusConfig && (
-            <p className="text-xs text-gray-500 truncate">
-              {activeWorkspace?.role === "owner" ? "Owner" : activeWorkspace?.role || "Member"}
-            </p>
+          {activeWorkspace && (
+            <div className="flex items-center gap-1 mt-0.5">
+              <WorkspaceStatusPills
+                status={activeWorkspace.status}
+                isPaused={activeWorkspace.is_paused ?? false}
+              />
+            </div>
           )}
         </div>
 
-        {/* Chevron */}
         <ChevronDown
           className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -208,9 +175,7 @@ export default function WorkspaceSwitcher({
             {/* Workspace List */}
             <div className="max-h-64 overflow-y-auto py-1">
               {workspaces.map((workspace) => {
-                const statusConfig = getStatusConfig(workspace.status);
-                const StatusIcon = statusConfig.icon;
-                const isActive = workspace.id === activeWorkspaceId;
+                const isCurrent = workspace.id === activeWorkspaceId;
 
                 return (
                   <button
@@ -220,34 +185,32 @@ export default function WorkspaceSwitcher({
                       setIsOpen(false);
                     }}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors duration-150 ${
-                      isActive
+                      isCurrent
                         ? "bg-green-50"
                         : "hover:bg-gray-50"
                     }`}
                     role="option"
-                    aria-selected={isActive}
+                    aria-selected={isCurrent}
                   >
-                    {/* Workspace Icon */}
                     <div
                       className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        isActive
+                        isCurrent
                           ? "bg-gradient-to-br from-green-500 to-green-600"
                           : "bg-gray-100"
                       }`}
                     >
                       <Building2
                         className={`w-4 h-4 ${
-                          isActive ? "text-white" : "text-gray-500"
+                          isCurrent ? "text-white" : "text-gray-500"
                         }`}
                       />
                     </div>
 
-                    {/* Workspace Details */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p
                           className={`text-sm font-medium truncate ${
-                            isActive ? "text-green-700" : "text-gray-900"
+                            isCurrent ? "text-green-700" : "text-gray-900"
                           }`}
                         >
                           {workspace.name}
@@ -258,19 +221,16 @@ export default function WorkspaceSwitcher({
                             </span>
                           )}
                         </p>
-                        {isActive && (
+                        {isCurrent && (
                           <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
                         )}
                       </div>
 
-                      {/* Status Badge */}
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${statusConfig.className}`}
-                        >
-                          <StatusIcon className="w-3 h-3" />
-                          {statusConfig.label}
-                        </span>
+                      <div className="mt-1">
+                        <WorkspaceStatusPills
+                          status={workspace.status}
+                          isPaused={workspace.is_paused ?? false}
+                        />
                       </div>
                     </div>
                   </button>

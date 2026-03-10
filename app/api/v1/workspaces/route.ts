@@ -106,7 +106,7 @@ export const GET = createApiHandler({
 
     const { data: tenants, error: tenantsError } = await supabase
       .from("tenants")
-      .select("id, name, status")
+      .select("id, name, status, is_paused")
       .in("id", tenantIds);
 
     if (tenantsError || !tenants) {
@@ -153,6 +153,7 @@ export const GET = createApiHandler({
         role: m.role as "owner" | "admin" | "member" | "viewer",
         created_at: m.created_at,
         content_language,
+        is_paused: tenant?.is_paused ?? false,
       };
     });
 

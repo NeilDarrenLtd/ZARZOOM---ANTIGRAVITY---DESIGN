@@ -49,13 +49,14 @@ export function meetsMinimumTier(
  */
 export const ACTION_PLAN_MAP: Record<string, PlanTier> = {
   // Basic tier
-  "social.publish":       "basic",
-  "social.post.text":     "basic",
-  "social.post.photo":    "basic",
-  "social.post.video":    "basic",
-  "social.profile.create":"basic",
-  image_generate:         "basic",
-  image_edit:             "basic",
+  "social.publish":        "basic",
+  "social.post.text":      "basic",
+  "social.post.photo":     "basic",
+  "social.post.video":     "basic",
+  "social.profile.create": "basic",
+  "social.profile.connect":"basic",
+  image_generate:          "basic",
+  image_edit:              "basic",
 
   // Pro tier
   research_social:        "pro",

@@ -2,7 +2,7 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, created } from "@/lib/api/http-responses";
 import { NotFoundError, ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { versionPrice, deactivatePrice } from "@/lib/billing/queries";
+import { versionPrice, deactivatePrice, getPlanById } from "@/lib/billing/queries";
 import { planPriceSchema } from "@/lib/billing/types";
 import { createAdminClient } from "@/lib/supabase/server";
 import { z } from "zod";
@@ -14,16 +14,9 @@ function extractPlanId(req: Request): string {
   return parts[parts.length - 2];
 }
 
-/** Fetch a plan from subscription_plans by id */
+/** Fetch a canonical plan (with prices) by id */
 async function fetchPlan(planId: string) {
-  const supabase = await createAdminClient();
-  const { data, error } = await supabase
-    .from("subscription_plans")
-    .select("*")
-    .eq("id", planId)
-    .single();
-  if (error || !data) return null;
-  return data;
+  return getPlanById(planId);
 }
 
 /* ------------------------------------------------------------------ */

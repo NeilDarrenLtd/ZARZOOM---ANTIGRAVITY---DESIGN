@@ -14,16 +14,11 @@ import { NextResponse } from "next/server";
 /* ------------------------------------------------------------------ */
 
 const checkoutSchema = z.object({
-  /**
-   * Plan code (slug) to subscribe to. The caller passes a human-friendly
-   * code like "basic", "pro", or "advanced" and we resolve the plan from
-   * the database.
-   */
   plan_code: z.string().min(1, "plan_code is required"),
-  /** Billing currency. */
   currency: z.enum(["GBP", "USD", "EUR"]),
-  /** Billing interval. */
   interval: z.enum(["month", "year"]),
+  success_path: z.string().optional(),
+  cancel_path: z.string().optional(),
 });
 
 /**
@@ -77,18 +72,18 @@ export const POST = createApiHandler({
       );
     }
 
-    const { plan_code, currency, interval } = parsed.data;
+    const { plan_code, currency, interval, success_path, cancel_path } = parsed.data;
     const tenantId = ctx.membership!.tenantId;
     const userId = ctx.user!.id;
     const userEmail = ctx.user!.email;
 
     const supabase = await createAdminClient();
 
-    // 2. Resolve the plan by slug (must be active)
+    // 2. Resolve the plan by canonical plan_key (must be active)
     const { data: plan, error: planErr } = await supabase
-      .from("subscription_plans")
-      .select("id, name, slug, stripe_product_id, is_active")
-      .eq("slug", plan_code)
+      .from("plans")
+      .select("id, plan_key, name, is_active")
+      .eq("plan_key", plan_code)
       .eq("is_active", true)
       .single();
 
@@ -125,15 +120,7 @@ export const POST = createApiHandler({
       );
     }
 
-    // 4. Ensure stripe_product_id exists on the plan
-    if (!plan.stripe_product_id) {
-      return badRequest(
-        ctx.requestId,
-        "This plan is not yet connected to the billing provider. Please ask an admin to sync products."
-      );
-    }
-
-    // 5. Ensure billing_provider_price_id exists on the price
+    // 4. Ensure billing_provider_price_id exists on the price
     const stripePriceId = priceRow.billing_provider_price_id;
     if (!stripePriceId) {
       return badRequest(
@@ -178,8 +165,8 @@ export const POST = createApiHandler({
       customer: stripeCustomerId,
       client_reference_id: tenantId,
       line_items: [{ price: stripePriceId, quantity: 1 }],
-      success_url: `${baseUrl}/dashboard?checkout=success`,
-      cancel_url: `${baseUrl}/pricing?checkout=canceled`,
+      success_url: `${baseUrl}${success_path || "/dashboard?checkout=success"}`,
+      cancel_url: `${baseUrl}${cancel_path || "/pricing?checkout=canceled"}`,
       subscription_data: {
         metadata: {
           tenant_id: tenantId,
@@ -190,6 +177,8 @@ export const POST = createApiHandler({
       },
       metadata: {
         tenant_id: tenantId,
+        user_id: userId,
+        plan_id: plan.id,
         price_id: priceRow.id,
       },
     });

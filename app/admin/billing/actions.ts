@@ -3,9 +3,10 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import {
   getPlanById,
-  createPlan as createPlanQuery,
-  updatePlan as updatePlanQuery,
-  archivePlan as archivePlanQuery,
+  getAllPlansWithPrices,
+  createPlanWithPrices,
+  updatePlanData,
+  togglePlanStatus,
   getSubscriptionStats,
   listSubscriptions,
   createPlanSchema,
@@ -48,32 +49,7 @@ export async function fetchPlans(): Promise<{
 }> {
   try {
     await requireAdmin();
-    const supabase = await createAdminClient();
-
-    // Query subscription_plans directly — this is where all plan data lives.
-    const { data, error } = await supabase
-      .from("subscription_plans")
-      .select("*")
-      .order("display_order", { ascending: true });
-
-    if (error) throw new Error(error.message);
-
-    const plans: PlanWithPrices[] = (data ?? []).map((p: any) => ({
-      id: p.id,
-      plan_key: p.slug,
-      name: p.name,
-      description: p.description ?? null,
-      is_active: p.is_active ?? true,
-      sort_order: p.display_order ?? 0,
-      stripe_price_id: p.stripe_price_id ?? null,
-      entitlements: p.entitlements ?? {},
-      quota_policy: p.quota_policy ?? {},
-      features: p.features ?? [],
-      created_at: p.created_at,
-      updated_at: p.updated_at,
-      prices: [],
-    }));
-
+    const plans = await getAllPlansWithPrices();
     return { plans };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch plans";
@@ -120,24 +96,21 @@ export async function createNewPlan(
 
     const { prices, ...planFields } = result.data;
 
-    await createPlanQuery(
+    await createPlanWithPrices(
       {
-        name: planFields.name,
         plan_key: planFields.plan_key,
+        name: planFields.name,
         description: planFields.description || null,
         is_active: planFields.is_active,
-        scope: null,
-        tenant_id: null,
-        display_order: planFields.sort_order,
-        highlight: false,
+        sort_order: planFields.sort_order,
+        entitlements: planFields.entitlements,
         quota_policy: planFields.quota_policy,
         features: planFields.features,
-        entitlements: planFields.entitlements,
       },
       prices.map((p) => ({
         currency: p.currency,
         interval: p.interval,
-        unit_amount: p.unitAmount,
+        amount_minor: p.unitAmount,
       }))
     );
 
@@ -190,7 +163,16 @@ export async function updateExistingPlan(
       return { errors: result.error.flatten().fieldErrors as Record<string, string[]> };
     }
 
-    await updatePlanQuery(id, result.data);
+    await updatePlanData(id, {
+      name: result.data.name,
+      description: result.data.description,
+      is_active: result.data.is_active,
+      sort_order: result.data.sort_order,
+      quota_policy: result.data.quota_policy,
+      features: result.data.features,
+      entitlements: result.data.entitlements,
+      stripe_price_id: result.data.stripe_price_id ?? null,
+    });
 
     return { success: true };
   } catch (err) {
@@ -204,7 +186,7 @@ export async function archiveExistingPlan(
 ): Promise<{ success?: boolean; error?: string }> {
   try {
     await requireAdmin();
-    await archivePlanQuery(id);
+    await togglePlanStatus(id, false);
     return { success: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to archive plan";

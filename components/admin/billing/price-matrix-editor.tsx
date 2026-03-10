@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Loader2, Plus, Ban } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CURRENCIES, INTERVALS, type Currency, type BillingInterval, type PlanPriceRow } from "@/lib/billing/types";
+import { CURRENCIES, INTERVALS, type Currency, type BillingInterval, type PlanPrice } from "@/lib/billing/types";
 import { formatPrice } from "@/lib/billing/format";
 
 /* ------------------------------------------------------------------ */
@@ -12,7 +12,7 @@ import { formatPrice } from "@/lib/billing/format";
 
 interface PriceMatrixEditorProps {
   planId: string;
-  prices: PlanPriceRow[];
+  prices: PlanPrice[];
   onAddPrice: (currency: Currency, interval: BillingInterval, unitAmount: number) => Promise<void>;
   onDeactivatePrice: (priceId: string) => Promise<void>;
 }
@@ -36,7 +36,7 @@ export function PriceMatrixEditor({
 
   const activePrices = prices.filter((p) => p.is_active);
 
-  function getActivePrice(currency: Currency, interval: BillingInterval): PlanPriceRow | undefined {
+  function getActivePrice(currency: Currency, interval: BillingInterval): PlanPrice | undefined {
     return activePrices.find(
       (p) => p.currency === currency && p.interval === interval
     );
@@ -149,14 +149,14 @@ export function PriceMatrixEditor({
                       ) : activePrice ? (
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-zinc-800">
-                            {formatPrice(activePrice.unit_amount, currency)}
+                            {formatPrice(activePrice.amount_minor, currency)}
                           </span>
                           <button
                             type="button"
                             onClick={() => {
                               setEditingCell(key);
                               setDraftAmount(
-                                (activePrice.unit_amount / 100).toFixed(2)
+                                (activePrice.amount_minor / 100).toFixed(2)
                               );
                             }}
                             className="rounded px-1.5 py-0.5 text-xs text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
@@ -215,7 +215,7 @@ export function PriceMatrixEditor({
                   className="flex items-center gap-3 rounded bg-zinc-50 px-3 py-1.5"
                 >
                   <span className="font-mono">
-                    {formatPrice(p.unit_amount, p.currency)}
+                    {formatPrice(p.amount_minor, p.currency)}
                   </span>
                   <span className="text-zinc-400">
                     {p.currency} / {p.interval}

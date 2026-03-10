@@ -1,9 +1,11 @@
 import type { ApiPlan } from "@/lib/billing/api-types";
+import { hasPlanCopy as hasI18nPlanCopy } from "@/lib/i18n/plan-copy";
 
 /**
  * Type for i18n translation function
+ * Matches the useI18n / plan-copy helpers signature.
  */
-type TranslateFn = (key: string) => string;
+type TranslateFn = (key: string, fallback?: string) => string;
 
 /**
  * Enriched plan with i18n copy
@@ -12,34 +14,6 @@ export interface DisplayablePlan extends ApiPlan {
   displayName: string;
   displayDescription: string;
   displayFeatures: string[];
-}
-
-/**
- * Check if a plan has i18n translations defined.
- * Both DB data AND i18n translations must exist for a plan to be displayable.
- * 
- * Translations must exist at: billing.plans.<planKey>.displayName
- * 
- * FALLBACK: If i18n is broken (all keys return themselves), this will return true,
- * allowing the plan to display with humanized plan key as fallback.
- */
-function hasPlanCopy(planKey: string, t: TranslateFn): boolean {
-  const nameKey = `billing.plans.${planKey}.displayName`;
-  const translation = t(nameKey);
-  
-  // Translation exists if it's different from the key AND not empty
-  const hasTranslation = translation !== nameKey && translation !== "";
-  
-  // FALLBACK: If translation system is broken (all keys return themselves),
-  // allow the plan to display with fallback copy
-  if (!hasTranslation && process.env.NODE_ENV === "production") {
-    console.warn(
-      `[v0] Translation missing for "${nameKey}", but plan will display with fallback copy`
-    );
-    return true; // Allow display even if i18n is broken
-  }
-  
-  return hasTranslation;
 }
 
 /**
@@ -66,8 +40,10 @@ export function getDisplayablePlans(
   const displayable: DisplayablePlan[] = [];
 
   for (const plan of plans) {
-    // GATING: Skip plans without i18n translations
-    if (!hasPlanCopy(plan.planKey, t)) {
+    // GATING: Skip plans without complete i18n translations.
+    // Uses shared plan-copy helper to enforce displayName, shortTagline,
+    // description, and at least one bullet.
+    if (!hasI18nPlanCopy(plan.planKey, t)) {
       if (process.env.NODE_ENV === "development") {
         console.warn(
           `[v0] Plan "${plan.planKey}" exists in DB but has no i18n translations. Skipping.`

@@ -142,12 +142,12 @@ export function checkProfileCompleteness(
 export function getSectionLabel(section: MissingItem["section"]): string {
   switch (section) {
     case "brand":
-      return "Brand Basics";
+      return "profile.sections.brand";
     case "goals":
-      return "Goals & Growth";
+      return "profile.sections.goals";
     case "plan":
-      return "Your Plan";
+      return "profile.sections.plan";
     case "social":
-      return "Social Connections";
+      return "profile.sections.social";
   }
 }

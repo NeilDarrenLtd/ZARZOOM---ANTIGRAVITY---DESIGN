@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import {
   useWorkspaceFetch,
   useActiveWorkspace,
-  useSetActiveWorkspaceAndInvalidate,
   useWorkspaceSwitchKey,
 } from "@/lib/workspace/context";
 import { ACTIVE_WORKSPACE_COOKIE } from "@/lib/workspace/active";
@@ -15,7 +14,7 @@ import SiteNavbar from "@/components/SiteNavbar";
 import Footer from "@/components/Footer";
 import DynamicSEO from "@/components/DynamicSEO";
 import Link from "next/link";
-import { User, Settings, Link2, Rocket, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, AlertCircle, Zap, Trash2, Circle, ChevronRight, BarChart3, CreditCard, CalendarDays } from "lucide-react";
+import { User, Settings, Link2, LogOut, RotateCcw, HelpCircle, Plus, Building2, Check, Zap, Trash2, Circle, ChevronRight, BarChart3, CreditCard, CalendarDays, X, CheckCircle } from "lucide-react";
 import {
   checkProfileCompleteness,
   type CompletenessResult,
@@ -24,15 +23,16 @@ import type { OnboardingUpdate } from "@/lib/validation/onboarding";
 import { useUploadPostSuccess } from "@/hooks/use-upload-post-success";
 import UploadPostSuccessBanner from "@/components/ui/UploadPostSuccessBanner";
 import WorkspaceSwitcher, { type Workspace } from "@/components/dashboard/WorkspaceSwitcher";
+import WorkspaceAutomationToggle from "@/components/dashboard/WorkspaceAutomationToggle";
+import WorkspaceStatusPills from "@/components/dashboard/WorkspaceStatusPills";
 import { languages } from "@/lib/i18n";
 
 
 export default function DashboardPage() {
   const { t } = useI18n();
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const workspaceFetch = useWorkspaceFetch();
   const activeWorkspaceId = useActiveWorkspace();
-  const setActiveWorkspaceAndInvalidate = useSetActiveWorkspaceAndInvalidate();
   const workspaceSwitchKey = useWorkspaceSwitchKey();
   const [user, setUser] = useState<{ email?: string; created_at?: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,6 +47,16 @@ export default function DashboardPage() {
   const [addWorkspaceName, setAddWorkspaceName] = useState("Un-Named");
   const showSuccessBanner = useUploadPostSuccess();
   const [profileCompleteness, setProfileCompleteness] = useState<CompletenessResult | null>(null);
+  const [showCheckoutSuccess, setShowCheckoutSuccess] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("checkout") === "success") {
+      setShowCheckoutSuccess(true);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("checkout");
+      window.history.replaceState({}, "", url.pathname + url.search);
+    }
+  }, [searchParams]);
 
   const fetchWorkspaces = useCallback(async () => {
     try {
@@ -61,6 +71,13 @@ export default function DashboardPage() {
   }, [workspaceFetch]);
 
   useEffect(() => {
+    // Redirect to pricing to resume pending checkout from pre-auth plan selection
+    const pending = sessionStorage.getItem("pendingCheckout");
+    if (pending) {
+      window.location.href = "/pricing?resumeCheckout=1";
+      return;
+    }
+
     async function getUser() {
       const supabase = createClient();
       const {
@@ -108,15 +125,19 @@ export default function DashboardPage() {
     setDeleteWorkspaceError(null);
   }, [workspaceSwitchKey]);
 
-  // When there is only one workspace, ensure it is selected (set cookie and reload so layout picks it up).
-  // Skip while a workspace is being created — otherwise the effect races with the redirect to /onboarding
-  // by overwriting the cookie and navigating back to /dashboard before the page unloads.
+  // Ensure a workspace is always selected when workspaces exist.
+  // If only one workspace, auto-select it. If multiple but none selected, select the first.
+  // Skip while a workspace is being created — otherwise the effect races with the redirect
+  // to /onboarding by overwriting the cookie and navigating back to /dashboard.
   useEffect(() => {
     if (addWorkspaceLoading) return;
-    if (workspaces.length !== 1) return;
-    const singleId = workspaces[0].id;
-    if (activeWorkspaceId === singleId) return;
-    document.cookie = `active_workspace_id=${encodeURIComponent(singleId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    if (workspaces.length === 0) return;
+
+    const isCurrentValid = activeWorkspaceId && workspaces.some((w) => w.id === activeWorkspaceId);
+    if (isCurrentValid) return;
+
+    const targetId = workspaces[0].id;
+    document.cookie = `active_workspace_id=${encodeURIComponent(targetId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
     window.location.href = "/dashboard";
   }, [workspaces, activeWorkspaceId, addWorkspaceLoading]);
 
@@ -157,10 +178,9 @@ export default function DashboardPage() {
         const newWorkspaceId = (data as { workspace?: { id?: string } })?.workspace?.id;
         if (typeof newWorkspaceId === "string") {
           document.cookie = `${ACTIVE_WORKSPACE_COOKIE}=${encodeURIComponent(newWorkspaceId)}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
-          // Do NOT call setActiveWorkspaceAndInvalidate here — we are about to do a full
-          // page redirect. Updating React context would trigger the "single workspace"
-          // effect which races with the redirect and overwrites the cookie / navigates
-          // back to /dashboard before the browser can navigate to /onboarding.
+          // Do NOT update React context here — we are about to do a full page redirect.
+          // Updating context would trigger the auto-select effect which races with the
+          // redirect and overwrites the cookie before the browser can navigate.
         }
         if (copyFromCurrent) {
           window.location.href = "/dashboard/profile";
@@ -250,6 +270,31 @@ export default function DashboardPage() {
     }
   }
 
+  const handleTogglePause = useCallback(async (workspaceId: string, newIsPaused: boolean) => {
+    setWorkspaces((prev) =>
+      prev.map((w) => (w.id === workspaceId ? { ...w, is_paused: newIsPaused } : w))
+    );
+    try {
+      const res = await workspaceFetch(`/api/v1/workspaces/${workspaceId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_paused: newIsPaused }),
+      });
+      if (!res.ok) {
+        setWorkspaces((prev) =>
+          prev.map((w) => (w.id === workspaceId ? { ...w, is_paused: !newIsPaused } : w))
+        );
+      }
+    } catch {
+      setWorkspaces((prev) =>
+        prev.map((w) => (w.id === workspaceId ? { ...w, is_paused: !newIsPaused } : w))
+      );
+    }
+  }, [workspaceFetch]);
+
+  const activeWs = workspaces.find((w) => w.id === activeWorkspaceId);
+  const canConnectAccounts = !!activeWs && activeWs.status === "active";
+
   if (loading) {
     return (
       <main className="bg-gray-50 min-h-screen flex flex-col">
@@ -264,6 +309,19 @@ export default function DashboardPage() {
   return (
     <main className="bg-gray-50 min-h-screen flex flex-col">
       <UploadPostSuccessBanner show={showSuccessBanner} />
+      {showCheckoutSuccess && (
+        <div className="sticky top-0 z-40 flex items-center justify-center gap-3 bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-md">
+          <CheckCircle className="h-5 w-5 flex-shrink-0" />
+          <span>Your subscription is now active. Welcome to ZARZOOM!</span>
+          <button
+            type="button"
+            onClick={() => setShowCheckoutSuccess(false)}
+            className="ml-2 rounded-lg p-1 hover:bg-green-700 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       <DynamicSEO />
       <SiteNavbar />
 
@@ -281,7 +339,7 @@ export default function DashboardPage() {
               </span>
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <WorkspaceSwitcher
               workspaces={workspaces}
               activeWorkspaceId={activeWorkspaceId}
@@ -289,6 +347,13 @@ export default function DashboardPage() {
               onAddWorkspace={handleAddWorkspaceClick}
               addWorkspaceLoading={addWorkspaceLoading}
             />
+            {activeWs && (
+              <WorkspaceAutomationToggle
+                workspaceId={activeWs.id}
+                isPaused={activeWs.is_paused ?? false}
+                onToggle={handleTogglePause}
+              />
+            )}
             <button
               onClick={handleSignOut}
               className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-sm font-medium text-gray-700 transition-colors"
@@ -341,24 +406,13 @@ export default function DashboardPage() {
             ) : (
               <div className="flex flex-wrap gap-3">
                 {workspaces.map((ws) => {
-                  const isActive = ws.id === activeWorkspaceId;
-                  const statusColors: Record<string, string> = {
-                    active: "bg-green-100 text-green-700",
-                    setup_incomplete: "bg-amber-100 text-amber-700",
-                    payment_required: "bg-red-100 text-red-700",
-                  };
-                  const statusLabels: Record<string, string> = {
-                    active: t("dashboard.statusPaid"),
-                    setup_incomplete: t("dashboard.statusSetupIncomplete"),
-                    payment_required: t("dashboard.statusPaymentRequired"),
-                  };
-                  const StatusIcon = ws.status === "active" ? Check : AlertCircle;
+                  const isCurrent = ws.id === activeWorkspaceId;
 
                   return (
                     <div
                       key={ws.id}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
-                        isActive
+                        isCurrent
                           ? "border-green-500 bg-green-50"
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }`}
@@ -370,15 +424,15 @@ export default function DashboardPage() {
                       >
                         <div
                           className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                            isActive ? "bg-green-600" : "bg-gray-100"
+                            isCurrent ? "bg-green-600" : "bg-gray-100"
                           }`}
                         >
                           <Building2
-                            className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-500"}`}
+                            className={`w-4 h-4 ${isCurrent ? "text-white" : "text-gray-500"}`}
                           />
                         </div>
                         <div className="min-w-0">
-                          <p className={`text-sm font-semibold truncate ${isActive ? "text-green-700" : "text-gray-900"}`}>
+                          <p className={`text-sm font-semibold truncate ${isCurrent ? "text-green-700" : "text-gray-900"}`}>
                             {ws.name}
                             {ws.content_language && (
                               <span className="text-gray-500 font-normal">
@@ -388,16 +442,13 @@ export default function DashboardPage() {
                             )}
                           </p>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium ${statusColors[ws.status] ?? "bg-gray-100 text-gray-600"}`}>
-                              <StatusIcon className="w-3 h-3" />
-                              {statusLabels[ws.status] ?? ws.status}
-                            </span>
+                            <WorkspaceStatusPills status={ws.status} isPaused={ws.is_paused ?? false} />
                             {ws.role && (
                               <span className="text-[10px] text-gray-400 capitalize">{ws.role}</span>
                             )}
                           </div>
                         </div>
-                        {isActive && <Check className="w-4 h-4 text-green-500 flex-shrink-0 ml-1" />}
+                        {isCurrent && <Check className="w-4 h-4 text-green-500 flex-shrink-0 ml-1" />}
                       </button>
                       {ws.role === "owner" && (
                         workspaces.length > 1 ? (
@@ -518,7 +569,7 @@ export default function DashboardPage() {
               ) : profileCompleteness?.isComplete ? (
                 <p className="text-sm text-green-600 flex items-center gap-1.5">
                   <Check className="w-3.5 h-3.5" />
-                  All profile fields are complete
+                  {t("profile.subtitle")}
                 </p>
               ) : (
                 <div className="flex flex-col gap-2 text-sm text-gray-500">
@@ -550,22 +601,47 @@ export default function DashboardPage() {
           </Link>
 
           {/* Connected accounts card */}
-          <Link
-            href="/dashboard/connect-accounts?returnTo=/dashboard"
-            className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-purple-300 hover:shadow-md transition-all block"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <Link2 className="w-5 h-5 text-purple-600" />
+          {canConnectAccounts ? (
+            <Link
+              href="/dashboard/connect-accounts?returnTo=/dashboard"
+              className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 hover:border-purple-300 hover:shadow-md transition-all block"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Link2 className="w-5 h-5 text-purple-600" />
+                </div>
+                <h2 className="text-lg font-bold text-gray-900">
+                  {t("dashboard.connectedAccounts")}
+                </h2>
               </div>
-              <h2 className="text-lg font-bold text-gray-900">
-                {t("dashboard.connectedAccounts")}
-              </h2>
-            </div>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              {t("dashboard.comingSoon")}
-            </p>
-          </Link>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                {t("dashboard.comingSoon")}
+              </p>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => { window.location.href = "/dashboard/billing"; }}
+              className="bg-white rounded-2xl border border-red-200 shadow-sm p-6 hover:border-red-300 hover:shadow-md transition-all block text-left cursor-pointer"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <Link2 className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">
+                    {t("dashboard.connectedAccounts")}
+                  </h2>
+                  <p className="text-xs text-red-700 mt-0.5 font-medium">
+                    Subscription required
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Choose a plan for this workspace to connect social accounts.
+              </p>
+            </button>
+          )}
 
           {/* Analytics card */}
           <Link

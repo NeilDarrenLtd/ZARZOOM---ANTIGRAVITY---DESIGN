@@ -284,15 +284,28 @@ export async function POST(req: NextRequest) {
         const status = sub.status;
         const cancelAtPeriodEnd = sub.cancel_at_period_end;
 
-        // Period dates from the first subscription item (Stripe API >= basil)
         const firstItem = sub.items?.data?.[0];
         const currentPeriodStart = epochToISO(firstItem?.current_period_start);
         const currentPeriodEnd = epochToISO(firstItem?.current_period_end);
 
-        // Metadata (only trust Stripe)
         const metadata = sub.metadata ?? {};
-        const planIdFromMeta = metadata.plan_id ?? null;
-        const priceIdFromMeta = metadata.price_id ?? null;
+        let planIdFromMeta = metadata.plan_id ?? null;
+        let priceIdFromMeta = metadata.price_id ?? null;
+
+        // Reverse mapping: if metadata doesn't contain plan_id, look up
+        // by the Stripe price ID on the subscription item.
+        if (!planIdFromMeta && firstItem?.price?.id) {
+          const { data: priceRow } = await supabase
+            .from("plan_prices")
+            .select("id, plan_id")
+            .eq("billing_provider_price_id", firstItem.price.id)
+            .maybeSingle();
+
+          if (priceRow) {
+            planIdFromMeta = priceRow.plan_id;
+            priceIdFromMeta = priceRow.id;
+          }
+        }
 
         // Find existing row
         const { data: existingRow } = await supabase

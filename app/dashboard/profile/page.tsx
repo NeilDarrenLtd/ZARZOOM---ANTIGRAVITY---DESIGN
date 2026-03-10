@@ -84,6 +84,7 @@ export default function ProfilePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [plans, setPlans] = useState<DisplayablePlan[]>([]);
+  const [planChangeLoading, setPlanChangeLoading] = useState(false);
 
   // ── Load plans from DB + i18n ─────────────────────────
   useEffect(() => {
@@ -384,6 +385,54 @@ export default function ProfilePage() {
   const isAnnual = data.discount_opt_in !== false;
   const selectedPlan = data.selected_plan ?? null;
 
+  async function handleChangePlan(planKey: string, priceId: string) {
+    const plan = plans.find(p => p.planKey === planKey);
+    if (!plan) return;
+    const price = plan.prices?.find(p => p.id === priceId);
+    if (!price) return;
+
+    setPlanChangeLoading(true);
+    try {
+      const res = await workspaceFetch("/api/v1/billing/change-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan_code: planKey,
+          currency: price.currency,
+          interval: price.interval === "annual" ? "year" : "month",
+        }),
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+
+        // If the server returned a checkout URL, redirect the user to subscribe
+        if ((result as { url?: string }).url) {
+          window.location.href = (result as { url: string }).url;
+          return;
+        }
+
+        setToast({
+          type: "success",
+          message: `Plan ${result.change === "upgrade" ? "upgraded" : "changed"} to ${result.newPlan}!`,
+        });
+        onChange({ selected_plan: planKey });
+      } else {
+        const body = await res.json().catch(() => ({}));
+        const msg = (body as { error?: { message?: string } })?.error?.message;
+        if (res.status === 404) {
+          setToast({ type: "error", message: msg || "No active subscription. Please subscribe first." });
+        } else {
+          setToast({ type: "error", message: msg || "Failed to change plan. Please try again." });
+        }
+      }
+    } catch {
+      setToast({ type: "error", message: "An error occurred. Please try again." });
+    } finally {
+      setPlanChangeLoading(false);
+    }
+  }
+
   // ── Loading state ───────────────────────────────────────
   if (loading) {
     return (
@@ -488,9 +537,9 @@ export default function ProfilePage() {
                               className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-amber-200 text-xs font-medium text-amber-800"
                             >
                               <Circle className="w-3 h-3 text-amber-400" />
-                              {item.label}
+                          {item.label}
                               <span className="text-[10px] text-amber-500">
-                                ({getSectionLabel(item.section)})
+                                ({t(getSectionLabel(item.section))})
                               </span>
                             </span>
                           ))}
@@ -1081,8 +1130,14 @@ export default function ProfilePage() {
               showCurrencyToggle={true}
               showIntervalToggle={true}
               selectedPlanKey={selectedPlan || undefined}
-              onChoosePlan={(planKey) => onChange({ selected_plan: planKey })}
+              onChoosePlan={handleChangePlan}
             />
+            {planChangeLoading && (
+              <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Updating your plan...
+              </div>
+            )}
           </section>
 
           {/* ───────── SECTION 5: Social Connections ───────── */}

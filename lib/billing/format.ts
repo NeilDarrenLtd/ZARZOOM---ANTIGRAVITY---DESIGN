@@ -1,4 +1,4 @@
-import type { Currency, BillingInterval, PlanPriceRow } from "./types";
+import type { Currency, BillingInterval, PlanPrice } from "./types";
 
 /* ------------------------------------------------------------------ */
 /*  Currency Formatting                                                */
@@ -45,18 +45,18 @@ export function formatInterval(interval: BillingInterval): string {
  * Format a price row into a complete display string.
  * e.g. "\u00A329.99 / month"
  */
-export function formatPriceWithInterval(price: PlanPriceRow): string {
-  return `${formatPrice(price.unit_amount, price.currency)} ${formatInterval(price.interval)}`;
+export function formatPriceWithInterval(price: PlanPrice): string {
+  return `${formatPrice(price.amount_minor, price.currency)} ${formatInterval(price.interval)}`;
 }
 
 /**
  * Find a specific price from a list of prices.
  */
 export function findPrice(
-  prices: PlanPriceRow[],
+  prices: PlanPrice[],
   currency: Currency,
   interval: BillingInterval
-): PlanPriceRow | undefined {
+): PlanPrice | undefined {
   return prices.find(
     (p) =>
       p.currency.toUpperCase() === currency.toUpperCase() &&

@@ -58,27 +58,6 @@ export const createPlanSchema = z.object({
 });
 
 /**
- * DEPRECATED: Legacy schema using slug/display_order
- * Only for backward compatibility
- */
-export const createPlanSchemaLegacy = z.object({
-  name: z.string().min(1, "Name is required").max(100),
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .max(50)
-    .regex(/^[a-z0-9_-]+$/, "Slug must be lowercase alphanumeric with dashes or underscores"),
-  description: z.string().max(500).optional().default(""),
-  is_active: z.boolean().default(true),
-  display_order: z.coerce.number().int().min(0).default(0),
-  highlight: z.boolean().default(false),
-  quota_policy: z.record(z.unknown()).optional().default({}),
-  features: z.array(z.string()).optional().default([]),
-  entitlements: z.record(z.unknown()).optional().default({}),
-  prices: z.array(planPriceSchema).min(1, "At least one price is required"),
-});
-
-/**
  * CANONICAL: Schema for updating plans
  */
 export const updatePlanSchema = z.object({
@@ -90,20 +69,6 @@ export const updatePlanSchema = z.object({
   features: z.array(z.string()).optional(),
   entitlements: z.record(z.boolean()).optional(),
   stripe_price_id: z.string().max(255).nullable().optional(),
-});
-
-/**
- * DEPRECATED: Legacy update schema
- */
-export const updatePlanSchemaLegacy = z.object({
-  name: z.string().min(1).max(100).optional(),
-  description: z.string().max(500).optional(),
-  is_active: z.boolean().optional(),
-  display_order: z.coerce.number().int().min(0).optional(),
-  highlight: z.boolean().optional(),
-  quota_policy: z.record(z.unknown()).optional(),
-  features: z.array(z.string()).optional(),
-  entitlements: z.record(z.unknown()).optional(),
 });
 
 /** Well-known quota policy keys used in the structured editor. */
@@ -168,51 +133,6 @@ export interface PlanWithPrices extends Plan {
   prices: PlanPrice[];
 }
 
-/**
- * DEPRECATED: Legacy subscription_plans table structure.
- * Only use for backward compatibility during migration phase.
- * Will be removed after all code is migrated to use Plan type.
- */
-export interface PlanRow {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  is_active: boolean;
-  scope: string | null;
-  tenant_id: string | null;
-  display_order: number;
-  highlight: boolean;
-  quota_policy: Record<string, unknown>;
-  features: unknown[] | null;
-  entitlements: Record<string, unknown> | null;
-  stripe_price_id: string | null;
-  created_at: string;
-  updated_at: string;
-  status?: PlanStatus;
-  trial_days?: number;
-  feature_flags?: Record<string, boolean>;
-}
-
-/**
- * DEPRECATED: Legacy plan_prices structure with unit_amount.
- * Use PlanPrice (with amount_minor) instead.
- */
-export interface PlanPriceRow {
-  id: string;
-  plan_id: string;
-  currency: Currency;
-  interval: BillingInterval;
-  unit_amount: number;  // deprecated - use amount_minor
-  billing_provider_price_id: string | null;
-  is_active: boolean;
-  effective_from: string | null;
-  effective_to: string | null;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface TenantSubscriptionRow {
   id: string;
   tenant_id: string;
@@ -234,14 +154,6 @@ export interface TenantSubscriptionRow {
 /*  Composite Types (for UI)                                           */
 /* ------------------------------------------------------------------ */
 
-/**
- * DEPRECATED: Legacy composite using PlanRow.
- * Use PlanWithPrices (extends Plan) instead.
- */
-export interface LegacyPlanWithPrices extends PlanRow {
-  plan_prices: PlanPriceRow[];
-}
-
 export interface SubscriptionWithPlan extends TenantSubscriptionRow {
-  plan: Plan | PlanRow;  // Support both during migration
+  plan: Plan;
 }

@@ -176,11 +176,10 @@ export async function fetchCurrentSubscription(workspaceId: string | null): Prom
 
     if (!sub) return { subscription: null };
 
-    // Resolve plan name
     let planName: string | null = null;
     if (sub.plan_id) {
       const { data: plan } = await admin
-        .from("subscription_plans")
+        .from("plans")
         .select("name")
         .eq("id", sub.plan_id)
         .single();

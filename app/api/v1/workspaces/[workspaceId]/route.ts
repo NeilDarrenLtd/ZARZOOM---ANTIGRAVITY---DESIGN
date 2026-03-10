@@ -106,6 +106,68 @@ export const PATCH = createApiHandler({
 });
 
 // ──────────────────────────────────────────────
+// PUT /api/v1/workspaces/[workspaceId]
+// Toggle workspace pause state. Owner/admin only.
+// Body: { is_paused: boolean }
+// ──────────────────────────────────────────────
+
+export const PUT = createApiHandler({
+  auth: true,
+  tenantOptional: true,
+  rateLimit: { maxRequests: 30, windowMs: 60_000 },
+  handler: async (ctx) => {
+    const match = ctx.req.nextUrl.pathname.match(/^\/api\/v1\/workspaces\/([^/]+)$/);
+    const workspaceId = match?.[1] ?? null;
+    if (!workspaceId) return badRequest(ctx.requestId, "Missing workspace ID");
+
+    const userId = ctx.user!.id;
+    const supabase = ctx.supabase!;
+
+    const { data: membership, error: membershipError } = await supabase
+      .from("tenant_memberships")
+      .select("role")
+      .eq("tenant_id", workspaceId)
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (membershipError) return serverError(ctx.requestId, "Failed to verify workspace access");
+    if (!membership) return notFound(ctx.requestId, "Workspace not found");
+    if (!["owner", "admin"].includes(membership.role)) {
+      return forbidden(ctx.requestId, "Only the workspace owner or admin can change this setting");
+    }
+
+    const body = await ctx.req.json().catch(() => ({}));
+    if (typeof body?.is_paused !== "boolean") {
+      return badRequest(ctx.requestId, "Body must include is_paused (boolean)");
+    }
+
+    let admin;
+    try {
+      admin = await createAdminClient();
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      return fail(ctx, "Server configuration error", msg);
+    }
+
+    const { data: updated, error: updateError } = await admin
+      .from("tenants")
+      .update({ is_paused: body.is_paused })
+      .eq("id", workspaceId)
+      .select("id, name, status, is_paused")
+      .single();
+
+    if (updateError || !updated) {
+      return fail(ctx, "Failed to update workspace", updateError?.message);
+    }
+
+    return ok(
+      { workspace: { id: updated.id, name: updated.name, is_paused: updated.is_paused } },
+      ctx.requestId,
+    );
+  },
+});
+
+// ──────────────────────────────────────────────
 // DELETE /api/v1/workspaces/[workspaceId]
 // Permanently delete a workspace. Only the owner can delete.
 // Irreversible: removes tenant, memberships, and related data.

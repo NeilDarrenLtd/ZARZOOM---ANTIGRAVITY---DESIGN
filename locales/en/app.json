@@ -498,7 +498,7 @@
           "analytics": "Analytics dashboard",
           "prioritySupport": "Priority support"
         },
-        "scale": {
+        "advanced": {
           "socialProfiles": "Unlimited social profiles",
           "postsPerMonth": "Unlimited posts",
           "aiGeneration": "Premium AI with custom brand voice",
@@ -512,12 +512,12 @@
       "planNames": {
         "basic": "Basic",
         "pro": "Pro",
-        "scale": "Scale"
+        "advanced": "Advanced"
       },
       "planDescriptions": {
         "basic": "Perfect for getting started with social media automation.",
         "pro": "For growing businesses that need more power and insights.",
-        "scale": "Unlimited everything for teams and agencies."
+        "advanced": "Unlimited everything for teams and agencies."
       },
       "popular": "Most Popular",
       "perMonth": "/mo",
@@ -589,6 +589,73 @@
     }
   },
   "billing": {
+    "page": {
+      "title": "Billing & Subscription",
+      "subtitle": "Review your workspace plan, billing status, and manage subscription settings.",
+      "backToDashboard": "Back to Dashboard"
+    },
+    "status": {
+      "active": "Active",
+      "trialing": "Trial",
+      "pastDue": "Past Due",
+      "canceled": "Cancelled",
+      "incomplete": "Incomplete",
+      "none": "No Subscription"
+    },
+    "overview": {
+      "title": "Billing Overview",
+      "workspace": "Workspace",
+      "currentPlan": "Current Plan",
+      "status": "Status",
+      "billingCycle": "Billing Cycle",
+      "nextBillingDate": "Next Billing Date",
+      "nextBillingDateUnknown": "Not available yet",
+      "pricePerPeriod": "Price per period",
+      "priceUnknown": "Not yet set",
+      "unknownWorkspace": "This workspace",
+      "priceLabel": "{price} / {interval}"
+    },
+    "currentPlan": {
+      "title": "Current Plan",
+      "subtitle": "Details for the subscription attached to this workspace.",
+      "freePlan": "Free",
+      "interval": {
+        "monthly": "Monthly",
+        "annual": "Annual",
+        "unknown": "Not available",
+        "monthlyShort": "mo",
+        "annualShort": "yr"
+      },
+      "priceWithInterval": "{price} – {interval}",
+      "priceUnknown": "Pricing not yet configured for this workspace.",
+      "featuresTitle": "Key Features",
+      "featuresPlaceholder": "Plan features will appear here once a subscription is active.",
+      "defaultFeatureAnalytics": "Analytics and workspace insights"
+    },
+    "actions": {
+      "title": "Billing Actions",
+      "subtitle": "Manage your plan and subscription for this workspace only.",
+      "changePlan": "Change Plan",
+      "viewPlans": "View Plans",
+      "manageSubscription": "Manage Subscription"
+    },
+    "statusBanner": {
+      "noSubscription": {
+        "title": "No subscription active for this workspace",
+        "body": "Choose a plan to unlock automated content, analytics, and social connections for the selected workspace."
+      }
+    },
+    "history": {
+      "title": "Billing History",
+      "subtitle": "Invoices and payments for this workspace will appear here.",
+      "emptyTitle": "No billing history yet",
+      "emptyBody": "Once you subscribe to a plan, invoices and payment receipts will appear in this section."
+    },
+    "errors": {
+      "portalOpenFailed": "We couldn't open the billing portal. Please try again in a moment.",
+      "generic": "Something went wrong while opening the billing portal. Please try again."
+    },
+    "loading": "Loading billing information...",
     "nav": {
       "billingHistory": "Billing History"
     },

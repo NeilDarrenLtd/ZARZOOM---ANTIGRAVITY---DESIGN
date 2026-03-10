@@ -2,14 +2,17 @@ import { createApiHandler } from "@/lib/api/handler";
 import { ok, created, badRequest } from "@/lib/api/http-responses";
 import { ValidationError } from "@/lib/api/errors";
 import { writeAuditLog } from "@/lib/admin/audit";
-import { createPlan } from "@/lib/billing/queries";
+import {
+  getAllPlansWithPrices,
+  createPlanWithPrices,
+} from "@/lib/billing/queries";
 import { createPlanSchema } from "@/lib/billing/types";
 import { createAdminClient } from "@/lib/supabase/server";
 
 /* ------------------------------------------------------------------ */
 /*  GET /api/v1/admin/billing/plans                                    */
 /*  List all plans (optionally filter by is_active).                   */
-/*  Queries subscription_plans directly and maps to canonical shape.   */
+/*  Queries the canonical plans table.                                 */
 /* ------------------------------------------------------------------ */
 
 export const GET = createApiHandler({
@@ -20,44 +23,20 @@ export const GET = createApiHandler({
     const url = new URL(ctx.req.url);
     const statusParam = url.searchParams.get("status"); // "active" | "archived" | null
 
-    const supabase = await createAdminClient();
+    try {
+      let plans = await getAllPlansWithPrices();
 
-    let query = supabase
-      .from("subscription_plans")
-      .select("*")
-      .order("display_order", { ascending: true });
+      if (statusParam === "active") {
+        plans = plans.filter((p) => p.is_active);
+      } else if (statusParam === "archived") {
+        plans = plans.filter((p) => !p.is_active);
+      }
 
-    if (statusParam === "active") {
-      query = query.eq("is_active", true);
-    } else if (statusParam === "archived") {
-      query = query.eq("is_active", false);
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
+      return ok({ plans }, ctx.requestId);
+    } catch (error) {
       console.error("[admin/billing/plans] GET error:", error);
       return ok({ plans: [] }, ctx.requestId);
     }
-
-    // Map legacy subscription_plans rows to the canonical PlanWithPrices shape
-    const plans = (data ?? []).map((p: any) => ({
-      id: p.id,
-      plan_key: p.slug,
-      name: p.name,
-      description: p.description ?? null,
-      is_active: p.is_active ?? true,
-      sort_order: p.display_order ?? 0,
-      entitlements: p.entitlements ?? {},
-      quota_policy: p.quota_policy ?? {},
-      features: p.features ?? [],
-      stripe_price_id: p.stripe_price_id ?? null,
-      created_at: p.created_at,
-      updated_at: p.updated_at,
-      prices: [],
-    }));
-
-    return ok({ plans }, ctx.requestId);
   },
 });
 
@@ -79,59 +58,47 @@ export const POST = createApiHandler({
 
     const d = parsed.data;
 
-    // Check plan_key uniqueness (maps to legacy slug column)
+    // Check plan_key uniqueness in canonical plans table
     const supabase = await createAdminClient();
     const { data: existing } = await supabase
-      .from("subscription_plans")
+      .from("plans")
       .select("id")
-      .eq("slug", d.plan_key)  // Map canonical plan_key to legacy slug column
+      .eq("plan_key", d.plan_key)
       .maybeSingle();
 
     if (existing) {
-      return badRequest(ctx.requestId, `A plan with plan_key "${d.plan_key}" already exists.`);
+      return badRequest(
+        ctx.requestId,
+        `A plan with plan_key "${d.plan_key}" already exists.`,
+      );
     }
 
-    const plan = await createPlan(
+    const plan = await createPlanWithPrices(
       {
+        plan_key: d.plan_key,
         name: d.name,
-        slug: d.plan_key,  // Map canonical plan_key to legacy slug
         description: d.description || null,
         is_active: d.is_active,
-        scope: null,
-        tenant_id: null,
-        display_order: d.sort_order,  // Map canonical sort_order to legacy display_order
-        highlight: false,  // Default (not in canonical schema)
+        sort_order: d.sort_order,
+        entitlements: d.entitlements,
         quota_policy: d.quota_policy,
         features: d.features,
-        entitlements: d.entitlements,
       },
       d.prices.map((p) => ({
         currency: p.currency,
         interval: p.interval,
-        unit_amount: p.unitAmount,
-      }))
+        amount_minor: p.unitAmount,
+      })),
     );
 
     await writeAuditLog({
       userId: ctx.user!.id,
       tenantId: ctx.membership?.tenantId ?? "system",
-      tableName: "subscription_plans",
+      tableName: "plans",
       recordId: plan.id,
       action: "plan_created",
-      changes: {
-        after: {
-          name: plan.name,
-          plan_key: plan.slug,  // Use canonical name in audit logs
-          is_active: plan.is_active,
-          quota_policy: plan.quota_policy,
-          features: plan.features,
-          prices: (plan.plan_prices as Array<{ currency: string; interval: string; unit_amount: number }>).map((p) => ({
-            currency: p.currency,
-            interval: p.interval,
-            unit_amount: p.unit_amount,
-          })),
-        },
-      },
+      before: null,
+      after: plan,
     });
 
     return created({ plan }, ctx.requestId);
