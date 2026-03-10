@@ -86,7 +86,8 @@ export const POST = createApiHandler({
     };
 
     if (flow === "subscription_cancel") {
-      const subId = sub.billing_provider_subscription_id;
+
+      const subId = sub.billing_provider_subscription_id ?? null;
 
       if (!subId) {
         return badRequest(
