@@ -356,14 +356,27 @@ export const PLATFORM_SHARE: PlatformShare[] = PLATFORM_STATS.map((p) => ({
 }));
 
 // ─── Content Performance ──────────────────────────────────────────────────────
+//
+// TODO (real data): replace with:
+//   GET /api/analytics/top-content?workspaceId=<id>&from=<iso>&to=<iso>&limit=12
+//
+// `thumbnail` should be a CDN URL returned by the API; thumbnails are stored in
+// Vercel Blob and referenced here as local public paths for mock purposes.
 
 export interface ContentPerformanceRow {
   id: string;
   platform: string;
+  /** Content format — Carousel, Article, Thread, Short Clip, Story Post, etc. */
   type: string;
+  /** Opening hook / headline — the first line of the post */
   snippet: string;
-  impressions: number;
-  engagements: number;
+  /** Path to thumbnail image (local public path for mock; CDN URL in production) */
+  thumbnail: string;
+  // ── Metrics ──────────────────────────────────────────────────────────────
+  views: number;
+  likes: number;
+  comments: number;
+  shares: number;
   engagementRate: string;
   publishedAt: string;
   aiGenerated: boolean;
@@ -375,8 +388,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "Instagram",
     type: "Carousel",
     snippet: "5 AI productivity hacks your competitors aren't using yet",
-    impressions: 42800,
-    engagements: 3210,
+    thumbnail: "/images/analytics/post-1.jpg",
+    views: 42800,
+    likes: 3100,
+    comments: 410,
+    shares: 620,
     engagementRate: "7.5%",
     publishedAt: "Mar 8, 2026",
     aiGenerated: true,
@@ -386,8 +402,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "LinkedIn",
     type: "Article",
     snippet: "Why most social media strategies fail in 2026 (and how to fix yours)",
-    impressions: 38100,
-    engagements: 2890,
+    thumbnail: "/images/analytics/post-2.jpg",
+    views: 38100,
+    likes: 2600,
+    comments: 390,
+    shares: 480,
     engagementRate: "7.6%",
     publishedAt: "Mar 5, 2026",
     aiGenerated: true,
@@ -397,8 +416,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "X / Twitter",
     type: "Thread",
     snippet: "We analyzed 10,000 viral posts. Here's what they all have in common",
-    impressions: 31400,
-    engagements: 2410,
+    thumbnail: "/images/analytics/post-3.jpg",
+    views: 31400,
+    likes: 2200,
+    comments: 310,
+    shares: 740,
     engagementRate: "7.7%",
     publishedAt: "Mar 3, 2026",
     aiGenerated: true,
@@ -408,8 +430,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "TikTok",
     type: "Short Clip",
     snippet: "This one tweak doubled our engagement in 48 hours",
-    impressions: 28600,
-    engagements: 2010,
+    thumbnail: "/images/analytics/post-4.jpg",
+    views: 28600,
+    likes: 1840,
+    comments: 260,
+    shares: 390,
     engagementRate: "7.0%",
     publishedAt: "Mar 1, 2026",
     aiGenerated: true,
@@ -419,8 +444,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "Instagram",
     type: "Story Post",
     snippet: "Behind the scenes: how our AI writes content that actually converts",
-    impressions: 21900,
-    engagements: 1540,
+    thumbnail: "/images/analytics/post-5.jpg",
+    views: 21900,
+    likes: 1380,
+    comments: 190,
+    shares: 280,
     engagementRate: "7.0%",
     publishedAt: "Feb 27, 2026",
     aiGenerated: true,
@@ -430,8 +458,11 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "LinkedIn",
     type: "Carousel",
     snippet: "The 7-step framework we use to build thought leadership at scale",
-    impressions: 19200,
-    engagements: 1310,
+    thumbnail: "/images/analytics/post-6.jpg",
+    views: 19200,
+    likes: 1180,
+    comments: 160,
+    shares: 220,
     engagementRate: "6.8%",
     publishedAt: "Feb 24, 2026",
     aiGenerated: false,
