@@ -363,6 +363,13 @@ export const PLATFORM_SHARE: PlatformShare[] = PLATFORM_STATS.map((p) => ({
 // `thumbnail` should be a CDN URL returned by the API; thumbnails are stored in
 // Vercel Blob and referenced here as local public paths for mock purposes.
 
+export interface ProfileSnapshot {
+  followers: number;
+  following: number;
+  totalPosts: number;
+  avgEngagementRate: string;
+}
+
 export interface ContentPerformanceRow {
   id: string;
   platform: string;
@@ -370,16 +377,28 @@ export interface ContentPerformanceRow {
   type: string;
   /** Opening hook / headline — the first line of the post */
   snippet: string;
+  /** Full post caption */
+  caption: string;
   /** Path to thumbnail image (local public path for mock; CDN URL in production) */
   thumbnail: string;
+  /** Direct URL to the live post on the platform */
+  platformUrl: string;
   // ── Metrics ──────────────────────────────────────────────────────────────
+  // TODO (real data): populate from GET /api/analytics/post/:id
   views: number;
   likes: number;
   comments: number;
   shares: number;
+  saves?: number;
   engagementRate: string;
   publishedAt: string;
   aiGenerated: boolean;
+  // ── Profile snapshots ─────────────────────────────────────────────────────
+  // TODO (real data): populate from GET /api/analytics/post/:id/profile-snapshots
+  // profileAtPost  = account stats captured at time of posting
+  // profileLatest  = current account stats at time of API call
+  profileAtPost: ProfileSnapshot;
+  profileLatest: ProfileSnapshot;
 }
 
 export const TOP_CONTENT: ContentPerformanceRow[] = [
@@ -388,21 +407,28 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     platform: "Instagram",
     type: "Carousel",
     snippet: "5 AI productivity hacks your competitors aren't using yet",
+    caption: "Stop working harder. Start working smarter. 🧠\n\nWe've spent the last 6 months testing every AI productivity tool on the market so you don't have to.\n\nHere are the 5 that actually moved the needle for our team →\n\nSave this post — you'll want to come back to it.\n\n#AI #Productivity #ContentStrategy #ZARZOOM",
     thumbnail: "/images/analytics/post-1.jpg",
+    platformUrl: "https://www.instagram.com/",
     views: 42800,
     likes: 3100,
     comments: 410,
     shares: 620,
+    saves: 1840,
     engagementRate: "7.5%",
     publishedAt: "Mar 8, 2026",
     aiGenerated: true,
+    profileAtPost:  { followers: 52100, following: 420, totalPosts: 214, avgEngagementRate: "6.9%" },
+    profileLatest:  { followers: 54200, following: 421, totalPosts: 218, avgEngagementRate: "7.1%" },
   },
   {
     id: "2",
     platform: "LinkedIn",
     type: "Article",
     snippet: "Why most social media strategies fail in 2026 (and how to fix yours)",
+    caption: "I've reviewed over 300 brand social media strategies this year. The same pattern keeps appearing in the ones that fail.\n\nThey optimise for vanity metrics. Not outcomes.\n\nHere's the framework I now use with every client — and why it consistently outperforms the old playbook.\n\n[Swipe to read the full breakdown]\n\n#SocialMedia #MarketingStrategy #B2B #ContentMarketing",
     thumbnail: "/images/analytics/post-2.jpg",
+    platformUrl: "https://www.linkedin.com/",
     views: 38100,
     likes: 2600,
     comments: 390,
@@ -410,13 +436,17 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     engagementRate: "7.6%",
     publishedAt: "Mar 5, 2026",
     aiGenerated: true,
+    profileAtPost:  { followers: 17900, following: 610, totalPosts: 87, avgEngagementRate: "6.5%" },
+    profileLatest:  { followers: 18700, following: 612, totalPosts: 91, avgEngagementRate: "6.9%" },
   },
   {
     id: "3",
     platform: "X / Twitter",
     type: "Thread",
     snippet: "We analyzed 10,000 viral posts. Here's what they all have in common",
+    caption: "We analyzed 10,000 viral posts across Instagram, LinkedIn, TikTok and X.\n\nHere's what they all have in common (thread) 🧵\n\n1/ They all open with a pattern interrupt. Not a welcome. Not an intro. A hook that makes you stop scrolling.\n\n2/ They compress a complex idea into one sentence. The simpler the takeaway, the wider the reach.\n\n[Full thread continues…]\n\n#ViralContent #ContentStrategy #SocialMediaMarketing",
     thumbnail: "/images/analytics/post-3.jpg",
+    platformUrl: "https://x.com/",
     views: 31400,
     likes: 2200,
     comments: 310,
@@ -424,13 +454,17 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     engagementRate: "7.7%",
     publishedAt: "Mar 3, 2026",
     aiGenerated: true,
+    profileAtPost:  { followers: 21400, following: 880, totalPosts: 412, avgEngagementRate: "7.0%" },
+    profileLatest:  { followers: 22100, following: 883, totalPosts: 421, avgEngagementRate: "7.2%" },
   },
   {
     id: "4",
     platform: "TikTok",
     type: "Short Clip",
     snippet: "This one tweak doubled our engagement in 48 hours",
+    caption: "We changed one thing in our posting schedule and engagement doubled in 48 hours 👀\n\nNo new content. No new strategy. Just better timing.\n\nWatch to find out what we changed.\n\n#TikTokTips #SocialMediaGrowth #ContentCreator #ZARZOOM #GrowthHack",
     thumbnail: "/images/analytics/post-4.jpg",
+    platformUrl: "https://www.tiktok.com/",
     views: 28600,
     likes: 1840,
     comments: 260,
@@ -438,27 +472,36 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     engagementRate: "7.0%",
     publishedAt: "Mar 1, 2026",
     aiGenerated: true,
+    profileAtPost:  { followers: 37200, following: 290, totalPosts: 143, avgEngagementRate: "9.8%" },
+    profileLatest:  { followers: 38900, following: 291, totalPosts: 149, avgEngagementRate: "10.3%" },
   },
   {
     id: "5",
     platform: "Instagram",
     type: "Story Post",
     snippet: "Behind the scenes: how our AI writes content that actually converts",
+    caption: "People keep asking us: \"Is the content really AI-written?\"\n\nYes. And here's exactly how it works — no magic, no shortcuts.\n\nSwipe through for a behind-the-scenes look at our content pipeline.\n\nTag a brand or creator who should see this 👇\n\n#BehindTheScenes #AIContent #ContentMarketing #ZARZOOM",
     thumbnail: "/images/analytics/post-5.jpg",
+    platformUrl: "https://www.instagram.com/",
     views: 21900,
     likes: 1380,
     comments: 190,
     shares: 280,
+    saves: 920,
     engagementRate: "7.0%",
     publishedAt: "Feb 27, 2026",
     aiGenerated: true,
+    profileAtPost:  { followers: 51800, following: 418, totalPosts: 211, avgEngagementRate: "6.8%" },
+    profileLatest:  { followers: 54200, following: 421, totalPosts: 218, avgEngagementRate: "7.1%" },
   },
   {
     id: "6",
     platform: "LinkedIn",
     type: "Carousel",
     snippet: "The 7-step framework we use to build thought leadership at scale",
+    caption: "Most \"thought leadership\" is just recycled opinions dressed up as insight.\n\nHere's the 7-step framework we actually use to build genuine authority at scale — for brands with real things to say.\n\nStep 1: Find the intersection of what you know deeply and what your audience fears most.\n\n[Swipe for steps 2–7]\n\n#ThoughtLeadership #B2BMarketing #LinkedInStrategy #ContentFramework",
     thumbnail: "/images/analytics/post-6.jpg",
+    platformUrl: "https://www.linkedin.com/",
     views: 19200,
     likes: 1180,
     comments: 160,
@@ -466,6 +509,8 @@ export const TOP_CONTENT: ContentPerformanceRow[] = [
     engagementRate: "6.8%",
     publishedAt: "Feb 24, 2026",
     aiGenerated: false,
+    profileAtPost:  { followers: 17600, following: 608, totalPosts: 84, avgEngagementRate: "6.4%" },
+    profileLatest:  { followers: 18700, following: 612, totalPosts: 91, avgEngagementRate: "6.9%" },
   },
 ];
 
