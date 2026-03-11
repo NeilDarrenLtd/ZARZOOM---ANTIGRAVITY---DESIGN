@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { useActiveWorkspace } from "@/lib/workspace/context";
 
 import AnalyticsHeader from "./AnalyticsHeader";
+import AnalyticsFilterBar, { DEFAULT_FILTERS, type AnalyticsFilters } from "./AnalyticsFilterBar";
 import AnalyticsSummaryStrip from "./AnalyticsSummaryStrip";
 import EngagementChart from "./EngagementChart";
 import PlatformAnalytics from "./PlatformAnalytics";
@@ -30,24 +31,31 @@ import {
  *  1. Import useWorkspaceFetch + workspaceScopedKey from @/lib/workspace/context
  *  2. Replace the mock-data imports in each sub-component with SWR hooks
  *  3. Pass activeWorkspaceId as a query param (e.g. ?_ws=<id>) to scope requests
+ *  4. Pass `filters` (datePreset, customFrom, customTo, platform) as additional
+ *     query params so the API can scope results accordingly
  */
 export default function AnalyticsPage() {
   const activeWorkspaceId = useActiveWorkspace();
-  const [dateRange, setDateRange] = useState("Last 30 days");
+  const [filters, setFilters] = useState<AnalyticsFilters>(DEFAULT_FILTERS);
 
   // TODO (real data): derive workspace name from workspace list instead of fallback
   const workspaceName = activeWorkspaceId ? "My Workspace" : null;
+
+  // TODO (real data): when filters change, re-fetch all analytics sections:
+  //   const { data: kpiData }        = useSWR(["/api/analytics/kpis",        filters, activeWorkspaceId])
+  //   const { data: engagementData } = useSWR(["/api/analytics/engagement",   filters, activeWorkspaceId])
+  //   const { data: platformData }   = useSWR(["/api/analytics/platforms",    filters, activeWorkspaceId])
+  //   const { data: contentData }    = useSWR(["/api/analytics/top-content",  filters, activeWorkspaceId])
 
   return (
     <main className="bg-gray-50 min-h-screen flex flex-col">
       <SiteNavbar />
 
       <div className="flex-1 max-w-6xl mx-auto w-full px-4 py-10">
-        <AnalyticsHeader
-          workspaceName={workspaceName}
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-        />
+        <AnalyticsHeader workspaceName={workspaceName} />
+
+        {/* Filter bar: date presets, custom date range, platform selector */}
+        <AnalyticsFilterBar filters={filters} onChange={setFilters} />
 
         <AnalyticsSummaryStrip metrics={KPI_METRICS} />
 
@@ -65,3 +73,4 @@ export default function AnalyticsPage() {
     </main>
   );
 }
+

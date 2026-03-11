@@ -4,17 +4,9 @@ import { Building2, ChevronRight } from "lucide-react";
 
 interface AnalyticsHeaderProps {
   workspaceName: string | null;
-  dateRange: string;
-  onDateRangeChange: (range: string) => void;
 }
 
-const DATE_RANGES = ["Last 7 days", "Last 30 days", "Last 90 days", "This year"];
-
-export default function AnalyticsHeader({
-  workspaceName,
-  dateRange,
-  onDateRangeChange,
-}: AnalyticsHeaderProps) {
+export default function AnalyticsHeader({ workspaceName }: AnalyticsHeaderProps) {
   return (
     <header className="mb-8">
       {/* Breadcrumb */}
@@ -67,24 +59,6 @@ export default function AnalyticsHeader({
               </div>
             </div>
           )}
-        </div>
-
-        {/* Date range selector */}
-        <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1 shadow-sm">
-          {DATE_RANGES.map((range) => (
-            <button
-              key={range}
-              type="button"
-              onClick={() => onDateRangeChange(range)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                dateRange === range
-                  ? "bg-green-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              {range}
-            </button>
-          ))}
         </div>
       </div>
     </header>
