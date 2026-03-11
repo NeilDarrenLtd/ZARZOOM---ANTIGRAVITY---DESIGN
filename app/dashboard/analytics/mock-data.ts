@@ -1,7 +1,37 @@
 /**
  * Mock analytics data for the ZARZOOM Analytics page.
- * Structured so each section can be swapped to a real API call independently.
+ *
+ * Each section maps to a canonical API type defined in analytics.types.ts.
+ * When wiring real data, replace each constant with a useSWR hook that returns
+ * the matching type — the component props are already typed to accept them.
+ *
+ * API → Type mapping:
+ *   GET /api/v1/analytics/profile      → WorkspaceAnalytics  (KPI strip, insights)
+ *   GET /api/v1/analytics/aggregated   → AggregatedAnalytics (charts, platform cards)
+ *   GET /api/v1/analytics/posts/:id    → PostAnalytics        (post detail drawer)
+ *   GET /api/v1/analytics/media        → MediaListResponse    (top content grid)
+ *
+ * See analytics.types.ts for full interface definitions and endpoint documentation.
  */
+
+// Re-export canonical types so component files only need one import path.
+export type {
+  WorkspaceAnalytics,
+  AggregatedAnalytics,
+  PostAnalytics,
+  MediaListResponse,
+  MediaListItem,
+  PlatformAnalyticsData,
+  DailyAnalyticsPoint,
+  WeeklyPlatformPoint,
+  PostMetrics,
+  AccountSnapshot,
+  WorkspaceInsight,
+  AnalyticsFilterParams,
+  PlatformSlug,
+  PercentageString,
+  ISODateString,
+} from "./analytics.types";
 
 // ─── AI Insights ──────────────────────────────────────────────────────────────
 //
@@ -153,12 +183,15 @@ export const KPI_METRICS: KpiMetric[] = [
 
 // ─── Content Reach Over Time (30-day, "Exposure" metric) ─────────────────────
 //
-// TODO (real data): replace with API call scoped to workspace + date filter:
-//   GET /api/analytics/reach?workspaceId=<id>&from=<iso>&to=<iso>&platform=<all|slug>
+// Maps to: AggregatedAnalytics.dailySeries[].exposure  (analytics.types.ts)
+//
+// TODO (real data): replace with:
+//   GET /api/v1/analytics/aggregated?workspaceId=<id>&from=<iso>&to=<iso>&platform=<all|slug>
+//   → AggregatedAnalytics.dailySeries (use the `exposure` field from DailyAnalyticsPoint)
 //
 // "Exposure" is a normalised cross-platform metric that collapses Reach / Views /
-// Impressions into one comparable number — each platform surfaces a different
-// primary metric, so the backend should map them consistently before returning.
+// Impressions into one comparable number. The backend maps each platform's primary
+// metric consistently before returning (see ExposureMetricLabel in analytics.types.ts).
 
 export interface ReachDataPoint {
   date: string;      // "Feb 10", "Feb 11", … — used for XAxis + tooltip
@@ -222,14 +255,14 @@ export const DAILY_ENGAGEMENT: EngagementDataPoint[] = makeDailyData();
 
 // ─── Per-Platform Performance Cards ──────────────────────────────────────────
 //
-// Each platform exposes a different primary metric (Reach vs Views vs Impressions).
-// Metrics are defined as a key-value map so the card component can render them
-// dynamically — no hardcoded assumptions about what is available.
+// Maps to: AggregatedAnalytics.platforms[]  (PlatformAnalyticsData in analytics.types.ts)
 //
 // TODO (real data): replace with:
-//   GET /api/analytics/platform-cards?workspaceId=<id>&from=<iso>&to=<iso>
+//   GET /api/v1/analytics/aggregated
+//   → AggregatedAnalytics.platforms (PlatformAnalyticsData[])
+//   Map PlatformAnalyticsData fields to PlatformCard props for display.
 //
-// Supported metric keys (card renders whatever is present):
+// Supported metric keys rendered dynamically by PlatformPerformanceCards:
 //   followers        — total follower / subscriber count
 //   exposureLabel    — human label for the primary exposure metric ("Reach", "Views", etc.)
 //   exposure         — numeric exposure value
@@ -449,11 +482,25 @@ export const PLATFORM_SHARE: PlatformShare[] = PLATFORM_STATS.map((p) => ({
 
 // ─── Content Performance ──────────────────────────────────────────────────────
 //
-// TODO (real data): replace with:
-//   GET /api/analytics/top-content?workspaceId=<id>&from=<iso>&to=<iso>&limit=12
+// In production, this section is populated from two API endpoints:
 //
-// `thumbnail` should be a CDN URL returned by the API; thumbnails are stored in
-// Vercel Blob and referenced here as local public paths for mock purposes.
+//   Grid cards (ContentPerformanceSection):
+//     GET /api/v1/analytics/media
+//     Returns: MediaListResponse  (see analytics.types.ts)
+//     Map: MediaListItem.thumbnailUrl → thumbnail, MediaListItem.metrics.*
+//
+//   Post detail drawer (PostDetailDrawer):
+//     GET /api/v1/analytics/posts/:postId
+//     Returns: PostAnalytics  (see analytics.types.ts)
+//     Fetched lazily on drawer open for caption, platformUrl, profile snapshots.
+//
+// `thumbnail` is a CDN URL (Vercel Blob) in production;
+// referenced here as a local public path for mock purposes.
+
+/**
+ * @deprecated Use AccountSnapshot from analytics.types.ts when wiring real data.
+ * Kept for compatibility with ContentPerformance and PostDetailDrawer components.
+ */
 
 export interface ProfileSnapshot {
   followers: number;
@@ -476,7 +523,8 @@ export interface ContentPerformanceRow {
   /** Direct URL to the live post on the platform */
   platformUrl: string;
   // ── Metrics ──────────────────────────────────────────────────────────────
-  // TODO (real data): populate from GET /api/analytics/post/:id
+  // Maps to PostMetrics in analytics.types.ts.
+  // TODO (real data): populate from GET /api/v1/analytics/posts/:postId → PostAnalytics.metrics
   views: number;
   likes: number;
   comments: number;
@@ -486,7 +534,9 @@ export interface ContentPerformanceRow {
   publishedAt: string;
   aiGenerated: boolean;
   // ── Profile snapshots ─────────────────────────────────────────────────────
-  // TODO (real data): populate from GET /api/analytics/post/:id/profile-snapshots
+  // Maps to AccountSnapshot in analytics.types.ts.
+  // TODO (real data): populate from GET /api/v1/analytics/posts/:postId/profile-snapshots
+  //   → PostAnalytics.profileAtPost / PostAnalytics.profileLatest
   // profileAtPost  = account stats captured at time of posting
   // profileLatest  = current account stats at time of API call
   profileAtPost: ProfileSnapshot;
