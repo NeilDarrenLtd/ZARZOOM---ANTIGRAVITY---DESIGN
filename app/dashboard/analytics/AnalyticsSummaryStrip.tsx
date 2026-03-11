@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { KpiMetric } from "./mock-data";
 import { MetricPlaceholder } from "./EmptyState";
 
@@ -70,7 +71,7 @@ function IconTrendDown({ className }: { className?: string }) {
 
 // ─── Icon map ─────────────────────────────────────────────────────────────────
 
-const ICON_MAP: Record<string, (props: { className?: string }) => JSX.Element> = {
+const ICON_MAP: Record<string, (props: { className?: string }) => React.ReactElement> = {
   impressions: IconEye,
   followers: IconUsers,
   engagements: IconHeart,
