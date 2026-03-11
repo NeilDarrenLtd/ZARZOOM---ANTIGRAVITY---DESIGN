@@ -11,6 +11,7 @@ import AnalyticsSummaryStrip from "./AnalyticsSummaryStrip";
 import ContentReachChart from "./ContentReachChart";
 import EngagementChart from "./EngagementChart";
 import PlatformAnalytics from "./PlatformAnalytics";
+import PlatformPerformanceCards from "./PlatformPerformanceCards";
 import ContentPerformance from "./ContentPerformance";
 
 import {
@@ -18,6 +19,7 @@ import {
   REACH_OVER_TIME,
   DAILY_ENGAGEMENT,
   PLATFORM_STATS,
+  PLATFORM_CARDS,
   WEEKLY_BY_PLATFORM,
   TOP_CONTENT,
 } from "./mock-data";
@@ -70,6 +72,9 @@ export default function AnalyticsPage() {
           platformStats={PLATFORM_STATS}
           weeklyData={WEEKLY_BY_PLATFORM}
         />
+
+        {/* TODO (real data): pass useSWR platform card data instead of PLATFORM_CARDS */}
+        <PlatformPerformanceCards cards={PLATFORM_CARDS} />
 
         <ContentPerformance rows={TOP_CONTENT} />
       </div>

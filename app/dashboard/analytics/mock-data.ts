@@ -128,6 +128,170 @@ function makeDailyData(): EngagementDataPoint[] {
 
 export const DAILY_ENGAGEMENT: EngagementDataPoint[] = makeDailyData();
 
+// ─── Per-Platform Performance Cards ──────────────────────────────────────────
+//
+// Each platform exposes a different primary metric (Reach vs Views vs Impressions).
+// Metrics are defined as a key-value map so the card component can render them
+// dynamically — no hardcoded assumptions about what is available.
+//
+// TODO (real data): replace with:
+//   GET /api/analytics/platform-cards?workspaceId=<id>&from=<iso>&to=<iso>
+//
+// Supported metric keys (card renders whatever is present):
+//   followers        — total follower / subscriber count
+//   exposureLabel    — human label for the primary exposure metric ("Reach", "Views", etc.)
+//   exposure         — numeric exposure value
+//   likes            — total likes / reactions
+//   comments         — total comments
+//   shares           — shares / reposts / retweets
+//   saves            — saves / bookmarks (Instagram, Pinterest, etc.)
+//   views            — video views where distinct from reach (YouTube, TikTok)
+//   clickThroughs    — link clicks (LinkedIn, X)
+//   engagementRate   — percentage string e.g. "7.1%"
+
+export interface PlatformMetrics {
+  followers?: number;
+  exposureLabel?: string; // e.g. "Reach", "Impressions", "Views"
+  exposure?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+  saves?: number;
+  views?: number;
+  clickThroughs?: number;
+  engagementRate?: string;
+}
+
+export interface PlatformCard {
+  id: string;
+  platform: string;
+  /** Tailwind bg colour class for the icon badge */
+  colorClass: string;
+  /** Hex accent for inline styles where needed */
+  accent: string;
+  metrics: PlatformMetrics;
+  /** true = connected, false = not yet connected (greyed-out state) */
+  connected: boolean;
+}
+
+export const PLATFORM_CARDS: PlatformCard[] = [
+  {
+    id: "instagram",
+    platform: "Instagram",
+    colorClass: "bg-pink-50",
+    accent: "#E1306C",
+    connected: true,
+    metrics: {
+      followers: 54200,
+      exposureLabel: "Reach",
+      exposure: 480000,
+      likes: 21800,
+      comments: 4300,
+      shares: 6100,
+      saves: 3900,
+      engagementRate: "7.1%",
+    },
+  },
+  {
+    id: "tiktok",
+    platform: "TikTok",
+    colorClass: "bg-gray-50",
+    accent: "#010101",
+    connected: true,
+    metrics: {
+      followers: 38900,
+      exposureLabel: "Views",
+      exposure: 920000,
+      likes: 74100,
+      comments: 8200,
+      shares: 12400,
+      engagementRate: "10.3%",
+    },
+  },
+  {
+    id: "youtube",
+    platform: "YouTube",
+    colorClass: "bg-red-50",
+    accent: "#FF0000",
+    connected: true,
+    metrics: {
+      followers: 12400,
+      exposureLabel: "Views",
+      exposure: 210000,
+      likes: 9800,
+      comments: 1420,
+      shares: 3100,
+      engagementRate: "5.8%",
+    },
+  },
+  {
+    id: "linkedin",
+    platform: "LinkedIn",
+    colorClass: "bg-blue-50",
+    accent: "#0A66C2",
+    connected: true,
+    metrics: {
+      followers: 18700,
+      exposureLabel: "Impressions",
+      exposure: 310000,
+      likes: 14200,
+      comments: 2100,
+      shares: 3800,
+      clickThroughs: 4600,
+      engagementRate: "6.9%",
+    },
+  },
+  {
+    id: "facebook",
+    platform: "Facebook",
+    colorClass: "bg-blue-50",
+    accent: "#1877F2",
+    connected: true,
+    metrics: {
+      followers: 29300,
+      exposureLabel: "Reach",
+      exposure: 185000,
+      likes: 8900,
+      comments: 1640,
+      shares: 2900,
+      engagementRate: "5.1%",
+    },
+  },
+  {
+    id: "x",
+    platform: "X / Twitter",
+    colorClass: "bg-gray-50",
+    accent: "#14171A",
+    connected: true,
+    metrics: {
+      followers: 22100,
+      exposureLabel: "Impressions",
+      exposure: 260000,
+      likes: 11300,
+      comments: 1820,
+      shares: 4400,
+      clickThroughs: 3200,
+      engagementRate: "7.2%",
+    },
+  },
+  {
+    id: "pinterest",
+    platform: "Pinterest",
+    colorClass: "bg-red-50",
+    accent: "#E60023",
+    connected: false,
+    metrics: {},
+  },
+  {
+    id: "threads",
+    platform: "Threads",
+    colorClass: "bg-gray-50",
+    accent: "#000000",
+    connected: false,
+    metrics: {},
+  },
+];
+
 // ─── Platform Analytics ───────────────────────────────────────────────────────
 
 export interface PlatformStat {
