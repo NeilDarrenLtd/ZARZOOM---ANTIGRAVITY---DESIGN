@@ -3,22 +3,60 @@
  * Structured so each section can be swapped to a real API call independently.
  */
 
-// ─── Summary Strip ────────────────────────────────────────────────────────────
+// ─── KPI Summary Strip ────────────────────────────────────────────────────────
 
-export interface SummaryMetric {
+export type KpiVariant = "accent" | "neutral" | "info";
+
+export interface KpiMetric {
+  id: string;
   label: string;
   value: string;
-  delta: string;
-  positive: boolean;
+  /** e.g. "+12% vs last period" — omit for purely informational cards */
+  trend?: string;
+  /** true = up/positive (green), false = down/negative (red), undefined = neutral */
+  positive?: boolean;
+  variant: KpiVariant;
 }
 
-export const SUMMARY_METRICS: SummaryMetric[] = [
-  { label: "Total Impressions", value: "1.24M", delta: "+18.4%", positive: true },
-  { label: "Total Engagements", value: "87.3K", delta: "+12.1%", positive: true },
-  { label: "Posts Published", value: "214", delta: "+9 this month", positive: true },
-  { label: "Avg. Engagement Rate", value: "7.03%", delta: "+0.8pp", positive: true },
-  { label: "Followers Gained", value: "4,821", delta: "+22.6%", positive: true },
-  { label: "AI Score", value: "94/100", delta: "Excellent", positive: true },
+export const KPI_METRICS: KpiMetric[] = [
+  {
+    id: "impressions",
+    label: "Total Impressions",
+    value: "1.24M",
+    trend: "+18.4% vs last period",
+    positive: true,
+    variant: "accent",
+  },
+  {
+    id: "followers",
+    label: "Total Followers",
+    value: "128.6K",
+    trend: "+4,821 this period",
+    positive: true,
+    variant: "accent",
+  },
+  {
+    id: "engagements",
+    label: "Engagement Actions",
+    value: "87.3K",
+    trend: "+12.1% vs last period",
+    positive: true,
+    variant: "accent",
+  },
+  {
+    id: "platforms",
+    label: "Connected Platforms",
+    value: "4",
+    trend: "Instagram, LinkedIn, X, TikTok",
+    variant: "neutral",
+  },
+  {
+    id: "best_platform",
+    label: "Best Performing",
+    value: "Instagram",
+    trend: "480K impressions · 7.1% ER",
+    variant: "info",
+  },
 ];
 
 // ─── Main Engagement Chart (30-day daily) ─────────────────────────────────────

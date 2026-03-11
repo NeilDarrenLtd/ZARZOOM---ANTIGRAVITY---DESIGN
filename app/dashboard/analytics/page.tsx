@@ -12,7 +12,7 @@ import PlatformAnalytics from "./PlatformAnalytics";
 import ContentPerformance from "./ContentPerformance";
 
 import {
-  SUMMARY_METRICS,
+  KPI_METRICS,
   DAILY_ENGAGEMENT,
   PLATFORM_STATS,
   WEEKLY_BY_PLATFORM,
@@ -49,7 +49,7 @@ export default function AnalyticsPage() {
           onDateRangeChange={setDateRange}
         />
 
-        <AnalyticsSummaryStrip metrics={SUMMARY_METRICS} />
+        <AnalyticsSummaryStrip metrics={KPI_METRICS} />
 
         <EngagementChart data={DAILY_ENGAGEMENT} />
 
