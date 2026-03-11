@@ -13,10 +13,12 @@ import {
   Pie,
 } from "recharts";
 import type { PlatformStat, WeeklyDataPoint } from "./mock-data";
+import EmptyState from "./EmptyState";
 
 interface PlatformAnalyticsProps {
   platformStats: PlatformStat[];
   weeklyData: WeeklyDataPoint[];
+  emptyVariant?: "no-accounts" | "no-posts";
 }
 
 function formatK(value: number): string {
@@ -159,33 +161,49 @@ function PlatformStatRow({ stat }: { stat: PlatformStat }) {
   );
 }
 
-export default function PlatformAnalytics({ platformStats, weeklyData }: PlatformAnalyticsProps) {
+export default function PlatformAnalytics({ platformStats, weeklyData, emptyVariant }: PlatformAnalyticsProps) {
   return (
     <section className="mb-8">
       <h2 className="text-xl font-bold text-gray-900 mb-4">Platform Analytics</h2>
 
-      {/* Platform breakdown rows */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
-        <div className="flex items-center gap-4 pb-2 border-b border-gray-100 mb-1">
-          <div className="w-2 flex-shrink-0" />
-          <p className="flex-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Platform</p>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden sm:block w-20 text-right">Impressions</p>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden md:block w-24 text-right">Engagements</p>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide w-16 text-right">Eng. Rate</p>
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden lg:block w-20 text-right">Followers</p>
+      {emptyVariant ? (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <EmptyState
+            variant={emptyVariant}
+            inline
+            description={
+              emptyVariant === "no-accounts"
+                ? "Connect your social accounts to see a breakdown of performance across platforms."
+                : "Platform analytics will appear here once you have published content."
+            }
+          />
         </div>
-        {platformStats.map((stat) => (
-          <PlatformStatRow key={stat.platform} stat={stat} />
-        ))}
-      </div>
+      ) : (
+        <>
+          {/* Platform breakdown rows */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
+            <div className="flex items-center gap-4 pb-2 border-b border-gray-100 mb-1">
+              <div className="w-2 flex-shrink-0" />
+              <p className="flex-1 text-xs font-semibold text-gray-400 uppercase tracking-wide">Platform</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden sm:block w-20 text-right">Impressions</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden md:block w-24 text-right">Engagements</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide w-16 text-right">Eng. Rate</p>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide hidden lg:block w-20 text-right">Followers</p>
+            </div>
+            {platformStats.map((stat) => (
+              <PlatformStatRow key={stat.platform} stat={stat} />
+            ))}
+          </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <WeeklyBarChart data={weeklyData} />
-        </div>
-        <PlatformSharePie stats={platformStats} />
-      </div>
+          {/* Charts row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <WeeklyBarChart data={weeklyData} />
+            </div>
+            <PlatformSharePie stats={platformStats} />
+          </div>
+        </>
+      )}
     </section>
   );
 }

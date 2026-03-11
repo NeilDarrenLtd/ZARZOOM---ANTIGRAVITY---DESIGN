@@ -1,6 +1,7 @@
 "use client";
 
 import type { KpiMetric } from "./mock-data";
+import { MetricPlaceholder } from "./EmptyState";
 
 // ─── Icons (inline SVG, no extra dependency) ──────────────────────────────────
 
@@ -95,9 +96,14 @@ const valueCls: Record<string, string> = {
 
 interface AnalyticsSummaryStripProps {
   metrics: KpiMetric[];
+  /**
+   * When true, every value cell renders a "—" placeholder instead of real data.
+   * Use when no platforms are connected or data is still syncing.
+   */
+  partial?: boolean;
 }
 
-export default function AnalyticsSummaryStrip({ metrics }: AnalyticsSummaryStripProps) {
+export default function AnalyticsSummaryStrip({ metrics, partial = false }: AnalyticsSummaryStripProps) {
   return (
     <div
       className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8"
@@ -141,7 +147,7 @@ export default function AnalyticsSummaryStrip({ metrics }: AnalyticsSummaryStrip
             {/* Value */}
             <div className="flex flex-col gap-0.5">
               <span className={`text-2xl font-bold leading-tight tracking-tight ${valueCls[metric.variant]}`}>
-                {metric.value}
+                {partial ? <MetricPlaceholder label={metric.label} /> : metric.value}
               </span>
               <span className="text-xs font-medium text-gray-400 uppercase tracking-wide leading-relaxed">
                 {metric.label}
@@ -149,7 +155,7 @@ export default function AnalyticsSummaryStrip({ metrics }: AnalyticsSummaryStrip
             </div>
 
             {/* Trend text */}
-            {hasTrend && (
+            {!partial && hasTrend && (
               <p
                 className={`text-xs font-medium leading-relaxed border-t border-gray-100 pt-2 ${
                   isPositive

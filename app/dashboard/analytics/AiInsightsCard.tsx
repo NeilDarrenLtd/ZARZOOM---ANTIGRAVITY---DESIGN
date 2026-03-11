@@ -13,7 +13,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { AiInsight, InsightCategory } from "./mock-data";
-
 // ─── Category config ──────────────────────────────────────────────────────────
 
 const CATEGORY_CONFIG: Record<
@@ -96,15 +95,30 @@ interface AiInsightsCardProps {
   insights: AiInsight[];
   /** How many insights to show before "Show more" — defaults to 3 */
   initialVisible?: number;
+  /**
+   * "no-accounts" → no platforms connected, insights can't be generated
+   * "no-posts"    → accounts connected but no content published yet
+   * undefined     → normal render
+   */
+  emptyVariant?: "no-accounts" | "no-posts";
 }
 
 export default function AiInsightsCard({
   insights,
   initialVisible = 3,
+  emptyVariant,
 }: AiInsightsCardProps) {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? insights : insights.slice(0, initialVisible);
   const hasMore = insights.length > initialVisible;
+
+  // Empty state body copy
+  const emptyTitle = emptyVariant === "no-accounts"
+    ? "No insights yet"
+    : "Insights coming soon";
+  const emptyBody = emptyVariant === "no-accounts"
+    ? "Connect your social accounts and the AI will start generating personalised insights based on your performance data."
+    : "Your AI will begin generating insights once you've published your first piece of content.";
 
   return (
     <section
@@ -131,37 +145,54 @@ export default function AiInsightsCard({
           </div>
         </div>
 
-        {/* Live badge */}
-        <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1 leading-none">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
-          Updated now
-        </span>
+        {/* Live badge — only show when there is real data */}
+        {!emptyVariant && (
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1 leading-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-hidden />
+            Updated now
+          </span>
+        )}
       </div>
 
-      {/* Insight list */}
-      <ul className="px-6 py-2" role="list">
-        {visible.map((insight) => (
-          <InsightRow key={insight.id} insight={insight} />
-        ))}
-      </ul>
-
-      {/* Show more / less toggle */}
-      {hasMore && (
-        <div className="px-6 pb-4">
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            className="text-[13px] font-medium text-gray-500 hover:text-green-700 transition-colors flex items-center gap-1"
-          >
-            {expanded ? "Show fewer insights" : `Show ${insights.length - initialVisible} more insights`}
-            <ChevronRight
-              size={13}
-              strokeWidth={2.5}
-              aria-hidden
-              className={`transition-transform ${expanded ? "rotate-90" : "rotate-0"}`}
-            />
-          </button>
+      {/* ── Empty state ──────────────────────────────────────────────────────── */}
+      {emptyVariant ? (
+        <div className="px-6 py-10 flex flex-col items-center text-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-400">
+            <Sparkles size={22} strokeWidth={1.5} aria-hidden />
+          </div>
+          <div className="max-w-xs">
+            <p className="text-sm font-bold text-gray-900 mb-1">{emptyTitle}</p>
+            <p className="text-sm text-gray-500 leading-relaxed">{emptyBody}</p>
+          </div>
         </div>
+      ) : (
+        <>
+          {/* Insight list */}
+          <ul className="px-6 py-2" role="list">
+            {visible.map((insight) => (
+              <InsightRow key={insight.id} insight={insight} />
+            ))}
+          </ul>
+
+          {/* Show more / less toggle */}
+          {hasMore && (
+            <div className="px-6 pb-4">
+              <button
+                type="button"
+                onClick={() => setExpanded((v) => !v)}
+                className="text-[13px] font-medium text-gray-500 hover:text-green-700 transition-colors flex items-center gap-1"
+              >
+                {expanded ? "Show fewer insights" : `Show ${insights.length - initialVisible} more insights`}
+                <ChevronRight
+                  size={13}
+                  strokeWidth={2.5}
+                  aria-hidden
+                  className={`transition-transform ${expanded ? "rotate-90" : "rotate-0"}`}
+                />
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {/* Footer note */}

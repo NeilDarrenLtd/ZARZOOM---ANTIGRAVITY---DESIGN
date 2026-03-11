@@ -1,6 +1,7 @@
 "use client";
 
 import type { PlatformCard, PlatformMetrics } from "./mock-data";
+import EmptyState, { SkeletonCard } from "./EmptyState";
 
 // ─── Platform SVG Icons ───────────────────────────────────────────────────────
 // Inline SVGs — no external icon package dependency required.
@@ -211,10 +212,16 @@ function PlatformPerformanceCard({ card }: { card: PlatformCard }) {
 
 interface PlatformPerformanceCardsProps {
   cards: PlatformCard[];
+  /**
+   * "no-accounts"  → show full empty state (no platforms connected at all)
+   * "loading"      → show skeleton placeholders
+   * undefined      → normal render
+   */
+  emptyVariant?: "no-accounts" | "loading";
 }
 
-export default function PlatformPerformanceCards({ cards }: PlatformPerformanceCardsProps) {
-  const connected = cards.filter((c) => c.connected);
+export default function PlatformPerformanceCards({ cards, emptyVariant }: PlatformPerformanceCardsProps) {
+  const connected    = cards.filter((c) => c.connected);
   const disconnected = cards.filter((c) => !c.connected);
 
   return (
@@ -226,25 +233,52 @@ export default function PlatformPerformanceCards({ cards }: PlatformPerformanceC
             Per-platform breakdown — metrics shown are native to each platform.
           </p>
         </div>
-        <span className="text-xs font-semibold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">
-          {connected.length} connected
-        </span>
+        {!emptyVariant && (
+          <span className="text-xs font-semibold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-lg">
+            {connected.length} connected
+          </span>
+        )}
       </div>
 
-      {/* Connected platforms */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        {connected.map((card) => (
-          <PlatformPerformanceCard key={card.id} card={card} />
-        ))}
-      </div>
-
-      {/* Disconnected platforms — smaller, greyed out */}
-      {disconnected.length > 0 && (
+      {/* ── Loading skeleton ───────────────────────────────────────────────── */}
+      {emptyVariant === "loading" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {disconnected.map((card) => (
-            <PlatformPerformanceCard key={card.id} card={card} />
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
           ))}
         </div>
+      )}
+
+      {/* ── No accounts empty state ────────────────────────────────────────── */}
+      {emptyVariant === "no-accounts" && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <EmptyState
+            variant="no-accounts"
+            ctaLabel="Connect a platform"
+            ctaHref="/dashboard/settings"
+          />
+        </div>
+      )}
+
+      {/* ── Normal render ──────────────────────────────────────────────────── */}
+      {!emptyVariant && (
+        <>
+          {/* Connected platforms */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            {connected.map((card) => (
+              <PlatformPerformanceCard key={card.id} card={card} />
+            ))}
+          </div>
+
+          {/* Disconnected platforms — smaller, greyed out */}
+          {disconnected.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {disconnected.map((card) => (
+                <PlatformPerformanceCard key={card.id} card={card} />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </section>
   );

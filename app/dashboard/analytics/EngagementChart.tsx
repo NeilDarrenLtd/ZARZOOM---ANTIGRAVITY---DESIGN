@@ -11,9 +11,15 @@ import {
   Tooltip,
 } from "recharts";
 import type { EngagementDataPoint } from "./mock-data";
+import EmptyState from "./EmptyState";
 
 interface EngagementChartProps {
   data: EngagementDataPoint[];
+  /**
+   * Scenario passed down from the page so the chart can render the right empty state.
+   * "no-accounts" | "no-posts" | undefined = normal render
+   */
+  emptyVariant?: "no-accounts" | "no-posts";
 }
 
 type Metric = "impressions" | "engagements" | "posts";
@@ -58,7 +64,7 @@ function CustomTooltip({
   );
 }
 
-export default function EngagementChart({ data }: EngagementChartProps) {
+export default function EngagementChart({ data, emptyVariant }: EngagementChartProps) {
   const [activeMetric, setActiveMetric] = useState<Metric>("impressions");
 
   const opt = METRIC_OPTIONS.find((o) => o.key === activeMetric)!;
@@ -74,59 +80,73 @@ export default function EngagementChart({ data }: EngagementChartProps) {
           <h2 className="text-lg font-bold text-gray-900">Engagement Overview</h2>
           <p className="text-sm text-gray-500 leading-relaxed">Daily performance across all platforms</p>
         </div>
-        <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
-          {METRIC_OPTIONS.map((o) => (
-            <button
-              key={o.key}
-              type="button"
-              onClick={() => setActiveMetric(o.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                activeMetric === o.key
-                  ? "bg-white shadow-sm text-gray-900"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              {o.label}
-            </button>
-          ))}
-        </div>
+        {!emptyVariant && (
+          <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
+            {METRIC_OPTIONS.map((o) => (
+              <button
+                key={o.key}
+                type="button"
+                onClick={() => setActiveMetric(o.key)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  activeMetric === o.key
+                    ? "bg-white shadow-sm text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      <ResponsiveContainer width="100%" height={280}>
-        <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={opt.color} stopOpacity={0.2} />
-              <stop offset="95%" stopColor={opt.color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
-          <XAxis
-            dataKey="date"
-            ticks={ticks}
-            tick={{ fontSize: 11, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tickFormatter={formatYAxis}
-            tick={{ fontSize: 11, fill: "#9ca3af" }}
-            axisLine={false}
-            tickLine={false}
-            width={40}
-          />
-          <Tooltip content={<CustomTooltip metric={activeMetric} />} />
-          <Area
-            type="monotone"
-            dataKey={activeMetric}
-            stroke={opt.color}
-            strokeWidth={2}
-            fill="url(#areaGrad)"
-            dot={false}
-            activeDot={{ r: 5, fill: opt.color, stroke: "#fff", strokeWidth: 2 }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      {emptyVariant ? (
+        <EmptyState
+          variant={emptyVariant}
+          inline
+          description={
+            emptyVariant === "no-accounts"
+              ? "Connect your social accounts to start seeing engagement data here."
+              : "Your AI will begin tracking engagement once content is published."
+          }
+        />
+      ) : (
+        <ResponsiveContainer width="100%" height={280}>
+          <AreaChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={opt.color} stopOpacity={0.2} />
+                <stop offset="95%" stopColor={opt.color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+            <XAxis
+              dataKey="date"
+              ticks={ticks}
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              tickFormatter={formatYAxis}
+              tick={{ fontSize: 11, fill: "#9ca3af" }}
+              axisLine={false}
+              tickLine={false}
+              width={40}
+            />
+            <Tooltip content={<CustomTooltip metric={activeMetric} />} />
+            <Area
+              type="monotone"
+              dataKey={activeMetric}
+              stroke={opt.color}
+              strokeWidth={2}
+              fill="url(#areaGrad)"
+              dot={false}
+              activeDot={{ r: 5, fill: opt.color, stroke: "#fff", strokeWidth: 2 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }

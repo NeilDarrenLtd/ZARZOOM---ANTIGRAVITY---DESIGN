@@ -24,6 +24,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import type { ReachDataPoint } from "./mock-data";
+import EmptyState from "./EmptyState";
 
 // ─── Colour tokens (computed — not CSS variables, avoids Recharts resolution issues)
 const LINE_COLOR   = "#16a34a"; // green-600
@@ -74,21 +75,17 @@ function ReachTooltip({ active, payload, label }: TooltipProps) {
 
 interface ContentReachChartProps {
   data: ReachDataPoint[];
+  emptyVariant?: "no-accounts" | "no-posts";
 }
 
-export default function ContentReachChart({ data }: ContentReachChartProps) {
-  const avg = average(data);
+export default function ContentReachChart({ data, emptyVariant }: ContentReachChartProps) {
+  const avg  = average(data);
+  const peak = data.length ? data.reduce((best, d) => (d.exposure > best.exposure ? d : best), data[0]) : null;
 
   // Show every 5th tick to avoid crowding on the 30-day range
   const ticks = data
     .filter((_, i) => i % 5 === 0 || i === data.length - 1)
     .map((d) => d.date);
-
-  // Peak day annotation
-  const peak = data.reduce(
-    (best, d) => (d.exposure > best.exposure ? d : best),
-    data[0]
-  );
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
@@ -103,129 +100,83 @@ export default function ContentReachChart({ data }: ContentReachChartProps) {
           </p>
         </div>
 
-        {/* Legend + avg badge */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <span
-              className="inline-block w-3 h-3 rounded-full"
-              style={{ backgroundColor: LINE_COLOR }}
-            />
-            <span className="text-sm font-medium text-gray-700">Exposure</span>
+        {!emptyVariant && (
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: LINE_COLOR }} />
+              <span className="text-sm font-medium text-gray-700">Exposure</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-green-50 border border-green-100 rounded-lg px-3 py-1.5">
+              <span className="text-xs text-gray-500 font-medium">30-day avg</span>
+              <span className="text-xs font-bold text-green-700">{formatY(avg)}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5 bg-green-50 border border-green-100 rounded-lg px-3 py-1.5">
-            <span className="text-xs text-gray-500 font-medium">30-day avg</span>
-            <span className="text-xs font-bold text-green-700">
-              {formatY(avg)}
-            </span>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Chart */}
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="reachGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%"   stopColor={GRAD_START} stopOpacity={0.22} />
-              <stop offset="60%"  stopColor={GRAD_START} stopOpacity={0.06} />
-              <stop offset="100%" stopColor={GRAD_END}   stopOpacity={0}    />
-            </linearGradient>
-          </defs>
+      {emptyVariant ? (
+        <EmptyState
+          variant={emptyVariant}
+          inline
+          description={
+            emptyVariant === "no-accounts"
+              ? "Connect your social accounts to start seeing reach data here."
+              : "Your AI will begin tracking content reach once posts are published."
+          }
+        />
+      ) : (
+        <>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="reachGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stopColor={GRAD_START} stopOpacity={0.22} />
+                  <stop offset="60%"  stopColor={GRAD_START} stopOpacity={0.06} />
+                  <stop offset="100%" stopColor={GRAD_END}   stopOpacity={0}    />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} vertical={false} />
+              <XAxis dataKey="date" ticks={ticks} tick={{ fontSize: 11, fill: AXIS_COLOR }} axisLine={false} tickLine={false} dy={6} />
+              <YAxis tickFormatter={formatY} tick={{ fontSize: 11, fill: AXIS_COLOR }} axisLine={false} tickLine={false} width={44} />
+              <ReferenceLine y={avg} stroke={AVG_COLOR} strokeDasharray="4 4" strokeWidth={1.5} label={false} />
+              <Tooltip content={<ReachTooltip />} cursor={{ stroke: LINE_COLOR, strokeWidth: 1, strokeDasharray: "4 4" }} />
+              <Area
+                type="monotoneX"
+                dataKey="exposure"
+                stroke={LINE_COLOR}
+                strokeWidth={2.5}
+                fill="url(#reachGradient)"
+                dot={false}
+                activeDot={{ r: 5, fill: LINE_COLOR, stroke: "#ffffff", strokeWidth: 2.5 }}
+                isAnimationActive={true}
+                animationDuration={900}
+                animationEasing="ease-out"
+              />
+              {peak && <ReferenceLine x={peak.date} stroke={LINE_COLOR} strokeOpacity={0.25} strokeWidth={1} label={false} />}
+            </AreaChart>
+          </ResponsiveContainer>
 
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={GRID_COLOR}
-            vertical={false}
-          />
-
-          <XAxis
-            dataKey="date"
-            ticks={ticks}
-            tick={{ fontSize: 11, fill: AXIS_COLOR }}
-            axisLine={false}
-            tickLine={false}
-            dy={6}
-          />
-          <YAxis
-            tickFormatter={formatY}
-            tick={{ fontSize: 11, fill: AXIS_COLOR }}
-            axisLine={false}
-            tickLine={false}
-            width={44}
-          />
-
-          {/* Average reference line */}
-          <ReferenceLine
-            y={avg}
-            stroke={AVG_COLOR}
-            strokeDasharray="4 4"
-            strokeWidth={1.5}
-            label={false}
-          />
-
-          <Tooltip
-            content={<ReachTooltip />}
-            cursor={{ stroke: LINE_COLOR, strokeWidth: 1, strokeDasharray: "4 4" }}
-          />
-
-          <Area
-            type="monotoneX"
-            dataKey="exposure"
-            stroke={LINE_COLOR}
-            strokeWidth={2.5}
-            fill="url(#reachGradient)"
-            dot={false}
-            activeDot={{
-              r: 5,
-              fill: LINE_COLOR,
-              stroke: "#ffffff",
-              strokeWidth: 2.5,
-            }}
-            isAnimationActive={true}
-            animationDuration={900}
-            animationEasing="ease-out"
-          />
-
-          {/* Peak marker */}
-          <ReferenceLine
-            x={peak.date}
-            stroke={LINE_COLOR}
-            strokeOpacity={0.25}
-            strokeWidth={1}
-            label={false}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-
-      {/* Footer stat row */}
-      <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-6 flex-wrap">
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-            Peak day
-          </span>
-          <span className="text-sm font-bold text-gray-900">
-            {peak.date} &mdash; {formatY(peak.exposure)}
-          </span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-            30-day total
-          </span>
-          <span className="text-sm font-bold text-gray-900">
-            {formatY(data.reduce((s, d) => s + d.exposure, 0))}
-          </span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-            Metric
-          </span>
-          <span className="text-sm font-bold text-green-600">Exposure</span>
-        </div>
-        <p className="text-xs text-gray-400 ml-auto max-w-xs text-right leading-relaxed">
-          Exposure normalises Reach, Views &amp; Impressions across platforms into
-          one comparable signal.
-        </p>
-      </div>
+          {peak && (
+            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-6 flex-wrap">
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Peak day</span>
+                <span className="text-sm font-bold text-gray-900">{peak.date} &mdash; {formatY(peak.exposure)}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">30-day total</span>
+                <span className="text-sm font-bold text-gray-900">{formatY(data.reduce((s, d) => s + d.exposure, 0))}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Metric</span>
+                <span className="text-sm font-bold text-green-600">Exposure</span>
+              </div>
+              <p className="text-xs text-gray-400 ml-auto max-w-xs text-right leading-relaxed">
+                Exposure normalises Reach, Views &amp; Impressions across platforms into one comparable signal.
+              </p>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

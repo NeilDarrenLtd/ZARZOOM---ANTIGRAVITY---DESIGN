@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import type { ContentPerformanceRow, ProfileSnapshot } from "./mock-data";
+import EmptyState from "./EmptyState";
 
 // ─── Platform icon SVGs ───────────────────────────────────────────────────────
 
@@ -489,9 +490,15 @@ interface ContentPerformanceProps {
    *   const { data: rows } = useSWR(["/api/analytics/top-content", workspaceId, filters])
    */
   rows: ContentPerformanceRow[];
+  /**
+   * "no-accounts" → no platforms connected
+   * "no-posts"    → platforms connected but no content published yet
+   * undefined     → normal render
+   */
+  emptyVariant?: "no-accounts" | "no-posts";
 }
 
-export default function ContentPerformance({ rows }: ContentPerformanceProps) {
+export default function ContentPerformance({ rows, emptyVariant }: ContentPerformanceProps) {
   const [selected, setSelected] = useState<ContentPerformanceRow | null>(null);
 
   return (
@@ -504,28 +511,57 @@ export default function ContentPerformance({ rows }: ContentPerformanceProps) {
             Your strongest posts ranked by engagement rate — click any card for full details
           </p>
         </div>
-        <span className="rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
-          AI-ranked
-        </span>
+        {!emptyVariant && (
+          <span className="rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+            AI-ranked
+          </span>
+        )}
       </div>
 
-      {/* Card grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {rows.map((post, index) => (
-          <PostCard
-            key={post.id}
-            post={post}
-            rank={index + 1}
-            onClick={() => setSelected(post)}
+      {/* ── Empty states ───────────────────────────────────────────────────── */}
+      {emptyVariant === "no-accounts" && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <EmptyState
+            variant="no-accounts"
+            title="No content to show yet"
+            description="Connect your social accounts to start tracking your best-performing posts."
+            ctaLabel="Connect a platform"
+            ctaHref="/dashboard/settings"
           />
-        ))}
-      </div>
+        </div>
+      )}
 
-      {/* Slide-over drawer */}
-      <PostDetailDrawer
-        post={selected}
-        onClose={() => setSelected(null)}
-      />
+      {emptyVariant === "no-posts" && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm">
+          <EmptyState
+            variant="no-posts"
+            ctaLabel="Create your first post"
+            ctaHref="/dashboard/planner"
+          />
+        </div>
+      )}
+
+      {/* ── Normal card grid ───────────────────────────────────────────────── */}
+      {!emptyVariant && (
+        <>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {rows.map((post, index) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                rank={index + 1}
+                onClick={() => setSelected(post)}
+              />
+            ))}
+          </div>
+
+          {/* Slide-over drawer */}
+          <PostDetailDrawer
+            post={selected}
+            onClose={() => setSelected(null)}
+          />
+        </>
+      )}
     </section>
   );
 }
