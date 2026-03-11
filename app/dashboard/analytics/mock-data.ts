@@ -3,6 +3,98 @@
  * Structured so each section can be swapped to a real API call independently.
  */
 
+// ─── AI Insights ──────────────────────────────────────────────────────────────
+//
+// TODO (real data): replace with:
+//   GET /api/analytics/insights?workspaceId=<id>&from=<iso>&to=<iso>
+//
+// The response should return an ordered array of insight objects, highest
+// confidence / impact first. The `category` field drives the icon and accent
+// colour rendered by AiInsightsCard — extend the union as needed.
+//
+// category values:
+//   "timing"     — best day / time to post observations
+//   "growth"     — follower or reach growth signals
+//   "content"    — content type / topic performance patterns
+//   "engagement" — engagement rate or interaction trends
+//   "platform"   — cross-platform comparison observations
+//   "warning"    — declining metrics that need attention
+
+export type InsightCategory =
+  | "timing"
+  | "growth"
+  | "content"
+  | "engagement"
+  | "platform"
+  | "warning";
+
+export interface AiInsight {
+  id: string;
+  category: InsightCategory;
+  title: string;
+  body: string;
+  /** Highlighted fragment within `body` that the card wraps in a green pill */
+  highlight?: string;
+  /** Optional CTA label — links to the most relevant section of the dashboard */
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+export const AI_INSIGHTS: AiInsight[] = [
+  {
+    id: "ins-1",
+    category: "timing",
+    title: "Best day to post",
+    body: "Video content posted on Tuesdays generates 2.4x more views than any other day of the week across your connected platforms.",
+    highlight: "Tuesdays",
+    ctaLabel: "Open Planner",
+    ctaHref: "/dashboard/planner",
+  },
+  {
+    id: "ins-2",
+    category: "growth",
+    title: "Instagram on a strong run",
+    body: "Your Instagram engagement rate increased 18% this month — the highest single-month growth since your account was connected.",
+    highlight: "+18% this month",
+    ctaLabel: "View Instagram",
+    ctaHref: "/dashboard/analytics",
+  },
+  {
+    id: "ins-3",
+    category: "content",
+    title: "Educational content is your top performer",
+    body: "Educational posts are generating 3.1x more saves and shares than promotional content. Your audience responds best to actionable takeaways.",
+    highlight: "3.1x more saves and shares",
+  },
+  {
+    id: "ins-4",
+    category: "platform",
+    title: "TikTok has your highest raw reach",
+    body: "Despite having fewer followers on TikTok, your videos are reaching 920K people — more than any other platform. Consider increasing your posting frequency there.",
+    highlight: "920K reach",
+    ctaLabel: "See TikTok stats",
+    ctaHref: "/dashboard/analytics",
+  },
+  {
+    id: "ins-5",
+    category: "engagement",
+    title: "Carousel format outperforms single images",
+    body: "Carousel posts across Instagram and LinkedIn average a 7.5% engagement rate versus 4.2% for single-image posts. Scheduling more carousels could compound your results.",
+    highlight: "7.5% vs 4.2%",
+    ctaLabel: "Create a carousel",
+    ctaHref: "/dashboard/planner",
+  },
+  {
+    id: "ins-6",
+    category: "warning",
+    title: "Facebook engagement is declining",
+    body: "Your Facebook engagement rate dropped from 6.8% to 5.1% over the last 30 days. The AI suggests refreshing your content format or posting cadence on this platform.",
+    highlight: "5.1% (was 6.8%)",
+    ctaLabel: "Review Facebook",
+    ctaHref: "/dashboard/analytics",
+  },
+];
+
 // ─── KPI Summary Strip ────────────────────────────────────────────────────────
 
 export type KpiVariant = "accent" | "neutral" | "info";
