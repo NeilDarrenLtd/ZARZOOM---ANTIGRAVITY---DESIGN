@@ -8,12 +8,14 @@ import { useActiveWorkspace } from "@/lib/workspace/context";
 import AnalyticsHeader from "./AnalyticsHeader";
 import AnalyticsFilterBar, { DEFAULT_FILTERS, type AnalyticsFilters } from "./AnalyticsFilterBar";
 import AnalyticsSummaryStrip from "./AnalyticsSummaryStrip";
+import ContentReachChart from "./ContentReachChart";
 import EngagementChart from "./EngagementChart";
 import PlatformAnalytics from "./PlatformAnalytics";
 import ContentPerformance from "./ContentPerformance";
 
 import {
   KPI_METRICS,
+  REACH_OVER_TIME,
   DAILY_ENGAGEMENT,
   PLATFORM_STATS,
   WEEKLY_BY_PLATFORM,
@@ -58,6 +60,9 @@ export default function AnalyticsPage() {
         <AnalyticsFilterBar filters={filters} onChange={setFilters} />
 
         <AnalyticsSummaryStrip metrics={KPI_METRICS} />
+
+        {/* TODO (real data): pass useSWR reach data instead of REACH_OVER_TIME */}
+        <ContentReachChart data={REACH_OVER_TIME} />
 
         <EngagementChart data={DAILY_ENGAGEMENT} />
 

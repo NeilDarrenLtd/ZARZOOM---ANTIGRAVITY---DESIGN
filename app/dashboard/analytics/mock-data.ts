@@ -59,6 +59,45 @@ export const KPI_METRICS: KpiMetric[] = [
   },
 ];
 
+// ─── Content Reach Over Time (30-day, "Exposure" metric) ─────────────────────
+//
+// TODO (real data): replace with API call scoped to workspace + date filter:
+//   GET /api/analytics/reach?workspaceId=<id>&from=<iso>&to=<iso>&platform=<all|slug>
+//
+// "Exposure" is a normalised cross-platform metric that collapses Reach / Views /
+// Impressions into one comparable number — each platform surfaces a different
+// primary metric, so the backend should map them consistently before returning.
+
+export interface ReachDataPoint {
+  date: string;      // "Feb 10", "Feb 11", … — used for XAxis + tooltip
+  isoDate: string;   // full ISO string — useful for future API param building
+  exposure: number;  // normalised cross-platform exposure value
+}
+
+function makeReachData(): ReachDataPoint[] {
+  const points: ReachDataPoint[] = [];
+  const now = new Date(2026, 2, 11); // March 11 2026 (month is 0-indexed)
+  // Start with a realistic base and apply a gentle upward trend + organic noise
+  let base = 28000;
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const label = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const iso   = d.toISOString().split("T")[0];
+    // Trending growth with a weekend dip pattern (day 0 = Sunday) + random noise
+    const dayOfWeek = d.getDay();
+    const weekendDip = dayOfWeek === 0 || dayOfWeek === 6 ? 0.82 : 1;
+    const trend  = Math.round((29 - i) * 520);
+    const noise  = Math.round((Math.random() - 0.4) * 6000);
+    const value  = Math.max(8000, Math.round((base + trend + noise) * weekendDip));
+    points.push({ date: label, isoDate: iso, exposure: value });
+    base += 180; // small compounding drift upward
+  }
+  return points;
+}
+
+export const REACH_OVER_TIME: ReachDataPoint[] = makeReachData();
+
 // ─── Main Engagement Chart (30-day daily) ─────────────────────────────────────
 
 export interface EngagementDataPoint {
