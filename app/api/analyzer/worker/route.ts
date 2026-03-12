@@ -36,6 +36,20 @@ import type { Instant } from "@/lib/analyzer/types";
 // Worker job payload schema
 // ============================================================================
 
+/**
+ * Signals shape mirrors the spec's worker input contract.
+ * Stored in analysis_queue.payload_json.signals and forwarded verbatim
+ * to the normalizer — the instant engine values are authoritative.
+ */
+const WorkerSignalsSchema = z.object({
+  platform_detected: z.string().optional(),
+  keywords_detected: z.array(z.string()).optional(),
+  posting_frequency_estimate: z.enum(["low", "medium", "high", "unknown"]).optional(),
+  creator_score: z.number().optional(),
+  strengths: z.array(z.string()).optional(),
+  opportunities: z.array(z.string()).optional(),
+}).passthrough(); // allow extra fields from future engine versions
+
 const WorkerPayloadSchema = z.object({
   analysis_id: z.string().uuid(),
   profile_url: z.string().url(),
@@ -43,6 +57,8 @@ const WorkerPayloadSchema = z.object({
   profile_hash: z.string(),
   instant_json: z.record(z.unknown()),
   session_id: z.string().optional(),
+  /** Optional pre-computed signals forwarded from /start */
+  signals: WorkerSignalsSchema.optional(),
 });
 
 // ============================================================================
@@ -120,6 +136,12 @@ export async function POST(req: NextRequest) {
     const instant = instant_json as Instant;
     const aiResult = await runAiAnalysis(instant, profile_url);
 
+    if (aiResult.attempt === "retry") {
+      console.warn(
+        `[Worker] AI analysis for ${analysis_id} required a retry (JSON parse failure on first attempt)`
+      );
+    }
+
     // Normalise raw AI output + instant into stable UI contract
     const uiContract = normalizeToUiContract(
       analysis_id,
@@ -147,6 +169,7 @@ export async function POST(req: NextRequest) {
       analysis_id,
       tokens_used: aiResult.tokensUsed,
       model: aiResult.model,
+      attempt: aiResult.attempt,
     });
   } catch (err) {
     const errorMessage =

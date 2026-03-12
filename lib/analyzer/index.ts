@@ -49,8 +49,8 @@ export {
   estimatePostingFrequency,
 } from "./instantEngine";
 
-// AI analysis + normalizer
-export { runAiAnalysis, normalizeToUiContract } from "./aiAnalysis";
+// AI analysis + normalizer + admin preview helper
+export { runAiAnalysis, normalizeToUiContract, buildPromptPreview } from "./aiAnalysis";
 
 // DB helpers
 export {
