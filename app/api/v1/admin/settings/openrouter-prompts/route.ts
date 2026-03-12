@@ -220,4 +220,4 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export { DEFAULT_SOCIAL_PROFILE_PROMPT };
+
