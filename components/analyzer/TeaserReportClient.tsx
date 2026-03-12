@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, Loader2, RefreshCw, Sparkles, ArrowRight } from "lucide-react";
 import TeaserReport from "@/components/analyzer/TeaserReport";
-import type { Instant, Teaser } from "@/lib/analyzer/types";
+import FullReport from "@/components/analyzer/FullReport";
+import type { Instant, Teaser, FullReport as FullReportType } from "@/lib/analyzer/types";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -16,7 +17,7 @@ interface ResultPayload {
   status: AnalysisStatus;
   instant: Instant | null;
   teaser: Teaser | null;
-  full_report: unknown | null;
+  full_report: FullReportType | null;
 }
 
 interface Props {
@@ -314,8 +315,26 @@ export default function TeaserReportClient({ analysisId }: Props) {
           </motion.div>
         )}
 
-        {/* Completed */}
-        {!loading && !error && result?.status === "completed" && result.instant && result.teaser && (
+        {/* Completed — full report (authenticated) */}
+        {!loading && !error && result?.status === "completed" && result.instant && result.teaser && result.full_report && (
+          <motion.div
+            key="full-result"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <FullReport
+              instant={result.instant}
+              teaser={result.teaser}
+              fullReport={result.full_report}
+              profileUrl={result.analysis_id}
+            />
+          </motion.div>
+        )}
+
+        {/* Completed — teaser only (unauthenticated) */}
+        {!loading && !error && result?.status === "completed" && result.instant && result.teaser && !result.full_report && (
           <motion.div
             key="result"
             initial={{ opacity: 0, y: 12 }}
