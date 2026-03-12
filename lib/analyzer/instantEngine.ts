@@ -41,6 +41,9 @@ const PLATFORM_PATTERNS: Array<{ pattern: RegExp; platform: Platform }> = [
   { pattern: /linkedin\.com/i, platform: "linkedin" },
   { pattern: /facebook\.com/i, platform: "facebook" },
   { pattern: /pinterest\.com/i, platform: "pinterest" },
+  { pattern: /threads\.net/i, platform: "threads" },
+  { pattern: /reddit\.com/i, platform: "reddit" },
+  { pattern: /bsky\.app|bluesky\.social/i, platform: "bluesky" },
 ];
 
 export function detectPlatform(profileUrl: string): Platform {

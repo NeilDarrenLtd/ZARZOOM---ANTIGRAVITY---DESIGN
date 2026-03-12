@@ -19,6 +19,9 @@ export const SUPPORTED_PLATFORMS = [
   "linkedin",
   "facebook",
   "pinterest",
+  "threads",
+  "reddit",
+  "bluesky",
   "unknown",
 ] as const;
 
