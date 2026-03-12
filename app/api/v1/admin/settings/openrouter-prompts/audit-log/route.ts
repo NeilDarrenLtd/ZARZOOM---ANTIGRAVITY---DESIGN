@@ -1,11 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+
+const VALID_LIMITS = [50, 100, 500] as const;
+type ValidLimit = (typeof VALID_LIMITS)[number];
 
 /**
  * GET /api/v1/admin/settings/openrouter-prompts/audit-log
- * Returns recent autofill audit records for admin view.
+ * Returns paginated autofill audit records for admin view.
+ *
+ * Query params:
+ *   limit  – rows per page: 50 | 100 | 500  (default 50)
+ *   offset – row offset for pagination        (default 0)
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const supabase = await createClient();
     const {
@@ -26,19 +33,31 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    // Parse pagination params
+    const { searchParams } = new URL(req.url);
+    const rawLimit = parseInt(searchParams.get("limit") ?? "50", 10);
+    const limit: ValidLimit = VALID_LIMITS.includes(rawLimit as ValidLimit)
+      ? (rawLimit as ValidLimit)
+      : 50;
+    const offset = Math.max(0, parseInt(searchParams.get("offset") ?? "0", 10));
+
     const adminSupabase = await createAdminClient();
-    const { data: auditRows, error } = await adminSupabase
+
+    // Fetch the page + total count in one query
+    const { data: auditRows, error, count } = await adminSupabase
       .from("wizard_autofill_audit")
-      .select("*")
+      .select("*", { count: "exact" })
       .order("created_at", { ascending: false })
-      .limit(50);
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error("Failed to fetch audit logs:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const userIds = [...new Set((auditRows || []).map((r: Record<string, unknown>) => r.user_id as string))];
+    const userIds = [
+      ...new Set((auditRows || []).map((r: Record<string, unknown>) => r.user_id as string)),
+    ];
     let emailMap: Record<string, string> = {};
     if (userIds.length > 0) {
       const { data: profiles } = await adminSupabase
@@ -54,10 +73,18 @@ export async function GET() {
 
     const enriched = (auditRows || []).map((row: Record<string, unknown>) => ({
       ...row,
-      profiles: { email: emailMap[row.user_id as string] || null },
+      user_email: emailMap[row.user_id as string] || null,
     }));
 
-    return NextResponse.json({ data: enriched });
+    return NextResponse.json({
+      data: enriched,
+      pagination: {
+        total: count ?? 0,
+        limit,
+        offset,
+        has_more: offset + limit < (count ?? 0),
+      },
+    });
   } catch (err) {
     console.error("Audit log API error:", err);
     return NextResponse.json(
