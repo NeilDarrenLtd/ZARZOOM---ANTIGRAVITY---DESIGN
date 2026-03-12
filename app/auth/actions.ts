@@ -65,15 +65,20 @@ export async function signInWithEmail(email: string, password: string) {
   return { success: true, redirectTo };
 }
 
-export async function signUpWithEmail(email: string, password: string) {
+export async function signUpWithEmail(email: string, password: string, analysisId?: string | null) {
   const supabase = await createClient();
   const baseUrl = await getBaseUrl();
+
+  // If coming from the analyzer unlock flow, thread the analysis_id through
+  // the email confirmation callback so we can claim + redirect after verify.
+  const callbackNext = analysisId ? `/auth/verified` : `/auth/verified`;
+  const callbackAnalysis = analysisId ? `&analysis_id=${encodeURIComponent(analysisId)}` : "";
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${baseUrl}/auth/callback?next=/auth/verified`,
+      emailRedirectTo: `${baseUrl}/auth/callback?next=${callbackNext}${callbackAnalysis}`,
     },
   });
 

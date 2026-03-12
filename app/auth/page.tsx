@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import {
   signInWithEmail,
@@ -51,7 +51,20 @@ function SocialButton({
 export default function AuthPage() {
   const { t } = useI18n();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+  const searchParams = useSearchParams();
+
+  // Analyzer unlock flow: read analysis_id + mode from URL
+  const analysisId = searchParams.get("analysis_id") ?? null;
+  const modeParam = searchParams.get("mode");
+
+  const [activeTab, setActiveTab] = useState<"login" | "register">(
+    modeParam === "register" || analysisId ? "register" : "login"
+  );
+
+  // If analysis_id changes (e.g. back navigation), keep register tab selected
+  useEffect(() => {
+    if (analysisId) setActiveTab("register");
+  }, [analysisId]);
 
   // Login state
   const [loginEmail, setLoginEmail] = useState("");
@@ -125,13 +138,17 @@ export default function AuthPage() {
 
     setRegLoading(true);
 
-    const result = await signUpWithEmail(regEmail, regPassword);
+    const result = await signUpWithEmail(regEmail, regPassword, analysisId);
 
     if (result.error) {
       setRegError(result.error);
       setRegLoading(false);
     } else {
-      router.push(`/auth/verify?email=${encodeURIComponent(regEmail)}`);
+      // Include analysis_id in verify page URL so the user knows what they're unlocking
+      const verifyHref = analysisId
+        ? `/auth/verify?email=${encodeURIComponent(regEmail)}&analysis_id=${encodeURIComponent(analysisId)}`
+        : `/auth/verify?email=${encodeURIComponent(regEmail)}`;
+      router.push(verifyHref);
     }
   }
 
@@ -300,6 +317,25 @@ export default function AuthPage() {
             </>
           ) : (
             <>
+          {/* Analyzer unlock context banner */}
+          {analysisId && (
+            <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-start gap-3">
+              <div className="mt-0.5 w-5 h-5 rounded-full bg-green-600 flex items-center justify-center shrink-0">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-green-800 leading-tight">
+                  Your AI Growth Report Is Ready
+                </p>
+                <p className="text-xs text-green-700 mt-0.5 leading-relaxed">
+                  Create a free account to unlock your full report, AI content strategy, and Creator Score breakdown.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Tabs */}
           <div className="flex rounded-xl bg-gray-100 p-1">
             <button

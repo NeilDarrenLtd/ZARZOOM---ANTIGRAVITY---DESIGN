@@ -23,6 +23,8 @@ interface TeaserReportProps {
   instant: Instant;
   teaser: Teaser;
   profileUrl: string;
+  analysisId: string;
+  /** @deprecated use analysisId to generate the unlock href instead */
   onUnlock?: () => void;
 }
 
@@ -329,7 +331,7 @@ function BenchmarkBar({ score }: { score: number }) {
 
 // ── CTA block ─────────────────────────────────────────────────────────────────
 
-function CtaBlock({ onUnlock }: { onUnlock?: () => void }) {
+function CtaBlock({ unlockHref }: { unlockHref: string }) {
   return (
     <div
       className="rounded-2xl px-5 py-6 text-center"
@@ -352,8 +354,8 @@ function CtaBlock({ onUnlock }: { onUnlock?: () => void }) {
       <p className="text-xs text-white/45 mb-4">
         Free account. Takes 10 seconds.
       </p>
-      <motion.button
-        onClick={onUnlock}
+      <motion.a
+        href={unlockHref}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm text-white transition-colors"
@@ -361,7 +363,7 @@ function CtaBlock({ onUnlock }: { onUnlock?: () => void }) {
       >
         Get my free report
         <ArrowRight className="w-4 h-4" aria-hidden="true" />
-      </motion.button>
+      </motion.a>
       <p className="text-[10px] text-white/30 mt-3">
         No credit card required
       </p>
@@ -406,7 +408,7 @@ export default function TeaserReport({
   instant,
   teaser,
   profileUrl,
-  onUnlock,
+  analysisId,
 }: TeaserReportProps) {
   const {
     creator_score,
@@ -416,6 +418,9 @@ export default function TeaserReport({
   } = instant;
 
   const { growth_insights, ai_post_preview, benchmark_text } = teaser;
+
+  // Build the unlock href — links to /auth with analysis_id threaded through
+  const unlockHref = `/auth?analysis_id=${encodeURIComponent(analysisId)}&mode=register`;
 
   // Derive platform display name
   const platformLabel =
@@ -673,7 +678,7 @@ export default function TeaserReport({
 
         {/* ── CTA ─────────────────────────────────────────────────────────────── */}
         <div className="px-5 pb-5 pt-2">
-          <CtaBlock onUnlock={onUnlock} />
+          <CtaBlock unlockHref={unlockHref} />
         </div>
       </div>
     </motion.div>

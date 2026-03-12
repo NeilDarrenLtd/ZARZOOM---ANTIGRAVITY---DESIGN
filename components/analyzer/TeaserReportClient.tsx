@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
+import { AlertCircle, Loader2, RefreshCw, Sparkles, ArrowRight } from "lucide-react";
 import TeaserReport from "@/components/analyzer/TeaserReport";
 import type { Instant, Teaser } from "@/lib/analyzer/types";
 
@@ -26,6 +27,61 @@ interface Props {
 
 const POLL_INTERVAL = 2_000;
 const MAX_POLLS = 60; // 2 min total
+
+// ── Reward banner (shown after successful signup + claim) ─────────────────────
+
+function RewardBanner({ onCreateWorkspace }: { onCreateWorkspace: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="w-full max-w-2xl mx-auto mb-5 rounded-2xl overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, rgba(22,163,74,0.18) 0%, rgba(22,163,74,0.08) 100%)",
+        border: "1px solid rgba(22,163,74,0.35)",
+      }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="px-5 py-4 flex items-start gap-4">
+        <div
+          className="mt-0.5 w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+          style={{ background: "rgba(22,163,74,0.25)", border: "1px solid rgba(22,163,74,0.4)" }}
+        >
+          <Sparkles className="w-4.5 h-4.5 text-green-400" aria-hidden="true" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-white leading-tight">
+            Your AI Growth Report Is Ready
+          </p>
+          <p className="text-xs text-white/55 mt-1 leading-relaxed">
+            Your account has been created and this analysis has been saved to your profile.
+            Create a workspace to start building your content strategy.
+          </p>
+        </div>
+      </div>
+      <div
+        className="px-5 pb-4 flex items-center gap-3"
+      >
+        <button
+          onClick={onCreateWorkspace}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
+          style={{ background: "#16a34a" }}
+        >
+          Create my workspace
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
+        </button>
+        <a
+          href="/dashboard"
+          className="text-xs text-white/40 hover:text-white/60 transition-colors"
+        >
+          Go to dashboard
+        </a>
+      </div>
+    </motion.div>
+  );
+}
 
 // ── Loading skeleton ──────────────────────────────────────────────────────────
 
@@ -71,7 +127,11 @@ function LoadingSkeleton() {
           <div
             key={i}
             className="h-8 rounded-lg animate-pulse"
-            style={{ width: `${w * 100}%`, background: "rgba(255,255,255,0.05)", animationDelay: `${i * 0.1}s` }}
+            style={{
+              width: `${w * 100}%`,
+              background: "rgba(255,255,255,0.05)",
+              animationDelay: `${i * 0.1}s`,
+            }}
           />
         ))}
       </div>
@@ -115,9 +175,22 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
   );
 }
 
+// ── Fallback teaser for failed analyses ───────────────────────────────────────
+
+const FALLBACK_TEASER: Teaser = {
+  growth_insights: [
+    "Your profile was partially analysed. Sign up for a full deep-dive.",
+  ],
+  ai_post_preview: { title: "", caption: "", hashtags: [] },
+  benchmark_text: "",
+};
+
 // ── Main client component ─────────────────────────────────────────────────────
 
 export default function TeaserReportClient({ analysisId }: Props) {
+  const searchParams = useSearchParams();
+  const claimed = searchParams.get("claimed") === "1";
+
   const [result, setResult] = useState<ResultPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -154,7 +227,6 @@ export default function TeaserReportClient({ analysisId }: Props) {
     }
   }, [analysisId]);
 
-  // Poll until completed / failed / max polls / error
   useEffect(() => {
     let mounted = true;
     let timer: ReturnType<typeof setTimeout>;
@@ -198,13 +270,18 @@ export default function TeaserReportClient({ analysisId }: Props) {
     setResult(null);
   }, []);
 
-  const handleUnlock = useCallback(() => {
-    // Redirect to signup with analysis context
-    window.location.href = `/signup?from=analyzer&analysis_id=${analysisId}`;
-  }, [analysisId]);
+  // "Create workspace" CTA — take user to onboarding after they've seen their report
+  const handleCreateWorkspace = useCallback(() => {
+    window.location.href = "/onboarding";
+  }, []);
 
   return (
     <div className="w-full">
+      {/* Post-signup reward banner — only shown when ?claimed=1 is in the URL */}
+      {claimed && !loading && !error && result?.status === "completed" && (
+        <RewardBanner onCreateWorkspace={handleCreateWorkspace} />
+      )}
+
       <AnimatePresence mode="wait">
         {/* Loading */}
         {loading && !error && (
@@ -237,8 +314,8 @@ export default function TeaserReportClient({ analysisId }: Props) {
           </motion.div>
         )}
 
-        {/* Result */}
-        {!loading && !error && result && result.status === "completed" && result.instant && result.teaser && (
+        {/* Completed */}
+        {!loading && !error && result?.status === "completed" && result.instant && result.teaser && (
           <motion.div
             key="result"
             initial={{ opacity: 0, y: 12 }}
@@ -249,14 +326,14 @@ export default function TeaserReportClient({ analysisId }: Props) {
             <TeaserReport
               instant={result.instant}
               teaser={result.teaser}
-              profileUrl={`https://${result.analysis_id}`}
-              onUnlock={handleUnlock}
+              profileUrl={result.analysis_id}
+              analysisId={analysisId}
             />
           </motion.div>
         )}
 
-        {/* Failed status */}
-        {!loading && !error && result && result.status === "failed" && result.instant && (
+        {/* Failed — render teaser with instant data + fallback teaser */}
+        {!loading && !error && result?.status === "failed" && result.instant && (
           <motion.div
             key="failed"
             initial={{ opacity: 0, y: 12 }}
@@ -266,15 +343,9 @@ export default function TeaserReportClient({ analysisId }: Props) {
           >
             <TeaserReport
               instant={result.instant}
-              teaser={{
-                growth_insights: [
-                  "Your profile was partially analysed. Sign up for a full deep-dive.",
-                ],
-                ai_post_preview: { title: "", caption: "", hashtags: [] },
-                benchmark_text: "",
-              }}
+              teaser={FALLBACK_TEASER}
               profileUrl=""
-              onUnlock={handleUnlock}
+              analysisId={analysisId}
             />
           </motion.div>
         )}

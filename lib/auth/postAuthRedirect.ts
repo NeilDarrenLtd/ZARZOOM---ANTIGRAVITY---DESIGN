@@ -11,6 +11,12 @@ import { createClient } from "@/lib/supabase/server";
  * When workspaceId is not provided, returns /dashboard so the user lands there;
  * the dashboard layout will set the active workspace cookie and the page can
  * redirect to /onboarding for that workspace if needed. No first-workspace fallback.
+ *
+ * NOTE: This function is intentionally NOT called when an `analysis_id` is
+ * present in the auth callback. In that case the callback redirects straight
+ * to /[locale]/analyzer/[id]?claimed=1 so the user sees their report first,
+ * per the Analyzer Unlock Flow spec. The "Create workspace" CTA on the report
+ * page then sends the user to /onboarding.
  */
 export async function resolvePostAuthRedirect(
   userId: string,
