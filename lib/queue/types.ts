@@ -132,6 +132,8 @@ export const RETRY_DEFAULTS: Record<string, RetryConfig> = {
   },
   prompt_test: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
   test_provider_key: { maxAttempts: 1, baseDelayMs: 0, maxDelayMs: 0 },
+  // Social Profile Analyzer — retry once on transient AI errors
+  "analyzer.profile": { maxAttempts: 2, baseDelayMs: 5_000, maxDelayMs: 60_000 },
 };
 
 /**
