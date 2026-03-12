@@ -7,6 +7,7 @@ import {
   Sparkles, TrendingUp, Zap, Lock, FileText, Clock,
   BarChart2, PenSquare, Users, ChevronRight,
 } from "lucide-react";
+import AnalyzerFallbackWidget from "@/components/analyzer/AnalyzerFallbackWidget";
 
 // ── Platform registry ──────────────────────────────────────────────────────
 
@@ -772,21 +773,18 @@ export default function SocialAnalyzerWidget({ onClose }: { onClose?: () => void
               </motion.div>
             )}
 
-            {/* ── ERROR ─────────────────────────────────────────────────── */}
+            {/* ── ERROR — replaced with graceful fallback ──────────────── */}
             {stage === "error" && (
-              <motion.div key="error" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="py-2">
-                <div className="flex items-start gap-3 mb-4">
-                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                  <div>
-                    <p className="text-sm font-semibold text-white mb-0.5">Unable to analyze</p>
-                    <p className="text-xs text-white/50 leading-relaxed">{errorMsg}</p>
-                  </div>
-                </div>
-                <button onClick={handleReset}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold"
-                  style={{ background: "rgba(255,255,255,0.06)", color: "white" }}>
-                  Try again
-                </button>
+              <motion.div
+                key="error"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                <AnalyzerFallbackWidget
+                  profileUrl={url}
+                  onRetry={handleReset}
+                />
               </motion.div>
             )}
 
