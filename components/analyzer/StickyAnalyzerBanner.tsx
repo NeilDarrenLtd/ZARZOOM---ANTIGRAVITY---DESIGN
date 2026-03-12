@@ -25,8 +25,8 @@ export default function StickyAnalyzerBanner() {
     if (sessionStorage.getItem("_az_banner_dismissed") === "1") {
       setDismissed(true);
     }
-    // Small delay so it doesn't flash during initial paint
-    const t = setTimeout(() => setMounted(true), 300);
+    // Minimal delay to avoid flash on initial paint
+    const t = setTimeout(() => setMounted(true), 50);
     return () => clearTimeout(t);
   }, []);
 
@@ -45,7 +45,7 @@ export default function StickyAnalyzerBanner() {
       {/* ─────────────────────────────────────────────────────────────────────
           DESKTOP: Left-positioned fixed panel within hero area
          ───────────────────────────────────────────────────────────────────── */}
-      <div className="hidden lg:block fixed z-40 left-6 xl:left-10"
+      <div className="hidden lg:block fixed z-50 left-6 xl:left-10"
         style={{ top: "6.5rem" /* below navbar */ }}>
         <AnimatePresence mode="wait">
           {expanded ? (
@@ -103,7 +103,7 @@ export default function StickyAnalyzerBanner() {
       {/* ─────────────────────────────────────────────────────────────────────
           MOBILE + TABLET: Bottom-docked panel
          ───────────────────────────────────────────────────────────────────── */}
-      <div className="lg:hidden fixed z-40 inset-x-0 bottom-0 pointer-events-none">
+      <div className="lg:hidden fixed z-50 inset-x-0 bottom-0 pointer-events-none">
         <AnimatePresence mode="wait">
           {expanded ? (
             <motion.div
