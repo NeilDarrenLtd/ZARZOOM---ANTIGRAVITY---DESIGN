@@ -21,18 +21,11 @@ export default function StickyAnalyzerBanner() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Check session-level dismissal
-    if (sessionStorage.getItem("_az_banner_dismissed") === "1") {
-      setDismissed(true);
-    }
-    // Minimal delay to avoid flash on initial paint
-    const t = setTimeout(() => setMounted(true), 50);
-    return () => clearTimeout(t);
+    setMounted(true);
   }, []);
 
   const handleClose = () => {
     setDismissed(true);
-    sessionStorage.setItem("_az_banner_dismissed", "1");
   };
 
   const handleMinimise = () => setExpanded(false);
