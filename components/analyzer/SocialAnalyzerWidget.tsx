@@ -512,7 +512,7 @@ export default function SocialAnalyzerWidget({ onClose }: { onClose?: () => void
                   </button>
                 </div>
 
-                <p className="mt-2.5 text-center text-xs text-white/30">Takes about 5 seconds. No signup required.</p>
+                <p className="mt-3 text-center text-xs font-semibold text-white/90">Takes about 5 seconds. No signup required.</p>
               </motion.div>
             )}
 

@@ -1,58 +1,164 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronUp, ChevronDown, Sparkles } from "lucide-react";
 import SocialAnalyzerWidget from "./SocialAnalyzerWidget";
 
 /**
  * StickyAnalyzerBanner
  *
- * Renders a centered sticky container directly below the fixed Navbar (h-16 on
- * mobile, h-20 on md+). The widget is horizontally centered and constrained to
- * 520 px on desktop / 90 vw on mobile, per the product spec.
+ * Responsive positioning:
+ * - DESKTOP (lg+): left-aligned panel within the hero
+ * - TABLET + MOBILE: bottom-docked panel
  *
- * Visibility: visible on first render, dismissed when the user clicks close.
- * Session-level persistence: once dismissed, it won't reappear for the
- * duration of the browser session.
+ * Loads EXPANDED by default. User can minimise to a compact bar.
+ * Minimised bar shows: "FREE AI AUDIT • 5 sec" with expand affordance.
  */
 export default function StickyAnalyzerBanner() {
-  const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [expanded, setExpanded] = useState(true);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Don't show if the user already dismissed it this session
-    if (sessionStorage.getItem("_az_banner_dismissed") === "1") return;
+    // Check session-level dismissal
+    if (sessionStorage.getItem("_az_banner_dismissed") === "1") {
+      setDismissed(true);
+    }
     // Small delay so it doesn't flash during initial paint
-    const t = setTimeout(() => setVisible(true), 400);
+    const t = setTimeout(() => setMounted(true), 300);
     return () => clearTimeout(t);
   }, []);
 
   const handleClose = () => {
-    setVisible(false);
+    setDismissed(true);
     sessionStorage.setItem("_az_banner_dismissed", "1");
   };
 
+  const handleMinimise = () => setExpanded(false);
+  const handleExpand = () => setExpanded(true);
+
+  if (dismissed || !mounted) return null;
+
   return (
-    <AnimatePresence>
-      {visible && (
-        <div
-          className="sticky z-40 flex justify-center px-4 pointer-events-none"
-          // sits flush under the fixed navbar
-          style={{ top: "4rem" /* 64px = h-16 */ }}
-        >
-          {/* On md+ the navbar is h-20 (80px); compensate with a responsive offset */}
-          <style>{`
-            @media (min-width: 768px) {
-              .az-sticky-wrap { top: 5rem !important; }
-            }
-          `}</style>
-          <div
-            className="az-sticky-wrap pointer-events-auto w-[90vw] md:w-[520px]"
-            style={{ paddingTop: "0.625rem" }}
-          >
-            <SocialAnalyzerWidget onClose={handleClose} />
-          </div>
-        </div>
+    <>
+      {/* ─────────────────────────────────────────────────────────────────────
+          DESKTOP: Left-positioned fixed panel within hero area
+         ───────────────────────────────────────────────────────────────────── */}
+      <div className="hidden lg:block fixed z-40 left-6 xl:left-10"
+        style={{ top: "6.5rem" /* below navbar */ }}>
+        <AnimatePresence mode="wait">
+          {expanded ? (
+            <motion.div
+              key="expanded-desktop"
+              initial={{ opacity: 0, x: -20, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -20, scale: 0.96 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative"
+            >
+              {/* Minimise button */}
+              <button
+                onClick={handleMinimise}
+                className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                style={{ background: "#1c2029", border: "1px solid rgba(255,255,255,0.1)" }}
+                aria-label="Minimise analyzer"
+              >
+                <ChevronDown className="w-4 h-4 text-white/60" />
+              </button>
+              <SocialAnalyzerWidget onClose={handleClose} />
+            </motion.div>
+          ) : (
+            <motion.button
+              key="minimised-desktop"
+              onClick={handleExpand}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="group flex items-center gap-3 rounded-2xl px-5 py-3.5 shadow-2xl transition-all hover:scale-[1.02]"
+              style={{
+                background: "linear-gradient(145deg, #0f1117 0%, #171c26 100%)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+              aria-label="Expand analyzer"
+            >
+              <div className="w-8 h-8 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(22,163,74,0.15)" }}>
+                <Sparkles className="w-4 h-4 text-green-400" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-bold tracking-wide text-white">
+                  FREE AI AUDIT
+                  <span className="text-white/40 font-medium ml-2">• 5 sec</span>
+                </p>
+                <p className="text-[10px] text-white/40 mt-0.5">Get Your Social Score</p>
+              </div>
+              <ChevronUp className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors ml-2" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────────────────
+          MOBILE + TABLET: Bottom-docked panel
+         ───────────────────────────────────────────────────────────────────── */}
+      <div className="lg:hidden fixed z-40 inset-x-0 bottom-0 pointer-events-none">
+        <AnimatePresence mode="wait">
+          {expanded ? (
+            <motion.div
+              key="expanded-mobile"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="pointer-events-auto w-full px-3 pb-3"
+            >
+              {/* Minimise handle bar */}
+              <button
+                onClick={handleMinimise}
+                className="w-full flex items-center justify-center py-2 mb-1"
+                aria-label="Minimise analyzer"
+              >
+                <div className="w-12 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }} />
+              </button>
+              <div className="w-full max-w-[520px] mx-auto">
+                <SocialAnalyzerWidget onClose={handleClose} />
+              </div>
+            </motion.div>
+          ) : (
+            <motion.button
+              key="minimised-mobile"
+              onClick={handleExpand}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="pointer-events-auto w-full flex items-center justify-center gap-3 py-4 px-5 shadow-2xl"
+              style={{
+                background: "linear-gradient(180deg, #0f1117 0%, #171c26 100%)",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
+              }}
+              aria-label="Expand analyzer"
+            >
+              <div className="w-7 h-7 rounded-full flex items-center justify-center"
+                style={{ background: "rgba(22,163,74,0.15)" }}>
+                <Sparkles className="w-3.5 h-3.5 text-green-400" />
+              </div>
+              <p className="text-sm font-bold tracking-wide text-white">
+                FREE AI AUDIT
+                <span className="text-white/40 font-medium ml-2">• 5 sec</span>
+              </p>
+              <ChevronUp className="w-4 h-4 text-white/50 ml-auto" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Safe area spacer on mobile when expanded — prevents content from being hidden */}
+      {expanded && (
+        <div className="lg:hidden h-[420px] pointer-events-none" aria-hidden="true" />
       )}
-    </AnimatePresence>
+    </>
   );
 }
