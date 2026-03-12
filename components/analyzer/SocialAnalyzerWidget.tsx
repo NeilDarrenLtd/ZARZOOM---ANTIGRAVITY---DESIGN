@@ -302,7 +302,7 @@ function PostPreviewCard({ platform }: { platform: string }) {
 
 // ── Main widget ────────────────────────────────────────────────────────────
 
-export default function SocialAnalyzerWidget({ onClose }: { onClose?: () => void }) {
+export default function SocialAnalyzerWidget() {
   const inputId = useId();
   const [url, setUrl] = useState("");
   const [stage, setStage] = useState<FunnelStage>("idle");
@@ -424,12 +424,6 @@ export default function SocialAnalyzerWidget({ onClose }: { onClose?: () => void
             <Sparkles className="w-4 h-4 text-green-400" aria-hidden="true" />
             <span className="text-xs font-semibold tracking-widest uppercase text-green-400">Free AI Audit</span>
           </div>
-          {onClose && (
-            <button onClick={onClose} aria-label="Close analyzer"
-              className="w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/10 transition-colors">
-              <X className="w-4 h-4" aria-hidden="true" />
-            </button>
-          )}
         </div>
 
         <div className="px-5 pt-3 pb-5">
