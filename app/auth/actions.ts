@@ -90,15 +90,20 @@ export async function signUpWithEmail(email: string, password: string, analysisI
 }
 
 export async function signInWithOAuth(
-  provider: "google" | "facebook" | "twitter" | "linkedin_oidc"
+  provider: "google" | "facebook" | "twitter" | "linkedin_oidc",
+  analysisId?: string | null
 ) {
   const supabase = await createClient();
   const baseUrl = await getBaseUrl();
 
+  const callbackAnalysis = analysisId
+    ? `?analysis_id=${encodeURIComponent(analysisId)}`
+    : "";
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: `${baseUrl}/auth/callback`,
+      redirectTo: `${baseUrl}/auth/callback${callbackAnalysis}`,
     },
   });
 

@@ -47,29 +47,29 @@ export default function Home() {
           {/* Text Overlay: Hero */}
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none"
+            className="absolute inset-0 flex flex-col items-center justify-start pt-[14vh] lg:justify-center lg:pt-[20vh] z-10 pointer-events-none"
           >
-            <div className="rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-10 py-6 md:px-16 md:py-8">
-              <h1 className="text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">
+            <div className="rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-14 py-3 md:px-16 md:py-8">
+              <h1 className="text-6xl sm:text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">
                 {t("hero.title")}
               </h1>
             </div>
-            <div className="mt-4 rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-8 py-4 md:px-12 md:py-5">
-              <p className="text-2xl md:text-5xl text-black text-center max-w-3xl drop-shadow-md text-balance">
+            <div className="mt-3 lg:mt-4 rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-6 py-3 md:px-12 md:py-5">
+              <p className="text-xl sm:text-2xl md:text-5xl text-black text-center max-w-3xl drop-shadow-md text-balance">
                 {t("hero.subtitle")}
               </p>
             </div>
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="mt-10 flex flex-col items-center"
+              className="mt-4 lg:mt-10 flex flex-col items-center"
             >
-              <div className="rounded-xl border border-green-600 bg-white/30 px-8 py-3">
-                <span className="text-black font-semibold text-lg tracking-wide">
+              <div className="rounded-xl border border-green-600 bg-white/30 px-6 py-2 md:px-8 md:py-3">
+                <span className="text-black font-semibold text-base md:text-lg tracking-wide">
                   {t("hero.scrollToLaunch")}
                 </span>
               </div>
-              <ArrowDown className="w-8 h-8 text-green-600 mt-3" />
+              <ArrowDown className="w-6 h-6 md:w-8 md:h-8 text-green-600 mt-2 md:mt-3" />
             </motion.div>
           </motion.div>
 

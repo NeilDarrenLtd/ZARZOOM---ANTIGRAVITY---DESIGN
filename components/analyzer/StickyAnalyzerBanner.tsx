@@ -31,11 +31,11 @@ export default function StickyAnalyzerBanner() {
             >
               <button
                 onClick={() => setExpanded(false)}
-                className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                className="absolute -bottom-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-colors"
                 style={{ background: "#1c2029", border: "1px solid rgba(255,255,255,0.1)" }}
                 aria-label="Minimise analyzer"
               >
-                <ChevronDown className="w-4 h-4 text-white/60" />
+                <ChevronUp className="w-4 h-4 text-white/60" />
               </button>
               <SocialAnalyzerWidget />
             </motion.div>
@@ -66,7 +66,7 @@ export default function StickyAnalyzerBanner() {
                 </p>
                 <p className="text-[10px] text-white/40 mt-0.5">Get Your Social Score</p>
               </div>
-              <ChevronUp className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors ml-2" />
+              <ChevronDown className="w-4 h-4 text-white/40 group-hover:text-white/70 transition-colors ml-2" />
             </motion.button>
           )}
         </AnimatePresence>
@@ -86,10 +86,15 @@ export default function StickyAnalyzerBanner() {
             >
               <button
                 onClick={() => setExpanded(false)}
-                className="w-full flex items-center justify-center py-2 mb-1"
+                className="w-full flex items-center justify-center py-2.5 mb-1"
                 aria-label="Minimise analyzer"
               >
-                <div className="w-12 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }} />
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
+                >
+                  <ChevronDown className="w-5 h-5 text-white/80" />
+                </div>
               </button>
               <div className="w-full max-w-[520px] mx-auto">
                 <SocialAnalyzerWidget />
@@ -125,10 +130,8 @@ export default function StickyAnalyzerBanner() {
         </AnimatePresence>
       </div>
 
-      {/* Safe area spacer on mobile when expanded */}
-      {expanded && (
-        <div className="lg:hidden h-[420px] pointer-events-none" aria-hidden="true" />
-      )}
+      {/* Minimal spacer so bottom-of-page content isn't hidden behind the fixed collapsed bar */}
+      <div className="lg:hidden h-16 pointer-events-none" aria-hidden="true" />
     </>
   );
 }

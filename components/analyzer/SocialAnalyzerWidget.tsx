@@ -97,11 +97,23 @@ interface InstantResult {
   opportunities: string[];
 }
 
+interface AiPostPreview {
+  title: string;
+  caption: string;
+  hashtags: string[];
+}
+
+interface TeaserData {
+  growth_insights: string[];
+  ai_post_preview: AiPostPreview;
+  benchmark_text: string;
+}
+
 interface StartResponse {
   analysis_id: string;
   status: "pending" | "completed";
   instant: InstantResult;
-  teaser?: unknown;
+  teaser?: TeaserData;
   cached?: boolean;
 }
 
@@ -249,55 +261,57 @@ function LockedSection({ icon: Icon, label }: { icon: React.ElementType; label: 
   );
 }
 
-function PostPreviewCard({ platform }: { platform: string }) {
-  const isInstagram = platform === "instagram";
-  const isTikTok = platform === "tiktok";
-  const isLinkedIn = platform === "linkedin";
-
-  const samplePost = isLinkedIn
-    ? "I spent 3 years making this mistake — and it cost me 6 months of growth.\n\nHere's what I learned (and what I'd do differently):\n\n1/ Stop posting for the algorithm\n2/ Start posting for one person\n3/ Consistency beats perfection every time\n\nSave this if you needed to hear it."
-    : isTikTok
-    ? "POV: You stopped trying to go viral and your account finally grew 🤯\n\nThis is the strategy nobody talks about...\n\n#growthhack #contentcreator #creatortips"
-    : isInstagram
-    ? "The secret to growing on Instagram in 2024 isn't what you think.\n\nIt's not Reels. It's not hashtags.\n\nIt's this 👇\n\n(Save this before it disappears)"
-    : "Most creators quit right before the breakthrough.\n\nI almost did too.\n\nHere's the moment that changed everything — and the 3 things I wish I knew sooner.";
+function PostPreviewCard({ platform, preview }: { platform: string; preview?: AiPostPreview }) {
+  const postContent = preview?.caption || getFallbackPost(platform);
+  const hashtags = preview?.hashtags ?? [];
 
   return (
     <div className="rounded-xl overflow-hidden"
       style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
-      {/* Mock post header */}
       <div className="px-3 pt-3 pb-2 flex items-center gap-2.5">
         <div className="w-7 h-7 rounded-full flex-shrink-0"
           style={{ background: "linear-gradient(135deg, #16a34a, #4ade80)" }} aria-hidden="true" />
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold text-white/80 leading-none">Your AI Post</p>
+          <p className="text-xs font-semibold text-white/80 leading-none">
+            {preview?.title || "Your AI Post"}
+          </p>
           <p className="text-[10px] text-white/35 mt-0.5 capitalize">{platform} • Just now</p>
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
           style={{ background: "rgba(22,163,74,0.2)", color: "#4ade80" }}>
-          AI Generated
+          {preview ? "AI Generated" : "Example"}
         </span>
       </div>
 
-      {/* Post body */}
       <div className="px-3 pb-3">
         <p className="text-xs text-white/65 leading-relaxed whitespace-pre-line line-clamp-5">
-          {samplePost}
+          {postContent}
         </p>
       </div>
 
-      {/* Mock engagement row */}
-      <div className="px-3 py-2 flex items-center gap-4 border-t"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <span className="text-[10px] text-white/30">
-          Predicted reach: <span className="text-green-400 font-semibold">3.2k – 8.4k</span>
-        </span>
-        <span className="text-[10px] text-white/30 ml-auto">
-          Engagement: <span className="text-green-400 font-semibold">High</span>
-        </span>
-      </div>
+      {hashtags.length > 0 && (
+        <div className="px-3 py-2 flex flex-wrap gap-1.5 border-t"
+          style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+          {hashtags.slice(0, 5).map(tag => (
+            <span key={tag} className="text-[10px] text-green-400/70">#{tag.replace(/^#/, "")}</span>
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+function getFallbackPost(platform: string): string {
+  switch (platform) {
+    case "linkedin":
+      return "I spent 3 years making this mistake — and it cost me 6 months of growth.\n\nHere's what I learned (and what I'd do differently):\n\n1/ Stop posting for the algorithm\n2/ Start posting for one person\n3/ Consistency beats perfection every time\n\nSave this if you needed to hear it.";
+    case "tiktok":
+      return "POV: You stopped trying to go viral and your account finally grew\n\nThis is the strategy nobody talks about...\n\n#growthhack #contentcreator #creatortips";
+    case "instagram":
+      return "The secret to growing on Instagram isn't what you think.\n\nIt's not Reels. It's not hashtags.\n\nIt's this...\n\n(Save this before it disappears)";
+    default:
+      return "Most creators quit right before the breakthrough.\n\nI almost did too.\n\nHere's the moment that changed everything — and the 3 things I wish I knew sooner.";
+  }
 }
 
 // ── Main widget ────────────────────────────────────────────────────────────
@@ -316,12 +330,11 @@ export default function SocialAnalyzerWidget() {
   // Auto-advance from signals → thinking → score → ownership → post-preview → benchmark
   useEffect(() => {
     if (stage === "signals") {
-      const t = setTimeout(() => setStage("thinking"), 2000);
+      const t = setTimeout(() => setStage("thinking"), 1200);
       return () => clearTimeout(t);
     }
     if (stage === "thinking") {
-      // Thinking runs for ~4.8s (6 × 800ms) then reveals score
-      const t = setTimeout(() => setStage("score"), 4800);
+      const t = setTimeout(() => setStage("score"), 2400);
       return () => clearTimeout(t);
     }
   }, [stage]);
@@ -401,8 +414,11 @@ export default function SocialAnalyzerWidget() {
   const opportunities = result?.instant?.opportunities ?? [];
   const frequency = result?.instant?.posting_frequency_estimate ?? "unknown";
 
-  // Deterministic benchmark percentile from score
-  const benchmarkPct = Math.max(10, Math.min(90, Math.round(100 - score * 0.62 + 8)));
+  const benchmarkPct = Math.max(5, Math.min(95, Math.round(100 - score * 0.62 + 8)));
+  const teaserPreview = result?.teaser?.ai_post_preview;
+  const authHref = result?.analysis_id
+    ? `/auth?analysis_id=${encodeURIComponent(result.analysis_id)}&mode=register`
+    : "/auth?mode=register";
 
   return (
     <motion.div
@@ -670,18 +686,16 @@ export default function SocialAnalyzerWidget() {
                   ))}
                 </div>
 
-                {/* Unlock CTA */}
-                <a href="/auth"
+                <a href={authHref}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-all"
                   style={{ background: "#16a34a", color: "white", display: "flex" }}>
                   Unlock Your Full AI Growth Strategy
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </a>
 
-                {/* Step forward to post preview */}
                 <button onClick={() => setStage("post-preview")}
                   className="mt-3 w-full text-xs text-white/30 hover:text-white/60 transition-colors text-center">
-                  See an example AI post first
+                  {teaserPreview ? "See your AI-generated post" : "See an example AI post first"}
                 </button>
               </motion.div>
             )}
@@ -696,12 +710,11 @@ export default function SocialAnalyzerWidget() {
                   </h3>
                 </div>
 
-                <PostPreviewCard platform={platform} />
+                <PostPreviewCard platform={platform} preview={teaserPreview} />
 
                 <Divider />
 
-                {/* CTA */}
-                <a href="/auth"
+                <a href={authHref}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-all"
                   style={{ background: "#16a34a", color: "white", display: "flex" }}>
                   Generate Posts Like This
@@ -748,12 +761,11 @@ export default function SocialAnalyzerWidget() {
                 <div className="rounded-xl px-4 py-3 mb-4"
                   style={{ background: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)" }}>
                   <p className="text-xs text-white/70 leading-relaxed text-balance">
-                    <span className="text-white font-semibold">Creators in your bracket</span> who unlock their AI growth strategy typically move into the top {Math.max(5, benchmarkPct - 22)}% within 60 days.
+                    <span className="text-white font-semibold">Unlock your full AI growth strategy</span> to see personalised content plans, viral post ideas, and the optimal posting schedule for your niche.
                   </p>
                 </div>
 
-                {/* Final CTA */}
-                <a href="/auth"
+                <a href={authHref}
                   className="w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition-all"
                   style={{ background: "#16a34a", color: "white", display: "flex" }}>
                   Unlock Your Full AI Growth Strategy

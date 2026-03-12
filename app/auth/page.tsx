@@ -155,7 +155,7 @@ export default function AuthPage() {
   async function handleSocialLogin(
     provider: "google" | "facebook" | "twitter" | "linkedin_oidc"
   ) {
-    const result = await signInWithOAuth(provider);
+    const result = await signInWithOAuth(provider, analysisId);
     if (result.url) {
       window.location.href = result.url;
     }

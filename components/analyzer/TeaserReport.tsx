@@ -284,7 +284,7 @@ function AiPostPreview({ preview, platform }: { preview: Teaser["ai_post_preview
 
 function BenchmarkBar({ score }: { score: number }) {
   // Compute rough percentile — higher score = better than more creators
-  const topPct = Math.max(3, Math.min(72, Math.round(100 - score * 0.72 + 5)));
+  const topPct = Math.max(5, Math.min(95, Math.round(100 - score * 0.62 + 8)));
 
   return (
     <div
