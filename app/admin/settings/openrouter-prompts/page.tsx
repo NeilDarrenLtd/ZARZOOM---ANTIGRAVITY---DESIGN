@@ -2,7 +2,24 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save, ChevronDown, ChevronUp, Clock, User, Globe, FileText } from "lucide-react";
+import {
+  Sparkles,
+  Loader2,
+  AlertTriangle,
+  CheckCircle2,
+  Info,
+  RotateCcw,
+  Save,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  User,
+  Globe,
+  FileText,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -11,8 +28,10 @@ import { Sparkles, Loader2, AlertTriangle, CheckCircle2, Info, RotateCcw, Save, 
 interface PromptSettings {
   website_prompt: string | null;
   file_prompt: string | null;
+  social_profile_prompt: string | null;
   feature_enabled: boolean;
   openrouter_api_key: string | null;
+  openrouter_api_key_set: boolean;
   openrouter_model: string | null;
   updated_at: string | null;
   updated_by: string | null;
@@ -21,6 +40,27 @@ interface PromptSettings {
 interface SaveState {
   status: "idle" | "saving" | "success" | "error";
   message?: string;
+}
+
+interface AuditEntry {
+  id: string;
+  user_id: string;
+  user_email?: string | null;
+  source_type: "website" | "file" | "social_profile";
+  source_identifier: string;
+  status: string;
+  error_message: string | null;
+  fields_populated: number;
+  confidence_scores: Record<string, number> | null;
+  debug_data: Record<string, unknown> | null;
+  created_at: string;
+}
+
+interface AuditPagination {
+  total: number;
+  limit: number;
+  offset: number;
+  has_more: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -41,20 +81,16 @@ async function fetcher<T>(url: string): Promise<T> {
 /* ------------------------------------------------------------------ */
 
 export default function OpenRouterPromptsPage() {
-  const {
-    data,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR<{ data: PromptSettings }>(
+  const { data, error, isLoading, mutate } = useSWR<{ data: PromptSettings }>(
     "/api/v1/admin/settings/openrouter-prompts",
     fetcher
   );
 
   const [websitePrompt, setWebsitePrompt] = useState("");
   const [filePrompt, setFilePrompt] = useState("");
+  const [socialProfilePrompt, setSocialProfilePrompt] = useState("");
   const [apiKey, setApiKey] = useState("");
-  const [apiKeySet, setApiKeySet] = useState(false); // tracks if a key is stored in DB
+  const [apiKeySet, setApiKeySet] = useState(false);
   const [model, setModel] = useState("openai/gpt-4o-mini");
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -67,9 +103,9 @@ export default function OpenRouterPromptsPage() {
     if (data?.data) {
       setWebsitePrompt(data.data.website_prompt ?? "");
       setFilePrompt(data.data.file_prompt ?? "");
-      // Don't populate apiKey with masked value - keep it empty so users enter fresh key
+      setSocialProfilePrompt(data.data.social_profile_prompt ?? "");
       setApiKey("");
-      setApiKeySet(!!(data.data as any).openrouter_api_key_set);
+      setApiKeySet(data.data.openrouter_api_key_set ?? false);
       setModel(data.data.openrouter_model ?? "openai/gpt-4o-mini");
       setHasUnsavedChanges(false);
     }
@@ -78,28 +114,25 @@ export default function OpenRouterPromptsPage() {
   // Track unsaved changes
   useEffect(() => {
     if (!data?.data) return;
-    
     const changed =
       websitePrompt !== (data.data.website_prompt ?? "") ||
       filePrompt !== (data.data.file_prompt ?? "") ||
-      apiKey !== "" || // any new key typed = unsaved change
+      socialProfilePrompt !== (data.data.social_profile_prompt ?? "") ||
+      apiKey !== "" ||
       model !== (data.data.openrouter_model ?? "openai/gpt-4o-mini");
-    
     setHasUnsavedChanges(changed);
-  }, [websitePrompt, filePrompt, apiKey, model, data]);
+  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, data]);
 
   /* -- Save handler ---------------------------------------------- */
   const handleSave = useCallback(async () => {
     setSaveState({ status: "saving" });
-
     try {
-      // Only send API key if user entered a new one (non-empty)
       const payload: Record<string, unknown> = {
         website_prompt: websitePrompt || null,
         file_prompt: filePrompt || null,
+        social_profile_prompt: socialProfilePrompt || null,
         openrouter_model: model || null,
       };
-      // Only include API key in payload if user typed a new value
       if (apiKey.trim()) {
         payload.openrouter_api_key = apiKey.trim();
       }
@@ -118,18 +151,14 @@ export default function OpenRouterPromptsPage() {
       await mutate();
       setSaveState({ status: "success", message: "Settings saved successfully" });
       setHasUnsavedChanges(false);
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSaveState({ status: "idle" });
-      }, 3000);
+      setTimeout(() => setSaveState({ status: "idle" }), 3000);
     } catch (err) {
       setSaveState({
         status: "error",
         message: err instanceof Error ? err.message : "Failed to save settings",
       });
     }
-  }, [websitePrompt, filePrompt, apiKey, model, mutate]);
+  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, mutate]);
 
   /* -- Reset handler --------------------------------------------- */
   const handleReset = useCallback(async () => {
@@ -137,61 +166,44 @@ export default function OpenRouterPromptsPage() {
       setResetState("confirming");
       return;
     }
-
-    if (resetState === "confirming") {
-      setIsResetting(true);
-
-      try {
-        const res = await fetch("/api/v1/admin/settings/openrouter-prompts/reset", {
-          method: "POST",
-        });
-
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err?.error?.message ?? `Reset failed (${res.status})`);
-        }
-
-        await mutate();
-        setResetState("idle");
-        setSaveState({ status: "success", message: "Prompts reset to defaults" });
-        
-        // Clear success message after 3 seconds
-        setTimeout(() => {
-          setSaveState({ status: "idle" });
-        }, 3000);
-      } catch (err) {
-        setResetState("idle");
-        setSaveState({
-          status: "error",
-          message: err instanceof Error ? err.message : "Failed to reset prompts",
-        });
-      } finally {
-        setIsResetting(false);
+    setIsResetting(true);
+    try {
+      const res = await fetch("/api/v1/admin/settings/openrouter-prompts/reset", {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message ?? `Reset failed (${res.status})`);
       }
+      await mutate();
+      setResetState("idle");
+      setSaveState({ status: "success", message: "Prompts reset to defaults" });
+      setTimeout(() => setSaveState({ status: "idle" }), 3000);
+    } catch (err) {
+      setResetState("idle");
+      setSaveState({
+        status: "error",
+        message: err instanceof Error ? err.message : "Failed to reset prompts",
+      });
+    } finally {
+      setIsResetting(false);
     }
   }, [resetState, mutate]);
 
-  /* -- Cancel reset ---------------------------------------------- */
-  const handleCancelReset = useCallback(() => {
-    setResetState("idle");
-  }, []);
+  const handleCancelReset = useCallback(() => setResetState("idle"), []);
 
   /* -- Keyboard shortcut ----------------------------------------- */
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
         e.preventDefault();
-        if (hasUnsavedChanges && saveState.status !== "saving") {
-          handleSave();
-        }
+        if (hasUnsavedChanges && saveState.status !== "saving") handleSave();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [hasUnsavedChanges, saveState.status, handleSave]);
 
-  /* -- Format timestamp ------------------------------------------ */
   const formatTimestamp = (timestamp: string | null) => {
     if (!timestamp) return "Never";
     return new Intl.DateTimeFormat("en-US", {
@@ -222,7 +234,11 @@ export default function OpenRouterPromptsPage() {
       <div className="mb-6 flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
         <div className="text-xs leading-relaxed text-blue-800">
-          <strong>About these prompts:</strong> These prompts are sent to OpenRouter when users click "Auto-fill from website" or "Analyse file" in the onboarding wizard. The AI will extract brand information based on your instructions. The OpenRouter API key should be set as an environment variable.
+          <strong>About these prompts:</strong> These prompts are sent to OpenRouter when users click
+          "Auto-fill from website", "Analyse file", or "Investigate social profile" in the onboarding
+          wizard. Use <code className="bg-blue-100 px-1 rounded">[WEBSITE-URL]</code>,{" "}
+          <code className="bg-blue-100 px-1 rounded">[FILE-NAME]</code>, and{" "}
+          <code className="bg-blue-100 px-1 rounded">[PROFILE-URL]</code> as variable placeholders.
         </div>
       </div>
 
@@ -230,9 +246,7 @@ export default function OpenRouterPromptsPage() {
       {isLoading && (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
-          <span className="ml-2 text-sm text-zinc-500">
-            Loading prompts...
-          </span>
+          <span className="ml-2 text-sm text-zinc-500">Loading prompts...</span>
         </div>
       )}
 
@@ -254,7 +268,9 @@ export default function OpenRouterPromptsPage() {
             <div className="flex items-center gap-2 text-xs text-zinc-500">
               <span>Last updated: {formatTimestamp(data.data.updated_at)}</span>
               {data.data.updated_by && (
-                <span className="text-zinc-400">• User ID: {data.data.updated_by.slice(0, 8)}...</span>
+                <span className="text-zinc-400">
+                  • User ID: {data.data.updated_by.slice(0, 8)}...
+                </span>
               )}
             </div>
           )}
@@ -274,7 +290,7 @@ export default function OpenRouterPromptsPage() {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder={apiKeySet ? "Key is saved - enter new key to replace" : "sk-or-v1-..."}
+                  placeholder={apiKeySet ? "Key is saved — enter new key to replace" : "sk-or-v1-..."}
                   autoComplete="off"
                 />
                 <button
@@ -307,15 +323,13 @@ export default function OpenRouterPromptsPage() {
                 >
                   openrouter.ai/keys
                 </a>
-                . This key is stored securely in the database and used server-side only.
+                . Stored securely in the database and used server-side only.
               </p>
             </div>
 
             {/* Model */}
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
-                Model
-              </label>
+              <label className="block text-xs font-medium text-zinc-700 mb-1.5">Model</label>
               <input
                 type="text"
                 value={model}
@@ -324,9 +338,10 @@ export default function OpenRouterPromptsPage() {
                 placeholder="openai/gpt-4o-mini"
               />
               <p className="text-xs text-zinc-500 mt-1.5">
-                The OpenRouter model identifier (e.g. <code className="bg-zinc-100 px-1 rounded text-[11px]">openai/gpt-4o-mini</code>,{" "}
-                <code className="bg-zinc-100 px-1 rounded text-[11px]">anthropic/claude-3.5-sonnet</code>).
-                See{" "}
+                The OpenRouter model identifier (e.g.{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">openai/gpt-4o-mini</code>,{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">anthropic/claude-3.5-sonnet</code>
+                ). See{" "}
                 <a
                   href="https://openrouter.ai/models"
                   target="_blank"
@@ -334,50 +349,69 @@ export default function OpenRouterPromptsPage() {
                   className="text-purple-600 hover:text-purple-700 underline"
                 >
                   openrouter.ai/models
-                </a>{" "}
-                for available models.
+                </a>
+                .
               </p>
             </div>
           </div>
 
+          {/* ── Prompt Slots ──────────────────────────────────────────── */}
+
           {/* Website Prompt */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-900 mb-2">
-              Website Investigation Prompt
-            </label>
-            <textarea
-              value={websitePrompt}
-              onChange={(e) => setWebsitePrompt(e.target.value)}
-              rows={12}
-              className="w-full px-4 py-3 rounded-lg border border-zinc-200 bg-white text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-y"
-              placeholder="Enter the prompt for website analysis..."
-            />
-            <p className="text-xs text-zinc-500 mt-2">
-              This prompt is used when users provide a website URL. It should instruct the AI to extract business name, description, colors, and article styles from the website content.
-            </p>
-          </div>
+          <PromptSlot
+            icon={<Globe className="w-4 h-4" />}
+            label="Website Investigation Prompt"
+            promptKey="WEBSITE_INVESTIGATION"
+            description={
+              <>
+                Used when users provide a website URL. Use{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">[WEBSITE-URL]</code> as a
+                placeholder for the URL.
+              </>
+            }
+            value={websitePrompt}
+            onChange={setWebsitePrompt}
+            placeholder="Enter the prompt for website analysis..."
+          />
 
           {/* File Prompt */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-900 mb-2">
-              File Investigation Prompt
-            </label>
-            <textarea
-              value={filePrompt}
-              onChange={(e) => setFilePrompt(e.target.value)}
-              rows={12}
-              className="w-full px-4 py-3 rounded-lg border border-zinc-200 bg-white text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-y"
-              placeholder="Enter the prompt for file analysis..."
-            />
-            <p className="text-xs text-zinc-500 mt-2">
-              This prompt is used when users upload a PDF or Word document. It should instruct the AI to extract business information from the document content.
-            </p>
-          </div>
+          <PromptSlot
+            icon={<FileText className="w-4 h-4" />}
+            label="File Investigation Prompt"
+            promptKey="FILE_INVESTIGATION"
+            description={
+              <>
+                Used when users upload a PDF or Word document. Use{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">[FILE-NAME]</code> as a
+                placeholder for the filename.
+              </>
+            }
+            value={filePrompt}
+            onChange={setFilePrompt}
+            placeholder="Enter the prompt for file analysis..."
+          />
+
+          {/* Social Profile Prompt */}
+          <PromptSlot
+            icon={<Search className="w-4 h-4" />}
+            label="Social Profile Investigation Prompt"
+            promptKey="SOCIAL_PROFILE_ANALYZER"
+            badge="openai/gpt-4o-mini"
+            description={
+              <>
+                Used when users provide a social media profile URL. Use{" "}
+                <code className="bg-zinc-100 px-1 rounded text-[11px]">[PROFILE-URL]</code> as a
+                placeholder for the profile URL.
+              </>
+            }
+            value={socialProfilePrompt}
+            onChange={setSocialProfilePrompt}
+            placeholder="Enter the prompt for social profile analysis..."
+          />
 
           {/* Action buttons */}
           <div className="flex items-center justify-between gap-4 pt-4 border-t border-zinc-200">
             <div className="flex items-center gap-3">
-              {/* Reset button */}
               {resetState === "idle" && (
                 <button
                   onClick={handleReset}
@@ -387,8 +421,6 @@ export default function OpenRouterPromptsPage() {
                   Reset to defaults
                 </button>
               )}
-
-              {/* Confirm reset */}
               {resetState === "confirming" && (
                 <div className="flex items-center gap-2">
                   <button
@@ -419,31 +451,25 @@ export default function OpenRouterPromptsPage() {
               )}
             </div>
 
-            {/* Save button */}
             <div className="flex items-center gap-3">
-              {/* Unsaved changes indicator */}
               {hasUnsavedChanges && saveState.status === "idle" && (
                 <span className="text-xs text-amber-600 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600" />
                   Unsaved changes
                 </span>
               )}
-
-              {/* Status messages */}
               {saveState.status === "success" && (
                 <div className="flex items-center gap-2 text-xs text-green-600">
                   <CheckCircle2 className="w-4 h-4" />
                   {saveState.message}
                 </div>
               )}
-
               {saveState.status === "error" && (
                 <div className="flex items-center gap-2 text-xs text-red-600">
                   <AlertTriangle className="w-4 h-4" />
                   {saveState.message}
                 </div>
               )}
-
               <button
                 onClick={handleSave}
                 disabled={!hasUnsavedChanges || saveState.status === "saving"}
@@ -474,8 +500,59 @@ export default function OpenRouterPromptsPage() {
         </div>
       )}
 
-      {/* ── Audit Log Section ────────────────────────────── */}
+      {/* Audit Log */}
       <AuditLogViewer />
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  PromptSlot Component                                               */
+/* ================================================================== */
+
+interface PromptSlotProps {
+  icon: React.ReactNode;
+  label: string;
+  promptKey: string;
+  badge?: string;
+  description: React.ReactNode;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+}
+
+function PromptSlot({
+  icon,
+  label,
+  promptKey,
+  badge,
+  description,
+  value,
+  onChange,
+  placeholder,
+}: PromptSlotProps) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-zinc-400">{icon}</span>
+        <label className="text-sm font-medium text-zinc-900">{label}</label>
+        <code className="text-[10px] font-mono bg-zinc-100 text-zinc-500 px-1.5 py-0.5 rounded border border-zinc-200">
+          {promptKey}
+        </code>
+        {badge && (
+          <span className="text-[10px] font-mono bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-200">
+            {badge}
+          </span>
+        )}
+      </div>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={12}
+        className="w-full px-4 py-3 rounded-lg border border-zinc-200 bg-white text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-y"
+        placeholder={placeholder}
+      />
+      <p className="text-xs text-zinc-500 mt-2">{description}</p>
     </div>
   );
 }
@@ -484,200 +561,264 @@ export default function OpenRouterPromptsPage() {
 /*  Audit Log Viewer Component                                         */
 /* ================================================================== */
 
-interface AuditEntry {
-  id: string;
-  user_id: string;
-  user_email?: string;
-  source_type: "website" | "file";
-  source_identifier: string;
-  status: string;
-  error_message: string | null;
-  fields_populated: number;
-  confidence_scores: Record<string, number> | null;
-  debug_data: Record<string, unknown> | null;
-  created_at: string;
-}
+const LIMIT_OPTIONS = [50, 100, 500] as const;
+type LimitOption = (typeof LIMIT_OPTIONS)[number];
 
 function AuditLogViewer() {
-  const { data, error, isLoading } = useSWR<{ data: AuditEntry[] }>(
-    "/api/v1/admin/settings/openrouter-prompts/audit-log",
-    (url: string) => fetch(url).then((r) => r.json())
+  const [limit, setLimit] = useState<LimitOption>(50);
+  const [offset, setOffset] = useState(0);
+
+  const auditUrl = `/api/v1/admin/settings/openrouter-prompts/audit-log?limit=${limit}&offset=${offset}`;
+
+  const { data, error, isLoading } = useSWR<{
+    data: AuditEntry[];
+    pagination: AuditPagination;
+  }>(auditUrl, (url: string) =>
+    fetch(url).then((r) => {
+      if (!r.ok) throw new Error(`Failed to load (${r.status})`);
+      return r.json();
+    })
   );
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  if (isLoading) {
-    return (
-      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
-        <div className="flex items-center gap-2 text-sm text-zinc-500">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Loading audit logs...
-        </div>
-      </div>
-    );
-  }
+  // Reset to first page when limit changes
+  const handleLimitChange = (newLimit: LimitOption) => {
+    setLimit(newLimit);
+    setOffset(0);
+    setExpandedId(null);
+  };
 
-  if (error) {
-    return (
-      <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
-        <p className="text-sm text-red-600">Failed to load audit logs</p>
-      </div>
-    );
-  }
+  const pagination = data?.pagination;
+  const totalPages = pagination ? Math.ceil(pagination.total / pagination.limit) : 0;
+  const currentPage = pagination ? Math.floor(pagination.offset / pagination.limit) + 1 : 1;
 
-  const entries = data?.data || [];
+  const handlePrev = () => {
+    setOffset(Math.max(0, offset - limit));
+    setExpandedId(null);
+  };
+
+  const handleNext = () => {
+    if (pagination?.has_more) {
+      setOffset(offset + limit);
+      setExpandedId(null);
+    }
+  };
+
+  const sourceIcon = (type: string) => {
+    if (type === "website") return <Globe className="w-4 h-4 text-zinc-400 shrink-0" />;
+    if (type === "social_profile") return <Search className="w-4 h-4 text-zinc-400 shrink-0" />;
+    return <FileText className="w-4 h-4 text-zinc-400 shrink-0" />;
+  };
 
   return (
     <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
-      <h3 className="text-lg font-semibold text-zinc-900 mb-1">
-        Auto-fill Audit Log
-      </h3>
-      <p className="text-sm text-zinc-500 mb-4">
-        Recent auto-fill queries, responses, and usage tracking. Click a row to see the full prompt and response.
-      </p>
+      {/* Header row */}
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <h3 className="text-lg font-semibold text-zinc-900">Auto-fill Audit Log</h3>
+          <p className="text-sm text-zinc-500 mt-0.5">
+            Auto-fill queries, responses, and usage tracking. Click a row to expand.
+          </p>
+        </div>
 
-      {entries.length === 0 ? (
-        <p className="text-sm text-zinc-400 py-4 text-center">No auto-fill runs yet.</p>
-      ) : (
-        <div className="space-y-2">
-          {entries.map((entry) => {
-            const isExpanded = expandedId === entry.id;
-            let debugParsed: { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> } | null = null;
-            if (entry.debug_data) {
-              try {
-                debugParsed = typeof entry.debug_data === "string"
-                  ? JSON.parse(entry.debug_data)
-                  : entry.debug_data as { promptSent?: string; responseReceived?: string; fieldsExtracted?: Record<string, unknown> };
-              } catch {
-                // ignore
-              }
-            }
+        {/* Row limit dropdown */}
+        <div className="flex items-center gap-2 shrink-0">
+          <label className="text-xs text-zinc-500 font-medium whitespace-nowrap">Rows per page</label>
+          <select
+            value={limit}
+            onChange={(e) => handleLimitChange(Number(e.target.value) as LimitOption)}
+            className="text-xs border border-zinc-200 rounded-lg px-2.5 py-1.5 bg-white text-zinc-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          >
+            {LIMIT_OPTIONS.map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-            return (
-              <div key={entry.id} className="border border-zinc-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setExpandedId(isExpanded ? null : entry.id)}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
-                >
-                  {/* Status indicator */}
-                  <span
-                    className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                      entry.status === "success"
-                        ? "bg-green-500"
-                        : entry.status === "partial"
-                        ? "bg-amber-500"
-                        : "bg-red-500"
-                    }`}
-                  />
+      {isLoading && (
+        <div className="flex items-center gap-2 text-sm text-zinc-500 py-8 justify-center">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          Loading audit logs...
+        </div>
+      )}
 
-                  {/* Source type icon */}
-                  {entry.source_type === "website" ? (
-                    <Globe className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                  ) : (
-                    <FileText className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                  )}
+      {error && !isLoading && (
+        <p className="text-sm text-red-600 py-4">Failed to load audit logs: {error.message}</p>
+      )}
 
-                  {/* Source identifier */}
-                  <span className="text-sm text-zinc-700 truncate flex-1 font-mono">
-                    {entry.source_identifier}
-                  </span>
+      {!isLoading && !error && (
+        <>
+          {(data?.data ?? []).length === 0 ? (
+            <p className="text-sm text-zinc-400 py-4 text-center">No auto-fill runs yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {(data?.data ?? []).map((entry) => {
+                const isExpanded = expandedId === entry.id;
+                let debugParsed: {
+                  promptSent?: string;
+                  responseReceived?: string;
+                  fieldsExtracted?: Record<string, unknown>;
+                } | null = null;
+                if (entry.debug_data) {
+                  try {
+                    debugParsed =
+                      typeof entry.debug_data === "string"
+                        ? JSON.parse(entry.debug_data)
+                        : (entry.debug_data as unknown as typeof debugParsed);
+                  } catch {
+                    // ignore
+                  }
+                }
 
-                  {/* Fields populated */}
-                  <span className="text-xs text-zinc-500 flex-shrink-0">
-                    {entry.fields_populated} fields
-                  </span>
-
-                  {/* User email */}
-                  <span className="text-xs text-zinc-400 flex-shrink-0 hidden sm:block">
-                    <User className="w-3 h-3 inline mr-1" />
-                    {entry.user_email || entry.user_id.slice(0, 8)}
-                  </span>
-
-                  {/* Timestamp */}
-                  <span className="text-xs text-zinc-400 flex-shrink-0">
-                    <Clock className="w-3 h-3 inline mr-1" />
-                    {new Date(entry.created_at).toLocaleString()}
-                  </span>
-
-                  {/* Expand icon */}
-                  {isExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-                  )}
-                </button>
-
-                {isExpanded && (
-                  <div className="px-4 pb-4 border-t border-zinc-100 bg-zinc-50 space-y-3">
-                    {/* Status and error */}
-                    <div className="pt-3 flex items-center gap-2">
+                return (
+                  <div key={entry.id} className="border border-zinc-200 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => setExpandedId(isExpanded ? null : entry.id)}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
+                    >
+                      {/* Status dot */}
                       <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded ${
+                        className={`w-2 h-2 rounded-full shrink-0 ${
                           entry.status === "success"
-                            ? "bg-green-100 text-green-700"
+                            ? "bg-green-500"
                             : entry.status === "partial"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-red-100 text-red-700"
+                            ? "bg-amber-500"
+                            : "bg-red-500"
                         }`}
-                      >
-                        {entry.status.toUpperCase()}
+                      />
+
+                      {sourceIcon(entry.source_type)}
+
+                      <span className="text-sm text-zinc-700 truncate flex-1 font-mono">
+                        {entry.source_identifier}
                       </span>
-                      <span className="text-xs text-zinc-500">
-                        {entry.source_type} analysis
+
+                      <span className="text-xs text-zinc-500 shrink-0">
+                        {entry.fields_populated} fields
                       </span>
-                    </div>
 
-                    {entry.error_message && (
-                      <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <p className="text-xs font-medium text-red-700 mb-1">Error</p>
-                        <p className="text-xs text-red-600 font-mono whitespace-pre-wrap">
-                          {entry.error_message}
-                        </p>
+                      <span className="text-xs text-zinc-400 shrink-0 hidden sm:flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        {entry.user_email || entry.user_id.slice(0, 8)}
+                      </span>
+
+                      <span className="text-xs text-zinc-400 shrink-0 flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {new Date(entry.created_at).toLocaleString()}
+                      </span>
+
+                      {isExpanded ? (
+                        <ChevronUp className="w-4 h-4 text-zinc-400 shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-zinc-400 shrink-0" />
+                      )}
+                    </button>
+
+                    {isExpanded && (
+                      <div className="px-4 pb-4 border-t border-zinc-100 bg-zinc-50 space-y-3">
+                        <div className="pt-3 flex items-center gap-2">
+                          <span
+                            className={`text-xs font-medium px-2 py-0.5 rounded ${
+                              entry.status === "success"
+                                ? "bg-green-100 text-green-700"
+                                : entry.status === "partial"
+                                ? "bg-amber-100 text-amber-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {entry.status.toUpperCase()}
+                          </span>
+                          <span className="text-xs text-zinc-500">{entry.source_type} analysis</span>
+                        </div>
+
+                        {entry.error_message && (
+                          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-xs font-medium text-red-700 mb-1">Error</p>
+                            <p className="text-xs text-red-600 font-mono whitespace-pre-wrap">
+                              {entry.error_message}
+                            </p>
+                          </div>
+                        )}
+
+                        {debugParsed?.promptSent && (
+                          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <p className="text-xs font-medium text-blue-700 mb-1">Prompt Sent</p>
+                            <pre className="text-xs text-blue-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                              {debugParsed.promptSent}
+                            </pre>
+                          </div>
+                        )}
+
+                        {debugParsed?.responseReceived && (
+                          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <p className="text-xs font-medium text-green-700 mb-1">AI Response (raw)</p>
+                            <pre className="text-xs text-green-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                              {debugParsed.responseReceived}
+                            </pre>
+                          </div>
+                        )}
+
+                        {debugParsed?.fieldsExtracted && (
+                          <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                            <p className="text-xs font-medium text-purple-700 mb-1">Fields Extracted</p>
+                            <pre className="text-xs text-purple-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
+                              {JSON.stringify(debugParsed.fieldsExtracted, null, 2)}
+                            </pre>
+                          </div>
+                        )}
+
+                        {!debugParsed && (
+                          <p className="text-xs text-zinc-400 italic">
+                            No debug data available for this run.
+                          </p>
+                        )}
                       </div>
-                    )}
-
-                    {/* Debug: Prompt Sent */}
-                    {debugParsed?.promptSent && (
-                      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-xs font-medium text-blue-700 mb-1">Prompt Sent (truncated)</p>
-                        <pre className="text-xs text-blue-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
-                          {debugParsed.promptSent}
-                        </pre>
-                      </div>
-                    )}
-
-                    {/* Debug: Response Received */}
-                    {debugParsed?.responseReceived && (
-                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <p className="text-xs font-medium text-green-700 mb-1">AI Response (raw)</p>
-                        <pre className="text-xs text-green-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
-                          {debugParsed.responseReceived}
-                        </pre>
-                      </div>
-                    )}
-
-                    {/* Debug: Fields Extracted */}
-                    {debugParsed?.fieldsExtracted && (
-                      <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                        <p className="text-xs font-medium text-purple-700 mb-1">Fields Extracted</p>
-                        <pre className="text-xs text-purple-600 font-mono whitespace-pre-wrap max-h-48 overflow-y-auto">
-                          {JSON.stringify(debugParsed.fieldsExtracted, null, 2)}
-                        </pre>
-                      </div>
-                    )}
-
-                    {/* No debug data available */}
-                    {!debugParsed && (
-                      <p className="text-xs text-zinc-400 italic">
-                        No debug data available for this run (runs before this update won&apos;t have debug info).
-                      </p>
                     )}
                   </div>
-                )}
+                );
+              })}
+            </div>
+          )}
+
+          {/* Pagination controls */}
+          {pagination && pagination.total > 0 && (
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-zinc-100">
+              <p className="text-xs text-zinc-500">
+                Showing{" "}
+                <strong className="text-zinc-700">
+                  {pagination.offset + 1}–
+                  {Math.min(pagination.offset + pagination.limit, pagination.total)}
+                </strong>{" "}
+                of <strong className="text-zinc-700">{pagination.total.toLocaleString()}</strong> entries
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-zinc-400">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={handlePrev}
+                  disabled={offset === 0}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                  Previous
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!pagination.has_more}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white text-xs font-medium text-zinc-600 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Next
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

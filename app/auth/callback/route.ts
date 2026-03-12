@@ -7,6 +7,52 @@ import {
 } from "@/lib/workspace/active";
 import { NextResponse } from "next/server";
 
+const ANALYSIS_ID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Attempt to claim an analysis for a newly authenticated user.
+ * Non-fatal — a failed claim does not block the signup flow.
+ */
+async function claimAnalysis(
+  baseUrl: string,
+  analysisId: string,
+  userId: string
+): Promise<void> {
+  try {
+    const { createClient: createAdminSupa } = await import("@supabase/supabase-js");
+    const admin = createAdminSupa(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    // Guard: only claim if unclaimed
+    const { data: row } = await admin
+      .from("analysis_cache")
+      .select("claimed_user_id")
+      .eq("id", analysisId)
+      .maybeSingle();
+
+    if (!row) return; // analysis not found
+    if (row.claimed_user_id && row.claimed_user_id !== userId) return; // owned by another user
+
+    await Promise.allSettled([
+      admin
+        .from("analysis_cache")
+        .update({ claimed_user_id: userId })
+        .eq("id", analysisId)
+        .is("claimed_user_id", null),
+      admin
+        .from("analysis_queue")
+        .update({ claimed_user_id: userId })
+        .eq("id", analysisId)
+        .is("claimed_user_id", null),
+    ]);
+  } catch (err) {
+    console.error("[AuthCallback] claimAnalysis error:", err);
+  }
+}
+
 function getBaseUrl(requestUrl: string): string {
   // 1. Explicit site URL (set by admin)
   if (process.env.NEXT_PUBLIC_SITE_URL) {
@@ -34,6 +80,10 @@ export async function GET(request: Request) {
   // If a "next" param points to a specific non-dashboard page (e.g. /auth/verified),
   // honour it. Otherwise let the onboarding resolver decide.
   const explicitNext = searchParams.get("next");
+  // analysis_id: persist the analyzer funnel unlock through signup
+  const rawAnalysisId = searchParams.get("analysis_id") ?? null;
+  const analysisId =
+    rawAnalysisId && ANALYSIS_ID_RE.test(rawAnalysisId) ? rawAnalysisId : null;
   const baseUrl = getBaseUrl(request.url);
 
   if (code) {
@@ -41,6 +91,18 @@ export async function GET(request: Request) {
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
+      // ── Analyzer unlock flow ───────────────────────────────────────────
+      // If the user arrived from the teaser report's "Unlock" CTA, claim the
+      // analysis and redirect straight back to the report — do NOT start
+      // onboarding before the user sees their report (per spec).
+      if (analysisId) {
+        await claimAnalysis(baseUrl, analysisId, data.user.id);
+        const res = NextResponse.redirect(
+          `${baseUrl}/en/analyzer/${analysisId}?claimed=1`
+        );
+        return res;
+      }
+
       // If an explicit non-default next was requested (e.g. email-verify flow), use it
       if (explicitNext && explicitNext !== "/dashboard") {
         return NextResponse.redirect(`${baseUrl}${explicitNext}`);

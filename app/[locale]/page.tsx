@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
+import StickyAnalyzerBanner from "@/components/analyzer/StickyAnalyzerBanner";
 import RocketCanvas from "@/components/RocketCanvas";
 import TestimonialGrid from "@/components/TestimonialGrid";
 import FinalCTA from "@/components/FinalCTA";
@@ -37,6 +38,7 @@ export default function Home() {
     <main className="bg-white min-h-screen relative">
       <DynamicSEO />
       <Navbar />
+      <StickyAnalyzerBanner />
 
       <div ref={containerRef} className="relative" style={{ height: "500vh" }}>
         <div className="sticky top-0 h-screen w-full overflow-hidden">
