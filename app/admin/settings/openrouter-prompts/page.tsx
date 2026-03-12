@@ -668,7 +668,7 @@ function AuditLogViewer() {
                     debugParsed =
                       typeof entry.debug_data === "string"
                         ? JSON.parse(entry.debug_data)
-                        : (entry.debug_data as typeof debugParsed);
+                        : (entry.debug_data as unknown as typeof debugParsed);
                   } catch {
                     // ignore
                   }
