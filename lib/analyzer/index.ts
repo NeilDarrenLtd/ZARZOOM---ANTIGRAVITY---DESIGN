@@ -22,9 +22,11 @@ export type {
   StatusResponse,
   WebhookEventType,
   AnalysisWebhookPayload,
+  ProfileSignals,
 } from "./types";
 
 export {
+  ProfileSignalsSchema,
   SUPPORTED_PLATFORMS,
   AnalysisStatusSchema,
   InstantSchema,
@@ -44,7 +46,7 @@ export {
   detectPlatform,
   extractUsername,
   extractKeywords,
-  computeCreatorScore,
+  estimatePostingFrequency,
 } from "./instantEngine";
 
 // AI analysis + normalizer

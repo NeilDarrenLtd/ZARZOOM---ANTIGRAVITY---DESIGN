@@ -122,10 +122,46 @@ export type RawAiOutput = z.infer<typeof RawAiOutputSchema>;
 // Request / response schemas for the API routes
 // ============================================================================
 
+// ============================================================================
+// Profile signals — scraped metadata passed into the instant engine
+// All fields are optional: the engine degrades gracefully on partial data
+// ============================================================================
+
+export const ProfileSignalsSchema = z.object({
+  /** URL of the profile being analysed */
+  profile_url: z.string().url(),
+  /** Whether the account has a profile picture */
+  has_profile_image: z.boolean().optional(),
+  /** Raw character length of the bio / description */
+  bio_length: z.number().int().min(0).optional(),
+  /** Whether the profile contains an external link (website/linktree etc.) */
+  has_external_link: z.boolean().optional(),
+  /** Total number of posts / videos / pins visible */
+  post_count: z.number().int().min(0).optional(),
+  /** Follower count — used to infer posting frequency tier */
+  follower_count: z.number().int().min(0).optional(),
+  /** Raw bio text, used for keyword extraction */
+  bio_text: z.string().optional(),
+  /** Display name / full name shown on profile */
+  display_name: z.string().optional(),
+  /** Account handle / username without @ */
+  username: z.string().optional(),
+  /** Whether the account is verified */
+  is_verified: z.boolean().optional(),
+  /** Number of accounts this profile follows */
+  following_count: z.number().int().min(0).optional(),
+  /** Average post engagement rate 0–1, if available */
+  engagement_rate: z.number().min(0).max(1).optional(),
+});
+
+export type ProfileSignals = z.infer<typeof ProfileSignalsSchema>;
+
 /** POST /api/analyzer/start */
 export const StartRequestSchema = z.object({
   profile_url: z.string().url("Must be a valid URL"),
   email: z.string().email().optional(),
+  /** Optional pre-scraped metadata — enriches instant engine output */
+  signals: ProfileSignalsSchema.optional(),
 });
 export type StartRequest = z.infer<typeof StartRequestSchema>;
 
