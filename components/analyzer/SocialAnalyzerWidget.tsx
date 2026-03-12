@@ -416,7 +416,7 @@ export default function SocialAnalyzerWidget() {
       aria-label="Social media profile analyzer"
     >
       <div className="rounded-2xl overflow-hidden shadow-2xl"
-        style={{ background: "linear-gradient(145deg, #0f1117 0%, #171c26 100%)", border: "1px solid rgba(255,255,255,0.08)" }}>
+        style={{ background: "linear-gradient(145deg, #1a1f2e 0%, #232a3b 100%)", border: "1px solid rgba(255,255,255,0.16)", boxShadow: "0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(22,163,74,0.08)" }}>
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-4 pb-0">

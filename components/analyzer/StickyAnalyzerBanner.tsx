@@ -49,8 +49,9 @@ export default function StickyAnalyzerBanner() {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="group flex items-center gap-3 rounded-2xl px-5 py-3.5 shadow-2xl transition-all hover:scale-[1.02]"
               style={{
-                background: "linear-gradient(145deg, #0f1117 0%, #171c26 100%)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "linear-gradient(145deg, #1a1f2e 0%, #232a3b 100%)",
+                border: "1px solid rgba(255,255,255,0.16)",
+                boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
               }}
               aria-label="Expand analyzer"
             >
@@ -104,8 +105,9 @@ export default function StickyAnalyzerBanner() {
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="pointer-events-auto w-full flex items-center justify-center gap-3 py-4 px-5 shadow-2xl"
               style={{
-                background: "linear-gradient(180deg, #0f1117 0%, #171c26 100%)",
-                borderTop: "1px solid rgba(255,255,255,0.1)",
+                background: "linear-gradient(180deg, #1a1f2e 0%, #232a3b 100%)",
+                borderTop: "1px solid rgba(255,255,255,0.16)",
+                boxShadow: "0 -4px 30px rgba(0,0,0,0.5)",
               }}
               aria-label="Expand analyzer"
             >
