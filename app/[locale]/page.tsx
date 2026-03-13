@@ -47,7 +47,7 @@ export default function Home() {
           {/* Text Overlay: Hero */}
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale }}
-            className="absolute inset-0 flex flex-col items-center justify-start pt-[14vh] lg:justify-center lg:pt-[20vh] z-10 pointer-events-none"
+            className="absolute inset-0 flex flex-col items-center justify-start pt-[4vh] lg:justify-center lg:pt-[20vh] z-10 pointer-events-none"
           >
             <div className="rounded-2xl border border-green-600 bg-white/40 backdrop-blur-sm px-14 py-3 md:px-16 md:py-8">
               <h1 className="text-6xl sm:text-7xl md:text-9xl font-bold text-green-600 text-center tracking-tight drop-shadow-lg">

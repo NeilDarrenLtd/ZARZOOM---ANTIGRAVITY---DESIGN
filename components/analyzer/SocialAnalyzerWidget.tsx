@@ -435,14 +435,14 @@ export default function SocialAnalyzerWidget() {
         style={{ background: "linear-gradient(145deg, #1a1f2e 0%, #232a3b 100%)", border: "1px solid rgba(255,255,255,0.16)", boxShadow: "0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(22,163,74,0.08)" }}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-4 pb-0">
+        <div className="flex items-center justify-between px-4 pt-3 pb-0">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-green-400" aria-hidden="true" />
             <span className="text-xs font-semibold tracking-widest uppercase text-green-400">Free AI Audit</span>
           </div>
         </div>
 
-        <div className="px-5 pt-3 pb-5">
+        <div className="px-4 pt-2 pb-4">
           <AnimatePresence mode="wait">
 
             {/* ── STAGE 0: Input ────────────────────────────────────────── */}

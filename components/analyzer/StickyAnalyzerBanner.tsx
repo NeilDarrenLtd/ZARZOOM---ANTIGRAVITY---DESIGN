@@ -13,6 +13,32 @@ export default function StickyAnalyzerBanner() {
     setMounted(true);
   }, []);
 
+  // Mobile-only: auto-minimise when user starts scrolling down,
+  // and re-expand when they return to the very top.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleScroll = () => {
+      if (window.innerWidth >= 1024) return; // ignore on desktop / large screens
+
+      const y = window.scrollY;
+
+      // Just after user starts scrolling down, minimise if currently expanded
+      if (y > 40 && expanded) {
+        setExpanded(false);
+        return;
+      }
+
+      // When user scrolls back to the very top, re-expand if currently minimised
+      if (y < 10 && !expanded) {
+        setExpanded(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [expanded]);
+
   if (!mounted) return null;
 
   return (
@@ -84,19 +110,18 @@ export default function StickyAnalyzerBanner() {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="pointer-events-auto w-full px-3 pb-3"
             >
-              <button
-                onClick={() => setExpanded(false)}
-                className="w-full flex items-center justify-center py-2.5 mb-1"
-                aria-label="Minimise analyzer"
-              >
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}
+              <div className="w-full max-w-[520px] mx-auto relative">
+                <button
+                  onClick={() => setExpanded(false)}
+                  className="absolute -top-4 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+                  style={{
+                    background: "#1c2029",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
+                  aria-label="Minimise analyzer"
                 >
-                  <ChevronDown className="w-5 h-5 text-white/80" />
-                </div>
-              </button>
-              <div className="w-full max-w-[520px] mx-auto">
+                  <ChevronDown className="w-4 h-4 text-white/80" />
+                </button>
                 <SocialAnalyzerWidget />
               </div>
             </motion.div>
