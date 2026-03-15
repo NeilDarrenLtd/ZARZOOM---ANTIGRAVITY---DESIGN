@@ -10,7 +10,7 @@ import {
 } from "react";
 import { usePathname } from "next/navigation";
 import { defaultLanguage, getSupportedLanguageCode, languages } from "./languages";
-import { getDefaultTranslationsSync, loadLocale } from "./load";
+import { getDefaultTranslations, getDefaultTranslationsSync, loadLocale } from "./load";
 import { devCheckPricing } from "./validate-no-pricing";
 
 const COOKIE_NAME = "locale";
@@ -45,12 +45,20 @@ const I18nContext = createContext<I18nContextType | null>(null);
 
 /* ---------- Translation cache ---------- */
 
+// Start with empty (or already-cached) English; real data loads asynchronously
+// to avoid webpack inlining large JSON strings at build time.
 const enTranslationsRaw = getDefaultTranslationsSync();
 
-// Pre-populate with English for synchronous first render
+// Pre-populate with English for synchronous first render (will be {} on cold
+// start; getDefaultTranslations() below fills it after mount).
 const translationCache: Record<string, Translations> = {
   en: enTranslationsRaw,
 };
+
+// Eagerly warm the English cache via dynamic import so it's ready quickly.
+getDefaultTranslations().then((translations) => {
+  translationCache["en"] = translations;
+});
 
 if (process.env.NODE_ENV === "development") {
   devCheckPricing(enTranslationsRaw, "en");

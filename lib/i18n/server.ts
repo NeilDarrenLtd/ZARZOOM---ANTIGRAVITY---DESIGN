@@ -5,7 +5,7 @@
  */
 
 import { cookies, headers } from "next/headers";
-import { getDefaultTranslationsSync, loadLocale } from "./load";
+import { getDefaultTranslationsSync, getDefaultTranslations, loadLocale } from "./load";
 import { languages } from "./languages";
 
 const SUPPORTED_CODES = new Set(languages.map((l) => l.code));
@@ -30,16 +30,16 @@ export async function getPreferredLocale(): Promise<string | undefined> {
 type Translations = Record<string, unknown>;
 type TranslationKey = string;
 
-const translationCache: Record<string, Translations> = {
-  en: getDefaultTranslationsSync(),
-};
+const translationCache: Record<string, Translations> = {};
 
 async function loadServerTranslations(locale: string): Promise<Translations> {
   if (translationCache[locale]) {
     return translationCache[locale];
   }
 
-  const translations = await loadLocale(locale);
+  const translations = locale === "en"
+    ? await getDefaultTranslations()
+    : await loadLocale(locale);
   translationCache[locale] = translations;
   return translations;
 }

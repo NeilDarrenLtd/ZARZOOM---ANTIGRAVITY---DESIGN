@@ -3,15 +3,13 @@
  * with one shared English-only admin file. Admin strings always come
  * from locales/admin.json. Fallback to legacy single-file per locale
  * when split files are missing.
+ *
+ * All JSON files are loaded via dynamic import() so webpack does not
+ * inline them as large strings, avoiding the PackFileCacheStrategy
+ * serialization warning.
  */
 
-import enSite from "@/locales/en/site.json";
-import enApp from "@/locales/en/app.json";
-import sharedAdmin from "@/locales/admin.json";
-
 export type Translations = Record<string, unknown>;
-
-const NAMESPACES = ["site", "app", "admin"] as const;
 
 function mergeNamespaces(
   site: Record<string, unknown>,
@@ -21,26 +19,51 @@ function mergeNamespaces(
   return { ...site, ...app, ...admin };
 }
 
-/** Synchronous default (English) for first paint. Used by client context only. */
-export function getDefaultTranslationsSync(): Translations {
+const localeCache: Record<string, Translations> = {};
+
+async function loadAdminTranslations(): Promise<Record<string, unknown>> {
+  const mod = await import("@/locales/admin.json");
+  return mod.default as Record<string, unknown>;
+}
+
+/**
+ * Async default (English) for first paint. Used by client context only.
+ * Replaced the old synchronous version to avoid static imports of large JSON.
+ */
+export async function getDefaultTranslations(): Promise<Translations> {
+  const [siteMod, appMod, adminMod] = await Promise.all([
+    import("@/locales/en/site.json"),
+    import("@/locales/en/app.json"),
+    loadAdminTranslations(),
+  ]);
   return mergeNamespaces(
-    enSite as Record<string, unknown>,
-    enApp as Record<string, unknown>,
-    sharedAdmin as Record<string, unknown>
+    siteMod.default as Record<string, unknown>,
+    appMod.default as Record<string, unknown>,
+    adminMod
   );
 }
 
-const localeCache: Record<string, Translations> = {};
+/**
+ * Synchronous default kept for backwards-compat. Returns an empty object
+ * on first call; callers should prefer getDefaultTranslations() (async).
+ */
+export function getDefaultTranslationsSync(): Translations {
+  // Return cached English if already loaded, otherwise empty (will be
+  // filled on next async load). This avoids the static large-string import.
+  return localeCache["en"] ?? {};
+}
 
 /**
  * Load translations for a locale. Prefers split files (locales/<locale>/site.json, app.json),
  * always merges in shared admin from locales/admin.json. Falls back to legacy
- * locales/<locale>.json, then to English (sync default).
+ * locales/<locale>.json, then to English.
  */
 export async function loadLocale(locale: string): Promise<Translations> {
   if (localeCache[locale]) {
     return localeCache[locale];
   }
+
+  const adminMod = await loadAdminTranslations();
 
   try {
     const [siteMod, appMod] = await Promise.all([
@@ -51,7 +74,7 @@ export async function loadLocale(locale: string): Promise<Translations> {
       const merged = mergeNamespaces(
         siteMod.default as Record<string, unknown>,
         appMod.default as Record<string, unknown>,
-        sharedAdmin as Record<string, unknown>
+        adminMod
       );
       localeCache[locale] = merged;
       return merged;
@@ -63,11 +86,12 @@ export async function loadLocale(locale: string): Promise<Translations> {
   try {
     const mod = await import(`@/locales/${locale}.json`);
     const legacy = mod.default as Translations;
-    const translations = { ...legacy, ...(sharedAdmin as Record<string, unknown>) };
+    const translations = { ...legacy, ...adminMod };
     localeCache[locale] = translations;
     return translations;
   } catch {
-    const fallback = getDefaultTranslationsSync();
+    // Fall back to English
+    const fallback = await getDefaultTranslations();
     localeCache[locale] = fallback;
     return fallback;
   }
