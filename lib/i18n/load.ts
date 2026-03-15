@@ -4,10 +4,17 @@
  * from locales/admin.json. Fallback to legacy single-file per locale
  * when split files are missing.
  *
- * NOTE: All locale JSON files are loaded via dynamic import() to avoid
- * webpack serializing large strings (>128 KiB) into its pack-file cache,
- * which causes a performance warning and slows cold-start deserialization.
+ * NOTE: Large locale JSON files are intentionally loaded via fs.readFileSync /
+ * dynamic import() rather than static import / require() with literal paths.
+ * Webpack statically resolves literal require() / import paths and inlines the
+ * entire JSON string into the module chunk, which triggers:
+ *   "[webpack.cache.PackFileCacheStrategy] Serializing big strings (128kiB)…"
+ * Using fs.readFileSync is opaque to webpack's static analyser, so the content
+ * is never bundled — it is read from disk at runtime instead.
  */
+
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 export type Translations = Record<string, unknown>;
 
@@ -19,14 +26,17 @@ function mergeNamespaces(
   return { ...site, ...app, ...admin };
 }
 
+/** Read a locale JSON file from disk without bundling it into the webpack chunk. */
+function readLocaleFile(relativePath: string): Record<string, unknown> {
+  const absPath = join(process.cwd(), relativePath);
+  return JSON.parse(readFileSync(absPath, "utf8")) as Record<string, unknown>;
+}
+
 /** Synchronous default (English) for first paint. Used by client context only. */
 export function getDefaultTranslationsSync(): Translations {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const enSite = require("@/locales/en/site.json") as Record<string, unknown>;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const enApp = require("@/locales/en/app.json") as Record<string, unknown>;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const sharedAdmin = require("@/locales/admin.json") as Record<string, unknown>;
+  const enSite = readLocaleFile("locales/en/site.json");
+  const enApp = readLocaleFile("locales/en/app.json");
+  const sharedAdmin = readLocaleFile("locales/admin.json");
   return mergeNamespaces(enSite, enApp, sharedAdmin);
 }
 
@@ -36,40 +46,37 @@ const localeCache: Record<string, Translations> = {};
  * Load translations for a locale. Prefers split files (locales/<locale>/site.json, app.json),
  * always merges in shared admin from locales/admin.json. Falls back to legacy
  * locales/<locale>.json, then to English (sync default).
+ *
+ * All reads use readLocaleFile (fs.readFileSync) so webpack never inlines the
+ * JSON content into the bundle — the files are read from disk at runtime.
  */
 export async function loadLocale(locale: string): Promise<Translations> {
   if (localeCache[locale]) {
     return localeCache[locale];
   }
 
-  const sharedAdminMod = await import("@/locales/admin.json");
-  const sharedAdmin = sharedAdminMod.default as Record<string, unknown>;
+  // Read admin JSON via fs — opaque to webpack static analysis
+  const sharedAdmin = readLocaleFile("locales/admin.json");
 
+  // Try split site + app files first
   try {
-    const [siteMod, appMod] = await Promise.all([
-      import(`@/locales/${locale}/site.json`).catch(() => null),
-      import(`@/locales/${locale}/app.json`).catch(() => null),
-    ]);
-    if (siteMod?.default && appMod?.default) {
-      const merged = mergeNamespaces(
-        siteMod.default as Record<string, unknown>,
-        appMod.default as Record<string, unknown>,
-        sharedAdmin
-      );
-      localeCache[locale] = merged;
-      return merged;
-    }
+    const siteData = readLocaleFile(`locales/${locale}/site.json`);
+    const appData = readLocaleFile(`locales/${locale}/app.json`);
+    const merged = mergeNamespaces(siteData, appData, sharedAdmin);
+    localeCache[locale] = merged;
+    return merged;
   } catch {
-    // Fall through to legacy
+    // Fall through to legacy single-file
   }
 
+  // Try legacy single-file (locales/<locale>.json)
   try {
-    const mod = await import(`@/locales/${locale}.json`);
-    const legacy = mod.default as Translations;
-    const translations = { ...legacy, ...sharedAdmin };
+    const legacyData = readLocaleFile(`locales/${locale}.json`);
+    const translations: Translations = { ...legacyData, ...sharedAdmin };
     localeCache[locale] = translations;
     return translations;
   } catch {
+    // Final fallback: English defaults
     const fallback = getDefaultTranslationsSync();
     localeCache[locale] = fallback;
     return fallback;
