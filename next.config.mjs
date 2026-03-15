@@ -1,6 +1,25 @@
 import { createRequire } from "node:module";
+import { mkdirSync } from "node:fs";
+import { join } from "node:path";
 
 const require = createRequire(import.meta.url);
+
+// Pre-create all known webpack cache directories so the atomic rename
+// (*.pack.gz_ -> *.pack.gz) never fails with ENOENT on first write.
+// Next.js 15 creates the `client-development-fallback` compiler before
+// the webpack callback runs, so the directory must exist beforehand.
+const cacheBase = join(process.cwd(), ".next/cache/webpack");
+for (const name of [
+  "client-development",
+  "client-development-fallback",
+  "server-development",
+]) {
+  try {
+    mkdirSync(join(cacheBase, name), { recursive: true });
+  } catch {
+    // Ignore — directory already exists or filesystem is read-only.
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -14,20 +33,14 @@ const nextConfig = {
       config.plugins.push(new MiniCssExtractPlugin());
     }
 
-    // Use memory-only cache. The sandbox filesystem does not support the
-    // atomic rename webpack uses to commit pack files (*.pack.gz_ -> *.pack.gz),
-    // which produces repeated ENOENT errors for every compiler instance.
+    // Use memory-only cache for all compilers to avoid filesystem atomic-rename
+    // failures (ENOENT: *.pack.gz_ -> *.pack.gz) in the sandbox environment.
     config.cache = { type: "memory" };
 
     return config;
   },
 
   experimental: {
-    // Disable the webpack build worker so all compilers — including the
-    // internal `client-development-fallback` compiler — run in the same
-    // process and pick up the memory-cache override set in the webpack
-    // callback above, rather than spawning a separate worker with its
-    // own default filesystem cache.
     webpackBuildWorker: false,
   },
 };
