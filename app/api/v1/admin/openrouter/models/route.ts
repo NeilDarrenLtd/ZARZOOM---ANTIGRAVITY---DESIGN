@@ -1,23 +1,52 @@
 /**
  * GET /api/v1/admin/openrouter/models
  *
- * Fetches the live list of available models from the OpenRouter API.
- * Admin-only. Uses the saved API key from wizard_autofill_settings or
- * the OPENROUTER_API_KEY environment variable.
+ * Fetches the live list of available models from the OpenRouter API with full
+ * metadata: pricing (input/output per 1M tokens), provider, context_length,
+ * capabilities. Admin-only.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isUserAdmin } from "@/lib/auth/rbac";
 
+interface OpenRouterPricing {
+  prompt?: string | number;
+  completion?: string | number;
+}
+
+interface OpenRouterArchitecture {
+  input_modalities?: string[];
+  output_modalities?: string[];
+  modality?: string | null;
+}
+
 interface OpenRouterModel {
   id: string;
   name: string;
-  pricing?: {
-    prompt?: string;
-    completion?: string;
-  };
-  context_length?: number;
+  description?: string | null;
+  pricing?: OpenRouterPricing | OpenRouterPricing[] | null;
+  context_length?: number | null;
+  architecture?: OpenRouterArchitecture | null;
+  supported_parameters?: string[] | null;
+}
+
+/** Parse price (per-token USD) to per-1M-tokens USD for display. */
+function perMillion(perToken: string | number | undefined): number | null {
+  if (perToken === undefined || perToken === null) return null;
+  const n = typeof perToken === "string" ? parseFloat(perToken) : perToken;
+  if (Number.isNaN(n)) return null;
+  return n * 1_000_000;
+}
+
+/** Derive provider display name from model id (e.g. "openai/gpt-4" -> "OpenAI"). */
+function providerFromId(id: string): string {
+  const prefix = id.split("/")[0];
+  if (!prefix) return "Unknown";
+  const name = prefix
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return name;
 }
 
 export async function GET(req: NextRequest) {
@@ -43,7 +72,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Resolve API key
     const { data: settings } = await supabase
       .from("wizard_autofill_settings")
       .select("openrouter_api_key")
@@ -94,14 +122,30 @@ export async function GET(req: NextRequest) {
     const json = await response.json();
     const rawModels: OpenRouterModel[] = json.data ?? [];
 
-    const models = rawModels
-      .map((m) => ({
+    const models = rawModels.map((m) => {
+      const pricing = Array.isArray(m.pricing) ? m.pricing[0] : m.pricing;
+      const inputPerM = perMillion(pricing?.prompt);
+      const outputPerM = perMillion(pricing?.completion);
+      const capabilities: string[] = [];
+      const arch = m.architecture;
+      if (arch?.input_modalities?.includes("image")) capabilities.push("Vision");
+      if (arch?.output_modalities?.includes("image")) capabilities.push("Image Out");
+      const ctx = m.context_length ?? 0;
+      if (ctx >= 100_000) capabilities.push("Long Context");
+      if (m.supported_parameters?.includes("web_search_options")) capabilities.push("Search");
+      const provider = providerFromId(m.id);
+
+      return {
         id: m.id,
         name: m.name || m.id,
+        provider,
         context_length: m.context_length ?? null,
-        pricing: m.pricing ?? null,
-      }))
-      .sort((a, b) => a.id.localeCompare(b.id));
+        input_cost_per_million: inputPerM,
+        output_cost_per_million: outputPerM,
+        capabilities: capabilities.length ? capabilities : null,
+        description: m.description ?? null,
+      };
+    }).sort((a, b) => a.id.localeCompare(b.id));
 
     return NextResponse.json({ data: models });
   } catch (err) {

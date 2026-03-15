@@ -48,10 +48,19 @@ const FALLBACK_MODEL = "openai/gpt-4.1-mini";
 const MODELS_CACHE_KEY = "zarzoom_openrouter_models";
 const MODELS_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-interface CachedModelEntry {
+export interface ModelMetadata {
   id: string;
   name: string;
+  provider?: string | null;
+  context_length?: number | null;
+  input_cost_per_million?: number | null;
+  output_cost_per_million?: number | null;
+  capabilities?: string[] | null;
+  description?: string | null;
 }
+
+/** Backward compatibility: CachedModelEntry is ModelMetadata. */
+type CachedModelEntry = ModelMetadata;
 
 function loadCachedModels(): CachedModelEntry[] | null {
   try {
@@ -77,6 +86,62 @@ function saveCachedModels(models: CachedModelEntry[]) {
   } catch {
     // localStorage full or unavailable
   }
+}
+
+/** Format cost per 1M tokens as USD string. */
+function formatCostPerMillion(cost: number | null | undefined): string {
+  if (cost == null || Number.isNaN(cost)) return "—";
+  if (cost === 0) return "$0";
+  if (cost < 0.01) return `$${cost.toFixed(4)}`;
+  return `$${cost.toFixed(2)}`;
+}
+
+/** Capability tags: merge API capabilities with static overrides for known models. */
+const CAPABILITY_OVERRIDES: Record<string, string[]> = {
+  "openai/gpt-4.1-mini": ["Fast", "Cheap"],
+  "openai/gpt-4o-mini": ["Fast", "Cheap"],
+  "anthropic/claude-3.5-sonnet": ["Reasoning", "High Quality"],
+  "anthropic/claude-3-opus": ["Reasoning", "High Quality"],
+  "perplexity/sonar-medium": ["Search", "Research"],
+  "perplexity/sonar": ["Search", "Research"],
+  "google/gemini-2.0-flash": ["Fast", "Vision"],
+};
+
+function getCapabilityTags(m: CachedModelEntry): string[] {
+  const fromApi = m.capabilities ?? [];
+  const overrides = CAPABILITY_OVERRIDES[m.id];
+  if (overrides) {
+    const set = new Set([...fromApi, ...overrides]);
+    return Array.from(set);
+  }
+  return fromApi;
+}
+
+/** Recommendation labels for known models. */
+const RECOMMENDATION_LABELS: Record<string, string> = {
+  "openai/gpt-4.1-mini": "Recommended for Analysis · Cheap / Fast",
+  "openai/gpt-4o-mini": "Recommended for Analysis · Cheap / Fast",
+  "anthropic/claude-3.5-sonnet": "Recommended for Analysis · Best Quality",
+  "perplexity/sonar-medium": "Recommended for Research · Web Search",
+  "perplexity/sonar": "Recommended for Research · Web Search",
+};
+
+function getRecommendationLabel(id: string): string | null {
+  return RECOMMENDATION_LABELS[id] ?? null;
+}
+
+/** Estimate cost in USD for given input/output tokens and model pricing. */
+function estimateCost(
+  inputTokens: number,
+  outputTokens: number,
+  model: CachedModelEntry | undefined
+): number | null {
+  if (!model) return null;
+  const inPerM = model.input_cost_per_million ?? 0;
+  const outPerM = model.output_cost_per_million ?? 0;
+  const inCost = inPerM * (inputTokens / 1_000_000);
+  const outCost = outPerM * (outputTokens / 1_000_000);
+  return inCost + outCost;
 }
 
 interface SaveState {
@@ -165,7 +230,16 @@ export default function OpenRouterPromptsPage() {
       }
       const body = await res.json();
       const models: CachedModelEntry[] = (body.data ?? []).map(
-        (m: { id: string; name: string }) => ({ id: m.id, name: m.name })
+        (m: ModelMetadata) => ({
+          id: m.id,
+          name: m.name,
+          provider: m.provider ?? null,
+          context_length: m.context_length ?? null,
+          input_cost_per_million: m.input_cost_per_million ?? null,
+          output_cost_per_million: m.output_cost_per_million ?? null,
+          capabilities: m.capabilities ?? null,
+          description: m.description ?? null,
+        })
       );
       setModelList(models);
       saveCachedModels(models);
@@ -311,9 +385,9 @@ export default function OpenRouterPromptsPage() {
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-zinc-900">OpenRouter Prompts</h1>
+            <h1 className="text-xl font-bold text-zinc-900">AI Model Control Panel</h1>
             <p className="text-sm text-zinc-500">
-              Configure AI prompts for wizard auto-fill feature
+              OpenRouter prompts and model selection for wizard auto-fill. Choose models, see pricing, and estimate costs.
             </p>
           </div>
         </div>
@@ -616,6 +690,9 @@ export default function OpenRouterPromptsPage() {
             </kbd>
             <span>to save</span>
           </div>
+
+          {/* Token Cost Estimator */}
+          <TokenCostEstimatorPanel modelList={modelList} defaultModelId={model || FALLBACK_MODEL} />
         </div>
       )}
 
@@ -819,7 +896,7 @@ function TestPromptPanel({
 }
 
 /* ================================================================== */
-/*  ModelSelect Component                                               */
+/*  ModelSelect Component (enhanced with metadata, tooltips, tags)     */
 /* ================================================================== */
 
 interface ModelSelectProps {
@@ -830,37 +907,122 @@ interface ModelSelectProps {
 }
 
 function ModelSelect({ value, onChange, modelList, placeholder }: ModelSelectProps) {
+  const [open, setOpen] = useState(false);
   const hasModels = modelList.length > 0;
   const currentInList = hasModels && modelList.some((m) => m.id === value);
+  const selectedModel = hasModels ? modelList.find((m) => m.id === value) : null;
   const showSavedCustom = !!value && !currentInList;
 
-  const selectValue = currentInList ? value : showSavedCustom ? "__saved__" : "";
+  const triggerLabel = !value
+    ? (placeholder ?? `Use default (${FALLBACK_MODEL})`)
+    : selectedModel
+      ? selectedModel.name
+      : value;
+
+  const triggerTitle = selectedModel
+    ? [
+        `Context: ${selectedModel.context_length != null ? `${(selectedModel.context_length / 1000).toFixed(0)}k` : "—"}`,
+        `Provider: ${selectedModel.provider ?? "—"}`,
+        `Input: ${formatCostPerMillion(selectedModel.input_cost_per_million)} / 1M tokens`,
+        `Output: ${formatCostPerMillion(selectedModel.output_cost_per_million)} / 1M tokens`,
+        getCapabilityTags(selectedModel).length ? `Capabilities: ${getCapabilityTags(selectedModel).join(", ")}` : "",
+      ].filter(Boolean).join("\n")
+    : showSavedCustom
+      ? `Saved model (may use fallback ${FALLBACK_MODEL} if not in list)`
+      : "";
 
   return (
-    <div className="flex-1 flex gap-2">
-      <select
-        value={selectValue}
-        onChange={(e) => {
-          const v = e.target.value;
-          if (v === "__saved__") return;
-          onChange(v);
-        }}
-        className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-      >
-        <option value="">{placeholder ?? `-- Use default (${FALLBACK_MODEL}) --`}</option>
-        {showSavedCustom && (
-          <option value="__saved__">{value} (saved)</option>
+    <div className="flex-1 flex gap-2 relative">
+      <div className="flex-1 relative">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          title={triggerTitle}
+          className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm text-left font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent flex items-center justify-between gap-2"
+        >
+          <span className="truncate">{triggerLabel}</span>
+          <ChevronDown className={`w-4 h-4 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+        {open && (
+          <>
+            <div
+              className="fixed inset-0 z-10"
+              aria-hidden
+              onClick={() => setOpen(false)}
+            />
+            <div className="absolute z-20 mt-1 w-full max-h-72 overflow-auto rounded-lg border border-zinc-200 bg-white shadow-lg py-1">
+              <button
+                type="button"
+                onClick={() => {
+                  onChange("");
+                  setOpen(false);
+                }}
+                className="w-full px-3 py-2.5 text-left text-sm text-zinc-600 hover:bg-zinc-50 border-b border-zinc-100"
+              >
+                {placeholder ?? `Use default (${FALLBACK_MODEL})`}
+              </button>
+              {showSavedCustom && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="w-full px-3 py-2.5 text-left text-sm font-mono bg-amber-50 hover:bg-amber-100 border-b border-zinc-100"
+                  title={`Saved model. Fallback ${FALLBACK_MODEL} used if not in list.`}
+                >
+                  {value} (saved)
+                </button>
+              )}
+              {hasModels
+                ? modelList.map((m) => {
+                    const tags = getCapabilityTags(m);
+                    const rec = getRecommendationLabel(m.id);
+                    const tooltip = [
+                      `Context: ${m.context_length != null ? `${(m.context_length / 1000).toFixed(0)}k` : "—"}`,
+                      `Provider: ${m.provider ?? "—"}`,
+                      `Input: ${formatCostPerMillion(m.input_cost_per_million)} / 1M`,
+                      `Output: ${formatCostPerMillion(m.output_cost_per_million)} / 1M`,
+                      tags.length ? `Capabilities: ${tags.join(", ")}` : "",
+                    ].filter(Boolean).join("\n");
+                    return (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => {
+                          onChange(m.id);
+                          setOpen(false);
+                        }}
+                        title={tooltip}
+                        className={`w-full px-3 py-2.5 text-left hover:bg-zinc-50 border-b border-zinc-50 last:border-0 ${value === m.id ? "bg-purple-50" : ""}`}
+                      >
+                        <div className="font-medium text-zinc-900 truncate">{m.name}</div>
+                        <div className="text-xs text-zinc-500 mt-0.5">
+                          {m.provider ?? "—"} · In: {formatCostPerMillion(m.input_cost_per_million)}/1M · Out: {formatCostPerMillion(m.output_cost_per_million)}/1M
+                        </div>
+                        {(tags.length > 0 || rec) && (
+                          <div className="flex flex-wrap gap-1 mt-1.5">
+                            {tags.map((t) => (
+                              <span key={t} className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 text-zinc-600">
+                                {t}
+                              </span>
+                            ))}
+                            {rec && (
+                              <span className="inline-flex px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-700">
+                                {rec}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })
+                : (
+                  <div className="px-3 py-4 text-xs text-zinc-500 text-center">
+                    Click Refresh Models to load options
+                  </div>
+                )}
+            </div>
+          </>
         )}
-        {hasModels ? (
-          modelList.map((m) => (
-            <option key={m.id} value={m.id}>
-              {m.id}
-            </option>
-          ))
-        ) : (
-          <option disabled>Click Refresh Models to load options</option>
-        )}
-      </select>
+      </div>
       {value && (
         <button
           type="button"
@@ -871,6 +1033,81 @@ function ModelSelect({ value, onChange, modelList, placeholder }: ModelSelectPro
           Clear
         </button>
       )}
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  Token Cost Estimator Panel                                        */
+/* ================================================================== */
+
+function TokenCostEstimatorPanel({
+  modelList,
+  defaultModelId,
+}: {
+  modelList: CachedModelEntry[];
+  defaultModelId: string;
+}) {
+  const [inputTokens, setInputTokens] = useState(2000);
+  const [outputTokens, setOutputTokens] = useState(1000);
+  const [modelId, setModelId] = useState(defaultModelId);
+
+  const effectiveModelId = modelList.some((m) => m.id === modelId) ? modelId : defaultModelId;
+  const model = modelList.find((m) => m.id === effectiveModelId) ?? null;
+  const cost = estimateCost(inputTokens, outputTokens, model ?? undefined);
+
+  return (
+    <div className="mt-6 p-5 rounded-xl bg-white border border-zinc-200">
+      <h3 className="text-sm font-semibold text-zinc-900 mb-3">Token Cost Estimator</h3>
+      <p className="text-xs text-zinc-500 mb-4">
+        Estimate cost in USD for a given model and token counts (pricing per 1M tokens from OpenRouter).
+      </p>
+      <div className="flex flex-wrap items-end gap-4">
+        <div>
+          <label className="block text-xs font-medium text-zinc-600 mb-1">Input tokens</label>
+          <input
+            type="number"
+            min={0}
+            step={100}
+            value={inputTokens}
+            onChange={(e) => setInputTokens(Number(e.target.value) || 0)}
+            className="w-32 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-zinc-600 mb-1">Output tokens</label>
+          <input
+            type="number"
+            min={0}
+            step={100}
+            value={outputTokens}
+            onChange={(e) => setOutputTokens(Number(e.target.value) || 0)}
+            className="w-32 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-zinc-600 mb-1">Model for estimate</label>
+          <select
+            value={effectiveModelId}
+            onChange={(e) => setModelId(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono min-w-[200px]"
+          >
+            {modelList.length === 0 ? (
+              <option value={defaultModelId}>{defaultModelId}</option>
+            ) : (
+              modelList.map((m) => (
+                <option key={m.id} value={m.id}>{m.name} · {m.provider ?? "—"}</option>
+              ))
+            )}
+          </select>
+        </div>
+        <div className="ml-2 px-4 py-2 rounded-lg bg-zinc-100 border border-zinc-200">
+          <span className="text-xs text-zinc-600">Estimated cost</span>
+          <div className="text-lg font-semibold text-zinc-900 font-mono">
+            {cost != null ? `$${cost < 0.01 ? cost.toFixed(4) : cost.toFixed(2)}` : "—"}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
