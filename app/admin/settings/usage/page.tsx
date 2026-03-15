@@ -30,11 +30,12 @@ export default function UsageLimitsSettingsPage() {
     async function load() {
       const result = await getSettings("usage_");
       if (result.settings) {
+        const settings = result.settings as Record<string, string>;
         setForm((prev) => {
           const next = { ...prev };
           for (const key of USAGE_KEYS) {
-            if (result.settings[key]) {
-              next[key] = result.settings[key];
+            if (settings[key]) {
+              next[key] = settings[key];
             }
           }
           return next;
