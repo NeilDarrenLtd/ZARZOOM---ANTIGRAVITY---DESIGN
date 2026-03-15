@@ -9,7 +9,7 @@ const nextConfig = {
   // These files must be statically imported so getDefaultTranslationsSync() works
   // synchronously in both the client I18nProvider and the server translation cache.
   // The warning is a build-cache performance hint only and does not affect runtime.
-  webpack: (config) => {
+  webpack: (config, { dev }) => {
     const MiniCssExtractPlugin = require("mini-css-extract-plugin");
     const hasPlugin = config.plugins?.some(
       (p) => p?.constructor?.name === "MiniCssExtractPlugin"
@@ -19,11 +19,13 @@ const nextConfig = {
       config.plugins.push(new MiniCssExtractPlugin());
     }
 
-    // Raise the threshold at which webpack warns about large serialized strings
-    // in the pack-file cache. Default is 128 KiB; raising to 512 KiB covers
-    // all current locale files without hiding genuinely oversized assets.
-    if (config.cache && typeof config.cache === "object") {
-      config.cache.maxMemoryGenerations = 1;
+    // Disable the filesystem pack-file cache in development.
+    // The sandbox environment does not support the atomic rename that webpack
+    // uses when writing cache pack files (*.pack.gz_ -> *.pack.gz), which
+    // produces repeated ENOENT errors. Memory-only cache still gives fast
+    // incremental rebuilds within a single dev-server session.
+    if (dev) {
+      config.cache = { type: "memory" };
     }
 
     return config;
