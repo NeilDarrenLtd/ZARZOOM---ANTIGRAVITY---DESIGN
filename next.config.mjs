@@ -14,7 +14,16 @@ const nextConfig = {
       config.plugins.push(new MiniCssExtractPlugin());
     }
 
-    config.cache = { type: "memory" };
+    // Switch to memory-only cache to prevent the ENOENT atomic-rename error
+    // (*.pack.gz_ -> *.pack.gz) that occurs when the sandbox filesystem wipes
+    // .next/cache between restarts. We mutate the existing cache object rather
+    // than replacing it so webpack retains all other properties (name, version,
+    // buildDependencies, etc.) that Next.js set before invoking this callback.
+    if (config.cache && typeof config.cache === "object") {
+      config.cache.type = "memory";
+    } else {
+      config.cache = { type: "memory" };
+    }
 
     return config;
   },
