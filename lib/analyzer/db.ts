@@ -41,6 +41,8 @@ export function buildProfileHash(platform: string, profileUrl: string): string {
 export interface CacheHit {
   id: string;
   status: "pending" | "completed" | "failed";
+  profile_url: string | null;
+  platform: string | null;
   instant_json: Instant | null;
   ui_json: AnalysisResult | null;
   analysis_json: unknown | null;
@@ -57,7 +59,7 @@ export async function getCacheEntry(
   const admin = getAdmin();
   const { data, error } = await admin
     .from("analysis_cache")
-    .select("id, status, instant_json, ui_json, analysis_json, expires_at")
+    .select("id, status, profile_url, platform, instant_json, ui_json, analysis_json, expires_at")
     .eq("profile_hash", profileHash)
     .gt("expires_at", new Date().toISOString())
     .maybeSingle();
@@ -228,7 +230,7 @@ export async function getCacheById(cacheId: string): Promise<CacheHit | null> {
   const admin = getAdmin();
   const { data, error } = await admin
     .from("analysis_cache")
-    .select("id, status, instant_json, ui_json, analysis_json, expires_at")
+    .select("id, status, profile_url, platform, instant_json, ui_json, analysis_json, expires_at")
     .eq("id", cacheId)
     .maybeSingle();
 
