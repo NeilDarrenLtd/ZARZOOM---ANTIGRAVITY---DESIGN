@@ -3,15 +3,13 @@
  * with one shared English-only admin file. Admin strings always come
  * from locales/admin.json. Fallback to legacy single-file per locale
  * when split files are missing.
+ *
+ * NOTE: All locale JSON files are loaded via dynamic import() to avoid
+ * webpack serializing large strings (>128 KiB) into its pack-file cache,
+ * which causes a performance warning and slows cold-start deserialization.
  */
 
-import enSite from "@/locales/en/site.json";
-import enApp from "@/locales/en/app.json";
-import sharedAdmin from "@/locales/admin.json";
-
 export type Translations = Record<string, unknown>;
-
-const NAMESPACES = ["site", "app", "admin"] as const;
 
 function mergeNamespaces(
   site: Record<string, unknown>,
@@ -23,11 +21,13 @@ function mergeNamespaces(
 
 /** Synchronous default (English) for first paint. Used by client context only. */
 export function getDefaultTranslationsSync(): Translations {
-  return mergeNamespaces(
-    enSite as Record<string, unknown>,
-    enApp as Record<string, unknown>,
-    sharedAdmin as Record<string, unknown>
-  );
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const enSite = require("@/locales/en/site.json") as Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const enApp = require("@/locales/en/app.json") as Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const sharedAdmin = require("@/locales/admin.json") as Record<string, unknown>;
+  return mergeNamespaces(enSite, enApp, sharedAdmin);
 }
 
 const localeCache: Record<string, Translations> = {};
@@ -42,6 +42,9 @@ export async function loadLocale(locale: string): Promise<Translations> {
     return localeCache[locale];
   }
 
+  const sharedAdminMod = await import("@/locales/admin.json");
+  const sharedAdmin = sharedAdminMod.default as Record<string, unknown>;
+
   try {
     const [siteMod, appMod] = await Promise.all([
       import(`@/locales/${locale}/site.json`).catch(() => null),
@@ -51,7 +54,7 @@ export async function loadLocale(locale: string): Promise<Translations> {
       const merged = mergeNamespaces(
         siteMod.default as Record<string, unknown>,
         appMod.default as Record<string, unknown>,
-        sharedAdmin as Record<string, unknown>
+        sharedAdmin
       );
       localeCache[locale] = merged;
       return merged;
@@ -63,7 +66,7 @@ export async function loadLocale(locale: string): Promise<Translations> {
   try {
     const mod = await import(`@/locales/${locale}.json`);
     const legacy = mod.default as Translations;
-    const translations = { ...legacy, ...(sharedAdmin as Record<string, unknown>) };
+    const translations = { ...legacy, ...sharedAdmin };
     localeCache[locale] = translations;
     return translations;
   } catch {
