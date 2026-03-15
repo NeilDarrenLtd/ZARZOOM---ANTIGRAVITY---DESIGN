@@ -1,18 +1,19 @@
 /**
- * Locale loader — client & server safe entry point.
+ * Locale loader — client & server safe.
  *
- * getDefaultTranslationsSync: used by the client-side I18nProvider for the
- *   synchronous first-render English fallback. Uses require() with computed
- *   paths so webpack does NOT statically inline the large JSON strings into
- *   the client bundle (which triggers the "Serializing big strings (128 KiB)"
- *   cache warning and bloats the bundle).
+ * The English default files (en/site.json, en/app.json, admin.json) are
+ * statically imported so they are always available synchronously for the
+ * first-render fallback used by both the client I18nProvider and the server
+ * translation cache. Non-English locales are loaded lazily via dynamic import.
  *
- * loadLocale: async loader for non-English locales. Safe to call from both
- *   server components and client context (it uses dynamic import() with a
- *   non-literal path, which webpack handles as a lazy chunk).
+ * The webpack PackFileCacheStrategy "Serializing big strings" warning that
+ * appears for these files is a build-cache performance hint only — it does not
+ * affect correctness or runtime behaviour. It is suppressed in next.config.mjs.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
+import enSiteJson from "@/locales/en/site.json";
+import enAppJson from "@/locales/en/app.json";
+import adminJson from "@/locales/admin.json";
 
 export type Translations = Record<string, unknown>;
 
@@ -24,27 +25,13 @@ function mergeNamespaces(
   return { ...site, ...app, ...admin };
 }
 
-/**
- * Load a locale JSON file via require() without webpack inlining the content.
- *
- * Webpack statically analyses require() calls with string literals and inlines
- * the resolved module content into the bundle. Using a computed (non-literal)
- * path makes the call opaque to the static analyser, so the file is resolved
- * at runtime via the Node.js module cache instead of being bundled inline.
- */
-function requireLocaleJson(prefix: string, file: string): Record<string, unknown> {
-  // Concatenating at runtime keeps the path non-literal for webpack.
-  const mod = require(prefix + file) as { default?: Record<string, unknown> } | Record<string, unknown>;
-  return ("default" in mod ? mod.default : mod) as Record<string, unknown>;
-}
-
-/** Synchronous default (English) for first render. Safe to call in client components. */
+/** Synchronous default (English) for first render. Safe for both client and server. */
 export function getDefaultTranslationsSync(): Translations {
-  const base = "@/locales/";
-  const enSite = requireLocaleJson(base + "en/", "site.json");
-  const enApp = requireLocaleJson(base + "en/", "app.json");
-  const sharedAdmin = requireLocaleJson(base, "admin.json");
-  return mergeNamespaces(enSite, enApp, sharedAdmin);
+  return mergeNamespaces(
+    enSiteJson as Record<string, unknown>,
+    enAppJson as Record<string, unknown>,
+    adminJson as Record<string, unknown>
+  );
 }
 
 const localeCache: Record<string, Translations> = {};
@@ -53,17 +40,13 @@ const localeCache: Record<string, Translations> = {};
  * Load translations for a locale. Prefers split files (locales/<locale>/site.json, app.json),
  * always merges in shared admin from locales/admin.json. Falls back to legacy
  * locales/<locale>.json, then to English defaults.
- *
- * Dynamic import() with a non-literal path is emitted as a lazy webpack chunk,
- * so the JSON is never bundled into the main bundle.
  */
 export async function loadLocale(locale: string): Promise<Translations> {
   if (localeCache[locale]) {
     return localeCache[locale];
   }
 
-  const base = "@/locales/";
-  const sharedAdmin = requireLocaleJson(base, "admin.json");
+  const sharedAdmin = adminJson as Record<string, unknown>;
 
   // Try split site + app files first
   try {
@@ -98,3 +81,4 @@ export async function loadLocale(locale: string): Promise<Translations> {
     return fallback;
   }
 }
+
