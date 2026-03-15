@@ -147,7 +147,7 @@ interface PromptConfig {
 async function loadPromptConfig(): Promise<PromptConfig> {
   const admin = getAdmin();
 
-  const FALLBACK_MODEL = "openai/gpt-4.1-mini";
+  const FALLBACK_MODEL = "openai/gpt-4o-mini";
 
   const { data } = await admin
     .from("wizard_autofill_settings")
