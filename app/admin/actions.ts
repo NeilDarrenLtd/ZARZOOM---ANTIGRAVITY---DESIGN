@@ -46,7 +46,7 @@ export async function getSettings(prefix: string) {
     .like("key", `${prefix}%`)
     .order("key");
 
-  if (error) return { error: error.message, settings: {} };
+  if (error) return { error: error.message, settings: {} as Record<string, string> };
 
   const settings: Record<string, string> = {};
   for (const row of data || []) {
