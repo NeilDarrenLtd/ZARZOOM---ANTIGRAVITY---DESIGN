@@ -66,13 +66,59 @@ export async function getCacheEntry(
   return data as CacheHit;
 }
 
+/**
+ * Debug helper: read back a cache row by id without any expires_at filtering.
+ * Used by analyzer routes to trace row lifecycle issues.
+ */
+export async function debugReadCacheById(cacheId: string): Promise<{
+  row: {
+    id: string;
+    status: string;
+    profile_hash: string;
+    profile_url: string;
+    platform: string;
+  } | null;
+  error: Error | null;
+}> {
+  const admin = getAdmin();
+  const { data, error } = await admin
+    .from("analysis_cache")
+    .select("id, status, profile_hash, profile_url, platform")
+    .eq("id", cacheId)
+    .maybeSingle();
+
+  if (error || !data) {
+    return {
+      row: null,
+      error: error
+        ? new Error(error.message)
+        : null,
+    };
+  }
+
+  return {
+    row: data as {
+      id: string;
+      status: string;
+      profile_hash: string;
+      profile_url: string;
+      platform: string;
+    },
+    error: null,
+  };
+}
+
 // ============================================================================
 // Cache write helpers
 // ============================================================================
 
 /**
- * Upsert a new cache row with `pending` status after instant engine runs.
- * Uses ON CONFLICT on profile_hash to handle race conditions.
+ * Insert a new cache row with `pending` status after instant engine runs.
+ *
+ * The table has a UNIQUE constraint on `profile_hash`, so we delete any
+ * previous row for the same profile before inserting.  This guarantees each
+ * analysis run gets its own fresh row keyed by `id` (analysis_id) while
+ * respecting the existing schema constraint.
  */
 export async function upsertCachePending(
   id: string,
@@ -82,18 +128,27 @@ export async function upsertCachePending(
   instantJson: Instant
 ): Promise<void> {
   const admin = getAdmin();
-  await admin.from("analysis_cache").upsert(
-    {
-      id,
-      profile_hash: profileHash,
-      profile_url: profileUrl,
-      platform,
-      status: "pending",
-      instant_json: instantJson,
-      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    },
-    { onConflict: "profile_hash" }
-  );
+
+  await admin
+    .from("analysis_cache")
+    .delete()
+    .eq("profile_hash", profileHash);
+
+  const { error } = await admin.from("analysis_cache").insert({
+    id,
+    profile_hash: profileHash,
+    profile_url: profileUrl,
+    platform,
+    status: "pending",
+    instant_json: instantJson,
+    expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  });
+
+  if (error) {
+    throw new Error(
+      `[analyzer/db] upsertCachePending failed for analysis_id=${id}: ${error.message}`
+    );
+  }
 }
 
 /**
@@ -103,17 +158,50 @@ export async function upsertCachePending(
 export async function updateCacheCompleted(
   cacheId: string,
   analysisJson: unknown,
-  uiJson: AnalysisResult
+  uiJson: AnalysisResult,
+  debugCtx?: { profileUrl?: string; platform?: string; sourcePath?: string }
 ): Promise<void> {
   const admin = getAdmin();
-  await admin
+  const { data, error } = await admin
     .from("analysis_cache")
     .update({
       status: "completed",
       analysis_json: analysisJson,
       ui_json: uiJson,
     })
-    .eq("id", cacheId);
+    .eq("id", cacheId)
+    .select("id");
+
+  if (error) {
+    throw new Error(
+      `[analyzer/db] updateCacheCompleted failed for analysis_id=${cacheId}: ${error.message}`
+    );
+  }
+
+  const updatedCount = data?.length ?? 0;
+  if (updatedCount !== 1) {
+    if (debugCtx?.profileUrl) {
+      const { data: nearby } = await admin
+        .from("analysis_cache")
+        .select("id, profile_hash, status, profile_url")
+        .eq("profile_url", debugCtx.profileUrl)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      // eslint-disable-next-line no-console
+      console.error("[analyzer/db] updateCacheCompleted debug", {
+        analysis_id: cacheId,
+        profile_url: debugCtx.profileUrl,
+        platform: debugCtx.platform,
+        source_path: debugCtx.sourcePath,
+        rows: nearby ?? [],
+      });
+    }
+
+    throw new Error(
+      `[analyzer/db] updateCacheCompleted: expected to update 1 row for analysis_id=${cacheId}, updated ${updatedCount}`
+    );
+  }
 }
 
 /**
@@ -171,6 +259,12 @@ export async function enqueueAnalysis(opts: {
     email: opts.email ?? null,
     status: "pending",
     payload_json: opts.payload,
+  });
+
+  console.log("[analyzer/db] Queue row inserted", {
+    id: opts.id,
+    platform: opts.platform,
+    hasEmail: !!opts.email,
   });
 }
 
@@ -269,6 +363,54 @@ export async function checkSessionLimit(sessionId: string): Promise<boolean> {
     .eq("session_id", sessionId);
 
   return (count ?? 0) < SESSION_MAX;
+}
+
+// ============================================================================
+// Per-user analyzer usage limit (with site-wide default from site_settings)
+// ============================================================================
+
+/**
+ * Checks whether a user has remaining analyzer uses.
+ * Increments the counter if allowed.
+ * Returns true if the user is under the limit.
+ */
+export async function checkAndIncrementAnalyzerUsage(
+  userId: string
+): Promise<boolean> {
+  const admin = getAdmin();
+
+  const [{ data: profile }, { data: setting }] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("analyzer_usage_count, analyzer_usage_limit")
+      .eq("id", userId)
+      .maybeSingle(),
+    admin
+      .from("site_settings")
+      .select("value")
+      .eq("key", "usage_analyzer_default")
+      .maybeSingle(),
+  ]);
+
+  if (!profile) return true; // unknown user — fall through to session/IP limits
+
+  const globalLimit = (() => {
+    const raw = setting?.value as string | null | undefined;
+    const n = raw ? parseInt(raw, 10) : NaN;
+    return Number.isFinite(n) && n > 0 ? n : 3;
+  })();
+
+  const limit = profile.analyzer_usage_limit ?? globalLimit;
+  const count = profile.analyzer_usage_count ?? 0;
+
+  if (count >= limit) return false;
+
+  await admin
+    .from("profiles")
+    .update({ analyzer_usage_count: count + 1 })
+    .eq("id", userId);
+
+  return true;
 }
 
 // ============================================================================

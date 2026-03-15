@@ -69,7 +69,10 @@ export async function GET(req: NextRequest) {
           feature_enabled: true,
           openrouter_api_key: null,
           openrouter_api_key_set: false,
-          openrouter_model: "openai/gpt-4o-mini",
+          openrouter_model: "openai/gpt-4.1-mini",
+          website_model: null,
+          file_model: null,
+          social_profile_model: null,
           updated_at: null,
           updated_by: null,
         },
@@ -89,6 +92,9 @@ export async function GET(req: NextRequest) {
         openrouter_api_key: maskedKey,
         openrouter_api_key_set: !!settings.openrouter_api_key,
         openrouter_model: settings.openrouter_model,
+        website_model: settings.website_model ?? null,
+        file_model: settings.file_model ?? null,
+        social_profile_model: settings.social_profile_model ?? null,
         updated_at: settings.updated_at,
         updated_by: settings.updated_by,
       },
@@ -138,6 +144,9 @@ export async function PUT(req: NextRequest) {
       feature_enabled: z.boolean().optional(),
       openrouter_api_key: z.string().max(200).nullable().optional(),
       openrouter_model: z.string().max(200).nullable().optional(),
+      website_model: z.string().max(200).nullable().optional(),
+      file_model: z.string().max(200).nullable().optional(),
+      social_profile_model: z.string().max(200).nullable().optional(),
     });
 
     const parsed = schema.safeParse(body);
@@ -160,6 +169,9 @@ export async function PUT(req: NextRequest) {
       feature_enabled,
       openrouter_api_key,
       openrouter_model,
+      website_model,
+      file_model,
+      social_profile_model,
     } = parsed.data;
 
     const upsertPayload: Record<string, unknown> = {
@@ -169,6 +181,9 @@ export async function PUT(req: NextRequest) {
       social_profile_prompt,
       feature_enabled,
       openrouter_model,
+      website_model,
+      file_model,
+      social_profile_model,
       updated_at: new Date().toISOString(),
       updated_by: user.id,
     };
@@ -207,6 +222,9 @@ export async function PUT(req: NextRequest) {
         openrouter_api_key: maskedUpdatedKey,
         openrouter_api_key_set: !!updated.openrouter_api_key,
         openrouter_model: updated.openrouter_model,
+        website_model: updated.website_model ?? null,
+        file_model: updated.file_model ?? null,
+        social_profile_model: updated.social_profile_model ?? null,
         updated_at: updated.updated_at,
         updated_by: updated.updated_by,
       },

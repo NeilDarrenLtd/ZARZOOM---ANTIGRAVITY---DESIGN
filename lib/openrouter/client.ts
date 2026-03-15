@@ -47,10 +47,22 @@ export interface OpenRouterCallOptions {
   prompt: string;
   /** User input or content to process */
   input: string;
-  /** Optional JSON schema hint to guide structured output */
+  /** Optional JSON schema hint to guide structured output (used only when responseType is "json") */
   jsonSchemaHint?: string;
   /** Temperature for response randomness (0-1) */
   temperature?: number;
+  /**
+   * Optional API key override.
+   * If provided and non-empty, this key is used instead of the OPENROUTER_API_KEY env var.
+   * This is primarily used by subsystems that load the key from a secure DB settings table.
+   */
+  apiKeyOverride?: string;
+  /**
+   * When "text", the request does not send response_format and returns raw assistant text.
+   * Use for free-form test prompts; avoids 400 from models that don't support json_object.
+   * Default "json" preserves existing behaviour (response_format + JSON parse).
+   */
+  responseType?: "json" | "text";
 }
 
 export interface OpenRouterResponse<T = unknown> {
@@ -80,43 +92,131 @@ export class OpenRouterError extends Error {
 }
 
 // ============================================================================
-// JSON Repair Utilities
+// Assistant content extraction and safe JSON parsing
 // ============================================================================
 
 /**
- * Attempts to extract and repair JSON from a response that might contain
- * markdown code blocks or other wrapping.
+ * Normalizes OpenRouter assistant content to a single string.
+ * Supports: string content, or array of { type: "text", text: string } parts.
+ */
+function extractAssistantContent(content: unknown): string {
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    const parts = content
+      .filter((p): p is { type?: string; text?: string } => p != null && typeof p === "object")
+      .filter((p) => p.type === "text" && typeof p.text === "string")
+      .map((p) => p.text);
+    return parts.join("\n");
+  }
+  if (content != null && typeof content === "object" && "text" in content && typeof (content as { text: unknown }).text === "string") {
+    return (content as { text: string }).text;
+  }
+  return String(content ?? "");
+}
+
+/**
+ * Strips markdown code fences from the start/end of the string.
+ * Handles: ```json\n...\n```, ```\n...\n```, ```json ... ``` (same line).
+ */
+function stripCodeFences(text: string): string {
+  let out = text.trim();
+  // Block with newlines: ```json\n...\n``` or ```\n...\n```
+  const blockMatch = out.match(/^```(?:json)?\s*\n?([\s\S]*?)\n?```\s*$/);
+  if (blockMatch) {
+    out = blockMatch[1].trim();
+    return out;
+  }
+  // Inline or same-line: ```json ... ``` or ``` ... ```
+  const inlineMatch = out.match(/^```(?:json)?\s*([\s\S]*?)```\s*$/);
+  if (inlineMatch) {
+    out = inlineMatch[1].trim();
+  }
+  return out;
+}
+
+/**
+ * Finds the span of the first top-level JSON object (from first { to matching }).
+ * Respects string boundaries so { and } inside strings are not counted.
+ */
+function isolateJsonObject(text: string): string {
+  const start = text.indexOf("{");
+  if (start === -1) throw new OpenRouterError("No JSON object found in response", "INVALID_JSON", undefined, text.substring(0, 300));
+  let depth = 0;
+  let inString: "'" | '"' | null = null;
+  let i = start;
+  while (i < text.length) {
+    const c = text[i];
+    if (inString) {
+      if (c === inString) {
+        // Count backslashes immediately before this quote; if even, string ends
+        let b = i - 1;
+        while (b >= 0 && text[b] === "\\") b--;
+        if ((i - 1 - b) % 2 === 0) inString = null;
+      }
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      inString = c;
+      i++;
+      continue;
+    }
+    if (c === "{") {
+      depth++;
+      i++;
+      continue;
+    }
+    if (c === "}") {
+      depth--;
+      if (depth === 0) return text.slice(start, i + 1);
+      i++;
+      continue;
+    }
+    i++;
+  }
+  throw new OpenRouterError("Unclosed JSON object in response", "INVALID_JSON", undefined, text.substring(0, 300));
+}
+
+/**
+ * Safe parser: extract assistant content → strip fences → trim → isolate JSON → parse.
+ * Supports plain JSON, JSON in markdown code fences, and JSON with minor surrounding text.
  */
 function extractAndRepairJson(rawText: string): unknown {
-  // Remove markdown code blocks if present
+  // 1. Trim
   let cleaned = rawText.trim();
+  if (!cleaned) throw new OpenRouterError("Empty assistant content", "INVALID_RESPONSE", undefined, "");
 
-  // Strip ```json ... ``` or ``` ... ```
-  const codeBlockMatch = cleaned.match(/^```(?:json)?\s*\n([\s\S]*?)\n```$/);
-  if (codeBlockMatch) {
-    cleaned = codeBlockMatch[1].trim();
+  // 2. Strip code fences
+  cleaned = stripCodeFences(cleaned).trim();
+
+  // 3. Isolate likely JSON object (first { ... })
+  let jsonSlice: string;
+  try {
+    jsonSlice = isolateJsonObject(cleaned);
+  } catch (e) {
+    if (e instanceof OpenRouterError) throw e;
+    throw new OpenRouterError(
+      `Could not isolate JSON: ${e instanceof Error ? e.message : String(e)}`,
+      "INVALID_JSON",
+      undefined,
+      cleaned.substring(0, 500)
+    );
   }
 
-  // Try parsing as-is
+  // 4. Parse JSON
   try {
-    return JSON.parse(cleaned);
+    return JSON.parse(jsonSlice);
   } catch (firstError) {
-    // Attempt repairs
+    // 5. Optional repair: trailing commas, then re-parse
     try {
-      // Remove trailing commas (common error)
-      let repaired = cleaned.replace(/,\s*([\]}])/g, "$1");
-
-      // Try to fix unquoted keys (very basic)
-      repaired = repaired.replace(/(\{|,)\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
-
+      const repaired = jsonSlice.replace(/,\s*([\]}])/g, "$1");
       return JSON.parse(repaired);
-    } catch (repairError) {
-      // If repair fails, throw original error with context
+    } catch {
       throw new OpenRouterError(
-        `Failed to parse JSON response. Original: ${firstError instanceof Error ? firstError.message : String(firstError)}`,
+        `Failed to parse JSON: ${firstError instanceof Error ? firstError.message : String(firstError)}`,
         "INVALID_JSON",
         undefined,
-        cleaned.substring(0, 500) // Include truncated response for debugging
+        jsonSlice.substring(0, 500)
       );
     }
   }
@@ -137,27 +237,46 @@ function extractAndRepairJson(rawText: string): unknown {
 export async function callOpenRouter<T = unknown>(
   options: OpenRouterCallOptions
 ): Promise<OpenRouterResponse<T>> {
-  const { model = DEFAULT_MODEL, prompt, input, jsonSchemaHint, temperature = 0.3 } = options;
+  const {
+    model = DEFAULT_MODEL,
+    prompt,
+    input,
+    jsonSchemaHint,
+    temperature = 0.3,
+    apiKeyOverride,
+    responseType = "json",
+  } = options;
 
-  // Validate API key (throws if missing)
-  const apiKey = getOpenRouterApiKey();
+  // Resolve API key:
+  // 1. If apiKeyOverride is provided and non-empty, use it.
+  // 2. Otherwise, fall back to env-based OPENROUTER_API_KEY (throws if missing).
+  const apiKey =
+    apiKeyOverride && apiKeyOverride.trim() !== ""
+      ? apiKeyOverride.trim()
+      : getOpenRouterApiKey();
 
-  // Build the system prompt with JSON enforcement
-  const systemPrompt = `${prompt}
+  const isTextMode = responseType === "text";
+
+  // Build the system prompt (with optional JSON enforcement)
+  const systemPrompt = isTextMode
+    ? prompt
+    : `${prompt}
 
 CRITICAL: You MUST respond with ONLY valid JSON. Do not include markdown code blocks, explanations, or any text outside the JSON object.
 ${jsonSchemaHint ? `\nExpected JSON structure:\n${jsonSchemaHint}` : ""}`;
 
-  // Prepare request payload
-  const payload = {
+  // Prepare request payload (omit response_format in text mode so all models work)
+  const payload: Record<string, unknown> = {
     model,
     messages: [
       { role: "system", content: systemPrompt },
       { role: "user", content: input },
     ],
     temperature,
-    response_format: { type: "json_object" }, // Force JSON mode for supported models
   };
+  if (!isTextMode) {
+    payload.response_format = { type: "json_object" };
+  }
 
   // Retry logic
   let lastError: OpenRouterError | null = null;
@@ -194,6 +313,51 @@ ${jsonSchemaHint ? `\nExpected JSON structure:\n${jsonSchemaHint}` : ""}`;
           );
         }
 
+        // JSON mode: many models don't support response_format.json_object and return 400. Retry once without it.
+        if (response.status === 400 && !isTextMode && payload.response_format) {
+          try {
+            const fallbackPayload = { ...payload };
+            delete fallbackPayload.response_format;
+            const controller2 = new AbortController();
+            const timeoutId2 = setTimeout(() => controller2.abort(), REQUEST_TIMEOUT_MS);
+            const retryRes = await fetch(OPENROUTER_API_URL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+                "HTTP-Referer": process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+                "X-Title": "ZARZOOM AI Wizard",
+              },
+              body: JSON.stringify(fallbackPayload),
+              signal: controller2.signal,
+            });
+            clearTimeout(timeoutId2);
+            if (retryRes.ok) {
+              const responseData = await retryRes.json();
+              const message = responseData.choices?.[0]?.message;
+              if (!message) {
+                throw new OpenRouterError(
+                  "OpenRouter returned an empty or invalid response structure",
+                  "INVALID_RESPONSE",
+                  undefined,
+                  JSON.stringify(responseData)
+                );
+              }
+              const rawContent = extractAssistantContent(message.content);
+              const parsedData = extractAndRepairJson(rawContent);
+              const tokensUsed =
+                (responseData.usage?.prompt_tokens || 0) + (responseData.usage?.completion_tokens || 0);
+              return {
+                data: parsedData as T,
+                tokensUsed,
+                model: responseData.model || model,
+              };
+            }
+          } catch (_fallbackErr) {
+            // Fall through to throw original 400
+          }
+        }
+
         throw new OpenRouterError(
           `OpenRouter API error: ${response.statusText}`,
           "API_ERROR",
@@ -205,7 +369,30 @@ ${jsonSchemaHint ? `\nExpected JSON structure:\n${jsonSchemaHint}` : ""}`;
       // Parse response
       const responseData = await response.json();
 
-      if (!responseData.choices?.[0]?.message?.content) {
+      // ──── TEMPORARY DEBUG CHECKPOINT ────
+      console.log("🔴 [5] FLOATING_ANALYZER_OPENROUTER_RAW_RESPONSE", {
+        hasChoices: !!responseData.choices,
+        choicesLength: responseData.choices?.length ?? 0,
+        hasMessage: !!responseData.choices?.[0]?.message,
+        contentType: typeof responseData.choices?.[0]?.message?.content,
+        contentLength: typeof responseData.choices?.[0]?.message?.content === "string"
+          ? responseData.choices[0].message.content.length
+          : Array.isArray(responseData.choices?.[0]?.message?.content)
+            ? responseData.choices[0].message.content.length
+            : 0,
+        rawContentFirst200: typeof responseData.choices?.[0]?.message?.content === "string"
+          ? responseData.choices[0].message.content.substring(0, 200)
+          : JSON.stringify(responseData.choices?.[0]?.message?.content)?.substring(0, 200),
+        model: responseData.model,
+        tokensPrompt: responseData.usage?.prompt_tokens,
+        tokensCompletion: responseData.usage?.completion_tokens,
+        httpStatus: response.status,
+        timestamp: new Date().toISOString(),
+      });
+      // ──── END TEMPORARY DEBUG CHECKPOINT ────
+
+      const message = responseData.choices?.[0]?.message;
+      if (!message) {
         throw new OpenRouterError(
           "OpenRouter returned an empty or invalid response structure",
           "INVALID_RESPONSE",
@@ -214,10 +401,49 @@ ${jsonSchemaHint ? `\nExpected JSON structure:\n${jsonSchemaHint}` : ""}`;
         );
       }
 
-      const rawContent = responseData.choices[0].message.content;
+      // Extract assistant content (string or array of text parts)
+      const rawContent = extractAssistantContent(message.content);
 
-      // Extract and parse JSON with repair attempts
-      const parsedData = extractAndRepairJson(rawContent);
+      // In text mode, return raw content without JSON parsing (avoids 400 for models that don't support response_format)
+      if (isTextMode) {
+        const tokensUsed =
+          (responseData.usage?.prompt_tokens || 0) + (responseData.usage?.completion_tokens || 0);
+        return {
+          data: rawContent as T,
+          tokensUsed,
+          model: responseData.model || model,
+        };
+      }
+
+      // ──── TEMPORARY DEBUG CHECKPOINT ────
+      console.log("🔴 [6] FLOATING_ANALYZER_PARSE_STARTED", {
+        rawContentLength: rawContent.length,
+        rawContentFirst200: rawContent.substring(0, 200),
+        timestamp: new Date().toISOString(),
+      });
+      // ──── END TEMPORARY DEBUG CHECKPOINT ────
+
+      // Safe parse: strip fences, isolate JSON object, parse, then Zod validates in callOpenRouterTyped
+      let parsedData: unknown;
+      try {
+        parsedData = extractAndRepairJson(rawContent);
+      } catch (parseErr) {
+        // ──── TEMPORARY DEBUG CHECKPOINT ────
+        console.error("🔴 [8] FLOATING_ANALYZER_PARSE_FAILED", {
+          error: parseErr instanceof Error ? parseErr.message : String(parseErr),
+          rawContentFirst500: rawContent.substring(0, 500),
+          timestamp: new Date().toISOString(),
+        });
+        // ──── END TEMPORARY DEBUG CHECKPOINT ────
+        throw parseErr;
+      }
+
+      // ──── TEMPORARY DEBUG CHECKPOINT ────
+      console.log("🔴 [7] FLOATING_ANALYZER_PARSE_SUCCESS", {
+        parsedKeys: parsedData && typeof parsedData === "object" ? Object.keys(parsedData as Record<string, unknown>) : "not_an_object",
+        timestamp: new Date().toISOString(),
+      });
+      // ──── END TEMPORARY DEBUG CHECKPOINT ────
 
       // Calculate token usage
       const tokensUsed =

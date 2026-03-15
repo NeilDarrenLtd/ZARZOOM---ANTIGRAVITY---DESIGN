@@ -30,13 +30,27 @@ import {
   enqueueAnalysis,
   checkIpRateLimit,
   checkSessionLimit,
+  checkAndIncrementAnalyzerUsage,
+  updateCacheCompleted,
+  updateCacheFailed,
 } from "@/lib/analyzer/db";
+import { createServerClient } from "@supabase/ssr";
+import { runAiAnalysis, normalizeToUiContract } from "@/lib/analyzer/aiAnalysis";
+import { logActivity } from "@/lib/logging/activity";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────────────────────────────────────
 
 const SESSION_HEADER = "x-analyzer-session-id";
+// For now we prefer a fully synchronous, reliable path that does not depend
+// on an external worker/queue being online. Async mode can be restored later
+// once the worker infrastructure is guaranteed to run.
+const USE_ASYNC_WORKER = false;
+
+// Temporary: when true, skip returning cached completed analyses so every request
+// runs the full flow (instant engine + prompt substitution + OpenRouter). Revert when caching is wanted again.
+const DISABLE_ANALYZER_CACHE = process.env.DISABLE_ANALYZER_CACHE === "true";
 
 /**
  * Platforms supported by the analyzer.
@@ -129,8 +143,26 @@ export async function POST(req: NextRequest) {
 
   const { profile_url, email, signals } = parsed.data;
 
+  // ──── TEMPORARY DEBUG CHECKPOINT ────
+  console.log("🔴 [1] FLOATING_ANALYZER_REQUEST_RECEIVED", {
+    profile_url,
+    hasEmail: !!email,
+    hasSignals: !!signals,
+    timestamp: new Date().toISOString(),
+  });
+  // ──── END TEMPORARY DEBUG CHECKPOINT ────
+
   // ── 2. Platform check ─────────────────────────────────────────────────────
   const platform = detectPlatform(profile_url);
+
+  // ──── TEMPORARY DEBUG CHECKPOINT ────
+  console.log("🔴 [2] FLOATING_ANALYZER_PLATFORM_INFERRED", {
+    profile_url,
+    platform,
+    isSupported: SUPPORTED_PLATFORMS.has(platform),
+    timestamp: new Date().toISOString(),
+  });
+  // ──── END TEMPORARY DEBUG CHECKPOINT ────
 
   if (!SUPPORTED_PLATFORMS.has(platform)) {
     return NextResponse.json(
@@ -154,6 +186,16 @@ export async function POST(req: NextRequest) {
   const sessionId =
     req.headers.get(SESSION_HEADER) ?? `anon-${randomUUID()}`;
 
+  void logActivity({
+    category: "analyzer",
+    stage: "analyzer.workflow_started",
+    level: "info",
+    profileUrl: profile_url,
+    platform,
+    sessionId,
+    details: { profileUrl: profile_url, platform, sessionId },
+  });
+
   // ── 4. CAPTCHA verification ───────────────────────────────────────────────
   // Token is passed in the request body as `captcha_token` or via the
   // `cf-turnstile-response` header (both are checked for flexibility).
@@ -162,6 +204,15 @@ export async function POST(req: NextRequest) {
     req.headers.get("cf-turnstile-response");
 
   const captchaOk = await verifyCaptcha(captchaToken, ip);
+  void logActivity({
+    category: "analyzer",
+    stage: "analyzer.limit_check",
+    level: captchaOk ? "info" : "warn",
+    profileUrl: profile_url,
+    platform,
+    sessionId,
+    details: { check: "captcha", passed: captchaOk },
+  });
   if (!captchaOk) {
     return NextResponse.json(
       {
@@ -176,6 +227,15 @@ export async function POST(req: NextRequest) {
 
   // ── 5. IP rate limit ──────────────────────────────────────────────────────
   const ipAllowed = await checkIpRateLimit(ip);
+  void logActivity({
+    category: "analyzer",
+    stage: "analyzer.limit_check",
+    level: ipAllowed ? "info" : "warn",
+    profileUrl: profile_url,
+    platform,
+    sessionId,
+    details: { check: "ip_rate", passed: ipAllowed },
+  });
   if (!ipAllowed) {
     return NextResponse.json(
       {
@@ -190,6 +250,15 @@ export async function POST(req: NextRequest) {
 
   // ── 6. Session rate limit ─────────────────────────────────────────────────
   const sessionAllowed = await checkSessionLimit(sessionId);
+  void logActivity({
+    category: "analyzer",
+    stage: "analyzer.limit_check",
+    level: sessionAllowed ? "info" : "warn",
+    profileUrl: profile_url,
+    platform,
+    sessionId,
+    details: { check: "session", passed: sessionAllowed },
+  });
   if (!sessionAllowed) {
     return NextResponse.json(
       {
@@ -203,26 +272,95 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // ── 6b. Per-user analyzer limit (only when logged in) ──────────────────
+  let resolvedUserId: string | null = null;
+  try {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll: () => req.cookies.getAll(), setAll: () => {} } }
+    );
+    const { data: { user } } = await supabase.auth.getUser();
+    resolvedUserId = user?.id ?? null;
+  } catch { /* not logged in — skip */ }
+
+  if (resolvedUserId) {
+    const userAllowed = await checkAndIncrementAnalyzerUsage(resolvedUserId);
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.limit_check",
+      level: userAllowed ? "info" : "warn",
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: { check: "user_analyzer", passed: userAllowed, userId: resolvedUserId },
+    });
+    if (!userAllowed) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "USER_ANALYZER_LIMIT",
+            message: "You have reached your analyzer usage limit. Contact support to increase it.",
+          },
+        },
+        { status: 429 }
+      );
+    }
+  }
+
   // ── 7. Build profile hash ─────────────────────────────────────────────────
   const profileHash = buildProfileHash(platform, profile_url);
+  console.log("[Analyzer/start] Platform + hash", { platform, profileHash });
 
   // ── 8. Cache hit? Return completed entry immediately ─────────────────────
   const cached = await getCacheEntry(profileHash);
 
   if (cached?.status === "completed" && cached.instant_json && cached.ui_json) {
-    return NextResponse.json({
-      analysis_id: cached.id,
-      status: "completed" as const,
-      instant: cached.instant_json,
-      teaser: cached.ui_json.teaser ?? null,
-      full_report: null, // full_report requires auth — withheld here
-      cache_hit: true,
-    });
+    if (!DISABLE_ANALYZER_CACHE) {
+      void logActivity({
+        category: "analyzer",
+        stage: "**FAILURE** analyzer_cache_hit_skip_openrouter",
+        level: "warn",
+        analysisId: cached.id,
+        profileUrl: profile_url,
+        platform,
+        sessionId,
+        details: {
+          reason: "cache_hit",
+          profileUrl: profile_url,
+          platform,
+          analysisId: cached.id,
+          served: "cache",
+          status: "completed",
+        },
+      });
+
+      return NextResponse.json({
+        analysis_id: cached.id,
+        status: "completed" as const,
+        instant: cached.instant_json,
+        teaser: cached.ui_json.teaser ?? null,
+        full_report: null, // full_report requires auth — withheld here
+        cache_hit: true,
+      });
+    }
+    // Cache disabled: fall through so full pipeline (instant + substitution + OpenRouter) runs
   }
 
-  // Race-safe: if a pending entry already exists (e.g. concurrent request),
-  // return it so the caller can poll /status without spawning a duplicate job.
-  if (cached?.status === "pending" && cached.instant_json) {
+  // Race-safe pending behavior only makes sense when the async worker path
+  // is enabled. In sync mode we treat "pending" cache rows as stale and
+  // re-run analysis instead of returning a forever-pending status.
+  if (USE_ASYNC_WORKER && cached?.status === "pending" && cached.instant_json) {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId: cached.id,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: { served: "pending", status: "pending", source: "async" },
+    });
     return NextResponse.json(
       {
         analysis_id: cached.id,
@@ -239,47 +377,156 @@ export async function POST(req: NextRequest) {
   const instant = runInstantEngine(profile_url, signals);
   const analysisId = randomUUID();
 
-  // ── 10. Persist pending cache row ─────────────────────────────────────────
-  await upsertCachePending(analysisId, profileHash, profile_url, platform, instant);
+  if (USE_ASYNC_WORKER) {
+    // ── 10a. Async path: persist pending + enqueue worker job ───────────────
+    await upsertCachePending(analysisId, profileHash, profile_url, platform, instant);
 
-  // ── 11. Enqueue AI analysis job ───────────────────────────────────────────
-  await enqueueAnalysis({
-    id: analysisId,
-    profileUrl: profile_url,
-    platform,
-    sessionId,
-    ipAddress: ip,
-    email,
-    payload: {
+    await enqueueAnalysis({
+      id: analysisId,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      ipAddress: ip,
+      email,
+      payload: {
+        analysis_id: analysisId,
+        profile_url,
+        platform,
+        profile_hash: profileHash,
+        instant_json: instant,
+        session_id: sessionId,
+      },
+    });
+
+    emitWebhookEvent({
+      event: "analysis.started",
       analysis_id: analysisId,
       profile_url,
       platform,
-      profile_hash: profileHash,
-      instant_json: instant,
-      session_id: sessionId,
-    },
+    }).catch((err) =>
+      console.warn("[Analyzer/start] analysis.started webhook failed:", err)
+    );
+
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: { served: "pending", status: "pending", source: "async" },
+    });
+
+    return NextResponse.json(
+      {
+        analysis_id: analysisId,
+        status: "pending" as const,
+        instant,
+        cache_hit: false,
+      },
+      { status: 202 }
+    );
+  }
+
+  // ── 10b. Sync path: call OpenRouter directly and return completed result ──
+  console.log("[Analyzer/start] Sync mode enabled, calling OpenRouter inline", {
+    analysis_id: analysisId,
+    platform,
   });
 
-  // ── 12. Emit webhook event (fire-and-forget) ──────────────────────────────
-  emitWebhookEvent({
-    event: "analysis.started",
-    analysis_id: analysisId,
-    profile_url,
-    platform,
-  }).catch((err) =>
-    console.warn("[Analyzer/start] analysis.started webhook failed:", err)
-  );
+  // Persist a pending cache row up-front so the analysis_id is durable and
+  // discoverable by /api/analyzer/result, even if something goes wrong later.
+  await upsertCachePending(analysisId, profileHash, profile_url, platform, instant);
 
-  // ── 13. Return instant result ─────────────────────────────────────────────
-  return NextResponse.json(
-    {
+  try {
+    const aiResult = await runAiAnalysis(instant, profile_url, analysisId);
+    const uiContract = normalizeToUiContract(analysisId, instant, aiResult.raw);
+
+    await updateCacheCompleted(analysisId, aiResult.raw, uiContract, {
+      profileUrl: profile_url,
+      platform,
+      sourcePath: "sync_start_route",
+    });
+
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.openrouter_result_written_to_cache",
+      level: "info",
+      analysisId,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: {
+        analysis_id: analysisId,
+        profile_url: profile_url,
+        platform,
+        source: "openrouter",
+        written: "analysis_cache (analysis_json + ui_json)",
+      },
+    });
+
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: {
+        served: "openrouter",
+        status: "completed",
+        cache_hit: false,
+        source: "openrouter",
+      },
+    });
+
+    return NextResponse.json(
+      {
+        analysis_id: analysisId,
+        status: "completed" as const,
+        instant: uiContract.instant,
+        teaser: uiContract.teaser,
+        cache_hit: false,
+      },
+      { status: 200 }
+    );
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown AI analysis error";
+    console.error("[Analyzer/start] Sync analysis failed", {
       analysis_id: analysisId,
-      status: "pending" as const,
-      instant,
-      cache_hit: false,
-    },
-    { status: 202 }
-  );
+      error: message,
+    });
+
+    await updateCacheFailed(analysisId, message);
+    void logActivity({
+      category: "analyzer",
+      stage: "**FAILURE** analyzer_openrouter_call_failed",
+      level: "error",
+      analysisId,
+      profileUrl: profile_url,
+      platform,
+      sessionId,
+      details: {
+        reason: "openrouter_call_failed",
+        error_summary: message,
+        served: "failed",
+      },
+    });
+
+    return NextResponse.json(
+      {
+        analysis_id: analysisId,
+        status: "failed" as const,
+        instant,
+        cache_hit: false,
+        error: { code: "AI_ERROR", message },
+      },
+      { status: 500 }
+    );
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

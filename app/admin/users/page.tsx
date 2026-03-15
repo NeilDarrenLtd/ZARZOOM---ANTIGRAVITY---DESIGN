@@ -10,6 +10,8 @@ import {
   deleteUser,
   resetAutofillUsage,
   toggleAutofillBlocked,
+  updateUserLimits,
+  forceVerifyUser,
   type AdminUserProfile,
 } from "@/app/admin/actions";
 import {
@@ -28,6 +30,10 @@ import {
   ZapOff,
   AlertTriangle,
   CheckCircle2,
+  Save,
+  Settings2,
+  BarChart2,
+  Loader2,
 } from "lucide-react";
 
 // ─── Confirmation modal ─────────────────────────────────────────
@@ -130,6 +136,7 @@ function AutofillBadge({
   user: AdminUserProfile;
 }) {
   const lifetime = user.autofill_lifetime_count || 0;
+  const threshold = user.total_autofill_limit ?? 10;
   const degraded = user.autofill_degraded;
   const blocked = user.autofill_blocked;
 
@@ -154,24 +161,134 @@ function AutofillBadge({
   return (
     <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-green-50 text-green-700">
       <Zap className="w-3 h-3" />
-      {lifetime}/10 uses
+      {lifetime}/{threshold} uses
     </span>
   );
 }
 
 // ─── User detail drawer ─────────────────────────────────────────
 
+function LimitInput({
+  label,
+  helperText,
+  value,
+  defaultValue,
+  onChange,
+}: {
+  label: string;
+  helperText: string;
+  value: string;
+  defaultValue: number;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-700 mb-1">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={99999}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={String(defaultValue)}
+          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        {value === "" && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-400">
+            default: {defaultValue}
+          </span>
+        )}
+      </div>
+      <p className="text-[10px] text-gray-400 mt-0.5">{helperText}</p>
+    </div>
+  );
+}
+
 function UserDetailPanel({
   user,
   onClose,
   onAction,
   actionLoading,
+  onLimitsSaved,
 }: {
   user: AdminUserProfile;
   onClose: () => void;
   onAction: (action: string, userId: string) => void;
   actionLoading: string | null;
+  onLimitsSaved: (userId: string, limits: { daily_autofill_limit: number | null; total_autofill_limit: number | null; analyzer_usage_limit: number | null }) => void;
 }) {
+  const [dailyLimit, setDailyLimit] = useState(
+    user.daily_autofill_limit != null ? String(user.daily_autofill_limit) : ""
+  );
+  const [totalLimit, setTotalLimit] = useState(
+    user.total_autofill_limit != null ? String(user.total_autofill_limit) : ""
+  );
+  const [analyzerLimit, setAnalyzerLimit] = useState(
+    user.analyzer_usage_limit != null ? String(user.analyzer_usage_limit) : ""
+  );
+  const [limitsSaving, setLimitsSaving] = useState(false);
+  const [limitsMsg, setLimitsMsg] = useState<{ text: string; type: "success" | "error" } | null>(null);
+
+  useEffect(() => {
+    setDailyLimit(user.daily_autofill_limit != null ? String(user.daily_autofill_limit) : "");
+    setTotalLimit(user.total_autofill_limit != null ? String(user.total_autofill_limit) : "");
+    setAnalyzerLimit(user.analyzer_usage_limit != null ? String(user.analyzer_usage_limit) : "");
+    setLimitsMsg(null);
+  }, [user.id, user.daily_autofill_limit, user.total_autofill_limit, user.analyzer_usage_limit]);
+
+  function parseLimit(v: string): number | null {
+    if (v.trim() === "") return null;
+    const n = parseInt(v, 10);
+    if (isNaN(n) || n < 0) return null;
+    return n;
+  }
+
+  async function handleSaveLimits() {
+    const daily = dailyLimit.trim() === "" ? null : parseLimit(dailyLimit);
+    const total = totalLimit.trim() === "" ? null : parseLimit(totalLimit);
+    const analyzer = analyzerLimit.trim() === "" ? null : parseLimit(analyzerLimit);
+
+    if (dailyLimit.trim() !== "" && daily === null) {
+      setLimitsMsg({ text: "Daily limit must be a valid number (0 or above).", type: "error" });
+      return;
+    }
+    if (totalLimit.trim() !== "" && total === null) {
+      setLimitsMsg({ text: "Total limit must be a valid number (0 or above).", type: "error" });
+      return;
+    }
+    if (analyzerLimit.trim() !== "" && analyzer === null) {
+      setLimitsMsg({ text: "Analyzer limit must be a valid number (0 or above).", type: "error" });
+      return;
+    }
+
+    setLimitsSaving(true);
+    setLimitsMsg(null);
+    const result = await updateUserLimits(user.id, {
+      daily_autofill_limit: daily,
+      total_autofill_limit: total,
+      analyzer_usage_limit: analyzer,
+    });
+
+    if (result.success) {
+      setLimitsMsg({ text: "Limits saved.", type: "success" });
+      onLimitsSaved(user.id, {
+        daily_autofill_limit: daily,
+        total_autofill_limit: total,
+        analyzer_usage_limit: analyzer,
+      });
+    } else {
+      setLimitsMsg({ text: result.error || "Failed to save limits.", type: "error" });
+    }
+    setLimitsSaving(false);
+  }
+
+  const effectiveDailyLimit = user.daily_autofill_limit ?? 2;
+  const effectiveTotalLimit = user.total_autofill_limit ?? 10;
+
   const formatDate = (d: string | null) =>
     d
       ? new Date(d).toLocaleDateString("en-GB", {
@@ -291,7 +408,7 @@ function UserDetailPanel({
                   {user.autofill_daily_count || 0}
                   <span className="text-sm font-normal text-gray-400">
                     {" "}
-                    / 2
+                    / {effectiveDailyLimit}
                   </span>
                 </p>
               </div>
@@ -304,18 +421,18 @@ function UserDetailPanel({
                   Degradation threshold
                 </span>
                 <span className="text-xs font-medium text-gray-700">
-                  {Math.min(user.autofill_lifetime_count || 0, 10)}/10
+                  {Math.min(user.autofill_lifetime_count || 0, effectiveTotalLimit)}/{effectiveTotalLimit}
                 </span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    (user.autofill_lifetime_count || 0) >= 10
+                    (user.autofill_lifetime_count || 0) >= effectiveTotalLimit
                       ? "bg-amber-500"
                       : "bg-green-500"
                   }`}
                   style={{
-                    width: `${Math.min(((user.autofill_lifetime_count || 0) / 10) * 100, 100)}%`,
+                    width: `${Math.min(((user.autofill_lifetime_count || 0) / effectiveTotalLimit) * 100, 100)}%`,
                   }}
                 />
               </div>
@@ -343,9 +460,104 @@ function UserDetailPanel({
             </div>
           </div>
 
+          {/* Analyzer usage section */}
+          <div className="border border-gray-200 rounded-lg p-4">
+            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <BarChart2 className="w-4 h-4 text-gray-400" />
+              Analyzer Usage
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-gray-400">Total Uses</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {user.analyzer_usage_count || 0}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">Limit</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {user.analyzer_usage_limit ?? <span className="text-sm font-normal text-gray-400">default (3)</span>}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Usage limits editor */}
+          <div className="border border-green-200 bg-green-50/30 rounded-lg p-4">
+            <h4 className="text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
+              <Settings2 className="w-4 h-4 text-green-600" />
+              Usage Limits
+            </h4>
+            <p className="text-[10px] text-gray-500 mb-4">
+              Override system defaults for this user. Leave blank to use defaults.
+            </p>
+
+            <div className="space-y-3">
+              <LimitInput
+                label="Daily auto-fill limit"
+                helperText="Number of auto-fills allowed per day"
+                value={dailyLimit}
+                defaultValue={2}
+                onChange={setDailyLimit}
+              />
+              <LimitInput
+                label="Total auto-fill limit"
+                helperText="Total lifetime auto-fill limit (degradation threshold)"
+                value={totalLimit}
+                defaultValue={10}
+                onChange={setTotalLimit}
+              />
+              <LimitInput
+                label="Analyzer usage limit"
+                helperText="Maximum number of Social Analyzer uses allowed"
+                value={analyzerLimit}
+                defaultValue={3}
+                onChange={setAnalyzerLimit}
+              />
+            </div>
+
+            {limitsMsg && (
+              <p
+                className={`mt-3 text-xs font-medium flex items-center gap-1.5 ${
+                  limitsMsg.type === "success" ? "text-green-700" : "text-red-600"
+                }`}
+              >
+                {limitsMsg.type === "success" ? (
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                ) : (
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                )}
+                {limitsMsg.text}
+              </p>
+            )}
+
+            <button
+              onClick={handleSaveLimits}
+              disabled={limitsSaving}
+              className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50"
+            >
+              {limitsSaving ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4" />
+              )}
+              {limitsSaving ? "Saving..." : "Save Limits"}
+            </button>
+          </div>
+
           {/* Actions */}
           <div className="space-y-2">
             <h4 className="text-sm font-bold text-gray-900 mb-3">Actions</h4>
+
+            {/* Force email verification */}
+            <button
+              onClick={() => onAction("force-verify", user.id)}
+              disabled={actionLoading === user.id}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              Mark Email as Verified
+            </button>
 
             {/* Role toggle */}
             <button
@@ -515,7 +727,7 @@ export default function AdminUsersPage() {
     if (!user) return;
 
     // Actions that need confirmation
-    const needsConfirm = ["suspend", "delete", "block-autofill"];
+    const needsConfirm = ["suspend", "delete", "block-autofill", "force-verify"];
     if (needsConfirm.includes(action)) {
       const configs: Record<
         string,
@@ -538,6 +750,12 @@ export default function AdminUsersPage() {
           message: `Are you sure you want to block ${user.email} from using auto-fill? They will not be able to use either website or file autofill until unblocked.`,
           label: "Block Autofill",
           color: "red",
+        },
+        "force-verify": {
+          title: "Mark Email as Verified",
+          message: `This will mark ${user.email} as email-verified in Supabase, even if they never clicked the verification link. They will be able to log in immediately.`,
+          label: "Verify Email",
+          color: "green",
         },
       };
 
@@ -685,6 +903,13 @@ export default function AdminUsersPage() {
         }
         break;
 
+      case "force-verify":
+        result = await forceVerifyUser(userId);
+        if (result.success) {
+          showToast(`Email marked as verified for ${user.email}.`, "success");
+        }
+        break;
+
       case "unblock-autofill":
         result = await toggleAutofillBlocked(userId, false);
         if (result.success) {
@@ -751,6 +976,16 @@ export default function AdminUsersPage() {
           onClose={() => setSelectedUser(null)}
           onAction={handleAction}
           actionLoading={actionLoading}
+          onLimitsSaved={(userId, limits) => {
+            setUsers((prev) =>
+              prev.map((u) =>
+                u.id === userId ? { ...u, ...limits } : u
+              )
+            );
+            setSelectedUser((prev) =>
+              prev && prev.id === userId ? { ...prev, ...limits } : prev
+            );
+          }}
         />
       )}
 

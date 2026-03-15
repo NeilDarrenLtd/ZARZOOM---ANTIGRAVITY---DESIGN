@@ -87,29 +87,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { getCacheById } from "@/lib/analyzer/db";
 import type { Instant, Teaser, FullReport } from "@/lib/analyzer/types";
+import { logActivity } from "@/lib/logging/activity";
 
 const ANALYSIS_ID_RE = /^[a-zA-Z0-9_-]{10,40}$/;
 
-// ── Safe fallback shapes returned when data is missing ────────────────────────
-
-const FALLBACK_INSTANT: Instant = {
-  platform_detected: "unknown",
-  keywords_detected: [],
-  posting_frequency_estimate: "unknown",
-  creator_score: 0,
-  strengths: [],
-  opportunities: ["We were unable to analyse this profile. Please try again."],
-};
-
-const FALLBACK_TEASER: Teaser = {
-  growth_insights: [],
-  ai_post_preview: {
-    title: "",
-    caption: "",
-    hashtags: [],
-  },
-  benchmark_text: "",
-};
+// We do not substitute placeholder/mock data. Failed or incomplete results return
+// status "failed" with null instant/teaser so the client shows the fallback UI.
 
 // ── Helper: resolve authenticated user from request cookies (optional) ────────
 
@@ -171,6 +154,17 @@ export async function GET(req: NextRequest) {
   }
 
   if (!entry) {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "warn",
+      analysisId: analysisId ?? null,
+      userId,
+      details: {
+        status: "not_found",
+        note: "FALLBACK PRESENTED TO USER - analysis not found",
+      },
+    });
     return NextResponse.json(
       { error: { code: "NOT_FOUND", message: "Analysis not found" } },
       { status: 404 }
@@ -179,6 +173,16 @@ export async function GET(req: NextRequest) {
 
   // ── Pending ────────────────────────────────────────────────────────────────
   if (entry.status === "pending") {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId: entry.id,
+      userId,
+      profileUrl: entry.profile_url ?? null,
+      platform: entry.platform ?? entry.instant_json?.platform_detected ?? null,
+      details: { status: "pending", source: "cache" },
+    });
     return NextResponse.json(
       {
         analysis_id: entry.id,
@@ -193,11 +197,25 @@ export async function GET(req: NextRequest) {
 
   // ── Failed — safe fallback, never expose internals ────────────────────────
   if (entry.status === "failed") {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "warn",
+      analysisId: entry.id,
+      userId,
+      profileUrl: entry.profile_url ?? null,
+      platform: entry.platform ?? entry.instant_json?.platform_detected ?? null,
+      details: {
+        status: "failed",
+        source: "cache",
+        note: "STOCK RESULT / FALLBACK PRESENTED - analysis marked failed",
+      },
+    });
     return NextResponse.json(
       {
         analysis_id: entry.id,
         status: "failed" as const,
-        instant: entry.instant_json ?? FALLBACK_INSTANT,
+        instant: entry.instant_json ?? null,
         teaser: null,
         full_report: null,
       },
@@ -209,6 +227,16 @@ export async function GET(req: NextRequest) {
   const ui = entry.ui_json;
 
   if (!ui) {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId: entry.id,
+      userId,
+      profileUrl: entry.profile_url ?? null,
+      platform: entry.platform ?? entry.instant_json?.platform_detected ?? null,
+      details: { status: "pending", source: "cache", reason: "ui_json_missing" },
+    });
     // Completed row but ui_json not yet written — treat as pending
     return NextResponse.json(
       {
@@ -222,11 +250,58 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const instant: Instant = ui.instant ?? FALLBACK_INSTANT;
-  const teaser: Teaser    = ui.teaser  ?? FALLBACK_TEASER;
+  // Do not substitute fake/placeholder data. If instant or teaser is missing, treat as failure
+  // so the client shows the existing fallback UI and we log the failure.
+  if (!ui.instant || !ui.teaser) {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "warn",
+      analysisId: entry.id,
+      userId,
+      profileUrl: entry.profile_url ?? null,
+      platform: entry.platform ?? entry.instant_json?.platform_detected ?? null,
+      details: {
+        status: "failed",
+        source: "cache",
+        note: "STOCK RESULT / FALLBACK PRESENTED - incomplete data",
+        usedFallbackInstant: !ui.instant,
+        usedFallbackTeaser: !ui.teaser,
+      },
+    });
+    return NextResponse.json(
+      {
+        analysis_id: entry.id,
+        status: "failed" as const,
+        instant: null,
+        teaser: null,
+        full_report: null,
+      },
+      { status: 200, headers: { "Cache-Control": "no-store" } }
+    );
+  }
+
+  const instant: Instant = ui.instant;
+  const teaser: Teaser = ui.teaser;
   const fullReport: FullReport | null = isAuthenticated
     ? (ui.full_report ?? null)
     : null;
+
+  void logActivity({
+    category: "analyzer",
+    stage: "analyzer.served_to_user",
+    level: "info",
+    analysisId: entry.id,
+    userId,
+    profileUrl: entry.profile_url ?? null,
+    platform: entry.platform ?? entry.instant_json?.platform_detected ?? null,
+    details: {
+      status: "completed",
+      source: "cache",
+      hasFullReport: !!ui.full_report,
+      isAuthenticated,
+    },
+  });
 
   return NextResponse.json(
     {

@@ -4,11 +4,12 @@
  * Public endpoint called when the main analyzer service is unavailable,
  * times out, or is under high load.
  *
- * Inserts a fallback queue record so the analysis can be prepared and emailed
- * to the user when capacity is restored. No auth required.
+ * Captures email, profile_url, platform, timestamp, failure_type (if available),
+ * writes to email_analysis_queue for admin follow-up, and creates an admin-visible
+ * log entry (email_queue_created). No auth required.
  *
  * Request body:
- *   { profile_url: string; email?: string }
+ *   { profile_url: string; email?: string; platform?: string; failure_type?: string }
  *
  * Response 202:
  *   { queued: true; has_email: boolean; queue_id: string }
@@ -20,12 +21,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/server";
+import { logActivity } from "@/lib/logging/activity";
 
 // ── Validation ────────────────────────────────────────────────────────────────
 
 const FallbackRequestSchema = z.object({
   profile_url: z.string().url("Must be a valid URL"),
   email: z.string().email("Must be a valid email address").optional().or(z.literal("")),
+  platform: z.string().max(64).optional(),
+  failure_type: z.string().max(128).optional(),
 });
 
 // ── Simple in-memory IP rate-limiter (3 req / IP / hour) ─────────────────────
@@ -77,8 +81,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { profile_url, email } = parsed.data;
+  const { profile_url, email, platform: bodyPlatform, failure_type: bodyFailureType } = parsed.data;
   const cleanEmail = email && email.length > 0 ? email : null;
+  const platform = (bodyPlatform && bodyPlatform.trim()) || detectPlatformLabel(profile_url);
+  const timestamp = new Date().toISOString();
 
   // IP rate limit
   const ip =
@@ -101,14 +107,52 @@ export async function POST(req: NextRequest) {
   const sessionId =
     req.headers.get("x-analyzer-session-id") ?? `anon-fallback-${Date.now()}`;
 
-  // Insert fallback queue row
   const supabase = await createAdminClient();
 
-  const { data: row, error: dbErr } = await supabase
+  // 1. Write to email_analysis_queue for admin follow-up
+  const { data: queueRow, error: queueErr } = await supabase
+    .from("email_analysis_queue")
+    .insert({
+      email: cleanEmail,
+      profile_url,
+      platform: platform || null,
+      failure_type: (bodyFailureType && bodyFailureType.trim()) || null,
+      status: "pending_manual_analysis",
+    })
+    .select("id")
+    .single();
+
+  if (queueErr) {
+    console.error("[Analyzer/fallback] email_analysis_queue insert failed:", queueErr);
+  }
+
+  const queueId = queueRow?.id ?? null;
+
+  // 2. Admin-visible log entry
+  void logActivity({
+    category: "analyzer",
+    stage: "**FAILURE** analyzer_fallback_queue_used",
+    level: "warn",
+    profileUrl: profile_url,
+    platform: platform || null,
+    details: {
+      note: "FALLBACK QUEUE USED - user submitted via fallback widget",
+      queue_id: queueId,
+      email: cleanEmail,
+      profile_url,
+      platform: platform || null,
+      timestamp,
+      failure_type: (bodyFailureType && bodyFailureType.trim()) || null,
+      status: "pending_manual_analysis",
+    },
+  });
+
+  // 3. Keep existing analysis_queue insert for backward compat (fallback-notify, etc.)
+  const { data: aqRow, error: aqErr } = await supabase
     .from("analysis_queue")
     .insert({
       profile_url,
-      platform: detectPlatformLabel(profile_url),
+      platform,
       email: cleanEmail,
       session_id: sessionId,
       ip_address: ip,
@@ -117,27 +161,23 @@ export async function POST(req: NextRequest) {
       payload_json: {
         profile_url,
         email: cleanEmail,
-        timestamp: new Date().toISOString(),
+        timestamp,
         source: "fallback_widget",
+        failure_type: (bodyFailureType && bodyFailureType.trim()) || null,
       },
     })
     .select("id")
     .single();
 
-  if (dbErr || !row) {
-    console.error("[Analyzer/fallback] DB insert failed:", dbErr);
-    // Return success anyway — we don't want to show a second error to the user
-    return NextResponse.json(
-      { queued: true, has_email: !!cleanEmail, queue_id: null },
-      { status: 202 }
-    );
+  if (aqErr) {
+    console.error("[Analyzer/fallback] analysis_queue insert failed:", aqErr);
   }
 
   return NextResponse.json(
     {
       queued: true,
       has_email: !!cleanEmail,
-      queue_id: row.id,
+      queue_id: queueId ?? aqRow?.id ?? null,
     },
     { status: 202 }
   );

@@ -2,13 +2,16 @@
  * ZARZOOM Social Profile Analyzer
  * OpenRouter AI Prompt + UI Contract Normalizer
  *
- * Loads the "SOCIAL_PROFILE_ANALYZER" prompt from the admin prompt settings
- * table (wizard_autofill_settings.social_profile_prompt) rather than
- * hard-coding the prompt here.  Falls back to DEFAULT_SOCIAL_PROFILE_PROMPT
- * if the DB row is absent or the column is null.
- *
- * Variable substitution uses {{double_braces}} to match the admin UI convention
- * and avoids conflicts with JavaScript template literals.
+ * Loads the admin prompt named "Social Profile Investigation prompt" from
+ * Admin settings → OpenRouter prompts (stored in wizard_autofill_settings
+ * .social_profile_prompt, singleton row id=1). Fetched dynamically on each
+ * run. Falls back to DEFAULT_SOCIAL_PROFILE_PROMPT only when the column is null.
+ */
+export const ANALYZER_ADMIN_PROMPT_NAME = "Social Profile Investigation prompt" as const;
+
+/**
+ * Variable substitution uses [SQUARE-BRACKET] syntax to match the admin UI
+ * convention (e.g. [PROFILE-URL], [PLATFORM]).
  *
  * Retry strategy:
  *   - callOpenRouterTyped already retries once on NETWORK_ERROR / TIMEOUT.
@@ -24,24 +27,20 @@ import { createClient } from "@supabase/supabase-js";
 import { callOpenRouterTyped } from "@/lib/openrouter/client";
 import { OpenRouterError } from "@/lib/openrouter/client";
 import type { Instant, RawAiOutput, AnalysisResult } from "./types";
-import { RawAiOutputSchema } from "./types";
+import { AnalyzerOpenRouterSchema } from "./types";
+import { logActivity } from "@/lib/logging/activity";
 
 // ============================================================================
 // Default prompt — used when the DB row is missing or the column is null.
-// Variables use {{double_braces}} to match the admin UI.
+// Variables use [SQUARE-BRACKET] syntax to match the admin UI.
 // ============================================================================
 
 const DEFAULT_SOCIAL_PROFILE_PROMPT = `You are an elite social media growth strategist and content architect.
 
 Analyse the social profile below and generate a deep strategic report.
 
-Profile URL: {{profile_url}}
-Platform: {{platform}}
-Detected keywords / niche signals: {{keywords}}
-Deterministic creator score (0-100): {{creator_score}}
-Posting frequency estimate: {{posting_frequency_estimate}}
-Strengths already identified: {{strengths}}
-Opportunities already identified: {{opportunities}}
+Profile URL: [PROFILE-URL]
+Platform: [PLATFORM]
 
 Return ONLY valid JSON — no markdown, no prose outside the JSON object — with this exact structure:
 
@@ -78,7 +77,7 @@ Return ONLY valid JSON — no markdown, no prose outside the JSON object — wit
 
 Rules:
 - Be platform-specific (Instagram != TikTok != LinkedIn).
-- Be niche-specific based on the detected keywords.
+- Be niche-specific based on the profile content.
 - viral_post_ideas: exactly 3 items.
 - growth_insights in teaser: exactly 2 items.
 - growth_insights in full_report: exactly 4 items.
@@ -90,39 +89,29 @@ Rules:
 // ============================================================================
 
 /**
- * Replaces all {{variable}} occurrences in a prompt template.
+ * Replaces all [VARIABLE-NAME] occurrences in a prompt template.
  * Unknown variables are left as-is so admins can audit substitution easily.
  */
 function substituteVariables(
   template: string,
   vars: Record<string, string>
 ): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
+  return template.replace(/\[([A-Z][A-Z0-9-]*)\]/g, (match, key: string) => {
     return Object.prototype.hasOwnProperty.call(vars, key) ? vars[key] : match;
   });
 }
 
 /**
- * Build the variable map from Instant engine output + raw profile URL.
+ * Build the variable map substituted into the admin-managed prompt.
+ * Keys must match the [SQUARE-BRACKET] placeholders exactly.
  */
 function buildPromptVariables(
   instant: Instant,
   profileUrl: string
 ): Record<string, string> {
   return {
-    profile_url: profileUrl,
-    platform: instant.platform_detected,
-    keywords: instant.keywords_detected.length
-      ? instant.keywords_detected.join(", ")
-      : "none detected",
-    creator_score: String(instant.creator_score),
-    posting_frequency_estimate: instant.posting_frequency_estimate,
-    strengths: instant.strengths.length
-      ? instant.strengths.join("; ")
-      : "none identified",
-    opportunities: instant.opportunities.length
-      ? instant.opportunities.join("; ")
-      : "none identified",
+    "PROFILE-URL": profileUrl,
+    "PLATFORM": instant.platform_detected,
   };
 }
 
@@ -144,29 +133,50 @@ interface PromptConfig {
   promptText: string;
   model: string;
   apiKey: string | null;
+  keySource: "env" | "db" | "none";
 }
 
 /**
- * Loads the SOCIAL_PROFILE_ANALYZER prompt from wizard_autofill_settings.
- * Falls back to DEFAULT_SOCIAL_PROFILE_PROMPT if missing.
+ * Loads the "Social Profile Investigation prompt" from Admin → OpenRouter prompts
+ * (wizard_autofill_settings.social_profile_prompt, row id=1). No hardcoded prompt
+ * overrides the DB value when present; DEFAULT_SOCIAL_PROFILE_PROMPT is used only
+ * when the column is null.
  *
  * @throws if the OpenRouter API key is not configured (neither in DB nor env)
  */
 async function loadPromptConfig(): Promise<PromptConfig> {
   const admin = getAdmin();
 
+  const FALLBACK_MODEL = "openai/gpt-4.1-mini";
+
   const { data } = await admin
     .from("wizard_autofill_settings")
-    .select("social_profile_prompt, openrouter_model, openrouter_api_key")
+    .select("social_profile_prompt, openrouter_model, social_profile_model, openrouter_api_key")
     .eq("id", 1)
     .maybeSingle();
 
-  return {
-    promptText: data?.social_profile_prompt ?? DEFAULT_SOCIAL_PROFILE_PROMPT,
-    model: data?.openrouter_model ?? "openai/gpt-4o-mini",
-    // env var takes precedence; DB key is the fallback
-    apiKey: process.env.OPENROUTER_API_KEY ?? data?.openrouter_api_key ?? null,
-  };
+  const promptText = data?.social_profile_prompt ?? DEFAULT_SOCIAL_PROFILE_PROMPT;
+  const perPromptModel = data?.social_profile_model ?? null;
+  const defaultModel = data?.openrouter_model ?? FALLBACK_MODEL;
+  const model = perPromptModel || defaultModel;
+  const envKey = process.env.OPENROUTER_API_KEY;
+  const dbKey = data?.openrouter_api_key ?? null;
+  const apiKey = envKey ?? dbKey ?? null;
+  const keySource: "env" | "db" | "none" = envKey ? "env" : dbKey ? "db" : "none";
+
+  if (perPromptModel) {
+    console.log("[aiAnalysis] Using per-prompt model for social profile:", perPromptModel);
+  } else {
+    console.log("[aiAnalysis] Using default model for social profile:", model);
+  }
+
+  console.log("[aiAnalysis] Loaded OpenRouter prompt config", {
+    hasDbRow: !!data,
+    model,
+    keySource,
+  });
+
+  return { promptText, model, apiKey, keySource };
 }
 
 // ============================================================================
@@ -184,26 +194,74 @@ export interface AiAnalysisResult {
 /**
  * Run the AI analysis for a social profile.
  *
- * 1. Loads the admin-editable prompt from the DB (with {{variable}} substitution)
+ * 1. Loads the admin-editable prompt from the DB (with [VARIABLE] substitution)
  * 2. Calls OpenRouter with model openai/gpt-4o-mini (or admin override)
- * 3. Validates the response against RawAiOutputSchema
+ * 3. Validates the response against AnalyzerOpenRouterSchema (flat or nested → RawAiOutput)
  * 4. On Zod validation failure, retries ONCE with a stricter reminder
  * 5. Throws on second failure so the worker can mark the job as `failed`
  */
 export async function runAiAnalysis(
   instant: Instant,
-  profileUrl: string
+  profileUrl: string,
+  analysisId?: string
 ): Promise<AiAnalysisResult> {
-  const config = await loadPromptConfig();
+  let config: Awaited<ReturnType<typeof loadPromptConfig>>;
+  try {
+    config = await loadPromptConfig();
+  } catch (configErr) {
+    void logActivity({
+      category: "analyzer",
+      stage: "**FAILURE** analyzer_prompt_config_load_failed",
+      level: "error",
+      analysisId,
+      profileUrl,
+      platform: instant.platform_detected,
+      details: {
+        reason: "prompt_config_load_failed",
+        profileUrl,
+        platform: instant.platform_detected,
+        analysisId: analysisId ?? null,
+        error_message: configErr instanceof Error ? configErr.message : String(configErr),
+      },
+    });
+    throw configErr;
+  }
+
+  // ──── TEMPORARY DEBUG CHECKPOINT ────
+  console.log("🔴 [3] FLOATING_ANALYZER_PROMPT_LOADED", {
+    analysisId,
+    profileUrl,
+    platform: instant.platform_detected,
+    model: config.model,
+    keySource: config.keySource,
+    promptLength: config.promptText.length,
+    promptFirst80: config.promptText.substring(0, 80),
+    timestamp: new Date().toISOString(),
+  });
+  // ──── END TEMPORARY DEBUG CHECKPOINT ────
 
   if (!config.apiKey) {
+    void logActivity({
+      category: "analyzer",
+      stage: "**FAILURE** analyzer_no_openrouter_api_key",
+      level: "error",
+      analysisId,
+      profileUrl,
+      platform: instant.platform_detected,
+      details: {
+        reason: "no_api_key",
+        profileUrl,
+        platform: instant.platform_detected,
+        analysisId: analysisId ?? null,
+      },
+    });
     throw new Error(
       "[aiAnalysis] OpenRouter API key is not configured. " +
         "Set OPENROUTER_API_KEY or configure it in Admin → OpenRouter Prompts."
     );
   }
 
-  // Substitute {{variables}} in the admin-managed prompt
+  // Substitute [VARIABLES] in the admin-managed prompt
   const vars = buildPromptVariables(instant, profileUrl);
   const compiledPrompt = substituteVariables(config.promptText, vars);
 
@@ -212,21 +270,55 @@ Return ONLY valid JSON. No markdown, no code fences, no text outside the JSON ob
 
   const userMessage = compiledPrompt;
 
+  void logActivity({
+    category: "analyzer",
+    stage: "**OPENROUTER** analyzer_prompt_input",
+    level: "info",
+    analysisId,
+    profileUrl,
+    platform: instant.platform_detected,
+    details: {
+      profile_url: profileUrl,
+      platform: instant.platform_detected,
+      variables_substituted: vars,
+      final_prompt_text: compiledPrompt,
+    },
+  });
+
   // ── First attempt ────────────────────────────────────────────────────────
   try {
-    const response = await callOpenRouterTyped(RawAiOutputSchema, {
+    const response = await callOpenRouterTyped(AnalyzerOpenRouterSchema, {
       model: config.model,
       prompt: systemPrompt,
       input: userMessage,
       temperature: 0.5,
+      apiKeyOverride: config.apiKey ?? undefined,
     });
 
-    return {
+    const result: AiAnalysisResult = {
       raw: response.data,
       tokensUsed: response.tokensUsed,
       model: response.model,
       attempt: "first",
     };
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.openrouter_success",
+      level: "info",
+      analysisId,
+      profileUrl,
+      platform: instant.platform_detected,
+      details: {
+        attempt: "first",
+        tokensUsed: result.tokensUsed,
+        model: result.model,
+        raw_keys: Object.keys(result.raw),
+        growth_insights_count: result.raw.growth_insights?.length ?? 0,
+        /** Full response from OpenRouter (parsed, same as stored in analysis_cache.analysis_json) */
+        openrouter_full_response: result.raw,
+      },
+    });
+    return result;
   } catch (firstErr) {
     const isSchemaError =
       firstErr instanceof OpenRouterError &&
@@ -236,13 +328,25 @@ Return ONLY valid JSON. No markdown, no code fences, no text outside the JSON ob
 
     // Only retry on parse / schema validation failures
     if (!isSchemaError && !isJsonError) {
+      void logActivity({
+        category: "analyzer",
+        stage: "**FAILURE** analyzer_openrouter_call_failed",
+        level: "error",
+        analysisId,
+        profileUrl,
+        platform: instant.platform_detected,
+        details: {
+          reason: "openrouter_call_failed",
+          attempt: "first",
+          profileUrl,
+          platform: instant.platform_detected,
+          analysisId: analysisId ?? null,
+          error_message: firstErr instanceof Error ? firstErr.message : String(firstErr),
+        },
+      });
       throw firstErr;
     }
 
-    console.warn(
-      "[aiAnalysis] First attempt failed with parse/schema error, retrying once:",
-      firstErr instanceof Error ? firstErr.message : firstErr
-    );
   }
 
   // ── Retry with a stricter JSON-only reminder ──────────────────────────────
@@ -251,19 +355,72 @@ Return ONLY valid JSON. No markdown, no code fences, no text outside the JSON ob
 CRITICAL REMINDER: Your previous response could not be parsed as valid JSON.
 You MUST return ONLY a raw JSON object. Do NOT wrap it in markdown. Do NOT add any text before or after the JSON.`;
 
-  const response = await callOpenRouterTyped(RawAiOutputSchema, {
-    model: config.model,
-    prompt: systemPrompt,
-    input: retryUserMessage,
-    temperature: 0.2, // Lower temperature for more predictable JSON output
+  void logActivity({
+    category: "analyzer",
+    stage: "**OPENROUTER** analyzer_prompt_sent_to_openrouter",
+    level: "info",
+    analysisId,
+    profileUrl,
+    platform: instant.platform_detected,
+    details: {
+      attempt: "retry",
+      model: config.model,
+      final_prompt: retryUserMessage,
+    },
   });
 
-  return {
-    raw: response.data,
-    tokensUsed: response.tokensUsed,
-    model: response.model,
-    attempt: "retry",
-  };
+  try {
+    const response = await callOpenRouterTyped(AnalyzerOpenRouterSchema, {
+      model: config.model,
+      prompt: systemPrompt,
+      input: retryUserMessage,
+      temperature: 0.2,
+      apiKeyOverride: config.apiKey ?? undefined,
+    });
+
+    const result: AiAnalysisResult = {
+      raw: response.data,
+      tokensUsed: response.tokensUsed,
+      model: response.model,
+      attempt: "retry",
+    };
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.openrouter_success",
+      level: "info",
+      analysisId,
+      profileUrl,
+      platform: instant.platform_detected,
+      details: {
+        attempt: "retry",
+        tokensUsed: result.tokensUsed,
+        model: result.model,
+        raw_keys: Object.keys(result.raw),
+        growth_insights_count: result.raw.growth_insights?.length ?? 0,
+        /** Full response from OpenRouter (parsed, same as stored in analysis_cache.analysis_json) */
+        openrouter_full_response: result.raw,
+      },
+    });
+    return result;
+  } catch (retryErr) {
+    void logActivity({
+      category: "analyzer",
+      stage: "**FAILURE** analyzer_openrouter_call_failed",
+      level: "error",
+      analysisId,
+      profileUrl,
+      platform: instant.platform_detected,
+      details: {
+        reason: "openrouter_call_failed",
+        attempt: "retry",
+        profileUrl,
+        platform: instant.platform_detected,
+        analysisId: analysisId ?? null,
+        error_message: retryErr instanceof Error ? retryErr.message : String(retryErr),
+      },
+    });
+    throw retryErr;
+  }
 }
 
 // ============================================================================
@@ -290,19 +447,33 @@ export function normalizeToUiContract(
     creator_score: finalScore,
   };
 
-  return {
+  const teaserGrowthInsights =
+    raw.teaser_growth_insights && raw.teaser_growth_insights.length > 0
+      ? raw.teaser_growth_insights
+      : raw.growth_insights.slice(0, 2);
+  const teaser = {
+    growth_insights: teaserGrowthInsights,
+    ai_post_preview: raw.ai_post_preview,
+    benchmark_text: raw.benchmark_ranking.description,
+  };
+
+  const fullReport = {
+    creator_score_explanation: raw.creator_score_explanation,
+    content_pillars: raw.content_pillars,
+    viral_post_ideas: raw.viral_post_ideas,
+    posting_schedule: raw.posting_schedule,
+    growth_insights: raw.growth_insights,
+  };
+
+  const normalized: AnalysisResult = {
     analysis_id: analysisId,
     status: "completed",
     instant: finalInstant,
-    teaser: raw.teaser,
-    full_report: {
-      ...raw.full_report,
-      // Prefer top-level AI explanation if present, fall back to nested field
-      creator_score_explanation:
-        raw.creator_score_explanation ||
-        raw.full_report.creator_score_explanation,
-    },
+    teaser,
+    full_report: fullReport,
   };
+
+  return normalized;
 }
 
 // ============================================================================

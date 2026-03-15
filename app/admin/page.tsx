@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { Mail, KeyRound, Users, CreditCard, HelpCircle, Sparkles, Link2, Inbox } from "lucide-react";
+import { Mail, KeyRound, Users, CreditCard, HelpCircle, Sparkles, Link2, Inbox, Activity } from "lucide-react";
 
 export default function AdminDashboardPage() {
   const { t } = useI18n();
@@ -63,6 +63,13 @@ export default function AdminDashboardPage() {
       title: "Email Queue",
       description: "Inspect queued, sent, and failed outgoing emails.",
       color: "bg-amber-50 text-amber-600",
+    },
+    {
+      href: "/admin/logs",
+      icon: Activity,
+      title: "Activity Logs",
+      description: "Inspect analyzer and other system activity (logging coming online).",
+      color: "bg-slate-50 text-slate-700",
     },
     {
       href: "/admin/billing",

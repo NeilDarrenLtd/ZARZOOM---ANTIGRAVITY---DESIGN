@@ -288,6 +288,10 @@ export interface AdminUserProfile {
   autofill_daily_count: number;
   autofill_degraded: boolean;
   autofill_blocked: boolean;
+  daily_autofill_limit: number | null;
+  total_autofill_limit: number | null;
+  analyzer_usage_limit: number | null;
+  analyzer_usage_count: number;
   created_at: string;
   updated_at: string;
 }
@@ -296,15 +300,43 @@ export async function getUsers() {
   await requireAdmin();
   const supabase = await createAdminClient();
 
+  // First, try selecting with the new limit columns. On older databases where
+  // the migration hasn't been applied yet, this will fail with an
+  // undefined_column error. In that case, fall back to the original column set
+  // and treat limits as null/zero so the admin UI still works.
   const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "id, email, display_name, is_admin, is_suspended, suspended_at, suspended_reason, autofill_lifetime_count, autofill_daily_count, autofill_degraded, autofill_blocked, daily_autofill_limit, total_autofill_limit, analyzer_usage_limit, analyzer_usage_count, created_at, updated_at"
+    )
+    .order("created_at", { ascending: false });
+
+  if (!error) {
+    return { users: (data || []) as AdminUserProfile[] };
+  }
+
+  console.warn("[admin/getUsers] Falling back to legacy column set:", error.message);
+
+  const { data: legacyData, error: legacyError } = await supabase
     .from("profiles")
     .select(
       "id, email, display_name, is_admin, is_suspended, suspended_at, suspended_reason, autofill_lifetime_count, autofill_daily_count, autofill_degraded, autofill_blocked, created_at, updated_at"
     )
     .order("created_at", { ascending: false });
 
-  if (error) return { error: error.message, users: [] };
-  return { users: (data || []) as AdminUserProfile[] };
+  if (legacyError) {
+    return { error: legacyError.message, users: [] };
+  }
+
+  const users = (legacyData || []).map((row: any) => ({
+    ...row,
+    daily_autofill_limit: null,
+    total_autofill_limit: null,
+    analyzer_usage_limit: null,
+    analyzer_usage_count: 0,
+  })) as AdminUserProfile[];
+
+  return { users };
 }
 
 export async function updateUserRole(userId: string, isAdmin: boolean) {
@@ -371,6 +403,23 @@ export async function deleteUser(userId: string) {
   return { success: true };
 }
 
+// ─── Email verification override ──────────────────────────────────
+// Allows an admin to mark a user's email as verified in Supabase Auth,
+// so they can log in even if they never clicked the email link.
+
+export async function forceVerifyUser(userId: string) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  // Supabase JS v2: updateUserById with email_confirm flag
+  const { error } = await supabase.auth.admin.updateUserById(userId, {
+    email_confirm: true,
+  } as any);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
 // ─── Autofill controls ──────────────────────────────────────────
 
 export async function resetAutofillUsage(userId: string) {
@@ -393,6 +442,60 @@ export async function toggleAutofillBlocked(userId: string, blocked: boolean) {
     .from("profiles")
     .update({
       autofill_blocked: blocked,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", userId);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+// ─── Analyzer anonymous limit reset ──────────────────────────────
+// Clears analyzer IP rate limits and anonymous session limits so that
+// non-logged-in users can run the homepage analyzer again.
+
+export async function resetAnalyzerAnonymousLimits() {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  // Clear IP-based analyzer rate limits
+  const { error: rateError } = await supabase
+    .from("rate_limits")
+    .delete()
+    .like("window_key", "analyzer:ip:%");
+
+  if (rateError) return { error: rateError.message };
+
+  // Clear session-based limits for anonymous sessions (session_id starts with anon-)
+  const { error: queueError } = await supabase
+    .from("analysis_queue")
+    .delete()
+    .like("session_id", "anon-%");
+
+  if (queueError) return { error: queueError.message };
+
+  return { success: true };
+}
+
+// ─── Update per-user usage limits ────────────────────────────
+
+export async function updateUserLimits(
+  userId: string,
+  limits: {
+    daily_autofill_limit: number | null;
+    total_autofill_limit: number | null;
+    analyzer_usage_limit: number | null;
+  }
+) {
+  await requireAdmin();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      daily_autofill_limit: limits.daily_autofill_limit,
+      total_autofill_limit: limits.total_autofill_limit,
+      analyzer_usage_limit: limits.analyzer_usage_limit,
       updated_at: new Date().toISOString(),
     })
     .eq("id", userId);

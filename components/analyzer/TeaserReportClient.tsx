@@ -176,16 +176,6 @@ function ErrorState({ message, onRetry }: { message: string; onRetry: () => void
   );
 }
 
-// ── Fallback teaser for failed analyses ───────────────────────────────────────
-
-const FALLBACK_TEASER: Teaser = {
-  growth_insights: [
-    "Your profile was partially analysed. Sign up for a full deep-dive.",
-  ],
-  ai_post_preview: { title: "", caption: "", hashtags: [] },
-  benchmark_text: "",
-};
-
 // ── Main client component ─────────────────────────────────────────────────────
 
 export default function TeaserReportClient({ analysisId }: Props) {
@@ -351,20 +341,18 @@ export default function TeaserReportClient({ analysisId }: Props) {
           </motion.div>
         )}
 
-        {/* Failed — render teaser with instant data + fallback teaser */}
-        {!loading && !error && result?.status === "failed" && result.instant && (
+        {/* Failed — show a clear error state, no synthetic teaser */}
+        {!loading && !error && result?.status === "failed" && (
           <motion.div
             key="failed"
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45 }}
+            transition={{ duration: 0.3 }}
           >
-            <TeaserReport
-              instant={result.instant}
-              teaser={FALLBACK_TEASER}
-              profileUrl=""
-              analysisId={analysisId}
+            <ErrorState
+              message="We couldn't generate your AI analysis. Please try again or contact support if this keeps happening."
+              onRetry={handleRetry}
             />
           </motion.div>
         )}

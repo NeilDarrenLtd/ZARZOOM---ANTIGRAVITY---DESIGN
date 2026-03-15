@@ -20,6 +20,7 @@ import {
   Sparkles,
   Link2,
   InboxIcon,
+  BarChart2,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -136,6 +137,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       label: "Email Queue",
       icon: InboxIcon,
     },
+    {
+      href: "/admin/email-analysis-queue",
+      label: "Analyzer Fallback Queue",
+      icon: InboxIcon,
+    },
   ];
 
   const settingsItems = [
@@ -153,6 +159,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       href: "/admin/settings/openrouter-prompts",
       label: "OpenRouter Prompts",
       icon: Sparkles,
+    },
+    {
+      href: "/admin/settings/usage",
+      label: "Usage Limits",
+      icon: BarChart2,
     },
     {
       href: "/admin/integrations/upload-post",

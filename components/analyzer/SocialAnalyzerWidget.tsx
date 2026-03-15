@@ -4,10 +4,11 @@ import { useState, useRef, useCallback, useId, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ArrowRight, Loader2, CheckCircle2, AlertCircle,
-  Sparkles, TrendingUp, Zap, Lock, FileText, Clock,
+  Sparkles, Zap, Lock, FileText, Clock,
   BarChart2, PenSquare, Users, ChevronRight,
 } from "lucide-react";
 import AnalyzerFallbackWidget from "@/components/analyzer/AnalyzerFallbackWidget";
+import { logAnalyzerUiEvent } from "@/lib/analyzer/clientLog";
 
 // ── Platform registry ──────────────────────────────────────────────────────
 
@@ -111,10 +112,18 @@ interface TeaserData {
 
 interface StartResponse {
   analysis_id: string;
-  status: "pending" | "completed";
+  status: "pending" | "completed" | "failed";
   instant: InstantResult;
   teaser?: TeaserData;
   cached?: boolean;
+}
+
+interface ResultResponse {
+  analysis_id: string;
+  status: "pending" | "completed" | "failed";
+  instant: InstantResult | null;
+  teaser: TeaserData | null;
+  full_report: unknown | null;
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -262,24 +271,53 @@ function LockedSection({ icon: Icon, label }: { icon: React.ElementType; label: 
 }
 
 function PostPreviewCard({ platform, preview }: { platform: string; preview?: AiPostPreview }) {
-  const postContent = preview?.caption || getFallbackPost(platform);
+  const postContent = preview?.caption?.trim() ?? "";
   const hashtags = preview?.hashtags ?? [];
 
+  const hasContent = Boolean(postContent) || hashtags.length > 0;
+
+  if (!hasContent) {
+    console.error("[Analyzer/widget] MOCK_PATH_TRIGGERED: PostPreviewCard rendered without real AI content");
+    return (
+      <div
+        className="rounded-xl overflow-hidden px-4 py-4"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.09)",
+        }}
+      >
+        <p className="text-xs text-white/35 leading-relaxed">
+          Your personalised AI post will appear in your full report.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="rounded-xl overflow-hidden"
-      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
+    <div
+      className="rounded-xl overflow-hidden"
+      style={{
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.09)",
+      }}
+    >
       <div className="px-3 pt-3 pb-2 flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-full flex-shrink-0"
-          style={{ background: "linear-gradient(135deg, #16a34a, #4ade80)" }} aria-hidden="true" />
+        <div
+          className="w-7 h-7 rounded-full flex-shrink-0"
+          style={{ background: "linear-gradient(135deg, #16a34a, #4ade80)" }}
+          aria-hidden="true"
+        />
         <div className="flex-1 min-w-0">
           <p className="text-xs font-semibold text-white/80 leading-none">
-            {preview?.title || "Your AI Post"}
+            {preview?.title || "AI Post Preview"}
           </p>
           <p className="text-[10px] text-white/35 mt-0.5 capitalize">{platform} • Just now</p>
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-          style={{ background: "rgba(22,163,74,0.2)", color: "#4ade80" }}>
-          {preview ? "AI Generated" : "Example"}
+        <span
+          className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+          style={{ background: "rgba(22,163,74,0.2)", color: "#4ade80" }}
+        >
+          AI Generated
         </span>
       </div>
 
@@ -290,28 +328,19 @@ function PostPreviewCard({ platform, preview }: { platform: string; preview?: Ai
       </div>
 
       {hashtags.length > 0 && (
-        <div className="px-3 py-2 flex flex-wrap gap-1.5 border-t"
-          style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-          {hashtags.slice(0, 5).map(tag => (
-            <span key={tag} className="text-[10px] text-green-400/70">#{tag.replace(/^#/, "")}</span>
+        <div
+          className="px-3 py-2 flex flex-wrap gap-1.5 border-t"
+          style={{ borderColor: "rgba(255,255,255,0.06)" }}
+        >
+          {hashtags.slice(0, 5).map((tag) => (
+            <span key={tag} className="text-[10px] text-green-400/70">
+              #{tag.replace(/^#/, "")}
+            </span>
           ))}
         </div>
       )}
     </div>
   );
-}
-
-function getFallbackPost(platform: string): string {
-  switch (platform) {
-    case "linkedin":
-      return "I spent 3 years making this mistake — and it cost me 6 months of growth.\n\nHere's what I learned (and what I'd do differently):\n\n1/ Stop posting for the algorithm\n2/ Start posting for one person\n3/ Consistency beats perfection every time\n\nSave this if you needed to hear it.";
-    case "tiktok":
-      return "POV: You stopped trying to go viral and your account finally grew\n\nThis is the strategy nobody talks about...\n\n#growthhack #contentcreator #creatortips";
-    case "instagram":
-      return "The secret to growing on Instagram isn't what you think.\n\nIt's not Reels. It's not hashtags.\n\nIt's this...\n\n(Save this before it disappears)";
-    default:
-      return "Most creators quit right before the breakthrough.\n\nI almost did too.\n\nHere's the moment that changed everything — and the 3 things I wish I knew sooner.";
-  }
 }
 
 // ── Main widget ────────────────────────────────────────────────────────────
@@ -324,8 +353,20 @@ export default function SocialAnalyzerWidget() {
   const [detectedPlatform, setDetectedPlatform] = useState<PlatformId | null>(null);
   const [result, setResult] = useState<StartResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [lastFailureType, setLastFailureType] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const activeAnalysisIdRef = useRef<string | null>(null);
+
+  const RESULT_POLL_INTERVAL = 2000;
+  const RESULT_MAX_POLLS = 30;
+
+  const logCtx = useCallback(() => ({
+    analysisId: result?.analysis_id ?? null,
+    sessionId: typeof window !== "undefined" ? sessionStorage.getItem("_az_sid") : null,
+    profileUrl: url || null,
+    platform: result?.instant?.platform_detected ?? detectedPlatform ?? null,
+  }), [result, url, detectedPlatform]);
 
   // Auto-advance from signals → thinking → score → ownership → post-preview → benchmark
   useEffect(() => {
@@ -338,6 +379,67 @@ export default function SocialAnalyzerWidget() {
       return () => clearTimeout(t);
     }
   }, [stage]);
+
+  const pollForResult = useCallback(
+    async (analysisId: string) => {
+      activeAnalysisIdRef.current = analysisId;
+
+      for (let i = 0; i < RESULT_MAX_POLLS; i++) {
+        if (activeAnalysisIdRef.current !== analysisId) {
+          console.log("[Analyzer/widget] Poll cancelled for", analysisId);
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/analyzer/result?analysis_id=${analysisId}`, {
+            cache: "no-store",
+          });
+
+          if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            console.error("[Analyzer/widget] Result fetch failed", res.status, body);
+            return;
+          }
+
+          const data: ResultResponse = await res.json();
+          console.log("[Analyzer/widget] Result poll tick", {
+            analysisId: data.analysis_id,
+            status: data.status,
+          });
+
+          if (data.status === "failed") {
+            setLastFailureType("CACHE_STATUS_FAILED");
+            setStage("error");
+            setErrorMsg("We couldn't complete your analysis. You can leave your email below and we'll follow up.");
+            return;
+          }
+
+          if (data.instant && data.teaser) {
+            setResult(prev => {
+              const base = prev ?? ({} as StartResponse);
+              return {
+                ...base,
+                analysis_id: data.analysis_id,
+                status: data.status,
+                instant: data.instant,
+                teaser: data.teaser,
+              };
+            });
+          }
+
+          if (data.status === "completed") {
+            return;
+          }
+        } catch (err) {
+          console.error("[Analyzer/widget] Result polling error for", analysisId, err);
+          return;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, RESULT_POLL_INTERVAL));
+      }
+    },
+    []
+  );
 
   const handleUrlChange = useCallback((v: string) => {
     setUrl(v);
@@ -368,6 +470,15 @@ export default function SocialAnalyzerWidget() {
 
     try {
       const sessionId = getOrCreateSessionId();
+      const platformVal = detectPlatformFromUrl(trimmed) ?? "unknown";
+
+      logAnalyzerUiEvent("analyzer.workflow_started", {
+        sessionId,
+        profileUrl: trimmed,
+        platform: platformVal,
+        details: { profileUrl: trimmed, platform: platformVal, sessionId },
+      });
+
       const res = await fetch("/api/analyzer/start", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-analyzer-session-id": sessionId },
@@ -379,24 +490,58 @@ export default function SocialAnalyzerWidget() {
         setStage("error");
         setErrorMsg(data?.error?.message ?? "Too many requests. Please try again later.");
         setIsSubmitting(false);
+        logAnalyzerUiEvent("analyzer.ui.result_received", {
+          sessionId,
+          profileUrl: trimmed,
+          platform: platformVal,
+          details: { status: "rate_limited", source: "limit_check", code: data?.error?.code ?? "RATE_LIMITED" },
+        });
         return;
       }
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        setLastFailureType(data?.error?.code ?? null);
         throw new Error(data?.error?.message ?? `Request failed (${res.status})`);
       }
 
       const data: StartResponse = await res.json();
       setResult(data);
       setStage("signals");
+
+      const cacheHit = Boolean((data as { cache_hit?: boolean }).cache_hit);
+      logAnalyzerUiEvent("analyzer.ui.result_received", {
+        analysisId: data.analysis_id,
+        sessionId,
+        profileUrl: trimmed,
+        platform: data.instant?.platform_detected ?? platformVal,
+        details: {
+          status: data.status,
+          cache_hit: cacheHit,
+          source: cacheHit ? "cache" : "openrouter",
+        },
+      });
+
+      if (data.analysis_id) {
+        pollForResult(data.analysis_id);
+      }
     } catch (err) {
       setStage("error");
       setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      logAnalyzerUiEvent("analyzer.ui.result_received", {
+        sessionId: getOrCreateSessionId(),
+        profileUrl: trimmed,
+        platform: detectPlatformFromUrl(trimmed) ?? "unknown",
+        details: {
+          status: "error",
+          source: "request_failed",
+          message: err instanceof Error ? err.message : "Unknown error",
+        },
+      });
     } finally {
       setIsSubmitting(false);
     }
-  }, [url]);
+  }, [url, pollForResult]);
 
   const handleReset = useCallback(() => {
     setUrl("");
@@ -404,18 +549,34 @@ export default function SocialAnalyzerWidget() {
     setDetectedPlatform(null);
     setValidationMsg(null);
     setErrorMsg(null);
+    setLastFailureType(null);
     setStage("idle");
-  }, []);
+  }, [stage]);
 
   const platform = result?.instant?.platform_detected ?? detectedPlatform ?? "unknown";
   const score = result?.instant?.creator_score ?? 0;
   const keywords = result?.instant?.keywords_detected ?? [];
-  const strengths = result?.instant?.strengths ?? [];
-  const opportunities = result?.instant?.opportunities ?? [];
   const frequency = result?.instant?.posting_frequency_estimate ?? "unknown";
 
-  const benchmarkPct = Math.max(5, Math.min(95, Math.round(100 - score * 0.62 + 8)));
+  useEffect(() => {
+    if (stage !== "post-preview") return;
+    const hasRealPreview = !!(result?.teaser?.ai_post_preview && result?.teaser?.ai_post_preview.caption);
+    if (!hasRealPreview) {
+      logAnalyzerUiEvent("analyzer.ui.**MOCK** post_preview_without_ai_content", {
+        analysisId: result?.analysis_id ?? null,
+        platform,
+        details: {
+          note: "MOCK / STOCK RESULT PRESENTED - post preview without real AI content",
+          hasTeaser: Boolean(result?.teaser),
+          hasPreviewCaption: false,
+        },
+      });
+    }
+  }, [stage, result?.analysis_id, result?.teaser, platform]);
+
   const teaserPreview = result?.teaser?.ai_post_preview;
+  const teaserGrowthInsights = result?.teaser?.growth_insights ?? [];
+  const teaserBenchmarkText = result?.teaser?.benchmark_text ?? "";
   const authHref = result?.analysis_id
     ? `/auth?analysis_id=${encodeURIComponent(result.analysis_id)}&mode=register`
     : "/auth?mode=register";
@@ -614,38 +775,19 @@ export default function SocialAnalyzerWidget() {
 
                 <Divider />
 
-                {/* Strengths */}
-                {strengths.length > 0 && (
+                {/* AI Growth Insights — only shown when real AI data is available */}
+                {teaserGrowthInsights.length > 0 && (
                   <div className="mb-3">
                     <div className="flex items-center gap-1.5 mb-2">
-                      <TrendingUp className="w-3.5 h-3.5 text-green-400" aria-hidden="true" />
-                      <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Strengths</span>
+                      <Sparkles className="w-3.5 h-3.5 text-green-400" aria-hidden="true" />
+                      <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">AI Growth Insights</span>
                     </div>
                     <ul className="flex flex-col gap-1.5">
-                      {strengths.slice(0, 3).map((s, i) => (
-                        <motion.li key={s} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
+                      {teaserGrowthInsights.slice(0, 3).map((insight, i) => (
+                        <motion.li key={insight} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
                           className="flex items-start gap-2 text-xs text-white/70 leading-relaxed">
                           <CheckCircle2 className="w-3.5 h-3.5 text-green-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                          {s}
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Opportunities */}
-                {opportunities.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <Zap className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
-                      <span className="text-xs font-semibold text-white/60 uppercase tracking-wider">Opportunities</span>
-                    </div>
-                    <ul className="flex flex-col gap-1.5">
-                      {opportunities.slice(0, 3).map((o, i) => (
-                        <motion.li key={o} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.1 }}
-                          className="flex items-start gap-2 text-xs text-white/70 leading-relaxed">
-                          <span className="text-amber-400 mt-0.5 flex-shrink-0" aria-hidden="true">•</span>
-                          {o}
+                          {insight}
                         </motion.li>
                       ))}
                     </ul>
@@ -733,31 +875,23 @@ export default function SocialAnalyzerWidget() {
               <motion.div key="benchmark" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
                 <p className="text-xs font-semibold text-green-400 uppercase tracking-wider mb-3">Benchmark Insight</p>
 
-                {/* Benchmark bar */}
-                <div className="rounded-xl px-4 py-4 mb-4"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <p className="text-sm text-white/70 leading-relaxed text-balance mb-3">
-                    Compared to similar {capitalize(platform)} creators, your profile ranks in the{" "}
-                    <span className="font-bold text-white">top {benchmarkPct}%</span>.
-                  </p>
-
-                  {/* Visual bar */}
-                  <div className="relative h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-                    <motion.div className="absolute inset-y-0 left-0 rounded-full"
-                      style={{ background: "linear-gradient(90deg, #16a34a, #4ade80)" }}
-                      initial={{ width: "0%" }}
-                      animate={{ width: `${100 - benchmarkPct}%` }}
-                      transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1], delay: 0.2 }}
-                    />
+                {teaserBenchmarkText ? (
+                  <div className="rounded-xl px-4 py-4 mb-4"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p className="text-sm text-white/70 leading-relaxed text-balance mb-3">
+                      {teaserBenchmarkText}
+                    </p>
                   </div>
-                  <div className="flex justify-between mt-1.5">
-                    <span className="text-[10px] text-white/30">Bottom</span>
-                    <span className="text-[10px] text-green-400 font-semibold">Top {benchmarkPct}%</span>
-                    <span className="text-[10px] text-white/30">Top</span>
+                ) : (
+                  <div className="rounded-xl px-4 py-3 mb-4"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <p className="text-xs text-white/45 leading-relaxed">
+                      Your personalised benchmark will appear in your full report.
+                    </p>
                   </div>
-                </div>
+                )}
 
-                {/* Insight */}
+                {/* AI Insight */}
                 <div className="rounded-xl px-4 py-3 mb-4"
                   style={{ background: "rgba(22,163,74,0.08)", border: "1px solid rgba(22,163,74,0.2)" }}>
                   <p className="text-xs text-white/70 leading-relaxed text-balance">
@@ -789,6 +923,8 @@ export default function SocialAnalyzerWidget() {
               >
                 <AnalyzerFallbackWidget
                   profileUrl={url}
+                  platform={result?.instant?.platform_detected ?? detectedPlatform ?? undefined}
+                  failureType={lastFailureType ?? undefined}
                   onRetry={handleReset}
                 />
               </motion.div>

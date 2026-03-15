@@ -1,16 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronUp, ChevronDown, Sparkles } from "lucide-react";
 import SocialAnalyzerWidget from "./SocialAnalyzerWidget";
+import { createClient } from "@/lib/supabase/client";
 
 export default function StickyAnalyzerBanner() {
   const [mounted, setMounted] = useState(false);
   const [expanded, setExpanded] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Check Supabase auth client-side so the floating analyzer only appears
+  // for non-logged-in visitors on public routes.
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        setIsAuthenticated(!!data?.user);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      });
   }, []);
 
   // Mobile-only: auto-minimise when user starts scrolling down,
@@ -39,7 +55,12 @@ export default function StickyAnalyzerBanner() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [expanded]);
 
-  if (!mounted) return null;
+  const handleExpand = useCallback(() => setExpanded(true), []);
+  const handleCollapse = useCallback(() => setExpanded(false), []);
+
+  // Avoid flash while auth state is loading; hide completely for logged-in users.
+  if (!mounted || isAuthenticated === null) return null;
+  if (isAuthenticated) return null;
 
   return (
     <>
@@ -56,7 +77,7 @@ export default function StickyAnalyzerBanner() {
               className="relative"
             >
               <button
-                onClick={() => setExpanded(false)}
+                onClick={handleCollapse}
                 className="absolute -bottom-2 -right-2 z-10 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-colors"
                 style={{ background: "#1c2029", border: "1px solid rgba(255,255,255,0.1)" }}
                 aria-label="Minimise analyzer"
@@ -68,7 +89,7 @@ export default function StickyAnalyzerBanner() {
           ) : (
             <motion.button
               key="minimised-desktop"
-              onClick={() => setExpanded(true)}
+              onClick={handleExpand}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -112,7 +133,7 @@ export default function StickyAnalyzerBanner() {
             >
               <div className="w-full max-w-[520px] mx-auto relative">
                 <button
-                  onClick={() => setExpanded(false)}
+                  onClick={handleCollapse}
                   className="absolute -top-4 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                   style={{
                     background: "#1c2029",
@@ -128,7 +149,7 @@ export default function StickyAnalyzerBanner() {
           ) : (
             <motion.button
               key="minimised-mobile"
-              onClick={() => setExpanded(true)}
+              onClick={handleExpand}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}

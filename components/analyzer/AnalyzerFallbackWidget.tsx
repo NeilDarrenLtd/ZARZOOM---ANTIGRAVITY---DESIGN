@@ -14,9 +14,10 @@
  *   error    — API call failed (very rarely)
  */
 
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Loader2, CheckCircle2, AlertCircle, Clock, ArrowRight } from "lucide-react";
+import { logAnalyzerUiEvent } from "@/lib/analyzer/clientLog";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -25,6 +26,10 @@ type FallbackState = "idle" | "loading" | "queued" | "error";
 interface Props {
   /** The profile URL already entered by the user so it can be pre-queued */
   profileUrl: string;
+  /** Platform (e.g. instagram, tiktok) when known — sent with queue request */
+  platform?: string | null;
+  /** Failure type/code when known (e.g. AI_ERROR, PARSE_OR_SCHEMA_FAILURE) — sent with queue request */
+  failureType?: string | null;
   /** Called when the user wants to retry the main flow */
   onRetry?: () => void;
 }
@@ -37,23 +42,34 @@ function isValidEmail(v: string): boolean {
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function AnalyzerFallbackWidget({ profileUrl, onRetry }: Props) {
+export default function AnalyzerFallbackWidget({ profileUrl, platform, failureType, onRetry }: Props) {
   const emailId = useId();
   const [state, setState] = useState<FallbackState>("idle");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [hasEmail, setHasEmail] = useState(false);
 
+  useEffect(() => {
+    logAnalyzerUiEvent("analyzer.ui.**FALLBACK** shown", {
+      profileUrl,
+      platform,
+      details: {
+        note: "FALLBACK UI PRESENTED TO USER",
+        failureType: failureType ?? null,
+      },
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   async function handleQueue() {
-    // Validate email if provided
     const trimmedEmail = email.trim();
     if (trimmedEmail && !isValidEmail(trimmedEmail)) {
       setEmailError("Please enter a valid email address.");
       return;
     }
     setEmailError(null);
+
     setState("loading");
 
     try {
@@ -63,10 +79,11 @@ export default function AnalyzerFallbackWidget({ profileUrl, onRetry }: Props) {
         body: JSON.stringify({
           profile_url: profileUrl,
           ...(trimmedEmail ? { email: trimmedEmail } : {}),
+          ...(platform && platform.trim() ? { platform: platform.trim() } : {}),
+          ...(failureType && failureType.trim() ? { failure_type: failureType.trim() } : {}),
         }),
       });
 
-      // We treat any 2xx (or even most errors) as "queued" to preserve UX
       if (res.ok || res.status === 202) {
         setHasEmail(!!trimmedEmail);
         setState("queued");
@@ -74,7 +91,6 @@ export default function AnalyzerFallbackWidget({ profileUrl, onRetry }: Props) {
         setState("error");
       }
     } catch {
-      // Network error — still show queued UI to avoid dead-end
       setHasEmail(!!trimmedEmail);
       setState("queued");
     }
@@ -195,7 +211,6 @@ export default function AnalyzerFallbackWidget({ profileUrl, onRetry }: Props) {
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </motion.button>
 
-            {/* Retry link */}
             {onRetry && (
               <button
                 onClick={onRetry}
@@ -310,7 +325,10 @@ export default function AnalyzerFallbackWidget({ profileUrl, onRetry }: Props) {
             </div>
             {onRetry && (
               <button
-                onClick={() => { setState("idle"); onRetry(); }}
+                onClick={() => {
+                  setState("idle");
+                  onRetry();
+                }}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white/70 transition-colors"
                 style={{
                   background: "rgba(255,255,255,0.07)",

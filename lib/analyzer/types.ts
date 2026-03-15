@@ -111,15 +111,94 @@ export type AnalysisResult = z.infer<typeof AnalysisResultSchema>;
 // Raw AI output schema (stored in analysis_json for debugging)
 // ============================================================================
 
+export const ViralPostIdeaRawSchema = z.object({
+  title: z.string(),
+  hook: z.string(),
+  description: z.string(),
+});
+
+export const PostingScheduleRawSchema = z.object({
+  posts_per_week: z.string(),
+  best_days: z.array(z.string()),
+  best_times: z.array(z.string()),
+});
+
+export const AiPostPreviewRawSchema = z.object({
+  title: z.string(),
+  caption: z.string(),
+  hashtags: z.array(z.string()),
+});
+
+export const BenchmarkRankingRawSchema = z.object({
+  percentile: z.string(),
+  description: z.string(),
+});
+
 export const RawAiOutputSchema = z.object({
-  teaser: TeaserSchema,
-  full_report: FullReportSchema,
+  creator_score_explanation: z.string(),
+  growth_insights: z.array(z.string()),
+  content_pillars: z.array(z.string()),
+  viral_post_ideas: z.array(ViralPostIdeaRawSchema),
+  posting_schedule: PostingScheduleRawSchema,
+  ai_post_preview: AiPostPreviewRawSchema,
+  benchmark_ranking: BenchmarkRankingRawSchema,
   // AI may also attempt to refine the creator score
   creator_score_override: z.number().int().min(0).max(100).optional(),
-  creator_score_explanation: z.string().optional(),
+  /** When present (e.g. from nested prompt response), used for teaser; else teaser uses first 2 of growth_insights */
+  teaser_growth_insights: z.array(z.string()).optional(),
 });
 
 export type RawAiOutput = z.infer<typeof RawAiOutputSchema>;
+
+// ============================================================================
+// Nested AI output (matches default prompt: teaser + full_report)
+// Transformed to flat RawAiOutput so the rest of the pipeline is unchanged.
+// ============================================================================
+
+const NestedTeaserRawSchema = z.object({
+  growth_insights: z.array(z.string()),
+  ai_post_preview: AiPostPreviewRawSchema,
+  benchmark_text: z.string(),
+});
+
+const NestedFullReportRawSchema = z.object({
+  creator_score_explanation: z.string(),
+  content_pillars: z.array(z.string()),
+  viral_post_ideas: z.array(ViralPostIdeaRawSchema),
+  posting_schedule: PostingScheduleRawSchema,
+  growth_insights: z.array(z.string()),
+});
+
+const RawAiOutputNestedSchema = z
+  .object({
+    teaser: NestedTeaserRawSchema,
+    full_report: NestedFullReportRawSchema,
+    creator_score_override: z.number().int().min(0).max(100).optional().nullable(),
+    creator_score_explanation: z.string().optional().nullable(),
+  })
+  .transform(
+    (n): RawAiOutput => ({
+      creator_score_explanation: n.full_report.creator_score_explanation,
+      growth_insights: n.full_report.growth_insights,
+      teaser_growth_insights: n.teaser.growth_insights,
+      content_pillars: n.full_report.content_pillars,
+      viral_post_ideas: n.full_report.viral_post_ideas,
+      posting_schedule: n.full_report.posting_schedule,
+      ai_post_preview: n.teaser.ai_post_preview,
+      benchmark_ranking: { percentile: "", description: n.teaser.benchmark_text },
+      creator_score_override: n.creator_score_override ?? undefined,
+    })
+  );
+
+/**
+ * Schema for OpenRouter analyzer responses. Accepts both flat (legacy/custom prompts)
+ * and nested (default prompt: teaser + full_report) and normalizes to RawAiOutput.
+ */
+export const AnalyzerOpenRouterSchema = z.union([
+  RawAiOutputSchema,
+  RawAiOutputNestedSchema,
+]);
+export type AnalyzerOpenRouterOutput = z.infer<typeof AnalyzerOpenRouterSchema>;
 
 // ============================================================================
 // Request / response schemas for the API routes

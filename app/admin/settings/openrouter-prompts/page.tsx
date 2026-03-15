@@ -19,6 +19,9 @@ import {
   Search,
   ChevronLeft,
   ChevronRight,
+  Play,
+  Terminal,
+  RefreshCw,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -33,8 +36,47 @@ interface PromptSettings {
   openrouter_api_key: string | null;
   openrouter_api_key_set: boolean;
   openrouter_model: string | null;
+  website_model: string | null;
+  file_model: string | null;
+  social_profile_model: string | null;
   updated_at: string | null;
   updated_by: string | null;
+}
+
+const FALLBACK_MODEL = "openai/gpt-4.1-mini";
+
+const MODELS_CACHE_KEY = "zarzoom_openrouter_models";
+const MODELS_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+interface CachedModelEntry {
+  id: string;
+  name: string;
+}
+
+function loadCachedModels(): CachedModelEntry[] | null {
+  try {
+    const raw = localStorage.getItem(MODELS_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (Date.now() - parsed.ts > MODELS_CACHE_TTL_MS) {
+      localStorage.removeItem(MODELS_CACHE_KEY);
+      return null;
+    }
+    return parsed.models as CachedModelEntry[];
+  } catch {
+    return null;
+  }
+}
+
+function saveCachedModels(models: CachedModelEntry[]) {
+  try {
+    localStorage.setItem(
+      MODELS_CACHE_KEY,
+      JSON.stringify({ models, ts: Date.now() })
+    );
+  } catch {
+    // localStorage full or unavailable
+  }
 }
 
 interface SaveState {
@@ -91,12 +133,50 @@ export default function OpenRouterPromptsPage() {
   const [socialProfilePrompt, setSocialProfilePrompt] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [apiKeySet, setApiKeySet] = useState(false);
-  const [model, setModel] = useState("openai/gpt-4o-mini");
+  const [model, setModel] = useState(FALLBACK_MODEL);
+  const [websiteModel, setWebsiteModel] = useState("");
+  const [fileModel, setFileModel] = useState("");
+  const [socialProfileModel, setSocialProfileModel] = useState("");
   const [showApiKey, setShowApiKey] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>({ status: "idle" });
   const [resetState, setResetState] = useState<"idle" | "confirming">("idle");
   const [isResetting, setIsResetting] = useState(false);
+
+  // Model list state
+  const [modelList, setModelList] = useState<CachedModelEntry[]>([]);
+  const [isLoadingModels, setIsLoadingModels] = useState(false);
+  const [modelListError, setModelListError] = useState<string | null>(null);
+
+  // Load cached models on mount
+  useEffect(() => {
+    const cached = loadCachedModels();
+    if (cached) setModelList(cached);
+  }, []);
+
+  const handleRefreshModels = useCallback(async () => {
+    setIsLoadingModels(true);
+    setModelListError(null);
+    try {
+      const res = await fetch("/api/v1/admin/openrouter/models");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error?.message ?? `Failed to fetch models (${res.status})`);
+      }
+      const body = await res.json();
+      const models: CachedModelEntry[] = (body.data ?? []).map(
+        (m: { id: string; name: string }) => ({ id: m.id, name: m.name })
+      );
+      setModelList(models);
+      saveCachedModels(models);
+    } catch (err) {
+      setModelListError(
+        err instanceof Error ? err.message : "Failed to fetch models"
+      );
+    } finally {
+      setIsLoadingModels(false);
+    }
+  }, []);
 
   // Sync form state when data loads
   useEffect(() => {
@@ -106,7 +186,10 @@ export default function OpenRouterPromptsPage() {
       setSocialProfilePrompt(data.data.social_profile_prompt ?? "");
       setApiKey("");
       setApiKeySet(data.data.openrouter_api_key_set ?? false);
-      setModel(data.data.openrouter_model ?? "openai/gpt-4o-mini");
+      setModel(data.data.openrouter_model ?? FALLBACK_MODEL);
+      setWebsiteModel(data.data.website_model ?? "");
+      setFileModel(data.data.file_model ?? "");
+      setSocialProfileModel(data.data.social_profile_model ?? "");
       setHasUnsavedChanges(false);
     }
   }, [data]);
@@ -119,9 +202,12 @@ export default function OpenRouterPromptsPage() {
       filePrompt !== (data.data.file_prompt ?? "") ||
       socialProfilePrompt !== (data.data.social_profile_prompt ?? "") ||
       apiKey !== "" ||
-      model !== (data.data.openrouter_model ?? "openai/gpt-4o-mini");
+      model !== (data.data.openrouter_model ?? FALLBACK_MODEL) ||
+      websiteModel !== (data.data.website_model ?? "") ||
+      fileModel !== (data.data.file_model ?? "") ||
+      socialProfileModel !== (data.data.social_profile_model ?? "");
     setHasUnsavedChanges(changed);
-  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, data]);
+  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, websiteModel, fileModel, socialProfileModel, data]);
 
   /* -- Save handler ---------------------------------------------- */
   const handleSave = useCallback(async () => {
@@ -132,6 +218,9 @@ export default function OpenRouterPromptsPage() {
         file_prompt: filePrompt || null,
         social_profile_prompt: socialProfilePrompt || null,
         openrouter_model: model || null,
+        website_model: websiteModel || null,
+        file_model: fileModel || null,
+        social_profile_model: socialProfileModel || null,
       };
       if (apiKey.trim()) {
         payload.openrouter_api_key = apiKey.trim();
@@ -158,7 +247,7 @@ export default function OpenRouterPromptsPage() {
         message: err instanceof Error ? err.message : "Failed to save settings",
       });
     }
-  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, mutate]);
+  }, [websitePrompt, filePrompt, socialProfilePrompt, apiKey, model, websiteModel, fileModel, socialProfileModel, mutate]);
 
   /* -- Reset handler --------------------------------------------- */
   const handleReset = useCallback(async () => {
@@ -275,6 +364,36 @@ export default function OpenRouterPromptsPage() {
             </div>
           )}
 
+          {/* Refresh Models Button — top-level */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleRefreshModels}
+              disabled={isLoadingModels}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-purple-600 text-sm font-medium text-white hover:bg-purple-700 transition-colors disabled:opacity-50"
+            >
+              {isLoadingModels ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+              Refresh Models
+            </button>
+            {modelList.length > 0 && (
+              <span className="text-xs text-green-600">
+                {modelList.length} models loaded
+              </span>
+            )}
+            {modelList.length === 0 && !isLoadingModels && (
+              <span className="text-xs text-zinc-500">
+                Click to fetch available models from OpenRouter
+              </span>
+            )}
+            {modelListError && (
+              <span className="text-xs text-red-600">{modelListError}</span>
+            )}
+          </div>
+
           {/* OpenRouter Configuration Card */}
           <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-5 space-y-4">
             <h3 className="text-sm font-semibold text-zinc-900">OpenRouter Configuration</h3>
@@ -327,30 +446,19 @@ export default function OpenRouterPromptsPage() {
               </p>
             </div>
 
-            {/* Model */}
+            {/* Default / Fallback Model */}
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1.5">Model</label>
-              <input
-                type="text"
+              <label className="block text-xs font-medium text-zinc-700 mb-1.5">
+                Default Model (fallback)
+              </label>
+              <ModelSelect
                 value={model}
-                onChange={(e) => setModel(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="openai/gpt-4o-mini"
+                onChange={setModel}
+                modelList={modelList}
+                placeholder={`Global default (${FALLBACK_MODEL})`}
               />
               <p className="text-xs text-zinc-500 mt-1.5">
-                The OpenRouter model identifier (e.g.{" "}
-                <code className="bg-zinc-100 px-1 rounded text-[11px]">openai/gpt-4o-mini</code>,{" "}
-                <code className="bg-zinc-100 px-1 rounded text-[11px]">anthropic/claude-3.5-sonnet</code>
-                ). See{" "}
-                <a
-                  href="https://openrouter.ai/models"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-600 hover:text-purple-700 underline"
-                >
-                  openrouter.ai/models
-                </a>
-                .
+                Used when no per-prompt model override is set. Falls back to <code className="bg-zinc-100 px-1 rounded">{FALLBACK_MODEL}</code> if empty.
               </p>
             </div>
           </div>
@@ -372,6 +480,10 @@ export default function OpenRouterPromptsPage() {
             value={websitePrompt}
             onChange={setWebsitePrompt}
             placeholder="Enter the prompt for website analysis..."
+            modelValue={websiteModel}
+            onModelChange={setWebsiteModel}
+            modelList={modelList}
+            defaultModel={model}
           />
 
           {/* File Prompt */}
@@ -389,6 +501,10 @@ export default function OpenRouterPromptsPage() {
             value={filePrompt}
             onChange={setFilePrompt}
             placeholder="Enter the prompt for file analysis..."
+            modelValue={fileModel}
+            onModelChange={setFileModel}
+            modelList={modelList}
+            defaultModel={model}
           />
 
           {/* Social Profile Prompt */}
@@ -396,7 +512,6 @@ export default function OpenRouterPromptsPage() {
             icon={<Search className="w-4 h-4" />}
             label="Social Profile Investigation Prompt"
             promptKey="SOCIAL_PROFILE_ANALYZER"
-            badge="openai/gpt-4o-mini"
             description={
               <>
                 Used when users provide a social media profile URL. Use{" "}
@@ -407,6 +522,10 @@ export default function OpenRouterPromptsPage() {
             value={socialProfilePrompt}
             onChange={setSocialProfilePrompt}
             placeholder="Enter the prompt for social profile analysis..."
+            modelValue={socialProfileModel}
+            onModelChange={setSocialProfileModel}
+            modelList={modelList}
+            defaultModel={model}
           />
 
           {/* Action buttons */}
@@ -500,8 +619,258 @@ export default function OpenRouterPromptsPage() {
         </div>
       )}
 
+      {/* Test Prompt */}
+      <TestPromptPanel modelList={modelList} defaultModel={model} />
+
       {/* Audit Log */}
       <AuditLogViewer />
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  Test Prompt Panel                                                   */
+/* ================================================================== */
+
+interface TestResult {
+  output: unknown;
+  model: string;
+  tokensUsed: number;
+  durationMs: number;
+  success: boolean;
+}
+
+interface TestError {
+  message: string;
+  code?: string;
+  statusCode?: number;
+}
+
+function TestPromptPanel({
+  modelList,
+  defaultModel,
+}: {
+  modelList: CachedModelEntry[];
+  defaultModel: string;
+}) {
+  const [prompt, setPrompt] = useState("");
+  const [testModel, setTestModel] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [result, setResult] = useState<TestResult | null>(null);
+  const [error, setError] = useState<TestError | null>(null);
+
+  const handleRun = useCallback(async () => {
+    if (!prompt.trim()) {
+      setError({ message: "Prompt cannot be empty." });
+      return;
+    }
+
+    setIsRunning(true);
+    setResult(null);
+    setError(null);
+
+    const resolvedModel = testModel || defaultModel || FALLBACK_MODEL;
+
+    try {
+      const res = await fetch("/api/v1/admin/settings/openrouter-prompts/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt.trim(), model: resolvedModel }),
+      });
+
+      const body = await res.json();
+
+      if (!res.ok) {
+        setError({
+          message: body?.error?.message ?? `Request failed (${res.status})`,
+          code: body?.error?.code,
+          statusCode: body?.error?.statusCode ?? res.status,
+        });
+        return;
+      }
+
+      setResult(body.data as TestResult);
+    } catch (err) {
+      setError({
+        message: err instanceof Error ? err.message : "Network error — could not reach the server.",
+      });
+    } finally {
+      setIsRunning(false);
+    }
+  }, [prompt, testModel, defaultModel]);
+
+  const formatOutput = (data: unknown): string => {
+    if (typeof data === "string") return data;
+    try {
+      return JSON.stringify(data, null, 2);
+    } catch {
+      return String(data);
+    }
+  };
+
+  return (
+    <div className="mt-8 p-6 rounded-xl bg-white border border-zinc-200">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+          <Terminal className="h-4 w-4" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-zinc-900">Test Prompt</h3>
+          <p className="text-sm text-zinc-500">
+            Send a free-form prompt through the real OpenRouter pipeline and inspect the raw response.
+          </p>
+        </div>
+      </div>
+
+      {/* Model selector */}
+      <div className="mb-3">
+        <label className="block text-xs text-zinc-500 mb-1">Model</label>
+        <ModelSelect
+          value={testModel}
+          onChange={setTestModel}
+          modelList={modelList}
+          placeholder={`Use default (${defaultModel || FALLBACK_MODEL})`}
+        />
+      </div>
+
+      {/* Prompt input */}
+      <textarea
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        rows={10}
+        disabled={isRunning}
+        className="w-full px-4 py-3 rounded-lg border border-zinc-200 bg-white text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-y disabled:opacity-50 disabled:cursor-not-allowed"
+        placeholder="Enter your prompt here... This will be sent as the user message to OpenRouter using the selected model."
+      />
+
+      {/* Run button */}
+      <div className="mt-3 flex items-center gap-3">
+        <button
+          onClick={handleRun}
+          disabled={isRunning || !prompt.trim()}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-600 text-sm font-medium text-white hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isRunning ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Running...
+            </>
+          ) : (
+            <>
+              <Play className="w-4 h-4" />
+              Run
+            </>
+          )}
+        </button>
+        {isRunning && (
+          <span className="text-xs text-zinc-500">
+            Waiting for OpenRouter response...
+          </span>
+        )}
+      </div>
+
+      {/* Error display */}
+      {error && (
+        <div className="mt-4 p-4 rounded-lg border border-red-200 bg-red-50">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-red-700">Request failed</p>
+              <p className="text-sm text-red-600 mt-1">{error.message}</p>
+              {(error.code || error.statusCode) && (
+                <p className="text-xs text-red-500 mt-1 font-mono">
+                  {error.code && <>Code: {error.code}</>}
+                  {error.code && error.statusCode && <> &middot; </>}
+                  {error.statusCode && <>HTTP {error.statusCode}</>}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Result display */}
+      {result && (
+        <div className="mt-4 space-y-3">
+          {/* Metadata bar */}
+          <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+            <span className="flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+              <span className="font-medium text-green-700">Success</span>
+            </span>
+            <span className="font-mono bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200">
+              {result.model}
+            </span>
+            <span>{result.tokensUsed.toLocaleString()} tokens</span>
+            <span>{(result.durationMs / 1000).toFixed(1)}s</span>
+          </div>
+
+          {/* Output */}
+          <div className="p-4 rounded-lg border border-zinc-200 bg-zinc-50">
+            <p className="text-xs font-medium text-zinc-500 mb-2">Raw Output</p>
+            <pre className="text-sm font-mono text-zinc-800 whitespace-pre-wrap break-words max-h-[600px] overflow-y-auto leading-relaxed">
+              {formatOutput(result.output)}
+            </pre>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  ModelSelect Component                                               */
+/* ================================================================== */
+
+interface ModelSelectProps {
+  value: string;
+  onChange: (v: string) => void;
+  modelList: CachedModelEntry[];
+  placeholder?: string;
+}
+
+function ModelSelect({ value, onChange, modelList, placeholder }: ModelSelectProps) {
+  const hasModels = modelList.length > 0;
+  const currentInList = hasModels && modelList.some((m) => m.id === value);
+  const showSavedCustom = !!value && !currentInList;
+
+  const selectValue = currentInList ? value : showSavedCustom ? "__saved__" : "";
+
+  return (
+    <div className="flex-1 flex gap-2">
+      <select
+        value={selectValue}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v === "__saved__") return;
+          onChange(v);
+        }}
+        className="flex-1 px-3 py-2 rounded-lg border border-zinc-200 bg-white text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+      >
+        <option value="">{placeholder ?? `-- Use default (${FALLBACK_MODEL}) --`}</option>
+        {showSavedCustom && (
+          <option value="__saved__">{value} (saved)</option>
+        )}
+        {hasModels ? (
+          modelList.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.id}
+            </option>
+          ))
+        ) : (
+          <option disabled>Click Refresh Models to load options</option>
+        )}
+      </select>
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          className="px-2 py-1 rounded border border-zinc-200 bg-white text-xs text-zinc-500 hover:bg-zinc-50 transition-colors shrink-0"
+          title="Clear model selection"
+        >
+          Clear
+        </button>
+      )}
     </div>
   );
 }
@@ -514,22 +883,28 @@ interface PromptSlotProps {
   icon: React.ReactNode;
   label: string;
   promptKey: string;
-  badge?: string;
   description: React.ReactNode;
   value: string;
   onChange: (v: string) => void;
   placeholder: string;
+  modelValue: string;
+  onModelChange: (v: string) => void;
+  modelList: CachedModelEntry[];
+  defaultModel: string;
 }
 
 function PromptSlot({
   icon,
   label,
   promptKey,
-  badge,
   description,
   value,
   onChange,
   placeholder,
+  modelValue,
+  onModelChange,
+  modelList,
+  defaultModel,
 }: PromptSlotProps) {
   return (
     <div>
@@ -539,12 +914,28 @@ function PromptSlot({
         <code className="text-[10px] font-mono bg-zinc-100 text-zinc-500 px-1.5 py-0.5 rounded border border-zinc-200">
           {promptKey}
         </code>
-        {badge && (
+        {modelValue ? (
           <span className="text-[10px] font-mono bg-purple-50 text-purple-600 px-1.5 py-0.5 rounded border border-purple-200">
-            {badge}
+            {modelValue}
+          </span>
+        ) : (
+          <span className="text-[10px] font-mono bg-zinc-50 text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-200">
+            default: {defaultModel || FALLBACK_MODEL}
           </span>
         )}
       </div>
+
+      {/* Model selector */}
+      <div className="mb-2">
+        <label className="block text-xs text-zinc-500 mb-1">Model override</label>
+        <ModelSelect
+          value={modelValue}
+          onChange={onModelChange}
+          modelList={modelList}
+          placeholder={`Use default (${defaultModel || FALLBACK_MODEL})`}
+        />
+      </div>
+
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}

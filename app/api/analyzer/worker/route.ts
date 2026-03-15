@@ -29,8 +29,16 @@ import {
   markQueueProcessing,
   markQueueCompleted,
   markQueueFailed,
+  debugReadCacheById,
 } from "@/lib/analyzer/db";
 import type { Instant } from "@/lib/analyzer/types";
+import { logActivity } from "@/lib/logging/activity";
+
+// Temporary safety switch: disable async worker processing until the
+// synchronous homepage analyzer path is fully stable. This prevents
+// orphaned or legacy jobs from attempting to complete rows that do not
+// exist in analysis_cache.
+const WORKER_ENABLED = false;
 
 // ============================================================================
 // Worker job payload schema
@@ -66,6 +74,26 @@ const WorkerPayloadSchema = z.object({
 // ============================================================================
 
 export async function POST(req: NextRequest) {
+  if (!WORKER_ENABLED) {
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.api.worker_disabled",
+      level: "info",
+      analysisId: null,
+      profileUrl: null,
+      platform: null,
+      source: "worker",
+      details: {
+        source_path: "async_worker_route",
+        reason: "WORKER_DISABLED",
+      },
+    });
+    return NextResponse.json({
+      ok: false,
+      skipped: true,
+      reason: "worker_disabled",
+    });
+  }
   // ── Auth: verify worker secret ────────────────────────────────────────────
   const secret = process.env.ANALYZER_WORKER_SECRET;
   if (secret) {
@@ -118,6 +146,12 @@ export async function POST(req: NextRequest) {
     instant_json,
   } = parsed.data;
 
+  console.log("[Analyzer/worker] Job received", {
+    analysis_id,
+    profile_url,
+    platform,
+  });
+
   // ── Guard: skip if already completed ─────────────────────────────────────
   const existing = await getCacheById(analysis_id);
   if (!existing) {
@@ -125,7 +159,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, skipped: true });
   }
   if (existing.status === "completed") {
-    return NextResponse.json({ ok: true, skipped: true, reason: "already_completed" });
+    console.log("[Analyzer/worker] Skipping already completed job", {
+      analysis_id,
+    });
+    return NextResponse.json({
+      ok: true,
+      skipped: true,
+      reason: "already_completed",
+    });
   }
 
   // ── Mark queue as processing ──────────────────────────────────────────────
@@ -134,7 +175,10 @@ export async function POST(req: NextRequest) {
   // ── Run AI analysis ───────────────────────────────────────────────────────
   try {
     const instant = instant_json as Instant;
-    const aiResult = await runAiAnalysis(instant, profile_url);
+    console.log("[Analyzer/worker] Starting OpenRouter analysis", {
+      analysis_id,
+    });
+    const aiResult = await runAiAnalysis(instant, profile_url, analysis_id);
 
     if (aiResult.attempt === "retry") {
       console.warn(
@@ -149,9 +193,55 @@ export async function POST(req: NextRequest) {
       aiResult.raw
     );
 
+    // Debug read-back immediately before completion update
+    try {
+      const { row, error } = await debugReadCacheById(analysis_id);
+      // eslint-disable-next-line no-console
+      console.log("[analyzer/worker] Pre-complete row debug", {
+        source_path: "async_worker_route",
+        analysis_id,
+        profile_url,
+        platform,
+        pre_complete_row_found: !!row,
+        row,
+        error: error?.message ?? null,
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[analyzer/worker] Pre-complete row debug failed", {
+        source_path: "async_worker_route",
+        analysis_id,
+        profile_url,
+        platform,
+        error: e instanceof Error ? e.message : String(e),
+      });
+    }
+
     // Persist to cache
-    await updateCacheCompleted(analysis_id, aiResult.raw, uiContract);
+    await updateCacheCompleted(analysis_id, aiResult.raw, uiContract, {
+      profileUrl: profile_url,
+      platform,
+      sourcePath: "async_worker_route",
+    });
     await markQueueCompleted(analysis_id);
+
+    void logActivity({
+      category: "analyzer",
+      stage: "analyzer.served_to_user",
+      level: "info",
+      analysisId: analysis_id,
+      profileUrl: profile_url,
+      platform,
+      source: "worker",
+      details: {
+        served: "openrouter",
+        status: "completed",
+        source: "async_worker",
+        tokensUsed: aiResult.tokensUsed,
+        model: aiResult.model,
+        attempt: aiResult.attempt,
+      },
+    });
 
     // Emit completion webhook (fire-and-forget)
     emitWebhook({
@@ -188,6 +278,21 @@ export async function POST(req: NextRequest) {
     }).catch((e) =>
       console.warn("[Worker] webhook analysis.failed failed:", e)
     );
+
+    void logActivity({
+      category: "analyzer",
+      stage: "**FAILURE** analyzer_openrouter_call_failed",
+      level: "error",
+      analysisId: analysis_id,
+      profileUrl: profile_url,
+      platform,
+      source: "worker",
+      details: {
+        reason: "openrouter_call_failed",
+        error_summary: errorMessage,
+        served: "failed",
+      },
+    });
 
     // Return 200 so the queue does not re-deliver.
     // The failure is captured in the DB and surfaced to the frontend via /status.

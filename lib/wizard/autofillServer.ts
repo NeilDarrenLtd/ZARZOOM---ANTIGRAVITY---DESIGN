@@ -23,11 +23,15 @@ export async function requireAuthenticatedUser() {
 // Prompt Settings
 // ──────────────────────────────────────────────
 
+const FALLBACK_MODEL = "openai/gpt-4.1-mini";
+
 export interface PromptSettings {
   website_prompt_text: string;
   file_prompt_text: string;
   openrouter_api_key: string | null;
   openrouter_model: string | null;
+  website_model: string | null;
+  file_model: string | null;
   updated_at: string | null;
   updated_by: string | null;
 }
@@ -82,7 +86,7 @@ export async function getPromptSettings(
 ): Promise<PromptSettings> {
   const { data, error } = await supabase
     .from("wizard_autofill_settings")
-    .select("website_prompt, file_prompt, openrouter_api_key, openrouter_model, updated_at, updated_by")
+    .select("website_prompt, file_prompt, openrouter_api_key, openrouter_model, website_model, file_model, updated_at, updated_by")
     .eq("id", 1)
     .single();
 
@@ -96,6 +100,8 @@ export async function getPromptSettings(
       file_prompt_text: DEFAULT_FILE_PROMPT,
       openrouter_api_key: null,
       openrouter_model: null,
+      website_model: null,
+      file_model: null,
       updated_at: null,
       updated_by: null,
     };
@@ -105,10 +111,35 @@ export async function getPromptSettings(
     website_prompt_text: data.website_prompt || DEFAULT_WEBSITE_PROMPT,
     file_prompt_text: data.file_prompt || DEFAULT_FILE_PROMPT,
     openrouter_api_key: data.openrouter_api_key,
-    openrouter_model: data.openrouter_model || "openai/gpt-4o-mini",
+    openrouter_model: data.openrouter_model || FALLBACK_MODEL,
+    website_model: data.website_model ?? null,
+    file_model: data.file_model ?? null,
     updated_at: data.updated_at,
     updated_by: data.updated_by,
   };
+}
+
+// ──────────────────────────────────────────────
+// Per-prompt model resolution with fallback
+// ──────────────────────────────────────────────
+
+function resolveModelForPrompt(
+  settings: PromptSettings,
+  sourceType: "website" | "file"
+): string {
+  const perPrompt =
+    sourceType === "website" ? settings.website_model : settings.file_model;
+  if (perPrompt) {
+    console.log(
+      `[autofillServer] Using per-prompt model for ${sourceType}: ${perPrompt}`
+    );
+    return perPrompt;
+  }
+  const fallback = settings.openrouter_model || FALLBACK_MODEL;
+  console.log(
+    `[autofillServer] Using default model for ${sourceType}: ${fallback}`
+  );
+  return fallback;
 }
 
 // ──────────────────────────────────────────────
@@ -171,7 +202,7 @@ export async function analyzeContentWithOpenRouter(
         "X-Title": "Zarzoom Wizard",
       },
       body: JSON.stringify({
-        model: settings.openrouter_model || "openai/gpt-4o-mini",
+        model: resolveModelForPrompt(settings, sourceType),
         messages: [
           {
             role: "system",
